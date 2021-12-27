@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap");
+
+:root {
+  --c-primary: #83a623;
+  --c-secondary: #335360;
+  --c-secondary-dark: #213744;
+  --c-text: #13171a;
+  --c-white: #fdfefe;
+  --c-shadow: #a8acb030;
+  --c-text-t: #1d1f2255;
+  --c-text-xt: #1d1f2211;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 400;
+  color: var(--c-text);
+}
+
+*:lang(ar) {
+  font-family: "Almarai", sans-serif;
+}
+
+html {
+  /* scrollbar-gutter: stable; */
+  min-width: 800px;
+}
+
+button {
+  border: none;
+}
+
+/* ENTRANCE PAGE */
+
+.entrance {
+  width: 100vw;
+  height: 100vh;
+  padding: 100px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  background-size: cover;
+  background-position: center;
+}
+
+.entrance .google-sign-in {
+  font-size: 24px;
+  text-transform: capitalize;
+  padding: 0.5em 1em;
+  border-radius: 0.25em;
+}

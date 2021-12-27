@@ -1,0 +1,19 @@
+{
+  "description": {
+    "part1": "عدل <1 >src/App.js</1> و احفظ لاعادة التحميل",
+    "part2": "تعلم ريأكت"
+  },
+  "counter_zero": "لم يتم تغيير الغة بعد",
+  "counter_one": "تم تغيير الغة مرة واحدة",
+  "counter_two": "تم تغيير الغة بالفعل مرتان",
+  "counter_few": "تم تغيير الغة بالفعل {{count}} مرات",
+  "counter_many": "تم تغيير الغة بالفعل {{count}} مرة",
+  "counter_other": "تم تغيير الغة بالفعل {{count}} مرة",
+  "footer": {
+    "date": "اليوم هو {{date, DATE_HUGE}}",
+    "date_morning":
+      " صباح الخير! اليوم {{date, DATE_HUGE}} | استمتع بوقتك",
+    "date_afternoon": "يوم سعيد! انه {{date, DATE_HUGE}}",
+    "date_evening": "مساء الخير! لقد كان {{date, DATE_HUGE}}"
+  }
+}
