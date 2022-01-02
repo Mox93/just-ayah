@@ -1,6 +1,7 @@
 import {
   // getRedirectResult,
   GoogleAuthProvider,
+  onAuthStateChanged,
   signInWithRedirect,
   signOut,
   User,
@@ -8,35 +9,32 @@ import {
 import {
   createContext,
   FunctionComponent,
-  ReactElement,
   useContext,
   useEffect,
   useState,
 } from "react";
 
 import { auth } from "../services/firebase";
+import { ProviderProps } from "../models";
+import { omit } from "../utils";
 
-interface AuthContextType {
+interface AuthContextObj {
   user: User | null;
   signIn: () => void;
   signOut: () => void;
   authorized: (path?: string) => boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({
+const AuthContext = createContext<AuthContextObj>({
   user: null,
-  signIn: () => {},
-  signOut: () => {},
+  signIn: omit,
+  signOut: omit,
   authorized: () => false,
 });
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
-interface AuthProviderProps {
-  children?: ReactElement;
-}
+interface AuthProviderProps extends ProviderProps {}
 
 export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
   children,
@@ -82,7 +80,7 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
       });
 */
 
-    return auth.onAuthStateChanged((user) => {
+    return onAuthStateChanged(auth, (user) => {
       setUser(user);
       setReady(true);
     });

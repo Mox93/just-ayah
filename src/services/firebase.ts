@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  useDeviceLanguage as fromDeviceLanguage,
+} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -10,8 +14,9 @@ const app = initializeApp({
   appId: process.env.REACT_APP_APP_ID,
 });
 
-const auth = getAuth();
-auth.useDeviceLanguage();
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-export default app;
-export { auth };
+fromDeviceLanguage(auth);
+
+export { auth, db };

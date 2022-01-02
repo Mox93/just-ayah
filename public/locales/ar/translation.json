@@ -1,4 +1,32 @@
 {
+  "entrance": {
+    "google_sign_in": "الدخول بحساب جوجل"
+  },
+  "new_student": {
+    "submit": "انضم إلى المبادرة"
+  },
+  "personal_info": {
+    "first_name": "الاسم",
+    "middle_name": "الأب",
+    "last_name": "العائلة",
+    "phone_number": "رقم الهاتف",
+    "second_phone_number": "رقم هاتف آخر",
+    "gender": "النوع",
+    "male": "ذكر",
+    "female": "أنثى",
+    "date_of_birth": "تاريخ الميلاد",
+    "email": "البريد الالكتروني",
+    "country": "البلد",
+    "governorate": "المحافظة",
+    "education": "المؤهل",
+    "occupation": "العمل",
+    "experience": "هل سبق لك حفظ شئ من القرآن ؟",
+    "zoom":"هل في امكانك استخدام تطبيق المحادثات \"Zoom\"؟ حيث أن اللقاءات تتم من خلاله."
+  },
+  "answer": {
+    "yes": "نعم",
+    "no": "ﻻ"
+  },
   "description": {
     "part1": "عدل <1 >src/App.js</1> و احفظ لاعادة التحميل",
     "part2": "تعلم ريأكت"

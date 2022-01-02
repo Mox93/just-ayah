@@ -1,27 +1,23 @@
-@import url("https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&family=Josefin+Sans:wght@300;400;500;600;700&display=swap");
 
 :root {
   --c-primary: #83a623;
-  --c-secondary: #335360;
-  --c-secondary-dark: #213744;
-  --c-text: #13171a;
+  --c-light: #357f9c;
+  --c-dark: #213744;
+  --c-black: #13171a;
   --c-white: #fdfefe;
-  --c-shadow: #a8acb030;
-  --c-text-t: #1d1f2255;
-  --c-text-xt: #1d1f2211;
+  --c-translucent: #13171a88;
+  --c-shadow: #13171a2d;
+  --c-error: #e0235c;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Josefin Sans", "Almarai", sans-serif;
   font-weight: 400;
-  color: var(--c-text);
-}
-
-*:lang(ar) {
-  font-family: "Almarai", sans-serif;
+  color: var(--c-black);
 }
 
 html {
@@ -31,26 +27,42 @@ html {
 
 button {
   border: none;
+  cursor: pointer;
 }
 
-/* ENTRANCE PAGE */
-
-.entrance {
-  width: 100vw;
-  height: 100vh;
-  padding: 100px;
-
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-
-  background-size: cover;
-  background-position: center;
+.container {
+  min-width: 800px;
+  max-width: 900px;
+  margin-inline: auto;
 }
 
-.entrance .google-sign-in {
-  font-size: 24px;
+.cta-btn {
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  padding: 0.5em 1rem;
+  border-radius: 0.25rem;
+}
+
+.title {
+  font-size: 1.25rem;
   text-transform: capitalize;
-  padding: 0.5em 1em;
-  border-radius: 0.25em;
+}
+
+.title.required::after {
+  content: " *";
+  color: var(--c-error);
+}
+
+.title + .field {
+  margin-top: 0.5rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.input-group > * {
+  flex-grow: 1;
+  flex-basis: 0;
 }

@@ -1,4 +1,32 @@
 {
+  "entrance": {
+    "google_sign_in": "enter with google"
+  },
+  "new_student": {
+    "submit": "join the initiative"
+  },
+  "personal_info": {
+    "first_name": "name",
+    "middle_name": "parental",
+    "last_name": "surname",
+    "phone_number": "phone number",
+    "second_phone_number": "another phone number",
+    "gender": "gender",
+    "male": "male",
+    "female": "female",
+    "date_of_birth": "date of birth",
+    "email": "email",
+    "country": "country",
+    "governorate": "governorate",
+    "education": "education level",
+    "occupation": "job",
+    "experience": "have you memorized portions of the quran before?",
+    "zoom": "are you able to use the conferencing app \"Zoom\"? as the sessions take place through it."
+  },
+  "answer": {
+    "yes": "yes",
+    "no": "no"
+  },
   "description": {
     "part1": "Edit <1>src/App.js</1> and save to reload.",
     "part2": "Learn React"

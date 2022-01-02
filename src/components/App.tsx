@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Navigate, Routes, Route } from "react-router-dom";
-import { useAuth } from "../context/Auth";
 
+import { useAuth } from "../context/Auth";
 import Courses from "../pages/Courses";
 import Curriculum from "../pages/Curriculum";
 import Entrance from "../pages/Entrance";
@@ -27,6 +27,7 @@ function App() {
             element: <Home />,
           })}
         />
+        <Route path="join" element={<NewStudent />} />
         <Route
           {...useProtect({
             path: "courses",
@@ -58,6 +59,7 @@ function App() {
           path="enter"
           element={user ? <Navigate replace to="/" /> : <Entrance />}
         />
+        <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
       {user && <button onClick={signOut}>Sign Out</button>}
     </div>
