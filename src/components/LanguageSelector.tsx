@@ -14,7 +14,10 @@ const LanguageSelector: FunctionComponent<LanguageSelectorProps> = () => {
       {Object.keys(languages).map((lng) => (
         <button
           key={lng}
-          className={cn({ selected: i18n.resolvedLanguage === lng }, lng)}
+          className={cn({ selected: i18n.resolvedLanguage === lng }, [
+            lng,
+            "element",
+          ])}
           onClick={() => i18n.changeLanguage(lng)}
         >
           {languages[lng].nativeName}

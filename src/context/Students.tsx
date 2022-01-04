@@ -37,9 +37,7 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
   const studentsRef = collection(db, "students");
 
   const add = (data: Student) => {
-    console.log("ADDING");
-
-    addDoc(studentsRef, data).then((res) => console.log(res));
+    addDoc(studentsRef, data);
   };
 
   const fetch = async (state: string = "active") => {

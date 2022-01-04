@@ -49,7 +49,7 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
       .then(() => console.log("Success"))
       .catch((err) => console.log(err));
 
-  const authorized = (path?: string) => (user ? true : false);
+  const authorized = () => (user ? true : false);
 
   useEffect(() => {
     /*

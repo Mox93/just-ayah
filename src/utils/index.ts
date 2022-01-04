@@ -3,12 +3,14 @@ interface ConditionalClasses {
 }
 
 export const cn = (
-  filteredCls: ConditionalClasses,
-  className: string = ""
+  filteredClasses: ConditionalClasses,
+  classNames: string | string[] = ""
 ): string =>
-  `${Object.keys(filteredCls)
-    .filter((className) => filteredCls[className])
-    .join(" ")} ${className}`;
+  `${Object.keys(filteredClasses)
+    .filter((className) => filteredClasses[className])
+    .join(" ")} ${
+    typeof classNames === "string" ? classNames : classNames.join(" ")
+  }`;
 
 export const identity = (value: any) => value;
 

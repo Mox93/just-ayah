@@ -15,7 +15,7 @@ const Entrance: FunctionComponent<EntranceProps> = () => {
     <div className="entrance" style={{ backgroundImage: `url(${justAyahBG})` }}>
       <LanguageSelector />
       <button className="google-sign-in cta-btn" onClick={signIn}>
-        {t("entrance.google_sign_in")}
+        {t("elements.google_sign_in")}
       </button>
     </div>
   );

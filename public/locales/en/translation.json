@@ -1,9 +1,17 @@
 {
-  "entrance": {
-    "google_sign_in": "enter with google"
+  "dir": "ltr",
+  "elements": {
+    "google_sign_in": "enter with google",
+    "join_initiative": "join the initiative",
+    "sign_out": "sign out",
+    "yes": "yes",
+    "no": "no"
   },
-  "new_student": {
-    "submit": "join the initiative"
+  "nav": {
+    "home": "home",
+    "students": "students",
+    "teachers": "teachers",
+    "courses": "courses"
   },
   "personal_info": {
     "first_name": "name",
@@ -23,9 +31,14 @@
     "experience": "have you memorized portions of the quran before?",
     "zoom": "are you able to use the conferencing app \"Zoom\"? as the sessions take place through it."
   },
-  "answer": {
-    "yes": "yes",
-    "no": "no"
+  "students": {
+    "pending": "pending students",
+    "existing": "existing students",
+    "archived": "archive"
+  },
+  "teachers": {
+    "existing": "teachers",
+    "archived": "archive"
   },
   "description": {
     "part1": "Edit <1>src/App.js</1> and save to reload.",

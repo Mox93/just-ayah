@@ -1,9 +1,17 @@
 {
-  "entrance": {
-    "google_sign_in": "الدخول بحساب جوجل"
+  "dir": "rtl",
+  "elements": {
+    "google_sign_in": "الدخول بحساب جوجل",
+    "join_initiative": "انضم إلى المبادرة",
+    "sign_out": "تسجيل الخروج",
+    "yes": "نعم",
+    "no": "ﻻ"
   },
-  "new_student": {
-    "submit": "انضم إلى المبادرة"
+  "nav": {
+    "home": "الرئيسية",
+    "students": "الطلاب",
+    "teachers": "المعلمون",
+    "courses": "الدورات"
   },
   "personal_info": {
     "first_name": "الاسم",
@@ -23,9 +31,14 @@
     "experience": "هل سبق لك حفظ شئ من القرآن ؟",
     "zoom":"هل في امكانك استخدام تطبيق المحادثات \"Zoom\"؟ حيث أن اللقاءات تتم من خلاله."
   },
-  "answer": {
-    "yes": "نعم",
-    "no": "ﻻ"
+  "students": {
+    "pending": "الطلاب الجدد",
+    "existing": "الطلاب القائمون",
+    "archived": "اﻷرشيف"
+  },
+  "teachers": {
+    "existing": "المعلمون",
+    "archived": "اﻷرشيف"
   },
   "description": {
     "part1": "عدل <1 >src/App.js</1> و احفظ لاعادة التحميل",

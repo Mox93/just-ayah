@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import "./styles/index.css";
-import "./styles/components.css";
-import "./styles/pages.css";
+import "./styles/index.scss";
+import "./styles/components.scss";
+import "./styles/pages.scss";
 import App from "./components/App";
 import "./services/i18n";
 import { AuthProvider } from "./context/Auth";
