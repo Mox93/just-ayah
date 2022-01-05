@@ -324,3 +324,106 @@
     cursor: not-allowed;
   }
 }
+
+/* Expandable Item */
+
+.expandable-item {
+  min-height: 3rem;
+  border: 1px solid var(--c-dark);
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+
+  .prefix {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .male,
+    .female {
+      width: 8px;
+      height: 2.5rem;
+      border-radius: 4px;
+    }
+
+    .male {
+      background-color: skyblue;
+    }
+
+    .female {
+      background-color: pink;
+    }
+  }
+
+  &:hover {
+    box-shadow: 2px 2px 8px var(--c-shadow);
+  }
+
+  & + .expandable-item {
+    margin-top: 1rem;
+  }
+
+  .info {
+    flex-grow: 10;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    .element {
+      flex-basis: 0;
+
+      &.name {
+        flex-grow: 3;
+      }
+
+      &.phone-number {
+        flex-grow: 2;
+      }
+
+      &.age {
+        flex-grow: 1;
+      }
+
+      &.country {
+        flex-grow: 2;
+      }
+
+      &.governorate {
+        flex-grow: 2;
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-inline-end: 0.25rem;
+
+    .toggle-btn {
+      height: 2rem;
+      width: 2rem;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      background-color: transparent;
+
+      &:hover {
+        background-color: var(--c-shadow);
+      }
+
+      svg {
+        fill: var(--c-black);
+      }
+    }
+
+    .close {
+      svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}

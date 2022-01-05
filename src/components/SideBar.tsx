@@ -26,7 +26,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
           to="/"
         >
           <h3 className="expanded">{t("nav.home")}</h3>
-          <SvgIcon href={`${HomeIcon}/#Capa_1`}></SvgIcon>
+          <SvgIcon className="shrunk" href={`${HomeIcon}/#Capa_1`} />
         </Link>
         <Link
           className={cn(
@@ -36,7 +36,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
           to="/students"
         >
           <h3 className="expanded">{t("nav.students")}</h3>
-          <SvgIcon href={`${StudentsIcon}/#Capa_1`}></SvgIcon>
+          <SvgIcon className="shrunk" href={`${StudentsIcon}/#Capa_1`} />
         </Link>
         <Link
           className={cn(
@@ -46,7 +46,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
           to="/teachers"
         >
           <h3 className="expanded">{t("nav.teachers")}</h3>
-          <SvgIcon href={`${TeachersIcon}/#Capa_1`}></SvgIcon>
+          <SvgIcon className="shrunk" href={`${TeachersIcon}/#Capa_1`} />
         </Link>
         <Link
           className={cn(
@@ -56,7 +56,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
           to="/courses"
         >
           <h3 className="expanded">{t("nav.courses")}</h3>
-          <SvgIcon href={`${CoursesIcon}/#Capa_1`}></SvgIcon>
+          <SvgIcon className="shrunk" href={`${CoursesIcon}/#Capa_1`} />
         </Link>
       </div>
       <div className="settings-section">

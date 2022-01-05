@@ -22,7 +22,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = () => {
   const pi = (value: string) => t(`personal_info.${value}`);
   const e = (value: string) => t(`elements.${value}`);
 
-  const { add: addStudent } = useStudents();
+  const { addStudent } = useStudents();
 
   const [student, setStudent] = useState<Partial<Student>>({});
   const [validation, setValidation] =

@@ -40,3 +40,19 @@ export const studentValidator: StudentValidation = {
   previousQuranMemorization: false,
   canUseZoom: true,
 };
+
+export interface StudentInDB extends Omit<Student, "gender" | "dateOfBirth"> {
+  gender: string;
+  dateOfBirth: { nanoseconds: number; seconds: number };
+}
+
+export const toStudent = (obj: StudentInDB): Student => {
+  const dob = new Date(1970, 0, 1);
+  dob.setSeconds(obj.dateOfBirth.seconds);
+
+  return {
+    ...obj,
+    gender: obj.gender as Gender,
+    dateOfBirth: dob,
+  };
+};

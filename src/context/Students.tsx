@@ -10,22 +10,22 @@ import {
 import { createContext, FunctionComponent, useContext, useState } from "react";
 
 import { db } from "../services/firebase";
-import { Student, Students } from "../models/student";
+import { Student, StudentInDB, Students, toStudent } from "../models/student";
 import { ProviderProps } from "../models";
 import { omit } from "../utils";
 
 interface StudentsContextObj {
   data: Students;
-  add: (data: Student) => void;
-  fetch: (state?: string) => void;
-  archive: (id: string) => void;
+  addStudent: (data: Student) => void;
+  fetchStudents: (state?: string) => void;
+  archiveStudent: (id: string) => void;
 }
 
 const StudentsContext = createContext<StudentsContextObj>({
   data: {},
-  add: omit,
-  fetch: omit,
-  archive: omit,
+  addStudent: omit,
+  fetchStudents: omit,
+  archiveStudent: omit,
 });
 
 interface StudentsProviderProps extends ProviderProps {}
@@ -36,28 +36,32 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
   const [data, setData] = useState<Students>({});
   const studentsRef = collection(db, "students");
 
-  const add = (data: Student) => {
+  const addStudent = (data: Student) => {
     addDoc(studentsRef, data);
   };
 
-  const fetch = async (state: string = "active") => {
-    const q = query(studentsRef, where("state", "==", state));
+  const fetchStudents = async (state?: string) => {
+    const q = state
+      ? query(studentsRef, where("state", "==", state))
+      : studentsRef;
     const querySnapshot = await getDocs(q);
     const newData: Students = {};
 
     querySnapshot.docs.forEach(
-      (doc) => (newData[doc.id] = { ...(doc.data() as Student) })
+      (doc) => (newData[doc.id] = toStudent(doc.data() as StudentInDB))
     );
 
     setData(newData);
   };
 
-  const archive = (id: string) => {
+  const archiveStudent = (id: string) => {
     updateDoc(doc(studentsRef, id), { state: "archived" });
   };
 
   return (
-    <StudentsContext.Provider value={{ add, fetch, archive, data }}>
+    <StudentsContext.Provider
+      value={{ addStudent, fetchStudents, archiveStudent, data }}
+    >
       {children}
     </StudentsContext.Provider>
   );
