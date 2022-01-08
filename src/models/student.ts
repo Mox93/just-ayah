@@ -1,7 +1,19 @@
+import { dateFromDB, DateInDB } from "../utils/datetime";
 import { Gender } from "./gender";
 import { PhoneMap } from "./phoneNumber";
 
-export interface Student {
+interface Meta {
+  dateCreated: Date;
+  dateUpdated: Date;
+  state: string;
+}
+
+interface MetaInDB extends Omit<Meta, "dateCreated" | "dateUpdated"> {
+  dateCreated: DateInDB;
+  dateUpdated: DateInDB;
+}
+
+export interface StudentInfo {
   firstName: string;
   middleName: string;
   lastName: string;
@@ -18,11 +30,9 @@ export interface Student {
   canUseZoom?: boolean;
 }
 
-export interface Students {
-  [id: string]: Student;
-}
-
-export type StudentValidation = { [K in keyof Required<Student>]: boolean };
+export type StudentValidation = {
+  [K in keyof Required<Omit<StudentInfo, "meta">>]: boolean;
+};
 
 export const studentValidator: StudentValidation = {
   firstName: false,
@@ -41,18 +51,42 @@ export const studentValidator: StudentValidation = {
   canUseZoom: true,
 };
 
-export interface StudentInDB extends Omit<Student, "gender" | "dateOfBirth"> {
-  gender: string;
-  dateOfBirth: { nanoseconds: number; seconds: number };
+export interface Student extends StudentInfo {
+  id: string;
+  meta: Meta;
 }
 
-export const toStudent = (obj: StudentInDB): Student => {
-  const dob = new Date(1970, 0, 1);
-  dob.setSeconds(obj.dateOfBirth.seconds);
+export interface StudentInDB
+  extends Omit<StudentInfo, "id" | "gender" | "dateOfBirth" | "meta"> {
+  gender: string;
+  dateOfBirth: DateInDB;
+  meta: MetaInDB;
+}
 
+export const studentFromDB = (id: string, data: StudentInDB): Student => {
   return {
-    ...obj,
-    gender: obj.gender as Gender,
-    dateOfBirth: dob,
+    ...data,
+    id,
+    gender: data.gender as Gender,
+    dateOfBirth: dateFromDB(data.dateOfBirth),
+    meta: data.meta
+      ? {
+          ...data.meta,
+          dateCreated: dateFromDB(data.meta.dateCreated),
+          dateUpdated: dateFromDB(data.meta.dateUpdated),
+        }
+      : {
+          dateCreated: new Date(),
+          dateUpdated: new Date(),
+          state: "pending",
+        },
+  };
+};
+
+export const studentFromInfo = (data: StudentInfo): Omit<Student, "id"> => {
+  const now = new Date();
+  return {
+    ...data,
+    meta: { dateCreated: now, dateUpdated: now, state: "pending" },
   };
 };

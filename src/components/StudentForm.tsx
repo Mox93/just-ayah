@@ -5,7 +5,7 @@ import InputField from "../components/InputField";
 import DatePicker from "../components/DatePicker";
 import RadioSelector from "../components/RadioSelector";
 import {
-  Student,
+  StudentInfo,
   StudentValidation,
   studentValidator,
 } from "../models/student";
@@ -24,12 +24,12 @@ const StudentForm: FunctionComponent<StudentFormProps> = () => {
 
   const { addStudent } = useStudents();
 
-  const [student, setStudent] = useState<Partial<Student>>({});
+  const [student, setStudent] = useState<Partial<StudentInfo>>({});
   const [validation, setValidation] =
     useState<StudentValidation>(studentValidator);
 
   const update =
-    (key: Keys<Student>) =>
+    (key: Keys<StudentInfo>) =>
     (value: any, valid: boolean = true) => {
       setStudent((state) => ({ ...state, [key]: value }));
       setValidation((state) => ({ ...state, [key]: valid }));
@@ -39,7 +39,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = () => {
     console.log(student);
     console.log(addStudent);
 
-    addStudent(student as Student);
+    addStudent(student as StudentInfo);
     e.preventDefault();
   };
 

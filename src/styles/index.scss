@@ -1,20 +1,27 @@
 @import url("https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&family=Josefin+Sans:wght@300;400;500;600;700&display=swap");
 
 :root {
-  --c-primary: #769c0e;
-  --c-light: #4c6f81;
-  --c-dark: #213744;
+  --c-primary: #3d6d8f;
+  --c-primary-light: #add1eb;
+  --c-primary-dark: #1c374a;
+  --c-success: #84ad13;
+  --c-success-dark: #405506;
+  --c-success-light: #b9d370;
+  --c-error: #e04024;
+  --c-error-dark: #672013;
+  --c-error-light: #df988b;
   --c-black: #13171a;
   --c-white: #fdfefe;
-  --c-translucent: #13171a88;
-  --c-shadow: #13171a2d;
-  --c-error: #e0235c;
+  --c-shadow: #3f44472d;
+  --c-shadow-dark: #13171a88;
+  --c-shadow-light: #cad1d64d;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  line-height: normal;
   font-family: "Josefin Sans", "Almarai", sans-serif;
   font-weight: 400;
   color: var(--c-black);
@@ -32,6 +39,14 @@ button {
 
 a {
   text-decoration: initial;
+}
+
+input {
+  line-height: 3;
+}
+
+::-webkit-input-placeholder {
+  line-height: 2;
 }
 
 .container {
@@ -78,7 +93,7 @@ a {
 }
 
 .male {
-  background-color: skyblue;
+  background-color: cadetblue;
 }
 
 .female {

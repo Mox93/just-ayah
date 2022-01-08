@@ -1,6 +1,5 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import StudentItem from "../components/StudentItem";
 import Tabs from "../components/Tabs";
 import { useStudents } from "../context/Students";
@@ -11,14 +10,28 @@ const Students: FunctionComponent<StudentsProps> = () => {
   const { t } = useTranslation();
   const s = (value: string) => t(`students.${value}`);
 
-  const tabs = ["pending", "existing", "archived"].map((name, index) => ({
-    name: s(name),
-    id: `st_${index}`,
-  }));
+  const mainTabs = ["pending", "existing", "archived"];
 
-  const [selectedTab, setSelectedTab] = useState(tabs[0].id);
+  const createTab = (name: string, index: number, staticTab: boolean = true) =>
+    staticTab
+      ? {
+          id: `st_${index}`,
+          name,
+          value: s(name),
+        }
+      : {
+          id: `st_${index}`,
+          name,
+          value: name,
+        };
 
-  const { data, fetchStudents } = useStudents();
+  const [tabs, setTabs] = useState(() =>
+    mainTabs.map((name, index) => createTab(name, index))
+  );
+
+  const [selectedTab, setSelectedTab] = useState(tabs[0]);
+
+  const { data, fetchStudents, archiveStudent } = useStudents();
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
@@ -27,27 +40,43 @@ const Students: FunctionComponent<StudentsProps> = () => {
   const removeFromSelected = (id: string) =>
     setSelectedItems((state) => state.filter((id$) => id$ !== id));
 
-  useEffect(() => fetchStudents(), []);
+  useEffect(() => fetchStudents(selectedTab.name), [selectedTab]);
 
   return (
     <div className="students">
       <Tabs
         elements={tabs}
-        selected={selectedTab}
-        onChange={(selection: string) => setSelectedTab(selection)}
+        selected={selectedTab.id}
+        onChange={(selection: string) => {
+          const selected = tabs.find((tab) => tab.id === selection);
+          if (selected) setSelectedTab(selected);
+        }}
         actions={
-          <Link className="add-resource" to="/students/new">
+          <button
+            className="add-resource"
+            onClick={() => {
+              let selected = createTab("new", tabs.length, false);
+
+              setTabs((tabs) => [...tabs, selected]);
+              setSelectedTab(selected);
+            }}
+          >
             +
-          </Link>
+          </button>
         }
       />
       <main className="main-body">
-        {Object.keys(data).map((id) => (
+        {data.map((student) => (
           <StudentItem
-            key={id}
-            data={data[id]}
-            selected={selectedItems.includes(id)}
-            {...{ id, addToSelected, removeFromSelected }}
+            key={student.id}
+            data={student}
+            selected={selectedItems.includes(student.id)}
+            select={(checked) =>
+              checked
+                ? addToSelected(student.id)
+                : removeFromSelected(student.id)
+            }
+            archive={() => archiveStudent(student)}
           />
         ))}
       </main>

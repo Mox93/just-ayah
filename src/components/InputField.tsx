@@ -1,4 +1,5 @@
 import { FunctionComponent, InputHTMLAttributes, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { cn, identity, omit } from "../utils";
 
 type InputTypes = "text" | "tel" | "email" | "url" | "date" | "password";
@@ -21,8 +22,10 @@ const InputField: FunctionComponent<InputFieldProps> = ({
   validators = [() => true],
   map = identity,
   value,
+  placeholder,
   ...props
 }) => {
+  const { t } = useTranslation();
   const [visited, setVisited] = useState(false);
   const invalid = visited
     ? (required && !value) ||
@@ -33,8 +36,10 @@ const InputField: FunctionComponent<InputFieldProps> = ({
     <label className={`input-field ${className}`}>
       <h3 className={cn({ required, invalid }, "title")}>{label}</h3>
       <input
-        {...{ ...props, required, value }}
-        dir={dir || "auto"}
+        {...props}
+        {...{ required, value }}
+        dir={dir || value ? "auto" : t("dir")}
+        placeholder={placeholder || label}
         className={cn({ invalid }, "field")}
         onChange={(e) => {
           setVisited(true);

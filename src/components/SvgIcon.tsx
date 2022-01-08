@@ -1,14 +1,19 @@
 import { FunctionComponent } from "react";
 
 interface SvgIconProps {
-  href?: string;
+  path?: string;
+  id?: string;
   className?: string;
 }
 
-const SvgIcon: FunctionComponent<SvgIconProps> = ({ href, className }) => {
+const SvgIcon: FunctionComponent<SvgIconProps> = ({
+  id = "Capa_1",
+  path,
+  className,
+}) => {
   return (
     <svg className={className} viewBox="0 0 32 32">
-      <use href={href}></use>
+      <use href={`${path}/#${id}`}></use>
     </svg>
   );
 };

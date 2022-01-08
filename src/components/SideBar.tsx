@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import HomeIcon from "../assets/icons/home-svgrepo-com.svg";
@@ -16,48 +16,29 @@ interface SideBarProps {}
 const SideBar: FunctionComponent<SideBarProps> = () => {
   const { t } = useTranslation();
   const { signOut } = useAuth();
-  const location = useLocation();
+
+  const classHandler = ({ isActive }: { isActive: boolean }) =>
+    cn({ selected: isActive }, "element");
 
   return (
     <div className="side-bar" dir={t("dir")}>
       <div className="nav-section">
-        <Link
-          className={cn({ selected: location.pathname === "/" }, "element")}
-          to="/"
-        >
+        <NavLink className={classHandler} to="/">
           <h3 className="expanded">{t("nav.home")}</h3>
-          <SvgIcon className="shrunk" href={`${HomeIcon}/#Capa_1`} />
-        </Link>
-        <Link
-          className={cn(
-            { selected: location.pathname.startsWith("/students") },
-            "element"
-          )}
-          to="/students"
-        >
+          <SvgIcon className="shrunk" path={HomeIcon} />
+        </NavLink>
+        <NavLink className={classHandler} to="/students">
           <h3 className="expanded">{t("nav.students")}</h3>
-          <SvgIcon className="shrunk" href={`${StudentsIcon}/#Capa_1`} />
-        </Link>
-        <Link
-          className={cn(
-            { selected: location.pathname.startsWith("/teachers") },
-            "element"
-          )}
-          to="/teachers"
-        >
+          <SvgIcon className="shrunk" path={StudentsIcon} />
+        </NavLink>
+        <NavLink className={classHandler} to="/teachers">
           <h3 className="expanded">{t("nav.teachers")}</h3>
-          <SvgIcon className="shrunk" href={`${TeachersIcon}/#Capa_1`} />
-        </Link>
-        <Link
-          className={cn(
-            { selected: location.pathname.startsWith("/courses") },
-            "element"
-          )}
-          to="/courses"
-        >
+          <SvgIcon className="shrunk" path={TeachersIcon} />
+        </NavLink>
+        <NavLink className={classHandler} to="/courses">
           <h3 className="expanded">{t("nav.courses")}</h3>
-          <SvgIcon className="shrunk" href={`${CoursesIcon}/#Capa_1`} />
-        </Link>
+          <SvgIcon className="shrunk" path={CoursesIcon} />
+        </NavLink>
       </div>
       <div className="settings-section">
         <LanguageSelector />

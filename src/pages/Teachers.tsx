@@ -10,8 +10,9 @@ const Teachers: FunctionComponent<TeachersProps> = () => {
   const tt = (value: string) => t(`teachers.${value}`);
 
   const tabs = ["existing", "archived"].map((name, index) => ({
-    name: tt(name),
     id: `te_${index}`,
+    name,
+    value: tt(name),
   }));
 
   const [selected, setSelected] = useState(tabs[0].id);
@@ -22,7 +23,11 @@ const Teachers: FunctionComponent<TeachersProps> = () => {
         elements={tabs}
         selected={selected}
         onChange={(selection: string) => setSelected(selection)}
-        actions={<Link className="add-resource" to="/teachers/new" >+</Link>}
+        actions={
+          <Link className="add-resource" to="/teachers/new">
+            +
+          </Link>
+        }
       />
       <Outlet />
     </div>

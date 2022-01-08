@@ -26,19 +26,19 @@
     padding: 0.5rem;
     border-radius: 0.25rem;
     position: relative;
-    border: 1px solid var(--c-dark);
+    border: 1px solid var(--c-primary-dark);
     background-color: var(--c-white);
     cursor: pointer;
   }
 
   input:checked + .option {
-    background-color: var(--c-dark);
+    background-color: var(--c-primary-dark);
     color: var(--c-white);
   }
 
   input:focus + .option {
-    outline: 2px solid var(--c-light);
-    border-color: var(--c-light);
+    outline: 2px solid var(--c-primary-light);
+    border-color: var(--c-primary-light);
   }
 
   .title.invalid {
@@ -63,13 +63,13 @@
   .element {
     width: 2.25rem;
     height: 2.25rem;
-    background-color: var(--c-translucent);
+    background-color: var(--c-shadow-dark);
     border-radius: 0.25rem;
     font-weight: 600;
     color: var(--c-white);
 
     &.selected {
-      background-color: var(--c-primary);
+      background-color: var(--c-success);
       box-shadow: 2px 2px 8px var(--c-shadow);
     }
 
@@ -86,13 +86,13 @@
     height: 3rem;
     padding: 0.5rem;
     font-size: 1rem;
-    border: 1px solid var(--c-dark);
+    border: 1px solid var(--c-primary-dark);
     border-radius: 0.25rem;
   }
 
   .field:focus {
-    outline: 2px solid var(--c-light);
-    border-color: var(--c-light);
+    outline: 2px solid var(--c-primary-light);
+    border-color: var(--c-primary-light);
   }
 
   .title.invalid {
@@ -112,7 +112,7 @@
   min-height: 40rem;
   width: 6rem;
   padding: 3rem 1rem;
-  background-color: var(--c-dark);
+  background-color: var(--c-primary-dark);
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -175,7 +175,7 @@
       height: 4rem;
       padding: 0.5rem;
       border-radius: 0.5rem;
-      background-color: var(--c-dark);
+      background-color: var(--c-primary-dark);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -183,11 +183,11 @@
 
       &:focus {
         outline: none;
-        background-color: var(--c-translucent);
+        background-color: var(--c-shadow-light);
       }
 
       &:hover {
-        background-color: var(--c-translucent);
+        background-color: var(--c-shadow-light);
       }
 
       &.selected {
@@ -195,12 +195,12 @@
         font-weight: 600;
 
         h3 {
-          color: var(--c-dark);
+          color: var(--c-primary-dark);
         }
 
         svg {
-          fill: var(--c-dark);
-          stroke: var(--c-dark);
+          fill: var(--c-primary-dark);
+          stroke: var(--c-primary-dark);
         }
       }
 
@@ -250,7 +250,7 @@
   min-width: 50rem;
   height: 3rem;
   padding: 0.5rem 1rem 0.25rem;
-  background-color: var(--c-light);
+  background-color: var(--c-primary);
   position: sticky;
   top: 0;
   display: flex;
@@ -261,7 +261,7 @@
     flex-basis: 0;
     max-width: 15rem;
     padding: 0.5rem 1rem;
-    border-radius: 0.25rem 0.25rem 0 0;
+    border-radius: 4px 4px 0 0;
     background-color: var(--c-shadow);
     text-align: start;
     text-transform: capitalize;
@@ -274,7 +274,7 @@
       position: relative;
       height: 2.75rem;
       bottom: 0.25rem;
-      border-radius: 0.5rem 0.5rem 0 0;
+      border-radius: 6px 6px 0 0;
       background-color: var(--c-white);
 
       .title {
@@ -285,6 +285,9 @@
     .title {
       font-size: 1rem;
       color: var(--c-white);
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -296,15 +299,28 @@
     justify-content: flex-start;
 
     .add-resource {
+      --c-main: var(--c-white);
+
       width: 2.25rem;
       font-size: 2rem;
-      background-color: var(--c-primary);
-      color: var(--c-white);
-      box-shadow: 2px 2px 8px var(--c-shadow);
+      font-weight: 400;
+      color: var(--c-main);
+      background-color: transparent;
+      border: 2px solid var(--c-main);
       border-radius: 0.25rem;
       display: flex;
       justify-content: center;
       align-items: center;
+      transition-duration: 200ms;
+      transition-property: background-color, color;
+
+      &:hover {
+        background-color: var(--c-main);
+        color: var(--c-primary);
+
+        transition-duration: 200ms;
+        transition-property: background-color, color;
+      }
     }
   }
 }
@@ -315,7 +331,7 @@
   margin-inline: auto;
 
   .submit-btn {
-    background-color: var(--c-primary);
+    background-color: var(--c-success);
     color: var(--c-white);
   }
 
@@ -329,33 +345,94 @@
 
 .expandable-item {
   min-height: 3rem;
-  border: 1px solid var(--c-dark);
+  border: 1px solid var(--c-primary-dark);
   border-radius: 0.25rem;
-  padding: 0.25rem;
   display: flex;
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
-  cursor: pointer;
+  overflow: hidden;
+  position: relative;
 
-  .prefix {
+  .actions {
+    --gap-size: 1rem;
+    --padding-size: 0.5rem;
+    --element-count: 2;
+    --element-size: 2rem;
+
+    height: 3rem;
+    position: absolute;
     display: flex;
-    gap: 1rem;
-    align-items: center;
+    align-items: stretch;
 
-    .male,
-    .female {
-      width: 8px;
-      height: 2.5rem;
-      border-radius: 4px;
+    .main {
+      padding-inline: var(--padding-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .male {
-      background-color: skyblue;
+    .extra {
+      width: 0;
+      display: flex;
+      gap: var(--gap-size);
+      align-items: center;
+      overflow: hidden;
+
+      .element {
+        width: var(--element-size);
+        height: var(--element-size);
+        padding: 0.5rem;
+        opacity: 0;
+        border-radius: 0.25rem;
+        background-color: transparent;
+
+        svg {
+          fill: var(--c-white);
+          stroke: var(--c-white);
+        }
+
+        &:hover {
+          background-color: var(--c-shadow-dark);
+        }
+
+        &.archive:hover {
+          background-color: var(--c-error);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+
+          svg {
+            fill: var(--c-shadow-light);
+            stroke: var(--c-shadow-light);
+          }
+
+          &:hover {
+            background-color: transparent;
+          }
+        }
+      }
     }
 
-    .female {
-      background-color: pink;
+    &:hover {
+      .extra {
+        width: calc(
+          var(--padding-size) * 2 + var(--gap-size) * (var(--element-count) - 1) +
+            var(--element-size) * var(--element-count)
+        );
+        padding-inline: var(--padding-size);
+        transition: width 100ms ease-in-out;
+
+        .element {
+          opacity: 100%;
+          transition: opacity 100ms ease-in 150ms;
+        }
+      }
+    }
+
+    & ~ * {
+      margin-inline-start: 3rem;
     }
   }
 
@@ -375,12 +452,24 @@
 
     .element {
       flex-basis: 0;
+      padding-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
 
       &.name {
         flex-grow: 3;
       }
 
       &.phone-number {
+        flex-grow: 2;
+      }
+
+      &.education {
+        flex-grow: 2;
+      }
+
+      &.occupation {
         flex-grow: 2;
       }
 
@@ -395,35 +484,37 @@
       &.governorate {
         flex-grow: 2;
       }
+
+      &.date-created {
+        flex-grow: 3;
+      }
+
+      &.state {
+        flex-grow: 1;
+      }
     }
   }
 
-  .actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-inline-end: 0.25rem;
+  .expand {
+    height: 2rem;
+    width: 2rem;
+    padding: 0.5rem;
+    margin-inline-end: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: transparent;
 
-    .toggle-btn {
-      height: 2rem;
-      width: 2rem;
-      padding: 0.5rem;
-      border-radius: 0.25rem;
-      background-color: transparent;
-
-      &:hover {
-        background-color: var(--c-shadow);
-      }
-
-      svg {
-        fill: var(--c-black);
-      }
+    &:hover {
+      background-color: var(--c-shadow);
     }
 
-    .close {
-      svg {
-        transform: rotate(180deg);
-      }
+    svg {
+      fill: var(--c-shadow-dark);
+    }
+  }
+
+  .reverse {
+    svg {
+      transform: rotate(180deg);
     }
   }
 }

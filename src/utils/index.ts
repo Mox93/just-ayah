@@ -21,15 +21,3 @@ export const fromYesNo = (value?: string) =>
 
 export const toYesNo = (value?: boolean) =>
   value === true ? "yes" : value === false ? "no" : undefined;
-
-export const getAge = (date: string | number | Date) => {
-  const today = new Date();
-  const birthDate = new Date(date);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-
-  return age;
-};

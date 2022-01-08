@@ -2,7 +2,7 @@ import { FunctionComponent, ReactNode } from "react";
 import { cn } from "../utils";
 
 interface TabsProps {
-  elements: { id: string; name: string }[];
+  elements: { id: string; name: string; value: string }[];
   selected: string;
   onChange: (selection: string) => void;
   actions?: ReactNode;
@@ -23,7 +23,7 @@ const Tabs: FunctionComponent<TabsProps> = ({
           className={cn({ selected: selected === element.id }, "element")}
           onClick={() => onChange(element.id)}
         >
-          <h4 className="title">{element.name}</h4>
+          <h4 className="title">{element.value}</h4>
         </button>
       ))}
     </div>
