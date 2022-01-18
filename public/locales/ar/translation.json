@@ -5,7 +5,9 @@
     "join_initiative": "انضم إلى المبادرة",
     "sign_out": "تسجيل الخروج",
     "yes": "نعم",
-    "no": "ﻻ"
+    "no": "ﻻ",
+    "date_created": "تاريخ الانشاء",
+    "course": "الدورة"
   },
   "nav": {
     "home": "الرئيسية",
@@ -14,6 +16,7 @@
     "courses": "الدورات"
   },
   "personal_info": {
+    "full_name": "الاسم الثلاثي",
     "first_name": "الاسم",
     "middle_name": "الأب",
     "last_name": "العائلة",
@@ -23,33 +26,43 @@
     "male": "ذكر",
     "female": "أنثى",
     "date_of_birth": "تاريخ الميلاد",
+    "age": "العمر",
     "email": "البريد الالكتروني",
-    "country": "البلد",
+    "country": "الدولة",
     "governorate": "المحافظة",
+    "location": "محل الإقامة",
     "education": "المؤهل",
+    "does_work": "هل تعمل؟",
     "occupation": "العمل",
+    "no_work_reason": "هل انت ...",
+    "student" : "طالب",
+    "housewife" : "ربة منزل",
+    "retired" : "متقاعد",
+    "unemployed" : "عاطل عن العمل",
+    "other": "غير ذلك",
+    "explanation": "التفاصيل",
     "experience": "هل سبق لك حفظ شئ من القرآن ؟",
     "zoom":"هل في امكانك استخدام تطبيق المحادثات \"Zoom\"؟ حيث أن اللقاءات تتم من خلاله."
   },
   "students": {
     "pending": "الطلاب المستجدون",
-    "existing": "الطلاب القائمون",
-    "archived": "اﻷرشيف"
+    "active": "الطلاب القائمون",
+    "archived": "اﻷرشيف",
+    "counter_zero": "لا يوجد طلاب مختارين",
+    "counter_one": "تم اختيار طالب",
+    "counter_two": "تم اختيار طالبان",
+    "counter_few": "تم اختيار {{count}} طلاب",
+    "counter_many": "تم اختيار {{count}} طالب",
+    "counter_other": "تم اختيار {{count}} طالب"
   },
   "teachers": {
-    "existing": "المعلمون",
+    "active": "المعلمون",
     "archived": "اﻷرشيف"
   },
   "description": {
     "part1": "عدل <1 >src/App.js</1> و احفظ لاعادة التحميل",
     "part2": "تعلم ريأكت"
   },
-  "counter_zero": "لم يتم تغيير الغة بعد",
-  "counter_one": "تم تغيير الغة مرة واحدة",
-  "counter_two": "تم تغيير الغة بالفعل مرتان",
-  "counter_few": "تم تغيير الغة بالفعل {{count}} مرات",
-  "counter_many": "تم تغيير الغة بالفعل {{count}} مرة",
-  "counter_other": "تم تغيير الغة بالفعل {{count}} مرة",
   "footer": {
     "date": "اليوم هو {{date, DATE_HUGE}}",
     "date_morning":

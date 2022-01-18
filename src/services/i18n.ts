@@ -4,7 +4,7 @@ import Backend from "i18next-http-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { DateTime } from "luxon";
 
-type Format = "DATE_HUGE";
+type DateTimeFormat = "DATE_HUGE";
 
 i18n
   // i18next-http-backend
@@ -27,7 +27,7 @@ i18n
         if (value instanceof Date && lng && format) {
           return DateTime.fromJSDate(value)
             .setLocale(lng)
-            .toLocaleString(DateTime[format as Format]);
+            .toLocaleString(DateTime[format as DateTimeFormat]);
         }
         return value;
       },

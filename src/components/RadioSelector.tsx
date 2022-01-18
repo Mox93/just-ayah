@@ -6,7 +6,7 @@ interface RadioSelectorProps {
   label: string;
   options: { value: string; name: string }[];
   selected?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: any) => void;
   map?: (value: string) => any;
   required?: boolean;
 }

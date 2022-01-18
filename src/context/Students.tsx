@@ -47,10 +47,11 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
     addDoc(studentsRef, studentFromInfo(data));
   };
 
-  const fetchStudents = async (state?: string) => {
-    const q = state
-      ? query(studentsRef, where("meta.state", "==", state), limit(20))
-      : studentsRef;
+  const fetchStudents = async (status?: string) => {
+    const q =
+      status !== undefined
+        ? query(studentsRef, where("meta.status", "==", status), limit(20))
+        : studentsRef;
     const querySnapshot = await getDocs(q);
     const newData: Student[] = [];
 

@@ -18,6 +18,7 @@
     flex-grow: 1;
     flex-basis: 0;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     text-transform: capitalize;
@@ -29,6 +30,7 @@
     border: 1px solid var(--c-primary-dark);
     background-color: var(--c-white);
     cursor: pointer;
+    white-space: nowrap;
   }
 
   input:checked + .option {
@@ -515,6 +517,91 @@
   .reverse {
     svg {
       transform: rotate(180deg);
+    }
+  }
+}
+
+/* TAbLE */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.75rem 1.5rem;
+
+    &.prefix {
+      padding-inline: 0.5rem;
+    }
+
+    &.fit {
+      width: 1%;
+      white-space: nowrap;
+    }
+
+    &.clip {
+      overflow-x: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    &:last-child {
+      padding-inline-end: 0.5rem;
+    }
+  }
+
+  .prefix + th,
+  .prefix + td {
+    padding-inline-start: 0.5rem;
+  }
+
+  thead {
+    tr {
+      border-bottom: 1px solid var(--c-shadow-dark);
+
+      th {
+        text-align: start;
+        text-transform: capitalize;
+        font-weight: bold;
+
+        &.prefix {
+          &:hover {
+            background-color: inherit;
+          }
+        }
+
+        &:hover {
+          background-color: var(--c-shadow-light);
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--c-shadow);
+
+      &:hover {
+        background-color: var(--c-shadow-light);
+      }
+
+      td {
+        &.phone-number {
+          direction: ltr;
+        }
+
+        &.prefix {
+          color: var(--c-shadow-dark);
+        }
+
+        .color-coded {
+          width: 1rem;
+          height: 1rem;
+          border-radius: 50%;
+          margin-inline: auto;
+        }
+      }
     }
   }
 }

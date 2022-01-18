@@ -1,3 +1,3 @@
-export const gender = ["male", "female"] as const;
+export const genders = ["male", "female"] as const;
 
-export type Gender = typeof gender[number];
+export type Gender = typeof genders[number];

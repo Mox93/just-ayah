@@ -99,3 +99,10 @@ input {
 .female {
   background-color: palevioletred;
 }
+
+.main-section {
+  padding: 3rem;
+  display: grid;
+  gap: 1rem;
+  overflow: auto;
+}

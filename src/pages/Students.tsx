@@ -1,17 +1,19 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import StudentItem from "../components/StudentItem";
+import StudentList from "../components/StudentList";
 import Tabs from "../components/Tabs";
 import { useStudents } from "../context/Students";
+import useRequestGuard from "../utils/requestGuard";
 
 interface StudentsProps {}
 
 const Students: FunctionComponent<StudentsProps> = () => {
+  /* TRANSLATION */
   const { t } = useTranslation();
   const s = (value: string) => t(`students.${value}`);
 
-  const mainTabs = ["pending", "existing", "archived"];
-
+  /* TABS */
+  const mainTabs = ["pending", "active", "archived"];
   const createTab = (name: string, index: number, staticTab: boolean = true) =>
     staticTab
       ? {
@@ -24,33 +26,30 @@ const Students: FunctionComponent<StudentsProps> = () => {
           name,
           value: name,
         };
-
   const [tabs, setTabs] = useState(() =>
     mainTabs.map((name, index) => createTab(name, index))
   );
-
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
-  const { data, fetchStudents, archiveStudent } = useStudents();
+  const handleTabSelection = (selection: string) => {
+    const selected = tabs.find((tab) => tab.id === selection);
+    if (selected) setSelectedTab(selected);
+  };
 
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const { data, fetchStudents } = useStudents();
 
-  const addToSelected = (id: string) =>
-    setSelectedItems((state) => [...state, id]);
-  const removeFromSelected = (id: string) =>
-    setSelectedItems((state) => state.filter((id$) => id$ !== id));
+  const [canFetch, ToggleButton] = useRequestGuard();
 
-  useEffect(() => fetchStudents(selectedTab.name), [selectedTab]);
+  useEffect(() => {
+    if (canFetch) fetchStudents(selectedTab.name);
+  }, [selectedTab, canFetch]);
 
   return (
     <div className="students">
       <Tabs
         elements={tabs}
         selected={selectedTab.id}
-        onChange={(selection: string) => {
-          const selected = tabs.find((tab) => tab.id === selection);
-          if (selected) setSelectedTab(selected);
-        }}
+        onChange={handleTabSelection}
         actions={
           <button
             className="add-resource"
@@ -65,20 +64,9 @@ const Students: FunctionComponent<StudentsProps> = () => {
           </button>
         }
       />
-      <main className="main-body">
-        {data.map((student) => (
-          <StudentItem
-            key={student.id}
-            data={student}
-            selected={selectedItems.includes(student.id)}
-            select={(checked) =>
-              checked
-                ? addToSelected(student.id)
-                : removeFromSelected(student.id)
-            }
-            archive={() => archiveStudent(student)}
-          />
-        ))}
+      <main className="main-section">
+        {ToggleButton}
+        <StudentList data={data} />
       </main>
     </div>
   );

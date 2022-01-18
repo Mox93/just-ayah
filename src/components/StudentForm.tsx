@@ -10,10 +10,11 @@ import {
   studentValidator,
 } from "../models/student";
 import { useStudents } from "../context/Students";
-import { gender } from "../models/gender";
+import { genders } from "../models/gender";
 import { Keys } from "../models";
 import { fromYesNo, toYesNo } from "../utils";
 import { sanitizePhoneNumber } from "../models/phoneNumber";
+import WorkStatusTree from "./WorkStatus";
 
 interface StudentFormProps {}
 
@@ -29,16 +30,13 @@ const StudentForm: FunctionComponent<StudentFormProps> = () => {
     useState<StudentValidation>(studentValidator);
 
   const update =
-    (key: Keys<StudentInfo>) =>
-    (value: any, valid: boolean = true) => {
+    (key: Keys<StudentInfo>, validByDefault: boolean = true) =>
+    (value: any, valid: boolean = validByDefault) => {
       setStudent((state) => ({ ...state, [key]: value }));
       setValidation((state) => ({ ...state, [key]: valid }));
     };
 
   const submitForm = (e: MouseEvent) => {
-    console.log(student);
-    console.log(addStudent);
-
     addStudent(student as StudentInfo);
     e.preventDefault();
   };
@@ -88,7 +86,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = () => {
         <RadioSelector
           name="gender"
           label={pi("gender")}
-          options={gender.map((g) => ({ value: g, name: pi(g) }))}
+          options={genders.map((g) => ({ value: g, name: pi(g) }))}
           selected={student.gender}
           onChange={update("gender")}
           required
@@ -148,15 +146,26 @@ const StudentForm: FunctionComponent<StudentFormProps> = () => {
           required
           validators={[Boolean]}
         />
-        <InputField
-          name="occupation"
-          label={pi("occupation")}
-          value={student.occupation}
-          onChange={update("occupation")}
+        <RadioSelector
+          name="doesWork"
+          label={pi("does_work")}
+          options={[
+            { value: "yes", name: e("yes") },
+            { value: "no", name: e("no") },
+          ]}
+          selected={student.workStatus && toYesNo(student.workStatus.doesWork)}
+          map={(value) => ({ doesWork: fromYesNo(value) })}
+          onChange={update("workStatus", false)}
           required
-          validators={[Boolean]}
         />
       </div>
+
+      {student.workStatus && (
+        <WorkStatusTree
+          status={student.workStatus}
+          onChange={update("workStatus")}
+        />
+      )}
 
       <RadioSelector
         name="previousQuranMemorization"
@@ -181,6 +190,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = () => {
         selected={toYesNo(student.canUseZoom)}
         map={fromYesNo}
         onChange={update("canUseZoom")}
+        required
       />
 
       <button

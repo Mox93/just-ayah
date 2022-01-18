@@ -39,9 +39,6 @@ interface AuthProviderProps extends ProviderProps {}
 export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [ready, setReady] = useState(false);
-
   const signIn = () => signInWithRedirect(auth, new GoogleAuthProvider());
 
   const signOut$ = () =>
@@ -80,11 +77,18 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
       });
 */
 
-    return onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setReady(true);
-    });
+    return onAuthStateChanged(
+      auth,
+      (user) => {
+        setUser(user);
+        setReady(true);
+      },
+      (err) => console.log(err)
+    );
   }, []);
+
+  const [user, setUser] = useState<User | null>(null);
+  const [ready, setReady] = useState(false);
 
   return (
     <AuthContext.Provider

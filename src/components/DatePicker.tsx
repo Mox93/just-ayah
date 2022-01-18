@@ -18,9 +18,10 @@ const DatePicker: FunctionComponent<DatePickerProps> = ({
       {...props}
       type="date"
       map={(value) =>
-        typeof value === "string" || typeof value === "number"
+        value &&
+        (typeof value === "string" || typeof value === "number"
           ? new Date(value)
-          : undefined
+          : undefined)
       }
       value={value && value.toISOString().slice(0, 10)}
       required

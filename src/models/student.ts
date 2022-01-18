@@ -1,11 +1,24 @@
-import { dateFromDB, DateInDB } from "../utils/datetime";
+import { dateFromDB, DateInDB } from "../utils/dateTime";
 import { Gender } from "./gender";
 import { PhoneMap } from "./phoneNumber";
+import { WorkStatus } from "./work";
+
+const statuses = [
+  "registered",
+  "contacted",
+  "pending",
+  "active",
+  "finished",
+  "canceled",
+  "postponed",
+] as const;
+
+type Status = typeof statuses[number]
 
 interface Meta {
   dateCreated: Date;
   dateUpdated: Date;
-  state: string;
+  status: Status;
 }
 
 interface MetaInDB extends Omit<Meta, "dateCreated" | "dateUpdated"> {
@@ -25,13 +38,13 @@ export interface StudentInfo {
   secondaryPhoneNumber?: PhoneMap[];
   email?: string;
   education: string;
-  occupation: string;
+  workStatus: WorkStatus;
   previousQuranMemorization: boolean;
   canUseZoom?: boolean;
 }
 
 export type StudentValidation = {
-  [K in keyof Required<Omit<StudentInfo, "meta">>]: boolean;
+  [K in keyof Required<StudentInfo>]: boolean;
 };
 
 export const studentValidator: StudentValidation = {
@@ -46,9 +59,9 @@ export const studentValidator: StudentValidation = {
   secondaryPhoneNumber: true,
   email: true,
   education: false,
-  occupation: false,
+  workStatus: false,
   previousQuranMemorization: false,
-  canUseZoom: true,
+  canUseZoom: false,
 };
 
 export interface Student extends StudentInfo {
@@ -57,8 +70,7 @@ export interface Student extends StudentInfo {
 }
 
 export interface StudentInDB
-  extends Omit<StudentInfo, "id" | "gender" | "dateOfBirth" | "meta"> {
-  gender: string;
+  extends Omit<Student, "id" | "dateOfBirth" | "meta"> {
   dateOfBirth: DateInDB;
   meta: MetaInDB;
 }
@@ -67,7 +79,6 @@ export const studentFromDB = (id: string, data: StudentInDB): Student => {
   return {
     ...data,
     id,
-    gender: data.gender as Gender,
     dateOfBirth: dateFromDB(data.dateOfBirth),
     meta: data.meta
       ? {
@@ -78,7 +89,7 @@ export const studentFromDB = (id: string, data: StudentInDB): Student => {
       : {
           dateCreated: new Date(),
           dateUpdated: new Date(),
-          state: "pending",
+          status: "pending",
         },
   };
 };
@@ -87,6 +98,6 @@ export const studentFromInfo = (data: StudentInfo): Omit<Student, "id"> => {
   const now = new Date();
   return {
     ...data,
-    meta: { dateCreated: now, dateUpdated: now, state: "pending" },
+    meta: { dateCreated: now, dateUpdated: now, status: "pending" },
   };
 };

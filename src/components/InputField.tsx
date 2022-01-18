@@ -29,7 +29,7 @@ const InputField: FunctionComponent<InputFieldProps> = ({
   const [visited, setVisited] = useState(false);
   const invalid = visited
     ? (required && !value) ||
-      !validators.every((validate) => validate(map(value)))
+      !validators.every((validator) => validator(map(value)))
     : false;
 
   return (
@@ -43,13 +43,13 @@ const InputField: FunctionComponent<InputFieldProps> = ({
         className={cn({ invalid }, "field")}
         onChange={(e) => {
           setVisited(true);
-          const value = e.target.value && map(e.target.value);
+          const value = map(e.target.value);
           onChange(
             value,
             validators.every((validator) => validator(value))
           );
         }}
-        onBlur={(e) => setVisited(true)}
+        onBlur={() => setVisited(true)}
       />
     </label>
   );
