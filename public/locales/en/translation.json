@@ -55,6 +55,37 @@
     "active": "teachers",
     "archived": "archive"
   },
+  "governorate": {
+    "egypt": {
+      "Alexandria": "Alexandria",
+      "Aswan": "Aswan",
+      "Asyut": "Asyut",
+      "Beheira": "Beheira",
+      "BeniSuef": "Beni Suef",
+      "Cairo": "Cairo",
+      "Dakahlia": "Dakahlia",
+      "Damietta": "Damietta",
+      "Faiyum": "Faiyum",
+      "Gharbia": "Gharbia",
+      "Giza": "Giza",
+      "Ismailia": "Ismailia",
+      "KafrElSheikh": "Kafr ElSheikh",
+      "Luxor": "Luxor",
+      "Matruh": "Matruh",
+      "Minya": "Minya",
+      "Monufia": "Monufia",
+      "NewValley": "New Valley",
+      "NorthSinai": "North Sinai",
+      "PortSaid": "Port Said",
+      "Qalyubia": "Qalyubia",
+      "Qena": "Qena",
+      "RedSea": "Red Sea",
+      "Sharqia": "Sharqia",
+      "Sohag": "Sohag",
+      "SouthSinai": "South Sinai",
+      "Suez": "Suez"
+    }
+  },
   "description": {
     "part1": "Edit <1>src/App.js</1> and save to reload.",
     "part2": "Learn React"

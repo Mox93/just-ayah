@@ -35,14 +35,14 @@
     "does_work": "هل تعمل؟",
     "occupation": "العمل",
     "no_work_reason": "هل انت ...",
-    "student" : "طالب",
-    "housewife" : "ربة منزل",
-    "retired" : "متقاعد",
-    "unemployed" : "عاطل عن العمل",
+    "student": "طالب",
+    "housewife": "ربة منزل",
+    "retired": "متقاعد",
+    "unemployed": "عاطل عن العمل",
     "other": "غير ذلك",
     "explanation": "التفاصيل",
     "experience": "هل سبق لك حفظ شئ من القرآن ؟",
-    "zoom":"هل في امكانك استخدام تطبيق المحادثات \"Zoom\"؟ حيث أن اللقاءات تتم من خلاله."
+    "zoom": "هل في امكانك استخدام تطبيق المحادثات \"Zoom\"؟ حيث أن اللقاءات تتم من خلاله."
   },
   "students": {
     "pending": "الطلاب المستجدون",
@@ -59,14 +59,44 @@
     "active": "المعلمون",
     "archived": "اﻷرشيف"
   },
+  "governorate": {
+    "egypt": {
+      "Alexandria": "الاسكندرية",
+      "Aswan": "أسوان",
+      "Asyut": "أسيوط",
+      "Beheira": "البحيرة",
+      "BeniSuef": "بني سويف",
+      "Cairo": "القاهرة",
+      "Dakahlia": "الدقهلية",
+      "Damietta": "دمياط",
+      "Faiyum": "الفيوم",
+      "Gharbia": "الغربية",
+      "Giza": "الجيزة",
+      "Ismailia": "الإسماعلية",
+      "KafrElSheikh": "كفر الشيخ",
+      "Luxor": "اﻷقصر",
+      "Matruh": "مطروح",
+      "Minya": "المنيا",
+      "Monufia": "المنوفية",
+      "NewValley": "الوادي الجديد",
+      "NorthSinai": "شمال سيناء",
+      "PortSaid": "بورسعيد",
+      "Qalyubia": "القليوبية",
+      "Qena": "قنا",
+      "RedSea": "البحر الأحمر",
+      "Sharqia": "الشرقية",
+      "Sohag": "سوهاج",
+      "SouthSinai": "جنوب سيناء",
+      "Suez": "السويس"
+    }
+  },
   "description": {
     "part1": "عدل <1 >src/App.js</1> و احفظ لاعادة التحميل",
     "part2": "تعلم ريأكت"
   },
   "footer": {
     "date": "اليوم هو {{date, DATE_HUGE}}",
-    "date_morning":
-      " صباح الخير! اليوم {{date, DATE_HUGE}} | استمتع بوقتك",
+    "date_morning": " صباح الخير! اليوم {{date, DATE_HUGE}} | استمتع بوقتك",
     "date_afternoon": "يوم سعيد! انه {{date, DATE_HUGE}}",
     "date_evening": "مساء الخير! لقد كان {{date, DATE_HUGE}}"
   }
