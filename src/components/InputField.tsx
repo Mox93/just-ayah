@@ -19,9 +19,10 @@ const InputField: FunctionComponent<InputFieldProps> = ({
   label,
   required = false,
   onChange = omit,
+  onBlur = omit,
   validators = [() => true],
   map = identity,
-  value,
+  value = "",
   placeholder,
   ...props
 }) => {
@@ -49,7 +50,10 @@ const InputField: FunctionComponent<InputFieldProps> = ({
             validators.every((validator) => validator(value))
           );
         }}
-        onBlur={() => setVisited(true)}
+        onBlur={(e) => {
+          setVisited(true);
+          onBlur(e);
+        }}
       />
     </label>
   );
