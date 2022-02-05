@@ -15,6 +15,8 @@ import { Keys } from "../models";
 import { fromYesNo, toYesNo } from "../utils";
 import { sanitizePhoneNumber } from "../models/phoneNumber";
 import WorkStatusTree from "./WorkStatus";
+import CountrySelector from "./CountrySelector";
+import GovernorateSelector from "./GovernorateSelector";
 
 interface StudentFormProps {}
 
@@ -94,19 +96,19 @@ const StudentForm: FunctionComponent<StudentFormProps> = () => {
       </div>
 
       <div className="input-group">
-        <InputField
-          name="country"
+        <CountrySelector
           label={pi("country")}
-          value={student.country}
+          selected={student.country}
           onChange={update("country")}
           required
-          validators={[Boolean]}
         />
-        <InputField
-          name="governorate"
+
+        <GovernorateSelector
+          country={student.country}
           label={pi("governorate")}
           value={student.governorate}
           onChange={update("governorate")}
+          required
         />
       </div>
 
@@ -125,7 +127,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = () => {
           name="phoneNumber"
           label={pi("second_phone_number")}
           value={(student.secondaryPhoneNumber || [{}])[0].number}
-          map={(value) => [{ number: [sanitizePhoneNumber(value)] }]}
+          map={(value) => [{ number: sanitizePhoneNumber(value) }]}
           onChange={update("secondaryPhoneNumber")}
         />
       </div>
