@@ -1,3 +1,5 @@
+import { identity } from "../utils";
+
 export const noWorkReasons = [
   "student",
   "housewife",
@@ -13,10 +15,12 @@ export type WorkStatus =
     }
   | { doesWork: false; reason: "other"; explanation: string };
 
-export const getOccupation = (status: WorkStatus): string => {
-  return status.doesWork
+export const getOccupation = (
+  status: WorkStatus,
+  pi: (value: string) => string = identity
+): string =>
+  status.doesWork
     ? status.occupation
     : status.reason === "other"
     ? status.explanation
-    : status.reason;
-};
+    : pi(status.reason);

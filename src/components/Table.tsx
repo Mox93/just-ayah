@@ -3,11 +3,11 @@ import { cn } from "../utils";
 
 export interface FieldProps {
   name: string;
-  value: ReactNode;
+  header: ReactNode;
   size?: string;
   fit?: boolean;
   className?: string;
-  selector?: (data: any) => ReactNode;
+  getValue?: (data: any) => ReactNode;
 }
 
 interface TableProps {
@@ -49,12 +49,12 @@ const Table: FunctionComponent<TableProps> = ({
                   fit: Boolean(field.fit),
                   clip: !field.fit,
                 },
-                field.name
+                field.className
               )}
               key={field.name}
               style={field.size ? { width: field.size } : {}}
             >
-              {field.value}
+              {field.header}
             </th>
           ))}
         </tr>
@@ -84,7 +84,7 @@ const Table: FunctionComponent<TableProps> = ({
                 )}
                 key={`${row.id}.${field.name}`}
               >
-                {field.selector ? field.selector(row) : row[field.name]}
+                {field.getValue ? field.getValue(row) : row[field.name]}
               </td>
             ))}
           </tr>

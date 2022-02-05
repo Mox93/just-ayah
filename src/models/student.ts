@@ -1,4 +1,5 @@
 import { dateFromDB, DateInDB } from "../utils/dateTime";
+import { CountryCode } from "./country";
 import { Gender } from "./gender";
 import { PhoneMap } from "./phoneNumber";
 import { WorkStatus } from "./work";
@@ -13,7 +14,7 @@ const statuses = [
   "postponed",
 ] as const;
 
-type Status = typeof statuses[number]
+type Status = typeof statuses[number];
 
 interface Meta {
   dateCreated: Date;
@@ -32,7 +33,7 @@ export interface StudentInfo {
   lastName: string;
   gender: Gender;
   dateOfBirth: Date;
-  country: string;
+  country: CountryCode;
   governorate?: string;
   phoneNumber: PhoneMap;
   secondaryPhoneNumber?: PhoneMap[];

@@ -1,5 +1,7 @@
 import { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getCountryName } from "../models/country";
+import { handleEgGov } from "../models/governorate";
 import { Student } from "../models/student";
 import { getOccupation } from "../models/work";
 import { getAge, historyRep } from "../utils/dateTime";
@@ -13,61 +15,65 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
   const { t } = useTranslation();
   const s = (value: string, options?: any) => t(`students.${value}`, options);
   const pi = (value: string) => t(`personal_info.${value}`);
+  const g = (value: string) => t(`governorate.egypt.${value}`);
 
   const fields: FieldProps[] = [
     {
-      name: "name",
-      value: pi("full_name"),
-      selector: (data: Student) =>
-        `${data.firstName} ${data.middleName} ${data.lastName}`,
-    },
-    {
-      name: "phone-number",
-      value: pi("phone_number"),
-      selector: (data: Student) => data.phoneNumber.number,
-      fit: true,
-    },
-    {
       name: "gender",
-      value: pi("gender"),
-      selector: (data: Student) => (
-        <div className={`color-coded ${data.gender}`}></div>
+      className: "prefix",
+      header: <div className="small-circle" style={{border: "2px solid var(--c-black)"}}></div>,
+      getValue: (data: Student) => (
+        <div className={`small-circle ${data.gender}`}></div>
       ),
       fit: true,
     },
     {
+      name: "name",
+      className: "name",
+      header: pi("full_name"),
+      getValue: (data: Student) =>
+        `${data.firstName} ${data.middleName} ${data.lastName}`,
+    },
+    {
+      name: "phone-number",
+      className: "phone-number",
+      header: pi("phone_number"),
+      getValue: (data: Student) => data.phoneNumber.number,
+      fit: true,
+    },
+    {
       name: "age",
-      value: pi("age"),
-      selector: (data: Student) => getAge(data.dateOfBirth),
+      header: pi("age"),
+      getValue: (data: Student) => getAge(data.dateOfBirth),
       fit: true,
     },
     {
       name: "education",
-      value: pi("education"),
+      header: pi("education"),
     },
     {
       name: "occupation",
-      value: pi("occupation"),
-      selector: (data: Student) =>
-        data.workStatus && getOccupation(data.workStatus),
+      header: pi("occupation"),
+      getValue: (data: Student) =>
+        data.workStatus && getOccupation(data.workStatus, pi),
     },
     {
       name: "location",
-      value: pi("location"),
-      selector: (data: Student) =>
-        (data.governorate
-          ? [data.country, data.governorate]
-          : [data.country]
-        ).join(" - "),
+      header: pi("location"),
+      getValue: (data: Student) => {
+        const parts = [getCountryName(data.country)];
+        if (data.governorate) parts.push(handleEgGov(data.governorate, g));
+        return parts.join(" - ");
+      },
     },
     {
       name: "course",
-      value: t("elements.course"),
+      header: t("elements.course"),
     },
     {
       name: "date-created",
-      value: t("elements.date_created"),
-      selector: (data: Student) => historyRep(data.meta.dateCreated),
+      header: t("elements.date_created"),
+      getValue: (data: Student) => historyRep(data.meta.dateCreated),
       fit: true,
     },
   ];
