@@ -343,185 +343,7 @@
   }
 }
 
-/* Expandable Item */
-
-.expandable-item {
-  min-height: 3rem;
-  border: 1px solid var(--c-primary-dark);
-  border-radius: 0.25rem;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: space-between;
-  overflow: hidden;
-  position: relative;
-
-  .actions {
-    --gap-size: 1rem;
-    --padding-size: 0.5rem;
-    --element-count: 2;
-    --element-size: 2rem;
-
-    height: 3rem;
-    position: absolute;
-    display: flex;
-    align-items: stretch;
-
-    .main {
-      padding-inline: var(--padding-size);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .extra {
-      width: 0;
-      display: flex;
-      gap: var(--gap-size);
-      align-items: center;
-      overflow: hidden;
-
-      .element {
-        width: var(--element-size);
-        height: var(--element-size);
-        padding: 0.5rem;
-        opacity: 0;
-        border-radius: 0.25rem;
-        background-color: transparent;
-
-        svg {
-          fill: var(--c-white);
-          stroke: var(--c-white);
-        }
-
-        &:hover {
-          background-color: var(--c-shadow-dark);
-        }
-
-        &.archive:hover {
-          background-color: var(--c-error);
-        }
-
-        &:disabled {
-          cursor: not-allowed;
-
-          svg {
-            fill: var(--c-shadow-light);
-            stroke: var(--c-shadow-light);
-          }
-
-          &:hover {
-            background-color: transparent;
-          }
-        }
-      }
-    }
-
-    &:hover {
-      .extra {
-        width: calc(
-          var(--padding-size) * 2 + var(--gap-size) * (var(--element-count) - 1) +
-            var(--element-size) * var(--element-count)
-        );
-        padding-inline: var(--padding-size);
-        transition: width 100ms ease-in-out;
-
-        .element {
-          opacity: 100%;
-          transition: opacity 100ms ease-in 150ms;
-        }
-      }
-    }
-
-    & ~ * {
-      margin-inline-start: 3rem;
-    }
-  }
-
-  &:hover {
-    box-shadow: 2px 2px 8px var(--c-shadow);
-  }
-
-  & + .expandable-item {
-    margin-top: 1rem;
-  }
-
-  .info {
-    flex-grow: 10;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-
-    .element {
-      flex-basis: 0;
-      padding-bottom: 0.25rem;
-      white-space: nowrap;
-      overflow-x: hidden;
-      text-overflow: ellipsis;
-
-      &.name {
-        flex-grow: 3;
-      }
-
-      &.phone-number {
-        flex-grow: 2;
-      }
-
-      &.education {
-        flex-grow: 2;
-      }
-
-      &.occupation {
-        flex-grow: 2;
-      }
-
-      &.age {
-        flex-grow: 1;
-      }
-
-      &.country {
-        flex-grow: 2;
-      }
-
-      &.governorate {
-        flex-grow: 2;
-      }
-
-      &.date-created {
-        flex-grow: 3;
-      }
-
-      &.state {
-        flex-grow: 1;
-      }
-    }
-  }
-
-  .expand {
-    height: 2rem;
-    width: 2rem;
-    padding: 0.5rem;
-    margin-inline-end: 0.5rem;
-    border-radius: 0.25rem;
-    background-color: transparent;
-
-    &:hover {
-      background-color: var(--c-shadow);
-    }
-
-    svg {
-      fill: var(--c-shadow-dark);
-    }
-  }
-
-  .reverse {
-    svg {
-      transform: rotate(180deg);
-    }
-  }
-}
-
-/* TAbLE */
+/* TABLE */
 
 .table {
   width: 100%;
@@ -591,17 +413,87 @@
           direction: ltr;
         }
 
+        &.name {
+          text-transform: capitalize;
+        }
+
         &.prefix {
           color: var(--c-shadow-dark);
         }
-
-        .color-coded {
-          width: 1rem;
-          height: 1rem;
-          border-radius: 50%;
-          margin-inline: auto;
-        }
       }
     }
+  }
+}
+
+/* DROPDOWN MENU */
+
+.dropdown-menu {
+  position: relative;
+
+  .menu {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: var(--c-white);
+    box-shadow: 2px 2px 8px var(--c-shadow);
+    list-style-type: none;
+    position: absolute;
+    top: 100%;
+    z-index: 2;
+
+    .element {
+      height: 2.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding-inline: 1.25rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--c-shadow-light);
+      }
+    }
+  }
+}
+
+/* COUNTRY SELECTOR */
+
+.country-selector {
+  .menu {
+    width: 25rem;
+    max-height: 30rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+
+    .flag {
+      width: 1.75rem;
+      max-width: 1.75rem;
+    }
+
+    .info {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: flex-start;
+
+      .name {
+        white-space: nowrap;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+/* GOVERNORATE SELECTOR */
+
+.governorate-selector {
+  .menu {
+    width: 25rem;
+    max-height: 30rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
   }
 }
