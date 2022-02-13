@@ -1,0 +1,81 @@
+/* TABLE */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.75rem 1.5rem;
+
+    &.prefix {
+      padding-inline: 0.5rem;
+    }
+
+    &.fit {
+      width: 1%;
+      white-space: nowrap;
+    }
+
+    &.clip {
+      overflow-x: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    &:last-child {
+      padding-inline-end: 0.5rem;
+    }
+  }
+
+  .prefix + th,
+  .prefix + td {
+    padding-inline-start: 0.5rem;
+  }
+
+  thead {
+    tr {
+      border-bottom: 1px solid var(--c-shadow-dark);
+
+      th {
+        text-align: start;
+        text-transform: capitalize;
+        font-weight: bold;
+
+        &.prefix {
+          &:hover {
+            background-color: inherit;
+          }
+        }
+
+        &:hover {
+          background-color: var(--c-shadow-light);
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--c-shadow);
+
+      &:hover {
+        background-color: var(--c-shadow-light);
+      }
+
+      td {
+        &.phone-number {
+          direction: ltr;
+        }
+
+        &.name {
+          text-transform: capitalize;
+        }
+
+        &.prefix {
+          color: var(--c-shadow-dark);
+        }
+      }
+    }
+  }
+}

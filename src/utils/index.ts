@@ -1,3 +1,4 @@
+//
 interface ConditionalClasses {
   [className: string]: boolean;
 }
@@ -12,10 +13,12 @@ export const cn = (
     typeof classNames === "string" ? classNames : classNames.join(" ")
   }`;
 
+//
 export const identity = (value: any) => value;
 
 export const omit = () => {};
 
+//
 export const fromYesNo = (value?: string) =>
   value === "yes" ? true : value === "no" ? false : undefined;
 

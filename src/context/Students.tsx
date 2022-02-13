@@ -10,20 +10,24 @@ import {
 } from "firebase/firestore";
 import { createContext, FunctionComponent, useContext, useState } from "react";
 
-import { db } from "../services/firebase";
+import { db } from "services/firebase";
 import {
   Student,
   StudentInfo,
   StudentInDB,
   studentFromDB,
   studentFromInfo,
-} from "../models/student";
-import { ProviderProps } from "../models";
-import { omit } from "../utils";
+} from "models/student";
+import { ProviderProps } from "models";
+import { omit } from "utils";
 
 interface StudentsContextObj {
   data: Student[];
-  addStudent: (data: StudentInfo) => void;
+  addStudent: (
+    data: StudentInfo,
+    onfulfilled?: (response: any) => void,
+    onrejected?: (response: any) => void
+  ) => void;
   fetchStudents: (state?: string) => void;
   archiveStudent: (student: Student) => void;
 }
@@ -43,8 +47,14 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
   const [data, setData] = useState<Student[]>([]);
   const studentsRef = collection(db, "students");
 
-  const addStudent = (data: StudentInfo) => {
-    addDoc(studentsRef, studentFromInfo(data));
+  const addStudent = (
+    data: StudentInfo,
+    onfulfilled: (response: any) => void = omit,
+    onrejected: (response: any) => void = console.log
+  ) => {
+    addDoc(studentsRef, studentFromInfo(data))
+      .then(onfulfilled, onrejected)
+      .catch(console.log);
   };
 
   const fetchStudents = async (status?: string) => {

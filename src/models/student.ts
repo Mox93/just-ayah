@@ -1,17 +1,15 @@
-import { dateFromDB, DateInDB } from "../utils/dateTime";
+import { dateFromDB, DateInDB } from "utils/dateTime";
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
 import { PhoneMap } from "./phoneNumber";
 import { WorkStatus } from "./work";
 
 const statuses = [
-  "registered",
-  "contacted",
   "pending",
   "active",
+  "postponed",
   "finished",
   "canceled",
-  "postponed",
 ] as const;
 
 type Status = typeof statuses[number];

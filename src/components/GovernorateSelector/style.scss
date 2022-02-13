@@ -1,0 +1,11 @@
+/* GOVERNORATE SELECTOR */
+
+.GovernorateSelector {
+  .menu {
+    width: 25rem;
+    max-height: 30rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+  }
+}

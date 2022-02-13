@@ -14,9 +14,9 @@ import {
   useState,
 } from "react";
 
-import { auth } from "../services/firebase";
-import { ProviderProps } from "../models";
-import { omit } from "../utils";
+import { auth } from "services/firebase";
+import { ProviderProps } from "models";
+import { omit } from "utils";
 
 interface AuthContextObj {
   user: User | null;

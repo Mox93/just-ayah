@@ -1,0 +1,138 @@
+/* SIDE BAR */
+
+.SideBar {
+  height: 100vh;
+  min-height: 40rem;
+  width: 6rem;
+  padding: 3rem 1rem;
+  background-color: var(--c-primary-dark);
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  transition: width 200ms ease-in-out;
+  z-index: 1;
+
+  &[dir="ltr"] {
+    right: none;
+    left: 0;
+  }
+
+  &[dir="rtl"] {
+    right: 0;
+    left: none;
+  }
+
+  &:hover {
+    width: 12rem;
+    transition: width 200ms ease-in-out;
+
+    .expanded {
+      display: block;
+    }
+
+    .shrunk {
+      display: none;
+    }
+
+    .settings-section {
+      .LanguageSelector {
+        .element {
+          display: block;
+        }
+      }
+
+      .sign-out {
+        opacity: 100%;
+        transition-delay: 100ms;
+      }
+    }
+  }
+
+  .expanded {
+    display: none;
+  }
+
+  .shrunk {
+    display: block;
+  }
+
+  .nav-section {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+
+    .element {
+      width: 100%;
+      height: 4rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background-color: var(--c-primary-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-transform: capitalize;
+
+      &:focus {
+        outline: none;
+        background-color: var(--c-shadow-light);
+      }
+
+      &:hover {
+        background-color: var(--c-shadow-light);
+      }
+
+      &.selected {
+        background-color: var(--c-white);
+        font-weight: 600;
+
+        h3 {
+          color: var(--c-primary-dark);
+        }
+
+        svg {
+          fill: var(--c-primary-dark);
+          stroke: var(--c-primary-dark);
+        }
+      }
+
+      h3 {
+        color: var(--c-white);
+        font-size: 1.5rem;
+      }
+
+      svg {
+        width: 2.5rem;
+        height: 2.5rem;
+        fill: var(--c-white);
+        stroke: var(--c-white);
+      }
+    }
+  }
+
+  .settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .LanguageSelector {
+      .element {
+        display: none;
+
+        &.selected {
+          display: block;
+        }
+      }
+    }
+
+    .sign-out {
+      height: 2.25rem;
+      background-color: var(--c-error);
+      color: var(--c-white);
+      text-transform: uppercase;
+      border-radius: 0.25rem;
+      opacity: 0;
+    }
+  }
+}

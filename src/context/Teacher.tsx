@@ -9,20 +9,20 @@ import {
 } from "firebase/firestore";
 import { createContext, FunctionComponent, useContext, useState } from "react";
 
-import { db } from "../services/firebase";
-import { Teacher, Teachers } from "../models/teacher";
-import { ProviderProps } from "../models";
-import { omit } from "../utils";
+import { db } from "services/firebase";
+import { TeacherInfo, Teacher } from "models/teacher";
+import { ProviderProps } from "models";
+import { omit } from "utils";
 
 interface TeacherContextObj {
-  data: Teachers;
-  add: (data: Teacher) => void;
+  data: Teacher[];
+  add: (data: TeacherInfo) => void;
   fetch: (state?: string) => void;
   archive: (id: string) => void;
 }
 
 const TeachersContext = createContext<TeacherContextObj>({
-  data: {},
+  data: [],
   add: omit,
   fetch: omit,
   archive: omit,
@@ -33,21 +33,21 @@ interface TeachersProviderProps extends ProviderProps {}
 export const TeachersProvider: FunctionComponent<TeachersProviderProps> = ({
   children,
 }) => {
-  const [data, setData] = useState<Teachers>({});
+  const [data, setData] = useState<Teacher[]>([]);
   const teachersRef = collection(db, "teachers");
 
-  const add = (data: Teacher) => {
+  const add = (data: TeacherInfo) => {
     addDoc(teachersRef, data);
   };
 
   const fetch = async (state: string = "active") => {
-    const q = query(teachersRef, where("state", "==", state));
+    const q = query(teachersRef, where("meta.status", "==", state));
     const querySnapshot = await getDocs(q);
-    const newData: Teachers = {};
+    const newData: Teacher[] = [];
 
-    querySnapshot.docs.forEach(
-      (doc) => (newData[doc.id] = { ...(doc.data() as Teacher) })
-    );
+    // querySnapshot.docs.forEach(
+    //   (doc) => (newData[doc.id] = { ...(doc.data() as TeacherInfo) })
+    // );
 
     setData(newData);
   };

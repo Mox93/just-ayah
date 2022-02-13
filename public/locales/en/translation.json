@@ -35,10 +35,10 @@
     "does_work": "do you work?",
     "occupation": "job",
     "no_work_reason": "are you a ...",
-    "student" : "housewife",
-    "housewife" : "housewife",
-    "retired" : "retired",
-    "unemployed" : "unemployed",
+    "student": "housewife",
+    "housewife": "housewife",
+    "retired": "retired",
+    "unemployed": "unemployed",
     "other": "other",
     "explanation": "details",
     "experience": "have you memorized portions of the quran before?",
@@ -94,8 +94,7 @@
   "counter_other": "Changed language already {{count}} times",
   "footer": {
     "date": "Today is {{date, DATE_HUGE}}",
-    "date_morning":
-      "Good morning! Today is {{date, DATE_HUGE}} | Have a nice day!",
+    "date_morning": "Good morning! Today is {{date, DATE_HUGE}} | Have a nice day!",
     "date_afternoon": "Good afternoon! It's {{date, DATE_HUGE}}",
     "date_evening": "Good evening! Today was the {{date, DATE_HUGE}}"
   }

@@ -1,0 +1,26 @@
+/* LANGUAGE SELECTOR */
+
+.LanguageSelector {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  direction: ltr;
+
+  .element {
+    width: 2.25rem;
+    height: 2.25rem;
+    background-color: var(--c-shadow-dark);
+    border-radius: 0.25rem;
+    font-weight: 600;
+    color: var(--c-white);
+
+    &.selected {
+      background-color: var(--c-success);
+      box-shadow: 2px 2px 8px var(--c-shadow);
+    }
+
+    &.ar {
+      padding-bottom: 0.4rem;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+/* NEW STUDENT */
+
+.NewStudent {
+  position: relative;
+
+  .banner {
+    width: 100%;
+    max-height: 25rem;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .StudentForm {
+    margin-inline: auto;
+    margin-block: 3rem;
+  }
+}
+
+.SignUp,
+.NewStudent,
+.NewCustomer {
+  .LanguageSelector {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+  }
+}

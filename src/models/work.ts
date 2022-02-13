@@ -1,4 +1,4 @@
-import { identity } from "../utils";
+import { identity } from "utils";
 
 export const noWorkReasons = [
   "student",

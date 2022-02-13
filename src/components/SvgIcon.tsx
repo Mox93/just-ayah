@@ -7,7 +7,7 @@ interface SvgIconProps {
 }
 
 const SvgIcon: FunctionComponent<SvgIconProps> = ({
-  id = "Capa_1",
+  id = "Main",
   path,
   className,
 }) => {

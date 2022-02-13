@@ -1,0 +1,29 @@
+/* COUNTRY SELECTOR */
+
+.CountrySelector {
+  .menu {
+    width: 25rem;
+    max-height: 30rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+
+    .flag {
+      width: 1.75rem;
+      max-width: 1.75rem;
+    }
+
+    .info {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: flex-start;
+
+      .name {
+        white-space: nowrap;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
