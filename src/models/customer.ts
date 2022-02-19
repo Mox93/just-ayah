@@ -22,12 +22,10 @@ interface MetaInDB extends Omit<Meta, "dateCreated" | "dateUpdated"> {
 }
 
 export interface CustomerInfo {
-  firstName: string;
-  middleName: string;
-  lastName: string;
+  fullName: string;
   phoneNumber: PhoneMap;
   secondaryPhoneNumber?: PhoneMap[];
-  email?: string;
+  facebookLink?: string;
 }
 
 export type CustomerValidation = {
@@ -35,12 +33,10 @@ export type CustomerValidation = {
 };
 
 export const customerValidator: CustomerValidation = {
-  firstName: false,
-  middleName: false,
-  lastName: false,
+  fullName: false,
   phoneNumber: false,
   secondaryPhoneNumber: true,
-  email: true,
+  facebookLink: true,
 };
 
 export interface Customer extends CustomerInfo {

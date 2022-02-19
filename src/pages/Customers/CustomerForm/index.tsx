@@ -54,32 +54,14 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
 
   return (
     <form className="CustomerForm container" dir={t("dir")}>
-      <div className="input-group">
-        <InputField
-          required
-          name="firstName"
-          label={pi("first_name")}
-          value={customer.firstName}
-          onChange={update("firstName")}
-          validators={[Boolean]}
-        />
-        <InputField
-          required
-          name="middleName"
-          label={pi("middle_name")}
-          value={customer.middleName}
-          onChange={update("middleName")}
-          validators={[Boolean]}
-        />
-        <InputField
-          required
-          name="lastName"
-          label={pi("last_name")}
-          value={customer.lastName}
-          onChange={update("lastName")}
-          validators={[Boolean]}
-        />
-      </div>
+      <InputField
+        required
+        name="fullName"
+        label={pi("first_name")}
+        value={customer.fullName}
+        onChange={update("fullName")}
+        validators={[Boolean]}
+      />
 
       <div className="input-group">
         <InputField
@@ -102,10 +84,10 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
       </div>
 
       <InputField
-        name="email"
-        label={pi("email")}
-        value={customer.email}
-        onChange={update("email")}
+        name="facebookLink"
+        label={pi("facebook_link")}
+        value={customer.facebookLink}
+        onChange={update("facebookLink")}
       />
 
       <button

@@ -28,6 +28,7 @@
     "date_of_birth": "date of birth",
     "age": "age",
     "email": "email",
+    "facebook_link": "facebook link",
     "country": "country",
     "governorate": "governorate",
     "location": "location",
