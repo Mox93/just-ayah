@@ -1,4 +1,4 @@
-import { dateFromDB, DateInDB } from "utils/dateTime";
+import { dateFromDB, DateInDB } from "models/dateTime";
 import { PhoneNumberInfo } from "./phoneNumber";
 
 const statuses = [
@@ -32,7 +32,7 @@ export type CustomerValidation = {
   [K in keyof Required<CustomerInfo>]: boolean;
 };
 
-export const customerValidator: CustomerValidation = {
+export const customerValidation: CustomerValidation = {
   fullName: false,
   phoneNumber: false,
   secondaryPhoneNumber: true,

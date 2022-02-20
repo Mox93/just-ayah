@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 
-import { CountryCode, countryList, getCountryName } from "models/country";
+import { CountryCode, countryList, getCountry } from "models/country";
 import DropdownMenu from "components/DropdownMenu";
 
 import "./style.scss";
@@ -19,7 +19,7 @@ const CountrySelector: FunctionComponent<CountrySelectorProps> = (props) => {
       {...props}
       className="CountrySelector"
       options={countryList}
-      getValue={getCountryName}
+      getValue={(code) => getCountry(code)?.native}
       getKey={(country) => country.code}
       map={(country) => country.code}
       renderElement={(country) => (

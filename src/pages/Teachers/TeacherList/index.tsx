@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Teacher } from "models/teacher";
-import { historyRep } from "utils/dateTime";
+import { historyRep } from "models/dateTime";
 import Table, { FieldProps } from "../../../components/Table";
 
 interface StudentListProps {

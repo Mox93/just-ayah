@@ -1,11 +1,11 @@
 import { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getCountryName } from "models/country";
+import { getCountry } from "models/country";
 import { handleEgGov } from "models/governorate";
 import { Student } from "models/student";
 import { getOccupation } from "models/work";
-import { getAge, historyRep } from "utils/dateTime";
+import { getAge, historyRep } from "models/dateTime";
 import Table, { FieldProps } from "components/Table";
 
 interface StudentListProps {
@@ -67,7 +67,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
       name: "location",
       header: pi("location"),
       getValue: (data: Student) => {
-        const parts = [getCountryName(data.country)];
+        const parts = [getCountry(data.country)?.native];
         if (data.governorate) parts.push(handleEgGov(data.governorate, g));
         return parts.join(" - ");
       },

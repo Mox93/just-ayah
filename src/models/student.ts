@@ -1,4 +1,4 @@
-import { dateFromDB, DateInDB } from "utils/dateTime";
+import { dateFromDB, DateInDB } from "models/dateTime";
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
 import { PhoneNumberInfo } from "./phoneNumber";
@@ -48,7 +48,7 @@ export type StudentValidation = {
   [K in keyof Required<StudentInfo>]: boolean;
 };
 
-export const studentValidator: StudentValidation = {
+export const studentValidation: StudentValidation = {
   firstName: false,
   middleName: false,
   lastName: false,

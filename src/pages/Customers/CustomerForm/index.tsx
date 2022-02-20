@@ -7,7 +7,7 @@ import { Keys } from "models";
 import {
   CustomerInfo,
   CustomerValidation,
-  customerValidator,
+  customerValidation,
 } from "models/customer";
 import { cn } from "utils";
 import PhoneNumber from "components/PhoneNumber";
@@ -29,7 +29,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
 
   const [customer, setCustomer] = useState<Partial<CustomerInfo>>({});
   const [validation, setValidation] =
-    useState<CustomerValidation>(customerValidator);
+    useState<CustomerValidation>(customerValidation);
 
   const [submitting, setSubmitting] = useState(false);
 

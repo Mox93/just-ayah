@@ -1,4 +1,4 @@
-import { DateInDB } from "utils/dateTime";
+import { DateInDB } from "models/dateTime";
 import { Gender } from "./gender";
 import { PhoneNumberInfo } from "./phoneNumber";
 
@@ -31,7 +31,7 @@ export type TeacherValidation = {
   [K in keyof Required<TeacherInfo>]: boolean;
 };
 
-export const teacherValidator: TeacherValidation = {
+export const teacherValidation: TeacherValidation = {
   firstName: false,
   middleName: false,
   lastName: false,

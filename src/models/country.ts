@@ -9,6 +9,3 @@ export const countryList = Object.keys(countries)
 
 export const getCountry = (code?: string): Country | undefined =>
   countries[code as CountryCode];
-
-export const getCountryName = (code?: string) =>
-  getCountry(code)?.native || code;

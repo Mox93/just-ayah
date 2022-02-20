@@ -7,7 +7,7 @@ import RadioSelector from "components/RadioSelector";
 import {
   StudentInfo,
   StudentValidation,
-  studentValidator,
+  studentValidation,
 } from "models/student";
 import { useStudents } from "context/Students";
 import { genders } from "models/gender";
@@ -36,7 +36,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
 
   const [student, setStudent] = useState<Partial<StudentInfo>>({});
   const [validation, setValidation] =
-    useState<StudentValidation>(studentValidator);
+    useState<StudentValidation>(studentValidation);
 
   const [submitting, setSubmitting] = useState(false);
 
