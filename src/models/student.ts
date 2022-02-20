@@ -1,7 +1,7 @@
 import { dateFromDB, DateInDB } from "utils/dateTime";
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
-import { PhoneMap } from "./phoneNumber";
+import { PhoneNumberInfo } from "./phoneNumber";
 import { WorkStatus } from "./work";
 
 const statuses = [
@@ -33,8 +33,8 @@ export interface StudentInfo {
   dateOfBirth: Date;
   country: CountryCode;
   governorate?: string;
-  phoneNumber: PhoneMap;
-  secondaryPhoneNumber?: PhoneMap[];
+  phoneNumber: PhoneNumberInfo;
+  secondaryPhoneNumber?: PhoneNumberInfo[];
   email?: string;
   education: string;
   workStatus: WorkStatus;

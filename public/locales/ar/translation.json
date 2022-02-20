@@ -20,6 +20,7 @@
     "first_name": "الاسم",
     "middle_name": "الأب",
     "last_name": "العائلة",
+    "country_code": "كود الدولة",
     "phone_number": "رقم الهاتف",
     "second_phone_number": "رقم هاتف آخر",
     "gender": "النوع",

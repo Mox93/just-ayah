@@ -20,6 +20,7 @@
     "first_name": "name",
     "middle_name": "parental",
     "last_name": "surname",
+    "country_code": "country code",
     "phone_number": "phone number",
     "second_phone_number": "another phone number",
     "gender": "gender",

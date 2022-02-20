@@ -13,10 +13,10 @@ import { useStudents } from "context/Students";
 import { genders } from "models/gender";
 import { Keys } from "models";
 import { cn, fromYesNo, toYesNo } from "utils";
-import { sanitizePhoneNumber } from "models/phoneNumber";
 import WorkStatusTree from "components/WorkStatus";
 import CountrySelector from "components/CountrySelector";
 import GovernorateSelector from "components/GovernorateSelector";
+import PhoneNumber from "components/PhoneNumber";
 
 interface StudentFormProps {
   onfulfilled?: (response: any) => void;
@@ -122,25 +122,17 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         />
       </div>
 
-      <div className="input-group">
-        <InputField
-          name="phoneNumber"
-          label={pi("phone_number")}
-          type="tel"
-          value={(student.phoneNumber || {}).number}
-          map={(value) => ({ number: sanitizePhoneNumber(value) })}
-          onChange={update("phoneNumber")}
-          required
-          validators={[Boolean]}
-        />
-        <InputField
-          name="phoneNumber"
-          label={pi("second_phone_number")}
-          value={(student.secondaryPhoneNumber || [{}])[0].number}
-          map={(value) => [{ number: sanitizePhoneNumber(value) }]}
-          onChange={update("secondaryPhoneNumber")}
-        />
-      </div>
+      <PhoneNumber
+        label={pi("phone_number")}
+        value={student.phoneNumber || {}}
+        onChange={update("phoneNumber")}
+        required
+      />
+      <PhoneNumber
+        label={pi("second_phone_number")}
+        value={(student.secondaryPhoneNumber || [{}])[0]}
+        onChange={update("secondaryPhoneNumber")}
+      />
 
       <InputField
         name="email"

@@ -1,0 +1,19 @@
+.PhoneNumber {
+  display: flex;
+  gap: 0.5rem;
+
+  .code {
+    flex: 1;
+
+    .menu {
+      max-height: 30rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+    }
+  }
+
+  .number {
+    flex: 3;
+  }
+}

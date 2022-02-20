@@ -9,8 +9,8 @@ import {
   CustomerValidation,
   customerValidator,
 } from "models/customer";
-import { sanitizePhoneNumber } from "models/phoneNumber";
 import { cn } from "utils";
+import PhoneNumber from "components/PhoneNumber";
 
 interface CustomerFormProps {
   onfulfilled?: (response: any) => void;
@@ -63,25 +63,17 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
         validators={[Boolean]}
       />
 
-      <div className="input-group">
-        <InputField
-          name="phoneNumber"
-          label={pi("phone_number")}
-          type="tel"
-          value={(customer.phoneNumber || {}).number}
-          map={(value) => ({ number: sanitizePhoneNumber(value) })}
-          onChange={update("phoneNumber")}
-          required
-          validators={[Boolean]}
-        />
-        <InputField
-          name="phoneNumber"
-          label={pi("second_phone_number")}
-          value={(customer.secondaryPhoneNumber || [{}])[0].number}
-          map={(value) => [{ number: sanitizePhoneNumber(value) }]}
-          onChange={update("secondaryPhoneNumber")}
-        />
-      </div>
+      <PhoneNumber
+        label={pi("phone_number")}
+        value={customer.phoneNumber || {}}
+        onChange={update("phoneNumber")}
+        required
+      />
+      <PhoneNumber
+        label={pi("second_phone_number")}
+        value={(customer.secondaryPhoneNumber || [{}])[0]}
+        onChange={update("secondaryPhoneNumber")}
+      />
 
       <InputField
         name="facebookLink"

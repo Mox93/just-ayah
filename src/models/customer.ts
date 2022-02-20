@@ -1,5 +1,5 @@
 import { dateFromDB, DateInDB } from "utils/dateTime";
-import { PhoneMap } from "./phoneNumber";
+import { PhoneNumberInfo } from "./phoneNumber";
 
 const statuses = [
   "registered",
@@ -23,8 +23,8 @@ interface MetaInDB extends Omit<Meta, "dateCreated" | "dateUpdated"> {
 
 export interface CustomerInfo {
   fullName: string;
-  phoneNumber: PhoneMap;
-  secondaryPhoneNumber?: PhoneMap[];
+  phoneNumber: PhoneNumberInfo;
+  secondaryPhoneNumber?: PhoneNumberInfo[];
   facebookLink?: string;
 }
 

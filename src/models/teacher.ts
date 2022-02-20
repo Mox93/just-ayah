@@ -1,6 +1,6 @@
 import { DateInDB } from "utils/dateTime";
 import { Gender } from "./gender";
-import { PhoneMap } from "./phoneNumber";
+import { PhoneNumberInfo } from "./phoneNumber";
 
 const statuses = ["active", "canceled", "postponed"] as const;
 
@@ -20,8 +20,8 @@ export interface TeacherInfo {
   middleName: string;
   lastName: string;
   gender: Gender;
-  phoneNumber: PhoneMap;
-  secondaryPhoneNumber?: PhoneMap[];
+  phoneNumber: PhoneNumberInfo;
+  secondaryPhoneNumber?: PhoneNumberInfo[];
   email?: string;
   nationalID: string;
   address: string;
