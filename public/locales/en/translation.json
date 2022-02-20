@@ -23,6 +23,8 @@
     "country_code": "country code",
     "phone_number": "phone number",
     "second_phone_number": "another phone number",
+    "WhatsApp": "WhatsApp",
+    "call": "available for calling",
     "gender": "gender",
     "male": "male",
     "female": "female",

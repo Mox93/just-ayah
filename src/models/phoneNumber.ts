@@ -1,7 +1,7 @@
 export interface PhoneNumberInfo {
   code: string;
   number: string;
-  tags?: string[];
+  tags?: Set<string>;
 }
 
 export type PhoneNumberValidation = {
@@ -20,3 +20,21 @@ export const sanitizePhoneNumber = (value: any) =>
   typeof value === "string"
     ? value.replace(notInPhoneNumber, "").slice(0, 16)
     : undefined;
+
+export const addTag = (
+  obj: Partial<PhoneNumberInfo>,
+  tag: string
+): Partial<PhoneNumberInfo> => {
+  const tags = obj.tags || new Set();
+  tags.add(tag);
+  return { ...obj, tags };
+};
+
+export const removeTag = (
+  obj: Partial<PhoneNumberInfo>,
+  tag: string
+): Partial<PhoneNumberInfo> => {
+  const tags = obj.tags || new Set();
+  tags.delete(tag);
+  return { ...obj, tags };
+};
