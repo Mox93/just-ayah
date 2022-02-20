@@ -13,17 +13,20 @@ import {
 
 import "./style.scss";
 import CheckBox from "components/CheckBox";
+import { identity } from "utils";
 
 interface PhoneNumberProps {
   label: string;
   value?: Partial<PhoneNumberInfo>;
   required?: boolean;
-  onChange: (value: Partial<PhoneNumberInfo>) => void;
+  onChange: (value: any) => void;
+  map?: (value: Partial<PhoneNumberInfo>) => any;
 }
 
 const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
   value = {},
   onChange,
+  map = identity,
   ...props
 }) => {
   const { t } = useTranslation();
@@ -45,7 +48,7 @@ const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
             return country ? `+${country.phone}` : "";
           }}
           map={(country) => country.code}
-          onChange={(code: string) => onChange({ ...value, code })}
+          onChange={(code: string) => onChange(map({ ...value, code }))}
           renderElement={(country) => (
             <>
               <p className="flag">{country.emoji}</p>
@@ -61,7 +64,7 @@ const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
           type="tel"
           map={sanitizePhoneNumber}
           value={value.number}
-          onChange={(number: string) => onChange({ ...value, number })}
+          onChange={(number: string) => onChange(map({ ...value, number }))}
         />
       </div>
       <div className="tags">
@@ -70,9 +73,11 @@ const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
             key={option}
             name={option}
             label={pi(option)}
-            checked={value.tags?.has(option)}
+            checked={value.tags?.includes(option)}
             onChange={(checked) =>
-              checked ? addTag(value, option) : removeTag(value, option)
+              onChange(
+                map(checked ? addTag(value, option) : removeTag(value, option))
+              )
             }
           />
         ))}

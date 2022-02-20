@@ -1,7 +1,7 @@
 export interface PhoneNumberInfo {
   code: string;
   number: string;
-  tags?: Set<string>;
+  tags?: string[];
 }
 
 export type PhoneNumberValidation = {
@@ -25,8 +25,12 @@ export const addTag = (
   obj: Partial<PhoneNumberInfo>,
   tag: string
 ): Partial<PhoneNumberInfo> => {
-  const tags = obj.tags || new Set();
-  tags.add(tag);
+  const tags = obj.tags || [];
+
+  if (!tags.includes(tag)) {
+    tags.push(tag);
+  }
+
   return { ...obj, tags };
 };
 
@@ -34,7 +38,6 @@ export const removeTag = (
   obj: Partial<PhoneNumberInfo>,
   tag: string
 ): Partial<PhoneNumberInfo> => {
-  const tags = obj.tags || new Set();
-  tags.delete(tag);
-  return { ...obj, tags };
+  if (!obj.tags) return obj;
+  return { ...obj, tags: obj.tags.filter((aTag) => aTag !== tag) };
 };

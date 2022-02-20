@@ -130,7 +130,8 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
       />
       <PhoneNumber
         label={pi("second_phone_number")}
-        value={(student.secondaryPhoneNumber || [{}])[0]}
+        value={(student.secondaryPhoneNumber || [])[0]}
+        map={(value) => [value]}
         onChange={update("secondaryPhoneNumber")}
       />
 
