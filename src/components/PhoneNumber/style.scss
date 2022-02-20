@@ -5,13 +5,6 @@
 
     .code {
       flex: 2;
-
-      .menu {
-        max-height: 30rem;
-        overflow-y: auto;
-        overflow-x: hidden;
-        overscroll-behavior: contain;
-      }
     }
 
     .number {

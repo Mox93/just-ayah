@@ -30,9 +30,11 @@ export interface StudentInfo {
   middleName: string;
   lastName: string;
   gender: Gender;
-  dateOfBirth: Date;
   country: CountryCode;
   governorate?: string;
+  dateOfBirth: Date;
+  nationality: CountryCode;
+  timeZone: string;
   phoneNumber: PhoneNumberInfo;
   secondaryPhoneNumber?: PhoneNumberInfo[];
   email?: string;
@@ -54,6 +56,8 @@ export const studentValidator: StudentValidation = {
   dateOfBirth: false,
   country: false,
   governorate: true,
+  nationality: false,
+  timeZone: false,
   phoneNumber: false,
   secondaryPhoneNumber: true,
   email: true,

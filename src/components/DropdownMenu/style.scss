@@ -13,6 +13,11 @@
     top: 100%;
     z-index: 2;
 
+    max-height: 30rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+
     .element {
       height: 2.5rem;
       display: flex;

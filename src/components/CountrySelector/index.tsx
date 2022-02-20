@@ -7,6 +7,7 @@ import "./style.scss";
 
 interface CountrySelectorProps {
   label: string;
+  name?: string;
   selected?: CountryCode;
   onChange: (value: CountryCode) => void;
   required?: boolean;
@@ -17,7 +18,6 @@ const CountrySelector: FunctionComponent<CountrySelectorProps> = (props) => {
     <DropdownMenu
       {...props}
       className="CountrySelector"
-      name="country"
       options={countryList}
       getValue={getCountryName}
       getKey={(country) => country.code}

@@ -17,6 +17,7 @@ import WorkStatusTree from "components/WorkStatus";
 import CountrySelector from "components/CountrySelector";
 import GovernorateSelector from "components/GovernorateSelector";
 import PhoneNumber from "components/PhoneNumber";
+import TimeZoneSelector from "components/TimeZoneSelector";
 
 interface StudentFormProps {
   onfulfilled?: (response: any) => void;
@@ -107,17 +108,35 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
 
       <div className="input-group">
         <CountrySelector
-          label={pi("country")}
+          name="nationality"
+          label={pi("nationality")}
+          selected={student.nationality}
+          onChange={update("nationality")}
+          required
+        />
+
+        <CountrySelector
+          name="residence"
+          label={pi("residence")}
           selected={student.country}
           onChange={update("country")}
           required
         />
+      </div>
 
+      <div className="input-group">
         <GovernorateSelector
           country={student.country}
           label={pi("governorate")}
           value={student.governorate}
           onChange={update("governorate")}
+          required
+        />
+
+        <TimeZoneSelector
+          label={pi("time_zone")}
+          selected={student.timeZone}
+          onChange={update("timeZone")}
           required
         />
       </div>
