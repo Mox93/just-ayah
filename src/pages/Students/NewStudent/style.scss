@@ -1,5 +1,6 @@
-/* NEW STUDENT */
+@import "styles/utils";
 
+/* NEW STUDENT */
 .NewStudent {
   position: relative;
 
@@ -13,6 +14,10 @@
   .StudentForm {
     margin-inline: auto;
     margin-block: 3rem;
+
+    @include mobile {
+      margin-block-start: 0;
+    }
   }
 }
 

@@ -8,7 +8,7 @@
     color: var(--c-white);
 
     &:disabled {
-      background-color: var(--c-shadow);
+      background-color: var(--c-shadow-dark);
       cursor: not-allowed;
 
       &.submitting {
@@ -29,7 +29,7 @@
     color: var(--c-white);
 
     &:disabled {
-      background-color: var(--c-shadow);
+      background-color: var(--c-shadow-dark);
       cursor: not-allowed;
 
       &.submitting {

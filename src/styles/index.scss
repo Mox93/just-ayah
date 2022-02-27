@@ -1,21 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&family=Josefin+Sans:wght@300;400;500;600;700&display=swap");
 
-:root {
-  --c-primary: #3d6d8f;
-  --c-primary-light: #add1eb;
-  --c-primary-dark: #1c374a;
-  --c-success: #84ad13;
-  --c-success-dark: #4a6109;
-  --c-success-light: #e2f1bc;
-  --c-error: #e04024;
-  --c-error-dark: #672013;
-  --c-error-light: #df988b;
-  --c-black: #13171a;
-  --c-white: #fdfefe;
-  --c-shadow: #3f44472d;
-  --c-shadow-dark: #13171a88;
-  --c-shadow-light: #cad1d64d;
-}
+@import "./variables";
+@import "./utils";
 
 *,
 *::before,
@@ -88,15 +74,13 @@ input {
   display: flex;
   gap: 1rem;
 
+  @include mobile {
+    flex-direction: column;
+  }
+
   & > * {
     flex-grow: 1;
     flex-basis: 0;
-  }
-}
-
-@media screen and (max-width: 35em) {
-  .input-group {
-    flex-direction: column;
   }
 }
 
