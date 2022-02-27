@@ -1,4 +1,11 @@
-import { FunctionComponent, ReactNode, useState } from "react";
+import {
+  ChangeEvent,
+  FunctionComponent,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { identity } from "utils";
 import InputField from "components/InputField";
@@ -34,35 +41,60 @@ const DropdownMenu: FunctionComponent<DropdownMenuProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const inputRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) =>
+    event.target instanceof Node &&
+    !menuRef.current?.contains(event.target) &&
+    !inputRef.current?.contains(event.target) &&
+    setIsOpen(false);
+
+  const handelCancelButtons = (event: KeyboardEvent) =>
+    ["Escape"].includes(event.key) && setIsOpen(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mouseup", handleClickOutside);
+      document.addEventListener("keyup", handelCancelButtons);
+    } else {
+      document.removeEventListener("mouseup", handleClickOutside);
+      document.removeEventListener("keyup", handelCancelButtons);
+    }
+
+    return () => {
+      document.removeEventListener("mouseup", handleClickOutside);
+      document.removeEventListener("keyup", handelCancelButtons);
+    };
+  }, [isOpen]);
+
   return (
     <div className={`DropdownMenu ${className}`}>
-      <InputField
-        name={name}
-        label={label}
-        value={getValue(selected)}
-        onClick={() => {
-          setIsOpen((state) => !state);
-        }}
-        validators={[Boolean]}
-        readOnly
-        required={required}
-      />
+      <div ref={inputRef}>
+        <InputField
+          name={name}
+          label={label}
+          value={getValue(selected)}
+          onClick={() => setIsOpen((state) => !state)}
+          validators={[Boolean]}
+          readOnly
+          required={required}
+        />
+      </div>
       {isOpen && (
-        <ul className="menu">
-          {options.map((element) => {
-            return (
-              <li
-                className="element"
-                key={getKey(element)}
-                onClick={() => {
-                  onChange(map(element));
-                  setIsOpen(false);
-                }}
-              >
-                {renderElement(element)}
-              </li>
-            );
-          })}
+        <ul ref={menuRef} className="menu">
+          {options.map((element) => (
+            <li
+              className="element"
+              key={getKey(element)}
+              onClick={() => {
+                onChange(map(element));
+                setIsOpen(false);
+              }}
+            >
+              {renderElement(element)}
+            </li>
+          ))}
         </ul>
       )}
     </div>
