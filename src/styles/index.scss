@@ -17,7 +17,9 @@
   --c-shadow-light: #cad1d64d;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -29,7 +31,7 @@
 
 html {
   /* scrollbar-gutter: stable; */
-  min-width: 800px;
+  // min-width: 800px;
 }
 
 button {
@@ -50,7 +52,7 @@ input {
 }
 
 .container {
-  min-width: 40rem;
+  // min-width: 40rem;
   max-width: 55rem;
   display: flex;
   flex-direction: column;
@@ -89,6 +91,12 @@ input {
   & > * {
     flex-grow: 1;
     flex-basis: 0;
+  }
+}
+
+@media screen and (max-width: 35em) {
+  .input-group {
+    flex-direction: column;
   }
 }
 
