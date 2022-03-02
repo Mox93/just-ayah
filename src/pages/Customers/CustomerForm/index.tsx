@@ -57,7 +57,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
       <InputField
         required
         name="fullName"
-        label={pi("first_name")}
+        label={pi("full_name")}
         value={customer.fullName}
         onChange={update("fullName")}
         validators={[Boolean]}

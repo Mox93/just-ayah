@@ -17,9 +17,9 @@ const TimeZoneSelector: FunctionComponent<TimeZoneSelectorProps> = (props) => {
       className="TimeZoneSelector"
       name="timeZone"
       options={timeZoneList}
-      getValue={(tzCode) => getTimeZone(tzCode)?.label}
-      getKey={(timezone) => timezone.tzCode}
-      map={(timezone) => timezone.tzCode}
+      mapValue={(tzCode) => getTimeZone(tzCode)?.label}
+      mapKey={(timezone) => timezone.tzCode}
+      mapSelection={(timezone) => timezone.tzCode}
       renderElement={(timezone) => <p className="timezone">{timezone.label}</p>}
     />
   );

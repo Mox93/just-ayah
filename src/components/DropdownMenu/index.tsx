@@ -1,5 +1,4 @@
 import {
-  ChangeEvent,
   FunctionComponent,
   ReactNode,
   useEffect,
@@ -7,37 +6,30 @@ import {
   useState,
 } from "react";
 
-import { identity } from "utils";
-import InputField from "components/InputField";
+import { identity, omit } from "utils";
+import InputField, { InputFieldProps } from "components/InputField";
 
 import "./style.scss";
 
-interface DropdownMenuProps {
-  label: string;
-  name?: string;
+interface DropdownMenuProps extends Omit<InputFieldProps, "value" | "map"> {
   options: any[];
   selected?: any;
-  className?: string;
-  map?: (value: any) => any;
-  getValue?: (selected: any) => string | undefined;
-  getKey?: (option: any) => string;
+  mapSelection?: (value: any) => any;
+  mapValue?: (selected: any) => string | undefined;
+  mapKey?: (option: any) => string;
   renderElement?: (option: any) => ReactNode;
-  onChange: (value: any) => void;
-  required?: boolean;
 }
 
 const DropdownMenu: FunctionComponent<DropdownMenuProps> = ({
-  label,
-  name,
   options,
   selected,
   className,
-  getValue = identity,
-  getKey = identity,
-  map = identity,
+  mapValue = identity,
+  mapKey = identity,
+  mapSelection = identity,
   renderElement = identity,
-  onChange,
-  required,
+  onChange = omit,
+  ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -72,13 +64,11 @@ const DropdownMenu: FunctionComponent<DropdownMenuProps> = ({
     <div className={`DropdownMenu ${className}`}>
       <div ref={inputRef}>
         <InputField
-          name={name}
-          label={label}
-          value={getValue(selected)}
+          {...props}
+          value={mapValue(selected)}
           onClick={() => setIsOpen((state) => !state)}
           validators={[Boolean]}
           readOnly
-          required={required}
         />
       </div>
       {isOpen && (
@@ -86,9 +76,9 @@ const DropdownMenu: FunctionComponent<DropdownMenuProps> = ({
           {options.map((element) => (
             <li
               className="element"
-              key={getKey(element)}
+              key={mapKey(element)}
               onClick={() => {
-                onChange(map(element));
+                onChange(mapSelection(element), true);
                 setIsOpen(false);
               }}
             >

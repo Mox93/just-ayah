@@ -1,9 +1,14 @@
 import { identity } from "./index";
 import { useTranslation } from "react-i18next";
 
+/**Namespaced T */
 export const useNST = (ns: string) => {
   const { t } = useTranslation();
-  return (value: string, options?: any) => t(`${ns}.${value}`, options);
+  return (value: string, options?: any) => {
+    const tIn = `${ns}.${value}`;
+    const tOut = t(tIn, options);
+    return tOut !== tIn ? tOut : value;
+  };
 };
 
 export const useDirT = () => useTranslation().t("dir");

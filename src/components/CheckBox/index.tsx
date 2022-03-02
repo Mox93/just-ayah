@@ -12,6 +12,7 @@ interface CheckBoxProps {
 }
 
 const CheckBox: FunctionComponent<CheckBoxProps> = ({
+  checked = false,
   className,
   label,
   onChange = omit,
@@ -21,6 +22,7 @@ const CheckBox: FunctionComponent<CheckBoxProps> = ({
     <label className={`CheckBox ${className}`}>
       <input
         {...props}
+        checked={checked}
         className="field"
         type="checkbox"
         onChange={(e) => onChange(e.target.checked)}

@@ -7,9 +7,9 @@ import "./style.scss";
 
 type InputTypes = "text" | "tel" | "email" | "url" | "date" | "password";
 
-interface InputFieldProps
+export interface InputFieldProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> {
-  label: string;
+  label?: string;
   type?: InputTypes;
   onChange?: (value: any, valid: boolean) => void;
   validators?: [(value: any) => boolean];
@@ -31,14 +31,17 @@ const InputField: FunctionComponent<InputFieldProps> = ({
 }) => {
   const { t } = useTranslation();
   const [visited, setVisited] = useState(false);
-  const invalid = visited
-    ? (required && !value) ||
-      !validators.every((validator) => validator(map(value)))
-    : false;
+
+  if (required) {
+    validators.push((value) => Boolean(value));
+  }
+
+  const invalid =
+    visited && !validators.every((validator) => validator(map(value)));
 
   return (
     <label className={`InputField ${className}`}>
-      <h3 className={cn({ required, invalid }, "title")}>{label}</h3>
+      {label && <h3 className={cn({ required, invalid }, "title")}>{label}</h3>}
       <input
         {...props}
         {...{ required, value }}

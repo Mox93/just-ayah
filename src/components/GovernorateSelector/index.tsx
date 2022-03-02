@@ -37,7 +37,7 @@ const GovernorateSelector: FunctionComponent<GovernorateSelectorProps> = ({
       className="GovernorateSelector"
       name="governorate"
       options={governorateList}
-      getValue={(element) =>
+      mapValue={(element) =>
         governorate.includes(egStrip(element) as Governorate)
           ? g(element)
           : undefined

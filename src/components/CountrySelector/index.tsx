@@ -19,9 +19,9 @@ const CountrySelector: FunctionComponent<CountrySelectorProps> = (props) => {
       {...props}
       className="CountrySelector"
       options={countryList}
-      getValue={(code) => getCountry(code)?.native}
-      getKey={(country) => country.code}
-      map={(country) => country.code}
+      mapValue={(code) => getCountry(code)?.native}
+      mapKey={(country) => country.code}
+      mapSelection={(country) => country.code}
       renderElement={(country) => (
         <div className="info">
           <p className="flag">{country.emoji}</p>

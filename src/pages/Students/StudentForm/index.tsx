@@ -59,6 +59,10 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
     true
   );
 
+  const availabilityOptions = ["WhatsApp", "Telegram", "call"].map(
+    (option) => ({ name: pi(option), option })
+  );
+
   return (
     <form className="StudentForm container" dir={t("dir")}>
       <div className="input-group">
@@ -137,19 +141,20 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
           label={pi("time_zone")}
           selected={student.timeZone}
           onChange={update("timeZone")}
-          required
         />
       </div>
 
       <PhoneNumber
         label={pi("phone_number")}
         value={student.phoneNumber || {}}
+        tags={availabilityOptions}
         onChange={update("phoneNumber")}
         required
       />
       <PhoneNumber
         label={pi("second_phone_number")}
         value={(student.secondaryPhoneNumber || [])[0]}
+        tags={availabilityOptions}
         map={(value) => [value]}
         onChange={update("secondaryPhoneNumber")}
       />

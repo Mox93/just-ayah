@@ -3,7 +3,7 @@ import { identity } from "utils";
 export const noWorkReasons = [
   "student",
   "housewife",
-  "unemployed",
+  // "unemployed",
   "retired",
 ] as const;
 

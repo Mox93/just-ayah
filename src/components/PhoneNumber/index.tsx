@@ -1,8 +1,8 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import DropdownMenu from "components/DropdownMenu";
-import InputField from "components/InputField";
+import InputField, { InputFieldProps } from "components/InputField";
 import { countryList, getCountry } from "models/country";
 import {
   addTag,
@@ -13,42 +13,51 @@ import {
 
 import "./style.scss";
 import CheckBox from "components/CheckBox";
-import { identity } from "utils";
+import { cn, identity, omit } from "utils";
 
-interface PhoneNumberProps {
-  label: string;
+interface PhoneNumberProps extends Omit<InputFieldProps, "value" | "map"> {
   value?: Partial<PhoneNumberInfo>;
-  required?: boolean;
-  onChange: (value: any) => void;
+  tags?: { name: string; option: string }[];
   map?: (value: Partial<PhoneNumberInfo>) => any;
 }
 
 const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
+  label,
+  tags,
   value = {},
-  onChange,
+  onChange = omit,
   map = identity,
+  required = false,
   ...props
 }) => {
   const { t } = useTranslation();
   const pi = (value: string) => t(`personal_info.${value}`);
 
-  const availabilityOptions = ["WhatsApp", "call"];
+  const [validCode, setValidCode] = useState(!required);
+  const [validNumber, setValidNumber] = useState(!required);
+
+  // TODO handle invalid css class to title
 
   return (
     <div className="PhoneNumber">
+      <h3 className={cn({ required }, "title")}>{label}</h3>
       <div className="data" dir="ltr">
         <DropdownMenu
+          required={required}
           className="code"
-          label={pi("country_code")}
+          placeholder={pi("country_code")}
           options={countryList}
           selected={value.code}
-          getKey={(country) => country.code}
-          getValue={(code) => {
+          mapKey={(country) => country.code}
+          mapValue={(code) => {
             const country = getCountry(code);
             return country ? `+${country.phone}` : "";
           }}
-          map={(country) => country.code}
-          onChange={(code: string) => onChange(map({ ...value, code }))}
+          mapSelection={(country) => country.code}
+          onChange={(code: string, valid) => {
+            setValidCode(valid);
+            onChange(map({ ...value, code }), validCode && validNumber);
+          }}
           renderElement={(country) => (
             <>
               <p className="flag">{country.emoji}</p>
@@ -58,30 +67,40 @@ const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
           )}
         />
         <InputField
+          required={required}
           {...props}
+          placeholder={pi("phone_number")}
           name="phoneNumber"
           className="number"
           type="tel"
           map={sanitizePhoneNumber}
           value={value.number}
-          onChange={(number: string) => onChange(map({ ...value, number }))}
+          onChange={(number, valid) => {
+            setValidNumber(valid);
+            onChange(map({ ...value, number }), validCode && validNumber);
+          }}
         />
       </div>
-      <div className="tags">
-        {availabilityOptions.map((option) => (
-          <CheckBox
-            key={option}
-            name={option}
-            label={pi(option)}
-            checked={value.tags?.includes(option)}
-            onChange={(checked) =>
-              onChange(
-                map(checked ? addTag(value, option) : removeTag(value, option))
-              )
-            }
-          />
-        ))}
-      </div>
+      {tags && (
+        <div className="tags">
+          {tags.map(({ name, option }) => (
+            <CheckBox
+              key={option}
+              name={option}
+              label={name}
+              checked={value.tags?.includes(option)}
+              onChange={(checked) =>
+                onChange(
+                  map(
+                    checked ? addTag(value, option) : removeTag(value, option)
+                  ),
+                  true
+                )
+              }
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
