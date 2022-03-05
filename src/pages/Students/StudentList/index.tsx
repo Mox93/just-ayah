@@ -44,7 +44,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
       name: "phone-number",
       className: "phone-number",
       header: pi("phone_number"),
-      getValue: (data: Student) => data.phoneNumber.number,
+      getValue: (data: Student) => data.phoneNumbers[0]?.number,
       fit: true,
     },
     {

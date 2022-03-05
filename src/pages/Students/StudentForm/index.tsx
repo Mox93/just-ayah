@@ -59,7 +59,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
     true
   );
 
-  const availabilityOptions = ["WhatsApp", "Telegram", "call"].map(
+  const availabilityOptions = ["whatsapp", "telegram", "call"].map(
     (option) => ({ name: pi(option), option })
   );
 
@@ -146,17 +146,18 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
 
       <PhoneNumber
         label={pi("phone_number")}
-        value={student.phoneNumber || {}}
+        value={(student.phoneNumbers || {})[0]}
         tags={availabilityOptions}
-        onChange={update("phoneNumber")}
+        map={(value) => ({ ...(student.phoneNumbers || {}), 0: value })}
+        onChange={update("phoneNumbers")}
         required
       />
       <PhoneNumber
         label={pi("second_phone_number")}
-        value={(student.secondaryPhoneNumber || [])[0]}
+        value={(student.phoneNumbers || [])[1]}
         tags={availabilityOptions}
-        map={(value) => [value]}
-        onChange={update("secondaryPhoneNumber")}
+        map={(value) => ({ ...(student.phoneNumbers || {}), 1: value })}
+        onChange={update("phoneNumbers")}
       />
 
       <InputField
@@ -203,9 +204,9 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
           { value: "yes", name: e("yes") },
           { value: "no", name: e("no") },
         ]}
-        selected={toYesNo(student.previousQuranMemorization)}
+        selected={toYesNo(student.Quran)}
         map={fromYesNo}
-        onChange={update("previousQuranMemorization")}
+        onChange={update("Quran")}
         required
       />
 
@@ -216,9 +217,9 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
           { value: "yes", name: e("yes") },
           { value: "no", name: e("no") },
         ]}
-        selected={toYesNo(student.canUseZoom)}
+        selected={toYesNo(student.Zoom)}
         map={fromYesNo}
-        onChange={update("canUseZoom")}
+        onChange={update("Zoom")}
         required
       />
 

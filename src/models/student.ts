@@ -35,13 +35,13 @@ export interface StudentInfo {
   dateOfBirth: Date;
   nationality: CountryCode;
   timeZone: string;
-  phoneNumber: PhoneNumberInfo;
-  secondaryPhoneNumber?: PhoneNumberInfo[];
+  phoneNumbers: { [idx: number]: PhoneNumberInfo };
   email?: string;
+  facebook?: string;
   education: string;
   workStatus: WorkStatus;
-  previousQuranMemorization: boolean;
-  canUseZoom?: boolean;
+  Quran: boolean;
+  Zoom?: boolean;
 }
 
 export type StudentValidation = {
@@ -58,13 +58,13 @@ export const studentValidation: StudentValidation = {
   governorate: true,
   nationality: false,
   timeZone: false,
-  phoneNumber: false,
-  secondaryPhoneNumber: true,
+  phoneNumbers: false,
   email: true,
+  facebook: true,
   education: false,
   workStatus: false,
-  previousQuranMemorization: false,
-  canUseZoom: false,
+  Quran: false,
+  Zoom: false,
 };
 
 export interface Student extends StudentInfo {

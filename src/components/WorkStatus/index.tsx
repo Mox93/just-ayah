@@ -22,10 +22,10 @@ const WorkStatusTree: FunctionComponent<WorkStatusTreeProps> = ({
       name="occupation"
       label={pi("occupation")}
       value={getOccupation(status)}
-      map={(value) => ({ doesWork: true, occupation: value })}
+      map={(value) => ({ doesWork: true, job: value })}
       onChange={onChange}
       required
-      validators={[(value) => Boolean(value.occupation)]}
+      validators={[(value) => Boolean(value.job)]}
     />
   ) : (
     <div className="WorkStatus">

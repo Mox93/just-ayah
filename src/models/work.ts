@@ -8,7 +8,7 @@ export const noWorkReasons = [
 ] as const;
 
 export type WorkStatus =
-  | { doesWork: true; occupation: string }
+  | { doesWork: true; job: string }
   | {
       doesWork: false;
       reason: typeof noWorkReasons[number];
@@ -20,7 +20,7 @@ export const getOccupation = (
   pi: (value: string) => string = identity
 ): string =>
   status.doesWork
-    ? status.occupation
+    ? status.job
     : status.reason === "other"
     ? status.explanation
     : pi(status.reason);
