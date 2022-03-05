@@ -19,6 +19,12 @@ with open("data/student_data.json", "r") as json_file:
         student["dateOfBirth"] = datetime.strptime(
             student["dateOfBirth"], "%d/%m/%Y"
         )
+        student["meta"]["dateCreated"] = datetime.strptime(
+            student["meta"]["dateCreated"], "%m/%d/%Y %H:%M:%S"
+        )
+        student["meta"]["dateUpdated"] = datetime.strptime(
+            student["meta"]["dateUpdated"], "%m/%d/%Y %H:%M:%S"
+        )
 
         # use update instead of set if data exists
         col_ref.document().set(student)
