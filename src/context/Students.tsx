@@ -2,8 +2,12 @@ import {
   addDoc,
   collection,
   doc,
+  DocumentData,
+  FieldPath,
   getDocs,
   limit,
+  orderBy,
+  OrderByDirection,
   query,
   startAfter,
   updateDoc,
@@ -32,6 +36,7 @@ type AddStudent = (
 type FetchStudents = (options?: {
   filters?: [string, WhereFilterOp, any][];
   size?: number;
+  sort?: { by: string | FieldPath; direction?: OrderByDirection };
 }) => void;
 
 interface StudentsContextObj {
@@ -54,6 +59,7 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
   children,
 }) => {
   const [data, setData] = useState<Student[]>([]);
+  const [lastDoc, setLastDoc] = useState<DocumentData>();
   const studentsRef = collection(db, "students");
 
   const addStudent: AddStudent = (
@@ -69,21 +75,27 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
   const fetchStudents: FetchStudents = async ({
     filters = [],
     size = 20,
+    sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
   } = {}) => {
     const q = query(
       studentsRef,
       ...filters.map((filter) => where(...filter)),
       limit(size),
-      ...(data.length ? [startAfter(data[data.length - 1])] : [])
+      orderBy(sort.by, sort.direction),
+      ...(lastDoc ? [startAfter(lastDoc)] : [])
     );
     const querySnapshot = await getDocs(q);
 
     setData((state) => {
       const newState = [...state];
 
-      querySnapshot.docs.forEach((doc) =>
-        newState.push(studentFromDB(doc.id, doc.data() as StudentInDB))
-      );
+      querySnapshot.docs.forEach((doc, i) => {
+        newState.push(studentFromDB(doc.id, doc.data() as StudentInDB));
+
+        if (i === size - 1) {
+          setLastDoc(doc);
+        }
+      });
 
       return newState;
     });

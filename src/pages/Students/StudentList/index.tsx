@@ -7,16 +7,17 @@ import { Student } from "models/student";
 import { getOccupation } from "models/work";
 import { getAge, historyRep } from "models/dateTime";
 import Table, { FieldProps } from "components/Table";
+import { useStudents } from "context/Students";
 
-interface StudentListProps {
-  data: Student[];
-}
+interface StudentListProps {}
 
-const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
+const StudentList: FunctionComponent<StudentListProps> = () => {
   const { t } = useTranslation();
   const s = (value: string, options?: any) => t(`students.${value}`, options);
   const pi = (value: string) => t(`personal_info.${value}`);
   const g = (value: string) => t(`governorate.egypt.${value}`);
+
+  const { data, fetchStudents } = useStudents();
 
   const fields: FieldProps[] = [
     {
@@ -94,7 +95,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
     });
 
   return (
-    <>
+    <main className="main-section">
       {selected.size > 0 && (
         <div className="selectionCounter">
           {s("counter", { count: selected.size })}
@@ -110,7 +111,10 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
           setSelected(checked ? new Set(data.map(({ id }) => id)) : new Set())
         }
       />
-    </>
+      <button className="cta-btn" dir="ltr" onClick={() => fetchStudents()}>
+        Load More ...
+      </button>
+    </main>
   );
 };
 
