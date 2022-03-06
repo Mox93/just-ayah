@@ -1,5 +1,4 @@
 import { FunctionComponent, MouseEvent, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import InputField from "components/InputField";
 import { useCustomers } from "context/Customers";
@@ -11,6 +10,7 @@ import {
 } from "models/customer";
 import { cn } from "utils";
 import PhoneNumber from "components/PhoneNumber";
+import { useDirT, useGlobalT, usePersonalInfoT } from "utils/translation";
 
 interface CustomerFormProps {
   onfulfilled?: (response: any) => void;
@@ -21,9 +21,9 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
   onfulfilled,
   onrejected,
 }) => {
-  const { t } = useTranslation();
-  const pi = (value: string) => t(`personal_info.${value}`);
-  const e = (value: string) => t(`elements.${value}`);
+  const dir = useDirT();
+  const glb = useGlobalT();
+  const pi = usePersonalInfoT();
 
   const { addCustomer } = useCustomers();
 
@@ -53,31 +53,31 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
   );
 
   return (
-    <form className="CustomerForm container" dir={t("dir")}>
+    <form className="CustomerForm container" dir={dir}>
       <InputField
         required
         name="fullName"
-        label={pi("full_name")}
+        label={pi("fullName")}
         value={customer.fullName}
         onChange={update("fullName")}
         validators={[Boolean]}
       />
 
       <PhoneNumber
-        label={pi("phone_number")}
+        label={pi("phoneNumber")}
         value={customer.phoneNumber || {}}
         onChange={update("phoneNumber")}
         required
       />
       <PhoneNumber
-        label={pi("second_phone_number")}
+        label={pi("secondPhoneNumber")}
         value={(customer.secondaryPhoneNumber || [{}])[0]}
         onChange={update("secondaryPhoneNumber")}
       />
 
       <InputField
         name="facebookLink"
-        label={pi("facebook_link")}
+        label={pi("facebookLink")}
         value={customer.facebookLink}
         onChange={update("facebookLink")}
       />
@@ -88,7 +88,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
         onClick={submitForm}
         disabled={!valid || submitting}
       >
-        {e("join_initiative")}
+        {glb("joinInitiative")}
       </button>
     </form>
   );

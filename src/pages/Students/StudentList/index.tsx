@@ -1,5 +1,4 @@
 import { FunctionComponent, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { getCountry } from "models/country";
 import { handleEgGov } from "models/governorate";
@@ -8,14 +7,20 @@ import { getOccupation } from "models/work";
 import { getAge, historyRep } from "models/dateTime";
 import Table, { FieldProps } from "components/Table";
 import { useStudents } from "context/Students";
+import {
+  useGlobalT,
+  useGovT,
+  usePageT,
+  usePersonalInfoT,
+} from "utils/translation";
 
 interface StudentListProps {}
 
 const StudentList: FunctionComponent<StudentListProps> = () => {
-  const { t } = useTranslation();
-  const s = (value: string, options?: any) => t(`students.${value}`, options);
-  const pi = (value: string) => t(`personal_info.${value}`);
-  const g = (value: string) => t(`governorate.egypt.${value}`);
+  const glb = useGlobalT();
+  const gov = useGovT("egypt");
+  const stu = usePageT("students");
+  const pi = usePersonalInfoT();
 
   const { data, fetchStudents } = useStudents();
 
@@ -37,14 +42,14 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     {
       name: "name",
       className: "name",
-      header: pi("full_name"),
+      header: pi("fullName"),
       getValue: (data: Student) =>
         `${data.firstName} ${data.middleName} ${data.lastName}`,
     },
     {
       name: "phone-number",
       className: "phone-number",
-      header: pi("phone_number"),
+      header: pi("phoneNumber"),
       getValue: (data: Student) => data.phoneNumbers[0]?.number,
       fit: true,
     },
@@ -69,17 +74,17 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       header: pi("residence"),
       getValue: (data: Student) => {
         const parts = [getCountry(data.country)?.native];
-        if (data.governorate) parts.push(handleEgGov(data.governorate, g));
+        if (data.governorate) parts.push(handleEgGov(data.governorate, gov));
         return parts.join(" - ");
       },
     },
     {
       name: "course",
-      header: t("elements.course"),
+      header: glb("course"),
     },
     {
       name: "date-created",
-      header: t("elements.date_created"),
+      header: glb("dateCreated"),
       getValue: (data: Student) => historyRep(data.meta.dateCreated),
       fit: true,
     },
@@ -98,7 +103,7 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     <main className="main-section">
       {selected.size > 0 && (
         <div className="selectionCounter">
-          {s("counter", { count: selected.size })}
+          {stu("counter", { count: selected.size })}
         </div>
       )}
       <Table
@@ -111,8 +116,8 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
           setSelected(checked ? new Set(data.map(({ id }) => id)) : new Set())
         }
       />
-      <button className="cta-btn" dir="ltr" onClick={() => fetchStudents()}>
-        Load More ...
+      <button className="cta-btn" onClick={() => fetchStudents()}>
+        {`${glb("loadMore")} ...`}
       </button>
     </main>
   );

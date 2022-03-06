@@ -1,20 +1,19 @@
 import { FunctionComponent, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import Table from "components/Table";
 import Tabs from "components/Tabs";
 import { omit } from "utils";
+import { usePageT } from "utils/translation";
 
 interface TeachersProps {}
 
 const Teachers: FunctionComponent<TeachersProps> = () => {
-  const { t } = useTranslation();
-  const tt = (value: string) => t(`teachers.${value}`);
+  const tch = usePageT("teachers");
 
   const tabs = ["active", "archived"].map((name, index) => ({
     id: `te_${index}`,
     name,
-    value: tt(name),
+    value: tch(name),
   }));
 
   const [selected, setSelected] = useState(tabs[0].id);

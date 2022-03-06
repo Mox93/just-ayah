@@ -1,28 +1,28 @@
 import { FunctionComponent, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Teacher } from "models/teacher";
 import { historyRep } from "models/dateTime";
 import Table, { FieldProps } from "../../../components/Table";
+import { useGlobalT, usePageT, usePersonalInfoT } from "utils/translation";
 
 interface StudentListProps {
   data: Teacher[];
 }
 
 const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
-  const { t } = useTranslation();
-  const s = (value: string, options?: any) => t(`students.${value}`, options);
-  const pi = (value: string) => t(`personal_info.${value}`);
+  const glb = useGlobalT();
+  const stu = usePageT("students");
+  const pi = usePersonalInfoT();
 
   const fields: FieldProps[] = [
     {
       name: "name",
-      header: pi("full_name"),
+      header: pi("fullName"),
       getValue: (data: Teacher) =>
         `${data.firstName} ${data.middleName} ${data.lastName}`,
     },
     {
       name: "phone-number",
-      header: pi("phone_number"),
+      header: pi("phoneNumber"),
       getValue: (data: Teacher) => data.phoneNumber.number,
       fit: true,
     },
@@ -36,7 +36,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
     },
     {
       name: "date-created",
-      header: t("elements.date_created"),
+      header: glb("dateCreated"),
       getValue: (data: Teacher) => historyRep(data.meta.dateCreated),
       fit: true,
     },
@@ -64,7 +64,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
     <>
       {selected.size > 0 && (
         <div className="selectionCounter">
-          {s("counter", { count: selected.size })}
+          {stu("counter", { count: selected.size })}
         </div>
       )}
       <Table

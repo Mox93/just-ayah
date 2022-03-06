@@ -1,7 +1,7 @@
 import { FunctionComponent, InputHTMLAttributes, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { cn, identity, omit } from "utils";
+import { useDirT } from "utils/translation";
 
 import "./style.scss";
 
@@ -29,7 +29,7 @@ const InputField: FunctionComponent<InputFieldProps> = ({
   placeholder,
   ...props
 }) => {
-  const { t } = useTranslation();
+  const dirT = useDirT();
   const [visited, setVisited] = useState(false);
 
   if (required) {
@@ -45,7 +45,7 @@ const InputField: FunctionComponent<InputFieldProps> = ({
       <input
         {...props}
         {...{ required, value }}
-        dir={dir || value ? "auto" : t("dir")}
+        dir={dir || value ? "auto" : dirT}
         placeholder={placeholder || label}
         className={cn({ invalid }, "field")}
         onChange={(e) => {

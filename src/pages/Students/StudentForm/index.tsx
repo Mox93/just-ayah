@@ -1,5 +1,4 @@
 import { FunctionComponent, MouseEvent, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import InputField from "components/InputField";
 import DatePicker from "components/DatePicker";
@@ -18,6 +17,7 @@ import CountrySelector from "components/CountrySelector";
 import GovernorateSelector from "components/GovernorateSelector";
 import PhoneNumber from "components/PhoneNumber";
 import TimeZoneSelector from "components/TimeZoneSelector";
+import { useDirT, useGlobalT, usePersonalInfoT } from "utils/translation";
 
 interface StudentFormProps {
   onfulfilled?: (response: any) => void;
@@ -28,9 +28,9 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
   onfulfilled,
   onrejected,
 }) => {
-  const { t } = useTranslation();
-  const pi = (value: string) => t(`personal_info.${value}`);
-  const e = (value: string) => t(`elements.${value}`);
+  const dir = useDirT();
+  const glb = useGlobalT();
+  const pi = usePersonalInfoT();
 
   const { addStudent } = useStudents();
 
@@ -64,12 +64,12 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
   );
 
   return (
-    <form className="StudentForm container" dir={t("dir")}>
+    <form className="StudentForm container" dir={dir}>
       <div className="input-group">
         <InputField
           required
           name="firstName"
-          label={pi("first_name")}
+          label={pi("firstName")}
           value={student.firstName}
           onChange={update("firstName")}
           validators={[Boolean]}
@@ -77,7 +77,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         <InputField
           required
           name="middleName"
-          label={pi("middle_name")}
+          label={pi("middleName")}
           value={student.middleName}
           onChange={update("middleName")}
           validators={[Boolean]}
@@ -85,7 +85,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         <InputField
           required
           name="lastName"
-          label={pi("last_name")}
+          label={pi("lastName")}
           value={student.lastName}
           onChange={update("lastName")}
           validators={[Boolean]}
@@ -94,7 +94,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
 
       <div className="input-group">
         <DatePicker
-          label={pi("date_of_birth")}
+          label={pi("dateOfBirth")}
           onChange={update("dateOfBirth")}
           value={student.dateOfBirth}
           required
@@ -138,14 +138,14 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         />
 
         <TimeZoneSelector
-          label={pi("time_zone")}
+          label={pi("timeZone")}
           selected={student.timeZone}
           onChange={update("timeZone")}
         />
       </div>
 
       <PhoneNumber
-        label={pi("phone_number")}
+        label={pi("phoneNumber")}
         value={(student.phoneNumbers || {})[0]}
         tags={availabilityOptions}
         map={(value) => ({ ...(student.phoneNumbers || {}), 0: value })}
@@ -153,7 +153,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         required
       />
       <PhoneNumber
-        label={pi("second_phone_number")}
+        label={pi("secondPhoneNumber")}
         value={(student.phoneNumbers || [])[1]}
         tags={availabilityOptions}
         map={(value) => ({ ...(student.phoneNumbers || {}), 1: value })}
@@ -178,10 +178,10 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         />
         <RadioSelector
           name="doesWork"
-          label={pi("does_work")}
+          label={pi("doesDork")}
           options={[
-            { value: "yes", name: e("yes") },
-            { value: "no", name: e("no") },
+            { value: "yes", name: glb("yes") },
+            { value: "no", name: glb("no") },
           ]}
           selected={student.workStatus && toYesNo(student.workStatus.doesWork)}
           map={(value) => ({ doesWork: fromYesNo(value) })}
@@ -199,10 +199,10 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
 
       <RadioSelector
         name="previousQuranMemorization"
-        label={pi("experience")}
+        label={pi("quran")}
         options={[
-          { value: "yes", name: e("yes") },
-          { value: "no", name: e("no") },
+          { value: "yes", name: glb("yes") },
+          { value: "no", name: glb("no") },
         ]}
         selected={toYesNo(student.Quran)}
         map={fromYesNo}
@@ -214,8 +214,8 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         name="canUseZoom"
         label={pi("zoom")}
         options={[
-          { value: "yes", name: e("yes") },
-          { value: "no", name: e("no") },
+          { value: "yes", name: glb("yes") },
+          { value: "no", name: glb("no") },
         ]}
         selected={toYesNo(student.Zoom)}
         map={fromYesNo}
@@ -229,7 +229,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         onClick={submitForm}
         disabled={!valid || submitting}
       >
-        {e("join_initiative")}
+        {glb("joinInitiative")}
       </button>
     </form>
   );

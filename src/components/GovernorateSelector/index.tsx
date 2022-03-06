@@ -1,5 +1,4 @@
 import { FunctionComponent } from "react";
-import { useTranslation } from "react-i18next";
 
 import DropdownMenu from "components/DropdownMenu";
 import InputField from "components/InputField";
@@ -13,6 +12,7 @@ import {
 } from "models/governorate";
 
 import "./style.scss";
+import { useGovT } from "utils/translation";
 
 interface GovernorateSelectorProps {
   country?: CountryCode;
@@ -27,8 +27,7 @@ const GovernorateSelector: FunctionComponent<GovernorateSelectorProps> = ({
   value,
   ...props
 }) => {
-  const { t } = useTranslation();
-  const g = (value: string) => t(`governorate.egypt.${egStrip(value)}`);
+  const gov = useGovT("egypt");
 
   return country === "EG" ? (
     <DropdownMenu
@@ -39,10 +38,10 @@ const GovernorateSelector: FunctionComponent<GovernorateSelectorProps> = ({
       options={governorateList}
       mapValue={(element) =>
         governorate.includes(egStrip(element) as Governorate)
-          ? g(element)
+          ? gov(element)
           : undefined
       }
-      renderElement={(element) => g(element)}
+      renderElement={(element) => gov(element)}
     />
   ) : (
     <InputField

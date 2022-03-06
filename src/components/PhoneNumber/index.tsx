@@ -14,6 +14,7 @@ import {
 import "./style.scss";
 import CheckBox from "components/CheckBox";
 import { cn, identity, omit } from "utils";
+import { usePersonalInfoT } from "utils/translation";
 
 interface PhoneNumberProps extends Omit<InputFieldProps, "value" | "map"> {
   value?: Partial<PhoneNumberInfo>;
@@ -30,8 +31,7 @@ const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
   required = false,
   ...props
 }) => {
-  const { t } = useTranslation();
-  const pi = (value: string) => t(`personal_info.${value}`);
+  const pi = usePersonalInfoT();
 
   const [validCode, setValidCode] = useState(!required);
   const [validNumber, setValidNumber] = useState(!required);
@@ -45,7 +45,7 @@ const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
         <DropdownMenu
           required={required}
           className="code"
-          placeholder={pi("country_code")}
+          placeholder={pi("countryCode")}
           options={countryList}
           selected={value.code}
           mapKey={(country) => country.code}
@@ -69,7 +69,7 @@ const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
         <InputField
           required={required}
           {...props}
-          placeholder={pi("phone_number")}
+          placeholder={pi("phoneNumber")}
           name="phoneNumber"
           className="number"
           type="tel"

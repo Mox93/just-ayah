@@ -1,13 +1,15 @@
 {
   "dir": "rtl",
-  "elements": {
-    "google_sign_in": "الدخول بحساب جوجل",
-    "join_initiative": "انضم إلى المبادرة",
-    "sign_out": "تسجيل الخروج",
+  "globals": {
+    "googleSignIn": "الدخول بحساب جوجل",
+    "joinInitiative": "انضم إلى المبادرة",
+    "signOut": "تسجيل الخروج",
     "yes": "نعم",
     "no": "ﻻ",
-    "date_created": "تاريخ الانشاء",
-    "course": "الدورة"
+    "dateCreated": "تاريخ الانشاء",
+    "dateUpdated": "آخر تعديل",
+    "course": "الدورة",
+    "loadMore": "حمل المزيد"
   },
   "nav": {
     "home": "الرئيسية",
@@ -15,56 +17,58 @@
     "teachers": "المعلمون",
     "courses": "الدورات"
   },
-  "personal_info": {
-    "full_name": "الاسم الثلاثي",
-    "first_name": "الاسم",
-    "middle_name": "الأب",
-    "last_name": "العائلة",
-    "country_code": "كود الدولة",
-    "phone_number": "رقم الهاتف",
-    "second_phone_number": "رقم هاتف آخر",
+  "personalInfo": {
+    "fullName": "الاسم الثلاثي",
+    "firstName": "الاسم",
+    "middleName": "الأب",
+    "lastName": "العائلة",
+    "countryCode": "كود الدولة",
+    "phoneNumber": "رقم الهاتف",
+    "secondPhoneNumber": "رقم هاتف آخر",
     "whatsapp": "WhatsApp",
     "telegram": "Telegram",
     "call": "متاح للاتصال",
     "gender": "النوع",
     "male": "ذكر",
     "female": "أنثى",
-    "date_of_birth": "تاريخ الميلاد",
+    "dateOfBirth": "تاريخ الميلاد",
     "age": "العمر",
     "email": "البريد الالكتروني",
-    "facebook_link": "رابط الفاسبوك",
+    "facebookLink": "رابط الفاسبوك",
     "nationality": "الجنسية",
-    "time_zone": "المنطة الزمنية",
+    "timeZone": "المنطة الزمنية",
     "country": "الدولة",
     "governorate": "المحافظة",
     "residence": "محل الإقامة",
     "education": "المؤهل",
-    "does_work": "هل تعمل؟",
+    "doesWork": "هل تعمل؟",
     "occupation": "العمل",
-    "no_work_reason": "هل انت ...",
+    "noWorkReason": "هل انت ...",
     "student": "طالب",
     "housewife": "ربة منزل",
     "retired": "متقاعد",
     "unemployed": "عاطل عن العمل",
     "other": "غير ذلك",
-    "explanation": "التفاصيل",
-    "experience": "هل سبق لك حفظ شئ من القرآن ؟",
+    "noDetails": "التفاصيل",
+    "quran": "هل سبق لك حفظ شئ من القرآن ؟",
     "zoom": "هل في امكانك استخدام تطبيق المحادثات \"Zoom\"؟ حيث أن اللقاءات تتم من خلاله."
   },
-  "students": {
-    "pending": "الطلاب المستجدون",
-    "active": "الطلاب القائمون",
-    "archived": "اﻷرشيف",
-    "counter_zero": "لا يوجد طلاب مختارين",
-    "counter_one": "تم تحديد طالب",
-    "counter_two": "تم تحديد طالبان",
-    "counter_few": "تم تحديد {{count}} طلاب",
-    "counter_many": "تم تحديد {{count}} طالب",
-    "counter_other": "تم تحديد {{count}} طالب"
-  },
-  "teachers": {
-    "active": "المعلمون",
-    "archived": "اﻷرشيف"
+  "pages": {
+    "students": {
+      "pending": "الطلاب المستجدون",
+      "active": "الطلاب القائمون",
+      "archived": "اﻷرشيف",
+      "counter_zero": "لا يوجد طلاب مختارين",
+      "counter_one": "تم تحديد طالب",
+      "counter_two": "تم تحديد طالبان",
+      "counter_few": "تم تحديد {{count}} طلاب",
+      "counter_many": "تم تحديد {{count}} طالب",
+      "counter_other": "تم تحديد {{count}} طالب"
+    },
+    "teachers": {
+      "active": "المعلمون",
+      "archived": "اﻷرشيف"
+    }
   },
   "governorate": {
     "egypt": {
@@ -96,15 +100,5 @@
       "SouthSinai": "جنوب سيناء",
       "Suez": "السويس"
     }
-  },
-  "description": {
-    "part1": "عدل <1 >src/App.js</1> و احفظ لاعادة التحميل",
-    "part2": "تعلم ريأكت"
-  },
-  "footer": {
-    "date": "اليوم هو {{date, DATE_HUGE}}",
-    "date_morning": " صباح الخير! اليوم {{date, DATE_HUGE}} | استمتع بوقتك",
-    "date_afternoon": "يوم سعيد! انه {{date, DATE_HUGE}}",
-    "date_evening": "مساء الخير! لقد كان {{date, DATE_HUGE}}"
   }
 }

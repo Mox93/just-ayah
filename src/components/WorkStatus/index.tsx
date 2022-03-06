@@ -1,8 +1,8 @@
 import { FunctionComponent } from "react";
-import { useTranslation } from "react-i18next";
 import { getOccupation, noWorkReasons, WorkStatus } from "models/work";
 import InputField from "components/InputField";
 import RadioSelector from "components/RadioSelector";
+import { usePersonalInfoT } from "utils/translation";
 
 interface WorkStatusTreeProps {
   status: WorkStatus;
@@ -13,8 +13,7 @@ const WorkStatusTree: FunctionComponent<WorkStatusTreeProps> = ({
   status,
   onChange,
 }) => {
-  const { t } = useTranslation();
-  const pi = (value: string) => t(`personal_info.${value}`);
+  const pi = usePersonalInfoT();
 
   return status.doesWork ? (
     <InputField
@@ -31,7 +30,7 @@ const WorkStatusTree: FunctionComponent<WorkStatusTreeProps> = ({
     <div className="WorkStatus">
       <RadioSelector
         name="noWorkReason"
-        label={pi("no_work_reason")}
+        label={pi("noWorkReason")}
         options={[...noWorkReasons, "other"].map((value) => ({
           value,
           name: pi(value),
@@ -43,8 +42,8 @@ const WorkStatusTree: FunctionComponent<WorkStatusTreeProps> = ({
       />
       {status.reason === "other" && (
         <InputField
-          name="explanation"
-          label={pi("explanation")}
+          name="noWorkDetails"
+          label={pi("noWorkDetails")}
           value={status.explanation}
           map={(value) => ({
             doesWork: false,
