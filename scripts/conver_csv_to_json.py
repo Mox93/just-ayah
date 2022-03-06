@@ -224,6 +224,14 @@ def parse_meta(date):
     }
 
 
+def parse_gender(data):
+    gender = data.get("gender", "").strip()
+
+    return {
+        "gender": "male" if gender == "m" else "female"
+    } if gender else {}
+
+
 def is_active_student(data):
     n = " ".join(filter(bool, data.get("name").split()))
 
@@ -307,7 +315,7 @@ with open("data/Students Data - form.csv", "r") as csv_file:
         student.update(parse_date_of_birth(data))
 
         # GENDER
-        student["gender"] = data["gender"].strip()
+        student.update(parse_gender(data))
 
         # NATIONALITY
         student["nationality"] = data["nationality"].strip()
