@@ -41,8 +41,8 @@ const Students: FunctionComponent<StudentsProps> = () => {
   const [canFetch, ToggleButton] = useRequestGuard();
 
   useEffect(() => {
-    if (canFetch) fetchStudents(selectedTab.name);
-  }, [selectedTab, canFetch]);
+    if (canFetch) fetchStudents();
+  }, [canFetch]);
 
   return (
     <div className="students">

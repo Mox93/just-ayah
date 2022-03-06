@@ -64,8 +64,8 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
         data.workStatus && getOccupation(data.workStatus, pi),
     },
     {
-      name: "location",
-      header: pi("location"),
+      name: "residence",
+      header: pi("residence"),
       getValue: (data: Student) => {
         const parts = [getCountry(data.country)?.native];
         if (data.governorate) parts.push(handleEgGov(data.governorate, g));

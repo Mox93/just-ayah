@@ -56,11 +56,11 @@
     "active": "الطلاب القائمون",
     "archived": "اﻷرشيف",
     "counter_zero": "لا يوجد طلاب مختارين",
-    "counter_one": "تم اختيار طالب",
-    "counter_two": "تم اختيار طالبان",
-    "counter_few": "تم اختيار {{count}} طلاب",
-    "counter_many": "تم اختيار {{count}} طالب",
-    "counter_other": "تم اختيار {{count}} طالب"
+    "counter_one": "تم تحديد طالب",
+    "counter_two": "تم تحديد طالبان",
+    "counter_few": "تم تحديد {{count}} طلاب",
+    "counter_many": "تم تحديد {{count}} طالب",
+    "counter_other": "تم تحديد {{count}} طالب"
   },
   "teachers": {
     "active": "المعلمون",
