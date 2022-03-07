@@ -1,9 +1,2 @@
-import { FunctionComponent } from "react";
-
-interface StudentProfileProps {}
-
-const StudentProfile: FunctionComponent<StudentProfileProps> = () => {
-  return <h1>Student Profile</h1>;
-};
-
-export default StudentProfile;
+export * from "./StudentProfile";
+export { default } from "./StudentProfile";

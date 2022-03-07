@@ -1,15 +1,4 @@
-import { FunctionComponent } from "react";
-import { Outlet } from "react-router-dom";
+import "./style.scss";
 
-interface CoursesProps {}
-
-const Courses: FunctionComponent<CoursesProps> = () => {
-  return (
-    <div>
-      <h1>Courses</h1>
-      <Outlet />
-    </div>
-  );
-};
-
-export default Courses;
+export * from "./Courses";
+export { default } from "./Courses";
