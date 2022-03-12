@@ -64,14 +64,6 @@
       }
 
       td {
-        &.phoneNumber {
-          direction: ltr;
-        }
-
-        &.name {
-          text-transform: capitalize;
-        }
-
         &.prefix {
           color: var(--c-shadow-dark);
         }

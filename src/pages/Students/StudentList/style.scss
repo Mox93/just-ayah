@@ -1,0 +1,11 @@
+.StudentList {
+  td {
+    &.phoneNumber {
+      direction: ltr;
+    }
+
+    &.name {
+      text-transform: capitalize;
+    }
+  }
+}
