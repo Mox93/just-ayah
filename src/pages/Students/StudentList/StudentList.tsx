@@ -13,6 +13,7 @@ import {
   usePageT,
   usePersonalInfoT,
 } from "utils/translation";
+import { getPhoneNumberByTag } from "models/phoneNumber";
 
 interface StudentListProps {}
 
@@ -50,7 +51,8 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       name: "phoneNumber",
       className: "phoneNumber",
       header: pi("phoneNumber"),
-      getValue: (data: Student) => data.phoneNumbers[0]?.number,
+      getValue: (data: Student) =>
+        getPhoneNumberByTag(data.phoneNumbers, "whatsapp"),
       fit: true,
     },
     {

@@ -2,9 +2,10 @@ import { FunctionComponent, useState } from "react";
 
 import DropdownMenu from "components/DropdownMenu";
 import InputField, { InputFieldProps } from "components/InputField";
-import { countryList, getCountry } from "models/country";
+import { countryList } from "models/country";
 import {
   addTag,
+  getCountryCode,
   PhoneNumberInfo,
   removeTag,
   sanitizePhoneNumber,
@@ -47,10 +48,7 @@ const PhoneNumber: FunctionComponent<PhoneNumberProps> = ({
           options={countryList}
           selected={value.code}
           mapKey={(country) => country.code}
-          mapValue={(code) => {
-            const country = getCountry(code);
-            return country ? `+${country.phone}` : "";
-          }}
+          mapValue={getCountryCode}
           mapSelection={(country) => country.code}
           onChange={(code: string, valid) => {
             setValidCode(valid);
