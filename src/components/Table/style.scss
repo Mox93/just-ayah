@@ -35,7 +35,7 @@
 
   thead {
     tr {
-      border-bottom: 1px solid var(--c-shadow-dark);
+      border-block-end: 1px solid var(--c-shadow-dark);
 
       th {
         text-align: start;
@@ -57,7 +57,7 @@
 
   tbody {
     tr {
-      border-bottom: 1px solid var(--c-shadow);
+      border-block-end: 1px solid var(--c-shadow);
 
       &:hover {
         background-color: var(--c-shadow-light);
