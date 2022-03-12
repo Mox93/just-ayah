@@ -178,7 +178,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         />
         <RadioSelector
           name="doesWork"
-          label={pi("doesDork")}
+          label={pi("doesWork")}
           options={[
             { value: "yes", name: glb("yes") },
             { value: "no", name: glb("no") },
