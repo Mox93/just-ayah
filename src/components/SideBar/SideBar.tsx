@@ -26,7 +26,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
 
   return (
     <div className="SideBar" dir={dir}>
-      <div className="nav-section">
+      <div className="navSection">
         <NavLink className={classHandler} to="/">
           <h3 className="expanded">{nav("home")}</h3>
           <SvgIcon className="shrunk" path={HomeIcon} />
@@ -44,9 +44,9 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
           <SvgIcon className="shrunk" path={CoursesIcon} />
         </NavLink>
       </div>
-      <div className="settings-section">
+      <div className="settingsSection">
         <LanguageSelector />
-        <button className="sign-out" onClick={signOut}>
+        <button className="signOut" onClick={signOut}>
           {glb("signOut")}
         </button>
       </div>

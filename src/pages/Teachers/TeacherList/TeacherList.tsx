@@ -21,7 +21,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
         `${data.firstName} ${data.middleName} ${data.lastName}`,
     },
     {
-      name: "phone-number",
+      name: "phoneNumber",
       header: pi("phoneNumber"),
       getValue: (data: Teacher) => data.phoneNumber.number,
       fit: true,
@@ -35,7 +35,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
       fit: true,
     },
     {
-      name: "date-created",
+      name: "dateCreated",
       header: glb("dateCreated"),
       getValue: (data: Teacher) => historyRep(data.meta.dateCreated),
       fit: true,

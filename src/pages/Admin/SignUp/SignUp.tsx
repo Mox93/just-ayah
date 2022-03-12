@@ -16,7 +16,7 @@ const SignUp: FunctionComponent<SignUpProps> = () => {
   return (
     <div className="SignUp" style={{ backgroundImage: `url(${justAyahBG})` }}>
       <LanguageSelector />
-      <button className="google-sign-in cta-btn" onClick={signIn}>
+      <button className="googleSignIn ctaBtn" onClick={signIn}>
         {glb("googleSignIn")}
       </button>
     </div>

@@ -83,7 +83,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
       />
 
       <button
-        className={cn({ submitting }, ["submit-btn", "cta-btn"])}
+        className={cn({ submitting }, ["submitBtn", "ctaBtn"])}
         type="submit"
         onClick={submitForm}
         disabled={!valid || submitting}

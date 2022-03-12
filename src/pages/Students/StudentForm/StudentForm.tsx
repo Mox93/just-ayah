@@ -65,7 +65,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
 
   return (
     <form className="StudentForm container" dir={dir}>
-      <div className="input-group">
+      <div className="inputGroup">
         <InputField
           required
           name="firstName"
@@ -92,7 +92,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         />
       </div>
 
-      <div className="input-group">
+      <div className="inputGroup">
         <DatePicker
           label={pi("dateOfBirth")}
           onChange={update("dateOfBirth")}
@@ -110,7 +110,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         />
       </div>
 
-      <div className="input-group">
+      <div className="inputGroup">
         <CountrySelector
           name="nationality"
           label={pi("nationality")}
@@ -128,7 +128,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         />
       </div>
 
-      <div className="input-group">
+      <div className="inputGroup">
         <GovernorateSelector
           country={student.country}
           label={pi("governorate")}
@@ -167,7 +167,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
         onChange={update("email")}
       />
 
-      <div className="input-group">
+      <div className="inputGroup">
         <InputField
           name="education"
           label={pi("education")}
@@ -224,7 +224,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
       />
 
       <button
-        className={cn({ submitting }, ["submit-btn", "cta-btn"])}
+        className={cn({ submitting }, ["submitBtn", "ctaBtn"])}
         type="submit"
         onClick={submitForm}
         disabled={!valid || submitting}

@@ -25,13 +25,13 @@ const Teachers: FunctionComponent<TeachersProps> = () => {
         selected={selected}
         onChange={(selection: string) => setSelected(selection)}
         actions={
-          <Link className="add-resource" to="/teachers/new">
+          <Link className="addResource" to="/teachers/new">
             +
           </Link>
         }
       />
 
-      <main className="main-section">
+      <main className="mainSection">
         <Table
           fields={[
             { name: "name", header: "name" },

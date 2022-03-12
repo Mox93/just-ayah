@@ -36,14 +36,14 @@
       display: none;
     }
 
-    .settings-section {
+    .settingsSection {
       .LanguageSelector {
         .element {
           display: block;
         }
       }
 
-      .sign-out {
+      .signOut {
         opacity: 100%;
         transition-delay: 100ms;
       }
@@ -58,7 +58,7 @@
     display: block;
   }
 
-  .nav-section {
+  .navSection {
     display: flex;
     gap: 1rem;
     flex-direction: column;
@@ -111,7 +111,7 @@
     }
   }
 
-  .settings-section {
+  .settingsSection {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -126,7 +126,7 @@
       }
     }
 
-    .sign-out {
+    .signOut {
       height: 2.25rem;
       background-color: var(--c-error);
       color: var(--c-white);

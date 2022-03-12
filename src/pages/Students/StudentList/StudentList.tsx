@@ -30,12 +30,12 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       className: "prefix",
       header: (
         <div
-          className="small-circle"
+          className="smallCircle"
           style={{ border: "2px solid var(--c-black)" }}
         ></div>
       ),
       getValue: (data: Student) => (
-        <div className={`small-circle ${data.gender}`}></div>
+        <div className={`smallCircle ${data.gender}`}></div>
       ),
       fit: true,
     },
@@ -47,8 +47,8 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
         `${data.firstName} ${data.middleName} ${data.lastName}`,
     },
     {
-      name: "phone-number",
-      className: "phone-number",
+      name: "phoneNumber",
+      className: "phoneNumber",
       header: pi("phoneNumber"),
       getValue: (data: Student) => data.phoneNumbers[0]?.number,
       fit: true,
@@ -83,7 +83,7 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       header: glb("course"),
     },
     {
-      name: "date-created",
+      name: "dateCreated",
       header: glb("dateCreated"),
       getValue: (data: Student) => historyRep(data.meta.dateCreated),
       fit: true,
@@ -100,15 +100,15 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     });
 
   return (
-    <main className="main-section">
+    <main className="mainSection">
       {selected.size > 0 && (
         <div className="selectionCounter">
           {stu("counter", { count: selected.size })}
         </div>
       )}
       <Table
-        {...{ fields, data }}
-        selected={selected}
+        {...{ fields, data, selected }}
+        className="StudentList"
         toggleSelect={(checked, id) =>
           checked ? handleSelect(id) : handleDeselect(id)
         }
@@ -116,7 +116,7 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
           setSelected(checked ? new Set(data.map(({ id }) => id)) : new Set())
         }
       />
-      <button className="cta-btn" onClick={() => fetchStudents()}>
+      <button className="ctaBtn" onClick={() => fetchStudents()}>
         {`${glb("loadMore")} ...`}
       </button>
     </main>
