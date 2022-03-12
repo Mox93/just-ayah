@@ -10,7 +10,11 @@ export const cn = (
   `${Object.keys(filteredClasses)
     .filter((className) => filteredClasses[className])
     .join(" ")} ${
-    typeof classNames === "string" ? classNames : classNames?.join(" ")
+    classNames
+      ? typeof classNames === "string"
+        ? classNames
+        : classNames?.join(" ")
+      : ""
   }`.trim();
 
 //

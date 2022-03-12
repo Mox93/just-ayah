@@ -35,7 +35,7 @@ const Table: FunctionComponent<TableProps> = ({
           <th className="prefix fit">
             <input
               type="checkbox"
-              name="select-all"
+              name="selectAll"
               id={"all"}
               onChange={(e) => toggleSelectAll(e.target.checked)}
               checked={data.length > 0 && selected.size === data.length}
@@ -66,7 +66,7 @@ const Table: FunctionComponent<TableProps> = ({
             <td className="prefix fit">
               <input
                 type="checkbox"
-                name="select-item"
+                name="selectItem"
                 id={row.id}
                 checked={selected.has(row.id)}
                 onChange={(e) => toggleSelect(e.target.checked, row.id)}
