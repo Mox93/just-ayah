@@ -1,5 +1,5 @@
 :root {
-  // Colors
+  // BRAND COLORS
   --c-primary: #3d6d8f;
   --c-primary-light: #add1eb;
   --c-primary-dark: #1c374a;
@@ -14,6 +14,15 @@
   --c-shadow: #3f44472d;
   --c-shadow-dark: #13171a88;
   --c-shadow-light: #cad1d64d;
+
+  // COLOR CODING
+  --c-unknown: #3f44472d;
+  --c-unknown-text: #13171a88;
+  --c-canceled: #e04024;
+  --c-active: #84ad13;
+  --c-pending: #9023bb;
+  --c-finished: #227aff;
+  --c-postponed: #d3b300;
 }
 
 // Sizes

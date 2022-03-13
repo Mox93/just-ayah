@@ -39,18 +39,20 @@ type FetchStudents = (options?: {
   sort?: { by: string | FieldPath; direction?: OrderByDirection };
 }) => void;
 
+type UpdateStudent = (id: string, updates: Partial<Student>) => void;
+
 interface StudentsContextObj {
   data: Student[];
   addStudent: AddStudent;
   fetchStudents: FetchStudents;
-  archiveStudent: (student: Student) => void;
+  updateStudent: UpdateStudent;
 }
 
 const StudentsContext = createContext<StudentsContextObj>({
   data: [],
   addStudent: omit,
   fetchStudents: omit,
-  archiveStudent: omit,
+  updateStudent: omit,
 });
 
 interface StudentsProviderProps extends ProviderProps {}
@@ -60,56 +62,58 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
 }) => {
   const [data, setData] = useState<Student[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
-  const studentsRef = collection(db, "students");
+  const collectionRef = collection(db, "students");
 
   const addStudent: AddStudent = (
     data,
     onfulfilled = omit,
     onrejected = console.log
   ) => {
-    addDoc(studentsRef, studentFromInfo(data))
+    addDoc(collectionRef, studentFromInfo(data))
       .then(onfulfilled, onrejected)
       .catch(console.log);
   };
 
-  const fetchStudents: FetchStudents = async ({
+  const fetchStudents: FetchStudents = ({
     filters = [],
     size = 20,
     sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
   } = {}) => {
     const q = query(
-      studentsRef,
+      collectionRef,
       ...filters.map((filter) => where(...filter)),
       limit(size),
       orderBy(sort.by, sort.direction),
       ...(lastDoc ? [startAfter(lastDoc)] : [])
     );
-    const querySnapshot = await getDocs(q);
+    getDocs(q).then((querySnapshot) => {
+      setData((state) => {
+        const newState = [...state];
 
-    setData((state) => {
-      const newState = [...state];
+        querySnapshot.docs.forEach((doc, i) => {
+          newState.push(studentFromDB(doc.id, doc.data() as StudentInDB));
 
-      querySnapshot.docs.forEach((doc, i) => {
-        newState.push(studentFromDB(doc.id, doc.data() as StudentInDB));
+          if (i === size - 1) {
+            setLastDoc(doc);
+          }
+        });
 
-        if (i === size - 1) {
-          setLastDoc(doc);
-        }
+        return newState;
       });
-
-      return newState;
     });
   };
 
-  const archiveStudent = (student: Student) => {
-    updateDoc(doc(studentsRef, student.id), {
-      meta: { ...student.meta, state: "archived", dateUpdated: new Date() },
-    });
+  const updateStudent: UpdateStudent = (id, updates) => {
+    updateDoc(doc(collectionRef, id), updates).then(() =>
+      setData((state) =>
+        state.map((data) => (data.id === id ? { ...data, ...updates } : data))
+      )
+    );
   };
 
   return (
     <StudentsContext.Provider
-      value={{ addStudent, fetchStudents, archiveStudent, data }}
+      value={{ addStudent, fetchStudents, updateStudent, data }}
     >
       {children}
     </StudentsContext.Provider>

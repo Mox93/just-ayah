@@ -7,5 +7,51 @@
     &.name {
       text-transform: capitalize;
     }
+
+    &.colorCoded {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+  }
+
+  .colorCoded {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+
+    &.unknown {
+      background-color: var(--c-unknown);
+      color: var(--c-unknown-text);
+    }
+
+    &.canceled {
+      background-color: var(--c-canceled);
+      color: var(--c-white);
+    }
+
+    &.active {
+      background-color: var(--c-active);
+      color: var(--c-white);
+    }
+
+    &.pending {
+      background-color: var(--c-pending);
+      color: var(--c-white);
+    }
+
+    &.finished {
+      background-color: var(--c-finished);
+      color: var(--c-white);
+    }
+
+    &.postponed {
+      background-color: var(--c-postponed);
+      color: var(--c-white);
+    }
+  }
+
+  .statusList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 }

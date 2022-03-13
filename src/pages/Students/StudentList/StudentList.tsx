@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from "react";
 
 import { getCountry } from "models/country";
 import { handleEgGov } from "models/governorate";
-import { Student } from "models/student";
+import { Status, statuses, Student } from "models/student";
 import { getOccupation } from "models/work";
 import { getAge, historyRep } from "models/dateTime";
 import Table, { FieldProps } from "components/Table";
@@ -14,6 +14,7 @@ import {
   usePersonalInfoT,
 } from "utils/translation";
 import { getPhoneNumberByTag } from "models/phoneNumber";
+import Popup, { PopupProps } from "components/Popup";
 
 interface StudentListProps {}
 
@@ -23,18 +24,43 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
   const stu = usePageT("students");
   const pi = usePersonalInfoT();
 
-  const { data, fetchStudents } = useStudents();
+  const { data, fetchStudents, updateStudent } = useStudents();
+
+  const [popupProps, setPopupProps] = useState<PopupProps>({ visible: false });
+
+  const updateStatus = (student: Student, status: Status) => {
+    updateStudent(student.id, { meta: { ...student.meta, status } });
+    setPopupProps({ visible: false });
+  };
+
+  const handlePopup = (student: Student) => () =>
+    setPopupProps({
+      children: (
+        <div className="statusList">
+          {statuses.map((status) => (
+            <button
+              key={status}
+              className={`${status} colorCoded`}
+              onClick={() => updateStatus(student, status)}
+            >
+              {glb(status)}
+            </button>
+          ))}
+        </div>
+      ),
+      close: () => setPopupProps({ visible: false }),
+    });
 
   const fields: FieldProps[] = [
     {
       name: "gender",
-      className: "prefix",
       header: (
         <div
           className="smallCircle"
           style={{ border: "2px solid var(--c-black)" }}
         ></div>
       ),
+      className: "prefix",
       getValue: (data: Student) => (
         <div className={`smallCircle ${data.gender}`}></div>
       ),
@@ -42,15 +68,49 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     },
     {
       name: "name",
-      className: "name",
       header: pi("fullName"),
+      className: "name",
       getValue: (data: Student) =>
         `${data.firstName} ${data.middleName} ${data.lastName}`,
     },
     {
+      name: "status",
+      header: pi("status"),
+      className: "colorCoded",
+      getValue: (data: Student) => {
+        const status = data.meta.status || "unknown";
+        return (
+          <button
+            className={`${status} colorCoded`}
+            onClick={handlePopup(data)}
+          >
+            {glb(status)}
+          </button>
+        );
+      },
+      fit: true,
+    },
+    {
+      name: "subscription",
+      header: pi("subscription"),
+      className: "colorCoded",
+      getValue: (data: Student) => {
+        const subscription = data.meta.subscription?.type || "unknown";
+        return (
+          <button
+            className={`${subscription} colorCoded`}
+            onClick={() => console.log("change subscription")}
+          >
+            {glb(subscription)}
+          </button>
+        );
+      },
+      fit: true,
+    },
+    {
       name: "phoneNumber",
-      className: "phoneNumber",
       header: pi("phoneNumber"),
+      className: "phoneNumber",
       getValue: (data: Student) =>
         getPhoneNumberByTag(data.phoneNumbers, "whatsapp"),
       fit: true,
@@ -70,6 +130,11 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       header: pi("occupation"),
       getValue: (data: Student) =>
         data.workStatus && getOccupation(data.workStatus, pi),
+    },
+    {
+      name: "nationality",
+      header: pi("nationality"),
+      getValue: (data: Student) => getCountry(data.country)?.native,
     },
     {
       name: "residence",
@@ -102,7 +167,7 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     });
 
   return (
-    <main className="mainSection">
+    <main className="mainSection StudentList">
       {selected.size > 0 && (
         <div className="selectionCounter">
           {stu("counter", { count: selected.size })}
@@ -110,7 +175,6 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       )}
       <Table
         {...{ fields, data, selected }}
-        className="StudentList"
         toggleSelect={(checked, id) =>
           checked ? handleSelect(id) : handleDeselect(id)
         }
@@ -121,6 +185,7 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       <button className="ctaBtn" onClick={() => fetchStudents()}>
         {`${glb("loadMore")} ...`}
       </button>
+      <Popup {...popupProps} />
     </main>
   );
 };

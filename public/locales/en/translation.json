@@ -9,7 +9,13 @@
     "dateCreated": "date created",
     "dateUpdated": "last updated",
     "course": "course",
-    "loadMore": "load more"
+    "loadMore": "load more",
+    "unknown": "unknown",
+    "pending": "pending",
+    "active": "active",
+    "postponed": "postponed",
+    "finished": "finished",
+    "canceled": "canceled"
   },
   "nav": {
     "home": "home",
@@ -51,7 +57,9 @@
     "other": "other",
     "noDetails": "details",
     "quran": "have you memorized portions of the quran before?",
-    "zoom": "are you able to use the conferencing app \"Zoom\"? as the sessions take place through it."
+    "zoom": "are you able to use the conferencing app \"Zoom\"? as the sessions take place through it.",
+    "status": "status",
+    "subscription": "subscription"
   },
   "pages": {
     "students": {

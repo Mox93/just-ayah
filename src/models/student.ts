@@ -4,7 +4,7 @@ import { Gender } from "./gender";
 import { PhoneNumberInfo } from "./phoneNumber";
 import { WorkStatus } from "./work";
 
-const statuses = [
+export const statuses = [
   "pending",
   "active",
   "postponed",
@@ -12,12 +12,17 @@ const statuses = [
   "canceled",
 ] as const;
 
-type Status = typeof statuses[number];
+export type Status = typeof statuses[number];
+
+export type Subscription =
+  | { type: "fullPay" | "noPay" }
+  | { type: "partialPay"; amount: number };
 
 interface Meta {
   dateCreated: Date;
   dateUpdated: Date;
-  status: Status;
+  status?: Status;
+  subscription?: Subscription;
 }
 
 interface MetaInDB extends Omit<Meta, "dateCreated" | "dateUpdated"> {
@@ -92,7 +97,6 @@ export const studentFromDB = (id: string, data: StudentInDB): Student => {
       : {
           dateCreated: new Date(),
           dateUpdated: new Date(),
-          status: "pending",
         },
   };
 };
