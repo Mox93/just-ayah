@@ -1,0 +1,47 @@
+/* POPUP */
+
+.Popup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+
+  .background {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--c-shadow-dark);
+  }
+
+  .card {
+    position: absolute;
+    background-color: var(--c-white);
+    min-width: 10rem;
+    margin: 2rem 1rem;
+    overflow-y: auto;
+    display: grid;
+    gap: 1rem;
+
+    &.closable {
+      padding-block-start: 3rem;
+    }
+
+    .closeButton {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.5rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      text-transform: uppercase;
+      background-color: transparent;
+
+      &:hover {
+        background-color: var(--c-shadow-light);
+      }
+    }
+  }
+}

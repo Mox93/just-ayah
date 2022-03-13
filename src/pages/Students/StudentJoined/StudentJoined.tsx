@@ -1,15 +1,15 @@
 import { FunctionComponent } from "react";
-import PopUp, { PopUpProps } from "components/PopUp";
+import Popup, { PopupProps } from "components/Popup";
 
-interface StudentJoinedProps extends PopUpProps {}
+interface StudentJoinedProps extends PopupProps {}
 
 const StudentJoined: FunctionComponent<StudentJoinedProps> = (props) => {
   return (
-    <PopUp {...props}>
+    <Popup {...props}>
       <h1>Thank you for joining</h1>
       <a href="/">go back to the home page</a>
       <a href="/join">fill in a new form</a>
-    </PopUp>
+    </Popup>
   );
 };
 
