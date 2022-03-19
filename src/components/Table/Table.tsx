@@ -29,7 +29,7 @@ const Table: FunctionComponent<TableProps> = ({
   className = "",
 }) => {
   return (
-    <table className={`table ${className}`}>
+    <table className={`Table ${className}`}>
       <thead>
         <tr>
           <th className="prefix fit">
