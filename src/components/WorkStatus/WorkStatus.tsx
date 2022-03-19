@@ -31,7 +31,7 @@ const WorkStatusTree: FunctionComponent<WorkStatusTreeProps> = ({
       <RadioSelector
         name="noWorkReason"
         label={pi("noWorkReason")}
-        options={[...noWorkReasons, "other"].map((value) => ({
+        options={noWorkReasons.map((value) => ({
           value,
           name: pi(value),
         }))}

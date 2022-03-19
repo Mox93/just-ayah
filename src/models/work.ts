@@ -3,15 +3,17 @@ import { identity } from "utils";
 export const noWorkReasons = [
   "student",
   "housewife",
-  // "unemployed",
   "retired",
+  "other",
 ] as const;
+
+export type NoWorkReason = typeof noWorkReasons[number];
 
 export type WorkStatus =
   | { doesWork: true; job: string }
   | {
       doesWork: false;
-      reason: typeof noWorkReasons[number];
+      reason: Exclude<NoWorkReason, "other">;
     }
   | { doesWork: false; reason: "other"; explanation: string };
 
