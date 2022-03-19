@@ -2,32 +2,26 @@ import { dateFromDB, DateInDB } from "models/dateTime";
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
 import { PhoneNumberInfo } from "./phoneNumber";
+import {
+  StudentStatus,
+  statusFromDB,
+  StudentStatusInDB,
+} from "./studentStatus";
+import { Subscription } from "./subscription";
 import { WorkStatus } from "./work";
-
-export const statuses = [
-  "pending",
-  "active",
-  "postponed",
-  "finished",
-  "canceled",
-] as const;
-
-export type Status = typeof statuses[number];
-
-export type Subscription =
-  | { type: "fullPay" | "noPay" }
-  | { type: "partialPay"; amount: number };
 
 interface Meta {
   dateCreated: Date;
   dateUpdated: Date;
-  status?: Status;
+  status?: StudentStatus;
   subscription?: Subscription;
 }
 
-interface MetaInDB extends Omit<Meta, "dateCreated" | "dateUpdated"> {
+interface MetaInDB
+  extends Omit<Meta, "dateCreated" | "dateUpdated" | "status"> {
   dateCreated: DateInDB;
   dateUpdated: DateInDB;
+  status: StudentStatusInDB;
 }
 
 export interface StudentInfo {
@@ -93,6 +87,7 @@ export const studentFromDB = (id: string, data: StudentInDB): Student => {
           ...data.meta,
           dateCreated: dateFromDB(data.meta.dateCreated),
           dateUpdated: dateFromDB(data.meta.dateUpdated),
+          status: statusFromDB(data.meta.status),
         }
       : {
           dateCreated: new Date(),
@@ -105,6 +100,6 @@ export const studentFromInfo = (data: StudentInfo): Omit<Student, "id"> => {
   const now = new Date();
   return {
     ...data,
-    meta: { dateCreated: now, dateUpdated: now, status: "pending" },
+    meta: { dateCreated: now, dateUpdated: now, status: { type: "pending" } },
   };
 };

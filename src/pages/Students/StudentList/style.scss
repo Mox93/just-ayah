@@ -10,13 +10,13 @@
 
     &.colorCoded {
       padding: 0.5rem 1rem;
-      cursor: pointer;
     }
   }
 
   .colorCoded {
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
+    font-weight: 600;
 
     &.unknown {
       background-color: var(--c-unknown);
@@ -47,9 +47,25 @@
       background-color: var(--c-postponed);
       color: var(--c-white);
     }
+
+    &.fullPay {
+      background-color: var(--c-success-dark);
+      color: var(--c-white);
+    }
+
+    &.partialPay {
+      background-color: var(--c-success);
+      color: var(--c-white);
+    }
+
+    &.noPay {
+      background-color: var(--c-success-light);
+      color: var(--c-success-dark);
+    }
   }
 
-  .statusList {
+  .statusList,
+  .subscriptionList {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;

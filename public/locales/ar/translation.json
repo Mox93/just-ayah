@@ -11,11 +11,14 @@
     "course": "الدورة",
     "loadMore": "حمل المزيد",
     "unknown": "مجهول",
-    "pending": "منتظر",
-    "active": "مستمر",
-    "postponed": "مأجل",
-    "finished": "منتهي",
-    "canceled": "ملغي"
+    "pending": "انتظار",
+    "active": "فعال",
+    "postponed": "تأجيل",
+    "finished": "أنهى",
+    "canceled": "توقف",
+    "fullPay": "تكلفة كاملة",
+    "partialPay": "تكلفة جزئية",
+    "noPay": "بدون تكلفة"
   },
   "nav": {
     "home": "الرئيسية",
@@ -49,7 +52,7 @@
     "education": "المؤهل",
     "doesWork": "هل تعمل؟",
     "occupation": "العمل",
-    "noWorkReason": "هل انت ...",
+    "noWorkReason": "هل انت/ي ...",
     "student": "طالب",
     "housewife": "ربة منزل",
     "retired": "متقاعد",

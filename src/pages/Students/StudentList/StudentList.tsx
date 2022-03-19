@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from "react";
 
 import { getCountry } from "models/country";
 import { handleEgGov } from "models/governorate";
-import { Status, statuses, Student } from "models/student";
+import { Student } from "models/student";
 import { getOccupation } from "models/work";
 import { getAge, historyRep } from "models/dateTime";
 import Table, { FieldProps } from "components/Table";
@@ -15,6 +15,11 @@ import {
 } from "utils/translation";
 import { getPhoneNumberByTag } from "models/phoneNumber";
 import Popup, { PopupProps } from "components/Popup";
+import { getSubscription, Subscription } from "models/subscription";
+import SubscriptionSelector from "components/SubscriptionSelector";
+import StatusSelector from "components/StatusSelector";
+import { getStatus, StudentStatus } from "models/studentStatus";
+import { UNKNOWN } from "models";
 
 interface StudentListProps {}
 
@@ -27,28 +32,35 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
   const { data, fetchStudents, updateStudent } = useStudents();
 
   const [popupProps, setPopupProps] = useState<PopupProps>({ visible: false });
+  const close = () => setPopupProps({ visible: false });
 
-  const updateStatus = (student: Student, status: Status) => {
+  const updateStatus = (student: Student, status: StudentStatus) => {
+    console.log(student.id);
+
     updateStudent(student.id, { meta: { ...student.meta, status } });
     setPopupProps({ visible: false });
   };
+  const updateSubscription = (student: Student, subscription: Subscription) => {
+    updateStudent(student.id, { meta: { ...student.meta, subscription } });
+    setPopupProps({ visible: false });
+  };
 
-  const handlePopup = (student: Student) => () =>
+  const showStatusPopup = (student: Student) => () =>
     setPopupProps({
       children: (
-        <div className="statusList">
-          {statuses.map((status) => (
-            <button
-              key={status}
-              className={`${status} colorCoded`}
-              onClick={() => updateStatus(student, status)}
-            >
-              {glb(status)}
-            </button>
-          ))}
-        </div>
+        <StatusSelector onChange={(status) => updateStatus(student, status)} />
       ),
-      close: () => setPopupProps({ visible: false }),
+      close,
+    });
+
+  const showSubscriptionPopup = (student: Student) => () =>
+    setPopupProps({
+      children: (
+        <SubscriptionSelector
+          onChange={(subscription) => updateSubscription(student, subscription)}
+        />
+      ),
+      close,
     });
 
   const fields: FieldProps[] = [
@@ -78,13 +90,15 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       header: pi("status"),
       className: "colorCoded",
       getValue: (data: Student) => {
-        const status = data.meta.status || "unknown";
+        const type = data.meta.status?.type || UNKNOWN;
+        const status = getStatus(data.meta.status, glb);
+
         return (
           <button
-            className={`${status} colorCoded`}
-            onClick={handlePopup(data)}
+            className={`${type} colorCoded`}
+            onClick={showStatusPopup(data)}
           >
-            {glb(status)}
+            {status}
           </button>
         );
       },
@@ -95,13 +109,15 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       header: pi("subscription"),
       className: "colorCoded",
       getValue: (data: Student) => {
-        const subscription = data.meta.subscription?.type || "unknown";
+        const type = data.meta.subscription?.type || UNKNOWN;
+        const subscription = getSubscription(data.meta.subscription, glb);
+
         return (
           <button
-            className={`${subscription} colorCoded`}
-            onClick={() => console.log("change subscription")}
+            className={`${type} colorCoded`}
+            onClick={showSubscriptionPopup(data)}
           >
-            {glb(subscription)}
+            {subscription}
           </button>
         );
       },

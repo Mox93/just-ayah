@@ -19,6 +19,18 @@ export const historyRep = (date: Date): string => {
   return date.toDateString();
 };
 
+export const shortDateRep = (date: Date): string => {
+  const now = new Date();
+  const year =
+    now.getFullYear() === date.getFullYear()
+      ? ""
+      : now.getFullYear() < 2000
+      ? `/${now.getFullYear()}`
+      : `/${date.getFullYear() - 2000}`;
+
+  return `${date.getDate()}/${date.getMonth() + 1}${year}`;
+};
+
 export const dateFromDB = (date: DateInDB): Date => {
   return new Date(date.seconds * 1000);
 };

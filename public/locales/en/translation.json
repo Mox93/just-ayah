@@ -15,7 +15,10 @@
     "active": "active",
     "postponed": "postponed",
     "finished": "finished",
-    "canceled": "canceled"
+    "canceled": "canceled",
+    "fullPay": "full payment",
+    "partialPay": "partial payment",
+    "noPay": "no payment"
   },
   "nav": {
     "home": "home",
@@ -50,7 +53,7 @@
     "doesWork": "do you work?",
     "occupation": "job",
     "noWorkReason": "are you a ...",
-    "student": "housewife",
+    "student": "student",
     "housewife": "housewife",
     "retired": "retired",
     "unemployed": "unemployed",

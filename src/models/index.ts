@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 
+export const UNKNOWN = "unknown";
+
 export interface ProviderProps {
   children?: ReactNode;
 }
