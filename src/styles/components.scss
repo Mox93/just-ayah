@@ -1,26 +1,7 @@
 /* STUDENT FORM */
-
-.StudentForm {
-  margin-inline: auto;
-
-  .submitBtn {
-    background-color: var(--c-success);
-    color: var(--c-white);
-
-    &:disabled {
-      background-color: var(--c-shadow-dark);
-      cursor: not-allowed;
-
-      &.submitting {
-        background-color: var(--c-success-light);
-        cursor: default;
-      }
-    }
-  }
-}
-
 /* CUSTOMER FORM */
 
+.StudentForm,
 .CustomerForm {
   margin-inline: auto;
 
@@ -28,12 +9,13 @@
     background-color: var(--c-success);
     color: var(--c-white);
 
-    &:disabled {
-      background-color: var(--c-shadow-dark);
+    &:disabled,
+    &.submitting {
+      color: var(--c-shadow-dark);
+      background-color: var(--c-shadow);
       cursor: not-allowed;
 
       &.submitting {
-        background-color: var(--c-success-light);
         cursor: default;
       }
     }
