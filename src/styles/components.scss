@@ -1,10 +1,6 @@
-/* STUDENT FORM */
-/* CUSTOMER FORM */
+/* FORM */
 
-.StudentForm,
-.CustomerForm {
-  margin-inline: auto;
-
+.Form {
   .submitBtn {
     background-color: var(--c-success);
     color: var(--c-white);
@@ -13,11 +9,7 @@
     &.submitting {
       color: var(--c-shadow-dark);
       background-color: var(--c-shadow);
-      cursor: not-allowed;
-
-      &.submitting {
-        cursor: default;
-      }
+      cursor: default;
     }
   }
 }

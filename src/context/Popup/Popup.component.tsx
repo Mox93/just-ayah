@@ -9,8 +9,8 @@ export interface PopupProps {
 const Popup: FunctionComponent<PopupProps> = ({ children, close }) => {
   return (
     <div className="Popup">
-      <div className="background" onClick={close} />
-      <div className={cn({ closable: Boolean(close) }, "card container")}>
+      <div className="Background" onClick={close} />
+      <div className={cn({ closable: Boolean(close) }, "Card Container")}>
         {close && (
           <button className="closeButton" onClick={close}>
             x

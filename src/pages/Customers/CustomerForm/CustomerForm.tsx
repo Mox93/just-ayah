@@ -53,7 +53,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
   );
 
   return (
-    <form className="CustomerForm container" dir={dir}>
+    <form className="Form Container" dir={dir}>
       <InputField
         required
         name="fullName"

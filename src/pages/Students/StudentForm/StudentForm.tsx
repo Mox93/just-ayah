@@ -64,7 +64,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
   );
 
   return (
-    <form className="StudentForm container" dir={dir}>
+    <form className="Form Container" dir={dir}>
       <div className="inputGroup">
         <InputField
           required
