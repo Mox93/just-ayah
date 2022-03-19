@@ -26,4 +26,8 @@
 }
 
 // Sizes
-$s-mobile: 35em; // can't use var in @media
+$sMobile: 35em; // can't use var in @media
+
+// ColorCodeType
+$subscription: "subscription";
+$studentState: studentState;

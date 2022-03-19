@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "context/Auth";
 import { CustomersProvider } from "context/Customers";
 import { StudentsProvider } from "context/Students";
+import { PopupProvider } from "context/Popup";
 
 import "services/i18n";
 import "styles/index.scss";
@@ -23,6 +24,7 @@ function App() {
         StudentsProvider,
         CustomersProvider,
         [Suspense, { fallback: "...is loading" }],
+        PopupProvider,
       ]}
     >
       <div className="App">

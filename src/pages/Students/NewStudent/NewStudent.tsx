@@ -1,24 +1,31 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import LanguageSelector from "components/LanguageSelector";
 import StudentForm from "../StudentForm";
-import StudentJoined from "../StudentJoined";
+import { usePopup } from "context/Popup";
 
 interface NewStudentProps {}
 
 const NewStudent: FunctionComponent<NewStudentProps> = () => {
-  const [complete, setComplete] = useState(false);
+  const { showPopup } = usePopup();
 
   return (
     <div className="NewStudent">
       <img className="banner" src={justAyahBG} alt="" />
       <LanguageSelector />
       <StudentForm
-        onfulfilled={() => setComplete(true)}
-        onrejected={() => setComplete(false)}
+        onfulfilled={() =>
+          showPopup(
+            <>
+              <h1>Thank you for joining</h1>
+              <a href="/">go back to the home page</a>
+              <a href="/join">fill in a new form</a>
+            </>,
+            false
+          )
+        }
       />
-      {<StudentJoined visible={complete} />}
     </div>
   );
 };

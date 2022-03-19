@@ -3,16 +3,11 @@ import { cn } from "utils";
 
 export interface PopupProps {
   children?: ReactNode;
-  visible?: boolean;
   close?: () => void;
 }
 
-const Popup: FunctionComponent<PopupProps> = ({
-  children,
-  visible = true,
-  close,
-}) => {
-  return visible ? (
+const Popup: FunctionComponent<PopupProps> = ({ children, close }) => {
+  return (
     <div className="Popup">
       <div className="background" onClick={close} />
       <div className={cn({ closable: Boolean(close) }, "card container")}>
@@ -24,7 +19,7 @@ const Popup: FunctionComponent<PopupProps> = ({
         {children}
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default Popup;

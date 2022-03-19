@@ -1,3 +1,5 @@
+@import "styles/utils";
+
 .StudentList {
   td {
     &.phoneNumber {
@@ -13,61 +15,5 @@
     }
   }
 
-  .colorCoded {
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-weight: 600;
-
-    &.unknown {
-      background-color: var(--c-unknown);
-      color: var(--c-unknown-text);
-    }
-
-    &.canceled {
-      background-color: var(--c-canceled);
-      color: var(--c-white);
-    }
-
-    &.active {
-      background-color: var(--c-active);
-      color: var(--c-white);
-    }
-
-    &.pending {
-      background-color: var(--c-pending);
-      color: var(--c-white);
-    }
-
-    &.finished {
-      background-color: var(--c-finished);
-      color: var(--c-white);
-    }
-
-    &.postponed {
-      background-color: var(--c-postponed);
-      color: var(--c-white);
-    }
-
-    &.fullPay {
-      background-color: var(--c-success-dark);
-      color: var(--c-white);
-    }
-
-    &.partialPay {
-      background-color: var(--c-success);
-      color: var(--c-white);
-    }
-
-    &.noPay {
-      background-color: var(--c-success-light);
-      color: var(--c-success-dark);
-    }
-  }
-
-  .statusList,
-  .subscriptionList {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
+  @include colorCoded($studentState, $subscription);
 }

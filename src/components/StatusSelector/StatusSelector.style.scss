@@ -1,7 +1,8 @@
+@import "styles/utils";
+
 .StatusSelector {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  @include optionsList();
+  @include colorCoded($studentState);
 
   .postponed {
     &.date {

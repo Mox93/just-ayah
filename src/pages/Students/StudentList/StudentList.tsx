@@ -14,12 +14,12 @@ import {
   usePersonalInfoT,
 } from "utils/translation";
 import { getPhoneNumberByTag } from "models/phoneNumber";
-import Popup, { PopupProps } from "components/Popup";
 import { getSubscription, Subscription } from "models/subscription";
 import SubscriptionSelector from "components/SubscriptionSelector";
 import StatusSelector from "components/StatusSelector";
 import { getStatus, StudentStatus } from "models/studentStatus";
 import { UNKNOWN } from "models";
+import { usePopup } from "context/Popup";
 
 interface StudentListProps {}
 
@@ -31,37 +31,30 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
 
   const { data, fetchStudents, updateStudent } = useStudents();
 
-  const [popupProps, setPopupProps] = useState<PopupProps>({ visible: false });
-  const close = () => setPopupProps({ visible: false });
+  const { showPopup, closePopup } = usePopup();
 
   const updateStatus = (student: Student, status: StudentStatus) => {
     console.log(student.id);
 
     updateStudent(student.id, { meta: { ...student.meta, status } });
-    setPopupProps({ visible: false });
+    closePopup();
   };
   const updateSubscription = (student: Student, subscription: Subscription) => {
     updateStudent(student.id, { meta: { ...student.meta, subscription } });
-    setPopupProps({ visible: false });
+    closePopup();
   };
 
   const showStatusPopup = (student: Student) => () =>
-    setPopupProps({
-      children: (
-        <StatusSelector onChange={(status) => updateStatus(student, status)} />
-      ),
-      close,
-    });
+    showPopup(
+      <StatusSelector onChange={(status) => updateStatus(student, status)} />
+    );
 
   const showSubscriptionPopup = (student: Student) => () =>
-    setPopupProps({
-      children: (
-        <SubscriptionSelector
-          onChange={(subscription) => updateSubscription(student, subscription)}
-        />
-      ),
-      close,
-    });
+    showPopup(
+      <SubscriptionSelector
+        onChange={(subscription) => updateSubscription(student, subscription)}
+      />
+    );
 
   const fields: FieldProps[] = [
     {
@@ -201,7 +194,6 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       <button className="ctaBtn" onClick={() => fetchStudents()}>
         {`${glb("loadMore")} ...`}
       </button>
-      <Popup {...popupProps} />
     </main>
   );
 };
