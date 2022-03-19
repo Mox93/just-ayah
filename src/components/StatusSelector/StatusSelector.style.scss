@@ -2,7 +2,7 @@
 
 .StatusSelector {
   @include optionsList();
-  @include colorCoded($studentState);
+  @include colorCodedButton($studentState);
 
   .postponed {
     &.date {

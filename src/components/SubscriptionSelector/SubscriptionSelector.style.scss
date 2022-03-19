@@ -2,7 +2,7 @@
 
 .SubscriptionSelector {
   @include optionsList();
-  @include colorCoded($subscription);
+  @include colorCodedButton($subscription);
 
   .partialPay {
     &.amount {

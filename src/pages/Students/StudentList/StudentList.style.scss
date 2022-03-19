@@ -15,5 +15,5 @@
     }
   }
 
-  @include colorCoded($studentState, $subscription);
+  @include colorCodedButton($studentState, $subscription);
 }

@@ -12,8 +12,8 @@
   }
 }
 
-@mixin colorCoded($type...) {
-  .colorCoded {
+@mixin colorCodedButton($type...) {
+  button.colorCoded {
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
     font-weight: 600;
