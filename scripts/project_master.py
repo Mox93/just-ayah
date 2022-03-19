@@ -21,13 +21,16 @@ for dir in ["App", "components", "pages"]:
                 # new_name = os.path.join(cmp_path, f"{cmp}.tsx")
                 # os.rename(index_path, new_name)
 
-                with open(index_path, "w") as index_file:
-                    if os.path.exists(style_path):
-                        counter += 1
-                        index_file.write(f'import "./style.scss";\n\n')
+                new_name = os.path.join(cmp_path, f"index.ts")
+                os.rename(index_path, new_name)
 
-                    index_file.write(f'export * from "./{cmp}";\n')
-                    index_file.write(f'export {{ default }} from "./{cmp}";\n')
+                # with open(index_path, "w") as index_file:
+                #     if os.path.exists(style_path):
+                #         counter += 1
+                #         index_file.write(f'import "./style.scss";\n\n')
+
+                #     index_file.write(f'export * from "./{cmp}";\n')
+                #     index_file.write(f'export {{ default }} from "./{cmp}";\n')
 
             for sub_cmp in os.listdir(cmp_path):
                 sub_cmp_path = os.path.join(cmp_path, sub_cmp)
@@ -42,14 +45,17 @@ for dir in ["App", "components", "pages"]:
                         # new_name = os.path.join(sub_cmp_path, f"{sub_cmp}.tsx")
                         # os.rename(index_path, new_name)
 
-                        with open(index_path, "w") as index_file:
-                            if os.path.exists(style_path):
-                                counter += 1
-                                index_file.write(f'import "./style.scss";\n\n')
+                        new_name = os.path.join(sub_cmp_path, f"index.ts")
+                        os.rename(index_path, new_name)
 
-                            index_file.write(f'export * from "./{sub_cmp}";\n')
-                            index_file.write(
-                                f'export {{ default }} from "./{sub_cmp}";\n'
-                            )
+                        # with open(index_path, "w") as index_file:
+                        #     if os.path.exists(style_path):
+                        #         counter += 1
+                        #         index_file.write(f'import "./style.scss";\n\n')
+
+                        #     index_file.write(f'export * from "./{sub_cmp}";\n')
+                        #     index_file.write(
+                        #         f'export {{ default }} from "./{sub_cmp}";\n'
+                        #     )
 
 print(counter)
