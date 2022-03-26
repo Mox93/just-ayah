@@ -1,3 +1,4 @@
+import cn from "classnames";
 import { FunctionComponent, MouseEvent, useState } from "react";
 
 import InputField from "components/InputField";
@@ -11,7 +12,7 @@ import {
 import { useStudents } from "context/Students";
 import { genders } from "models/gender";
 import { Keys } from "models";
-import { cn, fromYesNo, toYesNo } from "utils";
+import { fromYesNo, toYesNo } from "utils";
 import WorkStatusTree from "components/WorkStatus";
 import CountrySelector from "components/CountrySelector";
 import GovernorateSelector from "components/GovernorateSelector";
@@ -224,7 +225,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
       />
 
       <button
-        className={cn({ submitting }, ["submitBtn", "ctaBtn"])}
+        className={cn({ submitting }, "submitBtn ctaBtn")}
         type="submit"
         onClick={submitForm}
         disabled={!valid || submitting}

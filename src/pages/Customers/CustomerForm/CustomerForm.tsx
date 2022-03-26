@@ -1,3 +1,4 @@
+import cn from "classnames";
 import { FunctionComponent, MouseEvent, useState } from "react";
 
 import InputField from "components/InputField";
@@ -8,7 +9,6 @@ import {
   CustomerValidation,
   customerValidation,
 } from "models/customer";
-import { cn } from "utils";
 import PhoneNumber from "components/PhoneNumber";
 import { useDirT, useGlobalT, usePersonalInfoT } from "utils/translation";
 
@@ -83,7 +83,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
       />
 
       <button
-        className={cn({ submitting }, ["submitBtn", "ctaBtn"])}
+        className={cn({ submitting }, "submitBtn ctaBtn")}
         type="submit"
         onClick={submitForm}
         disabled={!valid || submitting}

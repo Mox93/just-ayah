@@ -1,7 +1,7 @@
+import cn from "classnames";
 import { FunctionComponent } from "react";
 
 import { languages } from "models/language";
-import { cn } from "utils";
 
 import { useLanguage } from "utils/translation";
 
@@ -15,7 +15,7 @@ const LanguageSelector: FunctionComponent<LanguageSelectorProps> = () => {
       {Object.keys(languages).map((lng) => (
         <button
           key={lng}
-          className={cn({ selected: language === lng }, [lng, "element"])}
+          className={cn({ selected: language === lng }, lng, "element")}
           onClick={() => setLanguage(lng)}
         >
           {languages[lng].nativeName}

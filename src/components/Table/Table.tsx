@@ -1,6 +1,5 @@
+import cn from "classnames";
 import { FunctionComponent, ReactNode } from "react";
-
-import { cn } from "utils";
 
 export interface FieldProps {
   name: string;
@@ -43,19 +42,13 @@ const Table: FunctionComponent<TableProps> = ({
           </th>
           <th className="prefix fit">#</th>
 
-          {fields.map((field) => (
+          {fields.map(({ fit, className, name, size, header }) => (
             <th
-              className={cn(
-                {
-                  fit: Boolean(field.fit),
-                  clip: !field.fit,
-                },
-                field.className
-              )}
-              key={field.name}
-              style={field.size ? { width: field.size } : {}}
+              className={cn({ fit, clip: !fit }, className)}
+              key={name}
+              style={size ? { width: size } : {}}
             >
-              {field.header}
+              {header}
             </th>
           ))}
         </tr>
@@ -74,18 +67,12 @@ const Table: FunctionComponent<TableProps> = ({
             </td>
             <td className="prefix fit">{index + 1}</td>
 
-            {fields.map((field) => (
+            {fields.map(({ fit, className, name, getValue }) => (
               <td
-                className={cn(
-                  {
-                    fit: Boolean(field.fit),
-                    clip: !field.fit,
-                  },
-                  field.className
-                )}
-                key={`${row.id}.${field.name}`}
+                className={cn({ fit, clip: !fit }, className)}
+                key={`${row.id}.${name}`}
               >
-                {field.getValue ? field.getValue(row) : row[field.name]}
+                {getValue ? getValue(row) : row[name]}
               </td>
             ))}
           </tr>

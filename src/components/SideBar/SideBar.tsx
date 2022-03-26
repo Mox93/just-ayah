@@ -1,3 +1,4 @@
+import cn from "classnames";
 import { FunctionComponent } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -8,7 +9,6 @@ import HomeIcon from "assets/icons/home-svgrepo-com.svg";
 import StudentsIcon from "assets/icons/group-of-students-svgrepo-com.svg";
 import TeachersIcon from "assets/icons/teacher-svgrepo-com.svg";
 import CoursesIcon from "assets/icons/closed-book-svgrepo-com.svg";
-import { cn } from "utils";
 
 import { useDirT, useGlobalT, useNavT } from "utils/translation";
 

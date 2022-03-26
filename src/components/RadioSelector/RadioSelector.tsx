@@ -1,6 +1,7 @@
+import cn from "classnames";
 import { FunctionComponent, useState } from "react";
 
-import { cn, identity, omit } from "utils";
+import { identity, omit } from "utils";
 
 interface RadioSelectorProps {
   name: string;

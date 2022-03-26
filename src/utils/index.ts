@@ -1,23 +1,4 @@
 //
-interface ConditionalClasses {
-  [className: string]: boolean;
-}
-
-export const cn = (
-  filteredClasses: ConditionalClasses,
-  classNames?: string | string[]
-): string =>
-  `${Object.keys(filteredClasses)
-    .filter((className) => filteredClasses[className])
-    .join(" ")} ${
-    classNames
-      ? typeof classNames === "string"
-        ? classNames
-        : classNames?.join(" ")
-      : ""
-  }`.trim();
-
-//
 export const identity = (value: any) => value;
 
 export const omit = () => {};

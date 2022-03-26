@@ -1,6 +1,7 @@
+import cn from "classnames";
 import { FunctionComponent, InputHTMLAttributes, useState } from "react";
 
-import { cn, identity, omit } from "utils";
+import { identity, omit } from "utils";
 import { useDirT } from "utils/translation";
 
 type InputTypes = "text" | "tel" | "email" | "url" | "date" | "password";

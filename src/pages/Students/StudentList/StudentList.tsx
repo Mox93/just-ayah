@@ -1,3 +1,4 @@
+import cn from "classnames";
 import { FunctionComponent, useState } from "react";
 
 import { getCountry } from "models/country";
@@ -20,7 +21,6 @@ import StatusSelector from "components/StatusSelector";
 import { getStatus, StudentStatus } from "models/studentStatus";
 import { UNKNOWN } from "models";
 import { usePopup } from "context/Popup";
-import { cn } from "utils";
 import StudentNotes from "../StudentNotes";
 
 interface StudentListProps {}

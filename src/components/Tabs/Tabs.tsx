@@ -1,6 +1,5 @@
+import cn from "classnames";
 import { FunctionComponent, ReactNode } from "react";
-
-import { cn } from "utils";
 
 interface TabsProps {
   elements: { id: string; name: string; value: string }[];
@@ -18,13 +17,13 @@ const Tabs: FunctionComponent<TabsProps> = ({
   return (
     <div className="Tabs">
       <div className="actions">{actions}</div>
-      {elements.map((element) => (
+      {elements.map(({ id, value }) => (
         <button
-          key={element.id}
-          className={cn({ selected: selected === element.id }, "element")}
-          onClick={() => onChange(element.id)}
+          key={id}
+          className={cn({ selected: selected === id }, "element")}
+          onClick={() => onChange(id)}
         >
-          <h4 className="title">{element.value}</h4>
+          <h4 className="title">{value}</h4>
         </button>
       ))}
     </div>

@@ -1,5 +1,6 @@
+import cn from "classnames";
 import { FunctionComponent, ReactNode, useEffect } from "react";
-import { cn } from "utils";
+
 import { useDirT } from "utils/translation";
 
 export interface PopupProps {
@@ -22,7 +23,7 @@ const Popup: FunctionComponent<PopupProps> = ({ children, close }) => {
   return (
     <div className="Popup" dir={dir}>
       <div className="Background" onClick={close} />
-      <div className={cn({ closable: Boolean(close) }, "Card Container")}>
+      <div className={cn({ closable: close }, "Card Container")}>
         {close && (
           <button className="closeButton" onClick={close}>
             x
