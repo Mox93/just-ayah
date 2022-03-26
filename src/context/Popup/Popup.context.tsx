@@ -9,13 +9,19 @@ import {
 } from "react";
 import { omit } from "utils";
 
+type ShowPopup = (content: ReactNode, closable?: boolean) => void;
+type UpdatePopup = (props: PopupProps) => void;
+type ClosePopup = () => void;
+
 interface PopupContextObj {
-  showPopup: (content: ReactNode, closable?: boolean) => void;
-  closePopup: () => void;
+  showPopup: ShowPopup;
+  updatePopup: UpdatePopup;
+  closePopup: ClosePopup;
 }
 
 const PopupContext = createContext<PopupContextObj>({
   showPopup: omit,
+  updatePopup: omit,
   closePopup: omit,
 });
 
@@ -27,14 +33,22 @@ export const PopupProvider: FunctionComponent<PopupProviderProps> = ({
   const [props, setProps] = useState<PopupProps>({});
   const [isOpen, setIsOpen] = useState(false);
 
-  const close = () => setIsOpen(false);
-  const open = (content: ReactNode, closable: boolean = true) => {
-    setProps({ children: content, ...(closable ? { close } : {}) });
+  const showPopup: ShowPopup = (
+    content: ReactNode,
+    closable: boolean = true
+  ) => {
+    setProps({ children: content, ...(closable ? { close: closePopup } : {}) });
     setIsOpen(true);
   };
 
+  const updatePopup: UpdatePopup = (props) => {
+    setProps((state) => ({ ...state, ...props }));
+  };
+
+  const closePopup: ClosePopup = () => setIsOpen(false);
+
   return (
-    <PopupContext.Provider value={{ showPopup: open, closePopup: close }}>
+    <PopupContext.Provider value={{ showPopup, closePopup, updatePopup }}>
       {children}
       {isOpen && <Popup {...props} />}
     </PopupContext.Provider>
