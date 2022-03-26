@@ -51,7 +51,7 @@ const StudentForm: FunctionComponent<StudentFormProps> = ({
     e.preventDefault();
 
     setSubmitting(true);
-    addStudent(student as StudentInfo, onfulfilled, onrejected);
+    addStudent(student as StudentInfo, { onfulfilled, onrejected });
   };
 
   const valid = Object.values(validation).reduce(

@@ -1,0 +1,84 @@
+@import "styles/utils";
+
+.NotesViewer {
+  max-width: 50rem;
+  width: 75vw;
+
+  .newNote {
+    margin-inline: 0.5rem;
+
+    @include mainButton();
+  }
+
+  .newNoteSection {
+    margin-inline: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+
+    @include mobile {
+      flex-direction: column;
+    }
+
+    .InputField {
+      width: 100%;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+
+      @include mobile {
+        width: 100%;
+      }
+
+      .save,
+      .cancel {
+        @include mainButton();
+
+        flex: 1;
+        min-width: 3rem;
+        padding: 0;
+        direction: ltr;
+      }
+
+      .save::after {
+        @include checkMark($x: -8px, $y: -8px);
+      }
+
+      .cancel {
+        background-color: var(--c-error);
+
+        &::after {
+          content: "X";
+          color: var(--c-white);
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .notesList {
+    margin-block-start: 1.5rem;
+    display: grid;
+    gap: 0.5rem;
+    max-height: calc(100vh - 15rem);
+    overflow-y: auto;
+
+    .noteItem {
+      margin-inline: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid var(--c-shadow);
+      border-radius: 0.25rem;
+
+      .username {
+        font-weight: 600;
+      }
+
+      .body {
+        padding-block-start: 1rem;
+        border-block-start: 1px solid var(--c-shadow-light);
+      }
+    }
+  }
+}

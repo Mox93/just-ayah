@@ -1,6 +1,7 @@
 import { dateFromDB, DateInDB } from "models/dateTime";
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
+import { Note, NoteMapInDB, noteListFromDB } from "./note";
 import { PhoneNumberInfo } from "./phoneNumber";
 import {
   StudentStatus,
@@ -69,12 +70,14 @@ export const studentValidation: StudentValidation = {
 export interface Student extends StudentInfo {
   id: string;
   meta: Meta;
+  notes?: Note[];
 }
 
 export interface StudentInDB
-  extends Omit<Student, "id" | "dateOfBirth" | "meta"> {
+  extends Omit<Student, "id" | "dateOfBirth" | "meta" | "notes"> {
   dateOfBirth: DateInDB;
   meta: MetaInDB;
+  notes?: NoteMapInDB;
 }
 
 export const studentFromDB = (id: string, data: StudentInDB): Student => {
@@ -82,17 +85,13 @@ export const studentFromDB = (id: string, data: StudentInDB): Student => {
     ...data,
     id,
     dateOfBirth: dateFromDB(data.dateOfBirth),
-    meta: data.meta
-      ? {
-          ...data.meta,
-          dateCreated: dateFromDB(data.meta.dateCreated),
-          dateUpdated: dateFromDB(data.meta.dateUpdated),
-          status: statusFromDB(data.meta.status),
-        }
-      : {
-          dateCreated: new Date(),
-          dateUpdated: new Date(),
-        },
+    meta: {
+      ...data.meta,
+      dateCreated: dateFromDB(data.meta.dateCreated),
+      dateUpdated: dateFromDB(data.meta.dateUpdated),
+      status: statusFromDB(data.meta.status),
+    },
+    notes: data.notes && noteListFromDB(data.notes),
   };
 };
 

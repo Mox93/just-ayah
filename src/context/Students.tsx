@@ -26,20 +26,34 @@ import {
 } from "models/student";
 import { ProviderProps } from "models";
 import { omit } from "utils";
+import { toNoteMap } from "models/note";
 
 type AddStudent = (
   data: StudentInfo,
-  onfulfilled?: (response: any) => void,
-  onrejected?: (response: any) => void
+  callback?: {
+    onfulfilled?: (response: any) => void;
+    onrejected?: (response: any) => void;
+  }
 ) => void;
 
 type FetchStudents = (options?: {
   filters?: [string, WhereFilterOp, any][];
   size?: number;
   sort?: { by: string | FieldPath; direction?: OrderByDirection };
+  callback?: {
+    onfulfilled?: (response: any) => void;
+    onrejected?: (response: any) => void;
+  };
 }) => void;
 
-type UpdateStudent = (id: string, updates: Partial<Student>) => void;
+type UpdateStudent = (
+  id: string,
+  updates: Partial<Student>,
+  callback?: {
+    onfulfilled?: () => void;
+    onrejected?: (response: any) => void;
+  }
+) => void;
 
 interface StudentsContextObj {
   data: Student[];
@@ -66,8 +80,7 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
 
   const addStudent: AddStudent = (
     data,
-    onfulfilled = omit,
-    onrejected = console.log
+    { onfulfilled = omit, onrejected = console.log } = {}
   ) => {
     addDoc(collectionRef, studentFromInfo(data))
       .then(onfulfilled, onrejected)
@@ -78,6 +91,7 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
     filters = [],
     size = 20,
     sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
+    callback: { onfulfilled = omit, onrejected = console.log } = {},
   } = {}) => {
     const q = query(
       collectionRef,
@@ -86,6 +100,7 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
       orderBy(sort.by, sort.direction),
       ...(lastDoc ? [startAfter(lastDoc)] : [])
     );
+
     getDocs(q).then((querySnapshot) => {
       setData((state) => {
         const newState = [...state];
@@ -100,15 +115,29 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
 
         return newState;
       });
-    });
+
+      onfulfilled(querySnapshot);
+    }, onrejected);
   };
 
-  const updateStudent: UpdateStudent = (id, updates) => {
-    updateDoc(doc(collectionRef, id), updates).then(() =>
+  const updateStudent: UpdateStudent = (
+    id,
+    updates,
+    { onfulfilled = omit, onrejected = console.log } = {}
+  ) => {
+    const { notes, ...rest } = updates;
+    const updatesDB = {
+      ...rest,
+      ...(notes ? { notes: toNoteMap(notes) } : {}),
+    };
+
+    updateDoc(doc(collectionRef, id), updatesDB).then(() => {
       setData((state) =>
         state.map((data) => (data.id === id ? { ...data, ...updates } : data))
-      )
-    );
+      );
+
+      onfulfilled();
+    }, onrejected);
   };
 
   return (

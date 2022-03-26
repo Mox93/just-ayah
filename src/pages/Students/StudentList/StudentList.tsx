@@ -20,6 +20,8 @@ import StatusSelector from "components/StatusSelector";
 import { getStatus, StudentStatus } from "models/studentStatus";
 import { UNKNOWN } from "models";
 import { usePopup } from "context/Popup";
+import { cn } from "utils";
+import StudentNotes from "../StudentNotes";
 
 interface StudentListProps {}
 
@@ -33,14 +35,9 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
 
   const { showPopup, closePopup } = usePopup();
 
+  // Status
   const updateStatus = (student: Student, status: StudentStatus) => {
-    console.log(student.id);
-
     updateStudent(student.id, { meta: { ...student.meta, status } });
-    closePopup();
-  };
-  const updateSubscription = (student: Student, subscription: Subscription) => {
-    updateStudent(student.id, { meta: { ...student.meta, subscription } });
     closePopup();
   };
 
@@ -49,12 +46,22 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       <StatusSelector onChange={(status) => updateStatus(student, status)} />
     );
 
+  // Subscription
+  const updateSubscription = (student: Student, subscription: Subscription) => {
+    updateStudent(student.id, { meta: { ...student.meta, subscription } });
+    closePopup();
+  };
+
   const showSubscriptionPopup = (student: Student) => () =>
     showPopup(
       <SubscriptionSelector
         onChange={(subscription) => updateSubscription(student, subscription)}
       />
     );
+
+  // Notes
+  const showNotesPopup = (student: Student) => () =>
+    showPopup(<StudentNotes studentId={student.id} />);
 
   const fields: FieldProps[] = [
     {
@@ -157,6 +164,32 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     {
       name: "course",
       header: glb("course"),
+    },
+    {
+      name: "teacher",
+      header: glb("teacher"),
+    },
+    {
+      name: "schedule",
+      header: glb("schedule"),
+    },
+    {
+      name: "notes",
+      header: glb("notes"),
+      getValue: (data: Student) => {
+        const hasNotes = Boolean(data.notes);
+        const lastNote = (data.notes || [])[0];
+
+        return (
+          <button
+            className={cn({ createNote: !hasNotes }, "note")}
+            onClick={showNotesPopup(data)}
+            dir="auto"
+          >
+            {lastNote?.body || ". . ."}
+          </button>
+        );
+      },
     },
     {
       name: "dateCreated",
