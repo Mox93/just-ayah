@@ -23,6 +23,7 @@
     }
 
     &.clip {
+      max-width: 15rem;
       overflow-x: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

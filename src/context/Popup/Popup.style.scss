@@ -19,8 +19,8 @@
     position: absolute;
     background-color: var(--c-white);
     min-width: 10rem;
+    max-height: calc(100vh - 4rem);
     margin: 2rem 1rem;
-    overflow-y: auto;
     display: grid;
     gap: 1rem;
 
