@@ -1,7 +1,6 @@
-import cn from "classnames";
 import { FunctionComponent, InputHTMLAttributes, useState } from "react";
 
-import { identity, omit } from "utils";
+import { cn, identity, omit } from "utils";
 import { useDirT } from "utils/translation";
 
 type InputTypes = "text" | "tel" | "email" | "url" | "date" | "password";
@@ -39,7 +38,7 @@ const InputField: FunctionComponent<InputFieldProps> = ({
     visited && !validators.every((validator) => validator(map(value)));
 
   return (
-    <label className={`InputField ${className}`}>
+    <label className={cn("InputField", className)}>
       {label && <h3 className={cn({ required, invalid }, "title")}>{label}</h3>}
       <input
         {...props}

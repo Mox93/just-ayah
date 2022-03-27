@@ -1,4 +1,3 @@
-import cn from "classnames";
 import { FunctionComponent, MouseEvent, useState } from "react";
 
 import InputField from "components/InputField";
@@ -11,6 +10,7 @@ import {
 } from "models/customer";
 import PhoneNumber from "components/PhoneNumber";
 import { useDirT, useGlobalT, usePersonalInfoT } from "utils/translation";
+import { cn } from "utils";
 
 interface CustomerFormProps {
   onfulfilled?: (response: any) => void;

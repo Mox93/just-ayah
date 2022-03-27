@@ -4,6 +4,7 @@ import {
   StudentStatusType,
 } from "models/studentStatus";
 import { FunctionComponent, useEffect, useState } from "react";
+import { cn } from "utils";
 import { useGlobalT } from "utils/translation";
 
 interface StatusSelectorProps {
@@ -43,7 +44,7 @@ const StatusSelector: FunctionComponent<StatusSelectorProps> = ({
         ) : (
           <button
             key={type}
-            className={`${type} colorCoded`}
+            className={cn("colorCoded", type)}
             onClick={() => setSelected(type)}
           >
             {glb(type)}

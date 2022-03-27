@@ -1,9 +1,9 @@
-import cn from "classnames";
 import { FunctionComponent } from "react";
 
 import { languages } from "models/language";
 
 import { useLanguage } from "utils/translation";
+import { cn } from "utils";
 
 interface LanguageSelectorProps {}
 

@@ -1,4 +1,3 @@
-import cn from "classnames";
 import { FunctionComponent } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -11,6 +10,7 @@ import TeachersIcon from "assets/icons/teacher-svgrepo-com.svg";
 import CoursesIcon from "assets/icons/closed-book-svgrepo-com.svg";
 
 import { useDirT, useGlobalT, useNavT } from "utils/translation";
+import { cn } from "utils";
 
 interface SideBarProps {}
 

@@ -1,4 +1,3 @@
-import cn from "classnames";
 import { FunctionComponent, useState } from "react";
 
 import DropdownMenu from "components/DropdownMenu";
@@ -13,7 +12,7 @@ import {
 } from "models/phoneNumber";
 
 import CheckBox from "components/CheckBox";
-import { identity, omit } from "utils";
+import { cn, identity, omit } from "utils";
 import { usePersonalInfoT } from "utils/translation";
 
 interface PhoneNumberProps extends Omit<InputFieldProps, "value" | "map"> {

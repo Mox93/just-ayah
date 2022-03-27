@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { omit } from "utils";
+import { cn, omit } from "utils";
 
 interface CheckBoxProps {
   name: string;
@@ -17,7 +17,7 @@ const CheckBox: FunctionComponent<CheckBoxProps> = ({
   ...props
 }) => {
   return (
-    <label className={`CheckBox ${className}`}>
+    <label className={cn("CheckBox", className)}>
       <input
         {...props}
         checked={checked}

@@ -1,5 +1,5 @@
-import cn from "classnames";
 import { FunctionComponent, ReactNode, useEffect } from "react";
+import { cn } from "utils";
 
 import { useDirT } from "utils/translation";
 

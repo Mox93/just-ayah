@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 
-import { identity, omit } from "utils";
+import { cn, identity, omit } from "utils";
 import InputField, { InputFieldProps } from "components/InputField";
 
 interface DropdownMenuProps extends Omit<InputFieldProps, "value" | "map"> {
@@ -59,7 +59,7 @@ const DropdownMenu: FunctionComponent<DropdownMenuProps> = ({
   }, [isOpen]);
 
   return (
-    <div className={`DropdownMenu ${className}`}>
+    <div className={cn("DropdownMenu", className)}>
       <div ref={inputRef}>
         <InputField
           {...props}

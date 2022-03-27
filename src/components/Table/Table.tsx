@@ -1,5 +1,5 @@
-import cn from "classnames";
 import { FunctionComponent, ReactNode } from "react";
+import { cn } from "utils";
 
 export interface FieldProps {
   name: string;
@@ -25,10 +25,10 @@ const Table: FunctionComponent<TableProps> = ({
   selected,
   toggleSelect,
   toggleSelectAll,
-  className = "",
+  className,
 }) => {
   return (
-    <table className={`Table ${className}`}>
+    <table className={cn("Table", className)}>
       <thead>
         <tr>
           <th className="prefix fit">

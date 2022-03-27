@@ -4,6 +4,7 @@ import {
   SubscriptionType,
 } from "models/subscription";
 import { FunctionComponent, useEffect, useState } from "react";
+import { cn } from "utils";
 import { useGlobalT } from "utils/translation";
 
 interface SubscriptionSelectorProps {
@@ -41,7 +42,7 @@ const SubscriptionSelector: FunctionComponent<SubscriptionSelectorProps> = ({
         ) : (
           <button
             key={type}
-            className={`${type} colorCoded`}
+            className={cn("colorCoded", type)}
             onClick={() => setSelected(type)}
           >
             {glb(type)}

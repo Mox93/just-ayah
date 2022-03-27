@@ -1,7 +1,6 @@
-import cn from "classnames";
 import { FunctionComponent, useState } from "react";
 
-import { identity, omit } from "utils";
+import { cn, identity, omit } from "utils";
 
 interface RadioSelectorProps {
   name: string;
@@ -29,7 +28,7 @@ const RadioSelector: FunctionComponent<RadioSelectorProps> = ({
 
   return (
     <div className="RadioSelector">
-      <h3 className={`title ${cn({ required, invalid })}`}>{label}</h3>
+      <h3 className={cn("title", { required, invalid })}>{label}</h3>
       <div className="field">
         {options.map((option) => (
           <>

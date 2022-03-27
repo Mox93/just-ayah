@@ -1,5 +1,5 @@
-import cn from "classnames";
 import { FunctionComponent, ReactNode } from "react";
+import { cn } from "utils";
 
 interface TabsProps {
   elements: { id: string; name: string; value: string }[];

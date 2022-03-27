@@ -1,4 +1,3 @@
-import cn from "classnames";
 import { FunctionComponent, MouseEvent, useState } from "react";
 
 import InputField from "components/InputField";
@@ -12,7 +11,7 @@ import {
 import { useStudents } from "context/Students";
 import { genders } from "models/gender";
 import { Keys } from "models";
-import { fromYesNo, toYesNo } from "utils";
+import { cn, fromYesNo, toYesNo } from "utils";
 import WorkStatusTree from "components/WorkStatus";
 import CountrySelector from "components/CountrySelector";
 import GovernorateSelector from "components/GovernorateSelector";
