@@ -22,6 +22,8 @@ import { getStatus, StudentStatus } from "models/studentStatus";
 import { UNKNOWN } from "models";
 import { usePopup } from "context/Popup";
 import StudentNotes from "../StudentNotes";
+import { getUpcoming, scheduleToString } from "models/schedule";
+import StudentSchedule from "../StudentSchedule";
 
 interface StudentListProps {}
 
@@ -59,10 +61,15 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       />
     );
 
-  // Notes
-  const showNotesPopup = (student: Student) => () =>
-    showPopup(<StudentNotes studentId={student.id} />);
+  // Schedule
+  const showSchedulePopup = (studentId: string) => () =>
+    showPopup(<StudentSchedule studentId={studentId} />);
 
+  // Notes
+  const showNotesPopup = (studentId: string) => () =>
+    showPopup(<StudentNotes studentId={studentId} />);
+
+  // Columns
   const fields: FieldProps[] = [
     {
       name: "gender",
@@ -73,8 +80,8 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
         ></div>
       ),
       className: "prefix",
-      getValue: (data: Student) => (
-        <div className={`smallCircle ${data.gender}`}></div>
+      getValue: ({ gender }: Student) => (
+        <div className={`smallCircle ${gender}`}></div>
       ),
       fit: true,
     },
@@ -82,8 +89,8 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       name: "name",
       header: pi("fullName"),
       className: "name",
-      getValue: (data: Student) =>
-        `${data.firstName} ${data.middleName} ${data.lastName}`,
+      getValue: ({ firstName, middleName, lastName }: Student) =>
+        `${firstName} ${middleName} ${lastName}`,
     },
     {
       name: "status",
@@ -127,14 +134,14 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       name: "phoneNumber",
       header: pi("phoneNumber"),
       className: "phoneNumber",
-      getValue: (data: Student) =>
-        getPhoneNumberByTag(data.phoneNumbers, "whatsapp"),
+      getValue: ({ phoneNumbers }: Student) =>
+        getPhoneNumberByTag(phoneNumbers, "whatsapp"),
       fit: true,
     },
     {
       name: "age",
       header: pi("age"),
-      getValue: (data: Student) => getAge(data.dateOfBirth),
+      getValue: ({ dateOfBirth }: Student) => getAge(dateOfBirth),
       fit: true,
     },
     {
@@ -144,20 +151,20 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     {
       name: "occupation",
       header: pi("occupation"),
-      getValue: (data: Student) =>
-        data.workStatus && getOccupation(data.workStatus, pi),
+      getValue: ({ workStatus }: Student) =>
+        workStatus && getOccupation(workStatus, pi),
     },
     {
       name: "nationality",
       header: pi("nationality"),
-      getValue: (data: Student) => getCountry(data.country)?.native,
+      getValue: ({ country }: Student) => getCountry(country)?.native,
     },
     {
       name: "residence",
       header: pi("residence"),
-      getValue: (data: Student) => {
-        const parts = [getCountry(data.country)?.native];
-        if (data.governorate) parts.push(handleEgGov(data.governorate, gov));
+      getValue: ({ country, governorate }: Student) => {
+        const parts = [getCountry(country)?.native];
+        if (governorate) parts.push(handleEgGov(governorate, gov));
         return parts.join(" - ");
       },
     },
@@ -172,21 +179,33 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     {
       name: "schedule",
       header: glb("schedule"),
+      getValue: ({ schedule, id }: Student) => {
+        const upcoming = schedule && getUpcoming(schedule);
+
+        return (
+          <button
+            className={cn({ createNew: !upcoming }, "schedule")}
+            onClick={showSchedulePopup(id)}
+            dir="ltr"
+          >
+            {upcoming && scheduleToString(upcoming)}
+          </button>
+        );
+      },
     },
     {
       name: "notes",
       header: glb("notes"),
-      getValue: (data: Student) => {
-        const hasNotes = Boolean(data.notes);
-        const lastNote = (data.notes || [])[0];
+      getValue: ({ notes, id }: Student) => {
+        const lastNote = (notes || [])[0];
 
         return (
           <button
-            className={cn({ createNote: !hasNotes }, "note")}
-            onClick={showNotesPopup(data)}
+            className={cn({ createNew: !notes?.length }, "note")}
+            onClick={showNotesPopup(id)}
             dir="auto"
           >
-            {lastNote?.body || ". . ."}
+            {lastNote?.body}
           </button>
         );
       },
@@ -194,7 +213,7 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     {
       name: "dateCreated",
       header: glb("dateCreated"),
-      getValue: (data: Student) => historyRep(data.meta.dateCreated),
+      getValue: ({ meta: { dateCreated } }: Student) => historyRep(dateCreated),
       fit: true,
     },
   ];

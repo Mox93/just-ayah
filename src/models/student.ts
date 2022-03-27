@@ -1,3 +1,4 @@
+import { Schedule } from "./schedule";
 import { dateFromDB, DateInDB } from "models/dateTime";
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
@@ -71,6 +72,7 @@ export interface Student extends StudentInfo {
   id: string;
   meta: Meta;
   notes?: Note[];
+  schedule?: Schedule;
 }
 
 export interface StudentInDB

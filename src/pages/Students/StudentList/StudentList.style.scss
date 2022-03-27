@@ -14,7 +14,8 @@
       padding: 0.5rem 1rem;
     }
 
-    .note {
+    .note,
+    .schedule {
       background-color: transparent;
       width: 100%;
       text-align: start;
@@ -23,8 +24,12 @@
       text-overflow: ellipsis;
       font-size: 1rem;
 
-      &.createNote {
+      &.createNew {
         text-align: center;
+
+        &::after {
+          content: ". . .";
+        }
       }
     }
 

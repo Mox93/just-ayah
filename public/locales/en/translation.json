@@ -24,7 +24,9 @@
     "canceled": "canceled",
     "fullPay": "full payment",
     "partialPay": "partial payment",
-    "noPay": "no payment"
+    "noPay": "no payment",
+    "day": "day",
+    "time": "time"
   },
   "nav": {
     "home": "home",

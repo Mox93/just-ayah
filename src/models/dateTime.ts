@@ -1,3 +1,7 @@
+export const weekDays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"] as const;
+
+export type WeekDays = typeof weekDays[number];
+
 export interface DateInDB {
   nanoseconds: number;
   seconds: number;
