@@ -16,7 +16,7 @@ const StudentNotes: FunctionComponent<StudentNotesProps> = ({ studentId }) => {
   };
 
   useEffect(() => {
-    setNotes(data.find((student) => student.id === studentId)?.notes);
+    setNotes(data.find(({ id }) => id === studentId)?.notes);
   }, [data, studentId]);
 
   return <NotesViewer notes={notes} onNoteAdded={(note) => addNote(note)} />;

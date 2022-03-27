@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 
 interface SvgIconProps {
-  path?: string;
+  path: string;
   id?: string;
   className?: string;
 }

@@ -10,7 +10,7 @@
     @include mainButton();
   }
 
-  .newNoteSection {
+  .new {
     margin-inline: 0.5rem;
     display: flex;
     gap: 0.5rem;
@@ -58,7 +58,7 @@
     }
   }
 
-  .notesList {
+  .list {
     margin-block-start: 1.5rem;
     display: grid;
     gap: 0.5rem;

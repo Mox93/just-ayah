@@ -3,7 +3,7 @@ import { useAuth } from "context/Auth";
 import { UNKNOWN } from "models";
 import { historyRep } from "models/dateTime";
 import { Note } from "models/note";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { useGlobalT } from "utils/translation";
 
 interface NotesViewerProps {
@@ -39,10 +39,14 @@ const NotesViewer: FunctionComponent<NotesViewerProps> = ({
     setDraft("");
   };
 
+  useEffect(() => {
+    if (!notes.length) setNewNote(true);
+  }, [notes.length]);
+
   return (
     <div className="NotesViewer">
-      {newNote || !notes.length ? (
-        <div className="newNoteSection">
+      {newNote ? (
+        <div className="new">
           <InputField
             label={glb("newNote")}
             placeholder={`${glb("writeNoteHere")} ...`}
@@ -61,7 +65,7 @@ const NotesViewer: FunctionComponent<NotesViewerProps> = ({
         </button>
       )}
 
-      <div className="notesList">
+      <div className="list">
         {notes.map((note) => {
           return (
             <div
