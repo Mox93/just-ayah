@@ -1,13 +1,12 @@
 import { FunctionComponent } from "react";
 import { NavLink } from "react-router-dom";
 
-import SvgIcon from "components/SvgIcon";
 import LanguageSelector from "components/LanguageSelector";
 import { useAuth } from "context/Auth";
-import HomeIcon from "assets/icons/home-svgrepo-com.svg";
-import StudentsIcon from "assets/icons/group-of-students-svgrepo-com.svg";
-import TeachersIcon from "assets/icons/teacher-svgrepo-com.svg";
-import CoursesIcon from "assets/icons/closed-book-svgrepo-com.svg";
+import { ReactComponent as HomeIcon } from "assets/icons/home-svgrepo-com.svg";
+import { ReactComponent as StudentsIcon } from "assets/icons/group-of-students-svgrepo-com.svg";
+import { ReactComponent as TeachersIcon } from "assets/icons/teacher-svgrepo-com.svg";
+import { ReactComponent as CoursesIcon } from "assets/icons/closed-book-svgrepo-com.svg";
 
 import { useDirT, useGlobalT, useNavT } from "utils/translation";
 import { cn } from "utils";
@@ -29,19 +28,19 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
       <div className="navSection">
         <NavLink className={classHandler} to="/">
           <h3 className="expanded">{nav("home")}</h3>
-          <SvgIcon className="shrunk" path={HomeIcon} />
+          <HomeIcon className="shrunk" />
         </NavLink>
         <NavLink className={classHandler} to="/students">
           <h3 className="expanded">{nav("students")}</h3>
-          <SvgIcon className="shrunk" path={StudentsIcon} />
+          <StudentsIcon className="shrunk" />
         </NavLink>
         <NavLink className={classHandler} to="/teachers">
           <h3 className="expanded">{nav("teachers")}</h3>
-          <SvgIcon className="shrunk" path={TeachersIcon} />
+          <TeachersIcon className="shrunk" />
         </NavLink>
         <NavLink className={classHandler} to="/courses">
           <h3 className="expanded">{nav("courses")}</h3>
-          <SvgIcon className="shrunk" path={CoursesIcon} />
+          <CoursesIcon className="shrunk" />
         </NavLink>
       </div>
       <div className="settingsSection">
