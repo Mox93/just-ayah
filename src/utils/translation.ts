@@ -23,6 +23,7 @@ export const useNavT = (ns?: string) => useNST(append("nav", ns));
 export const useGovT = (ns?: string) => useNST(append("governorate", ns));
 export const usePersonalInfoT = (ns?: string) =>
   useNST(append("personalInfo", ns));
+export const useMsgT = () => useNST("messages");
 
 const append = (...args: (string | undefined)[]): string =>
   args.filter(identity).join(".");

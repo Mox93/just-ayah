@@ -1,7 +1,6 @@
 import { countries, Country } from "countries-list";
-import { Keys } from ".";
 
-export type CountryCode = Keys<Omit<typeof countries, "IL">>;
+export type CountryCode = Exclude<keyof typeof countries, "IL">;
 
 export const countryList = Object.keys(countries)
   .filter((code) => code !== "IL")

@@ -15,7 +15,6 @@ import {
 } from "react";
 
 import { auth } from "services/firebase";
-import { ProviderProps } from "models";
 import { omit } from "utils";
 
 interface AuthContextObj {
@@ -34,7 +33,7 @@ const AuthContext = createContext<AuthContextObj>({
 
 export const useAuth = () => useContext(AuthContext);
 
-interface AuthProviderProps extends ProviderProps {}
+interface AuthProviderProps {}
 
 export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
   children,

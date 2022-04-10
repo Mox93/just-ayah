@@ -30,7 +30,7 @@ a {
 }
 
 input {
-  line-height: 3;
+  line-height: 2;
 }
 
 ::-webkit-input-placeholder {
@@ -59,15 +59,19 @@ input {
 .title {
   font-size: 1.25rem;
   text-transform: capitalize;
-}
 
-.title.required::after {
-  content: " *";
-  color: var(--c-error);
-}
+  & + * {
+    margin-block-start: 0.5rem;
+  }
 
-.title + * {
-  margin-block-start: 0.5rem;
+  &.invalid {
+    color: var(--c-error);
+  }
+
+  &.required::after {
+    content: " *";
+    color: var(--c-error);
+  }
 }
 
 .inputGroup {

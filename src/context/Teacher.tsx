@@ -11,7 +11,6 @@ import { createContext, FunctionComponent, useContext, useState } from "react";
 
 import { db } from "services/firebase";
 import { TeacherInfo, Teacher } from "models/teacher";
-import { ProviderProps } from "models";
 import { omit } from "utils";
 
 interface TeacherContextObj {
@@ -28,7 +27,7 @@ const TeachersContext = createContext<TeacherContextObj>({
   archive: omit,
 });
 
-interface TeachersProviderProps extends ProviderProps {}
+interface TeachersProviderProps {}
 
 export const TeachersProvider: FunctionComponent<TeachersProviderProps> = ({
   children,

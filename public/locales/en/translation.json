@@ -113,5 +113,10 @@
       "SouthSinai": "South Sinai",
       "Suez": "Suez"
     }
+  },
+  "messages": {
+    "noFullName": "please enter your full name",
+    "noPhoneNumber": "please enter your phone number",
+    "fieldRequired": "this field is required"
   }
 }

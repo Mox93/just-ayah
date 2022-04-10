@@ -117,5 +117,10 @@
       "SouthSinai": "جنوب سيناء",
       "Suez": "السويس"
     }
+  },
+  "messages": {
+    "noFullName": "من فضلك ادخل اسمك الثلاثي",
+    "noPhoneNumber": "من فضلك ادخل رقم الهاتف",
+    "fieldRequired": "هذا الحقل مطلوب"
   }
 }

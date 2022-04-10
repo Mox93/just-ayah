@@ -1,14 +1,22 @@
 import {
   addDoc,
   collection,
-  doc,
+  DocumentData,
   getDocs,
   limit,
+  orderBy,
+  OrderByDirection,
   query,
-  updateDoc,
+  startAfter,
   where,
 } from "firebase/firestore";
-import { createContext, FunctionComponent, useContext, useState } from "react";
+import {
+  createContext,
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 import { db } from "services/firebase";
 import {
@@ -18,70 +26,77 @@ import {
   customerFromDB,
   customerFromInfo,
 } from "models/customer";
-import { ProviderProps } from "models";
+import { AddData, FetchData } from "models";
 import { omit } from "utils";
 
 interface CustomersContextObj {
   data: Customer[];
-  addCustomer: (
-    data: CustomerInfo,
-    onfulfilled?: (response: any) => void,
-    onrejected?: (response: any) => void
-  ) => void;
-  fetchCustomers: (state?: string) => void;
-  archiveCustomer: (customer: Customer) => void;
+  addCustomer: AddData<CustomerInfo>;
+  fetchCustomers: FetchData;
 }
 
 const CustomersContext = createContext<CustomersContextObj>({
   data: [],
   addCustomer: omit,
   fetchCustomers: omit,
-  archiveCustomer: omit,
 });
 
-interface CustomersProviderProps extends ProviderProps {}
+interface CustomersProviderProps {}
 
 export const CustomersProvider: FunctionComponent<CustomersProviderProps> = ({
   children,
 }) => {
   const [data, setData] = useState<Customer[]>([]);
-  const customersRef = collection(db, "customers");
+  const [lastDoc, setLastDoc] = useState<DocumentData>();
+  const collectionRef = collection(db, "customers");
 
-  const addCustomer = (
-    data: CustomerInfo,
-    onfulfilled: (response: any) => void = omit,
-    onrejected: (response: any) => void = console.log
-  ) => {
-    addDoc(customersRef, customerFromInfo(data))
-      .then(onfulfilled, onrejected)
-      .catch(console.log);
-  };
+  const addCustomer: AddData<CustomerInfo> = useCallback(
+    (data, { onfulfilled = omit, onrejected = console.log } = {}) => {
+      addDoc(collectionRef, customerFromInfo(data))
+        .then(onfulfilled, onrejected)
+        .catch(console.log);
+    },
+    [collectionRef]
+  );
 
-  const fetchCustomers = async (status?: string) => {
-    const q =
-      status !== undefined
-        ? query(customersRef, where("meta.status", "==", status), limit(20))
-        : customersRef;
-    const querySnapshot = await getDocs(q);
-    const newData: Customer[] = [];
+  const fetchCustomers: FetchData = useCallback(
+    ({
+      filters = [],
+      size = 20,
+      sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
+      callback: { onfulfilled = omit, onrejected = console.log } = {},
+    } = {}) => {
+      const q = query(
+        collectionRef,
+        ...filters.map((filter) => where(...filter)),
+        limit(size),
+        orderBy(sort.by, sort.direction),
+        ...(lastDoc ? [startAfter(lastDoc)] : [])
+      );
 
-    querySnapshot.docs.forEach((doc) =>
-      newData.push(customerFromDB(doc.id, doc.data() as CustomerInDB))
-    );
+      getDocs(q).then((querySnapshot) => {
+        setData((state) => {
+          const newState = [...state];
 
-    setData(newData);
-  };
+          querySnapshot.docs.forEach((doc, i) => {
+            newState.push(customerFromDB(doc.id, doc.data() as CustomerInDB));
 
-  const archiveCustomer = (customer: Customer) => {
-    updateDoc(doc(customersRef, customer.id), {
-      meta: { ...customer.meta, state: "archived", dateUpdated: new Date() },
-    });
-  };
+            if (i === size - 1) {
+              setLastDoc(doc);
+            }
+          });
+
+          return newState;
+        });
+
+        onfulfilled(querySnapshot);
+      }, onrejected);
+    },
+    [collectionRef, lastDoc]
+  );
 
   return (
-    <CustomersContext.Provider
-      value={{ addCustomer, fetchCustomers, archiveCustomer, data }}
-    >
+    <CustomersContext.Provider value={{ addCustomer, fetchCustomers, data }}>
       {children}
     </CustomersContext.Provider>
   );

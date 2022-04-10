@@ -1,5 +1,4 @@
 import Popup, { PopupProps } from "./Popup.component";
-import { ProviderProps } from "models";
 import {
   createContext,
   FunctionComponent,
@@ -25,7 +24,7 @@ const PopupContext = createContext<PopupContextObj>({
   closePopup: omit,
 });
 
-interface PopupProviderProps extends ProviderProps {}
+interface PopupProviderProps {}
 
 export const PopupProvider: FunctionComponent<PopupProviderProps> = ({
   children,
