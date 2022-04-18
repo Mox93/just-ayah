@@ -1,0 +1,17 @@
+@import "styles/utils";
+
+.InputGroup {
+    display: flex;
+    gap: 2rem 1rem;
+  
+  &.canWrap {
+    @include mobile {
+      flex-direction: column;
+    }
+  }
+
+  & > * {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+}

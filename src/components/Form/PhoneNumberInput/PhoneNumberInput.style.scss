@@ -1,0 +1,18 @@
+@import "styles/utils";
+
+.PhoneNumberInput {
+  & > .FieldWrapper {
+    padding-inline: 0;
+  }
+
+  .countryCode {
+    flex: 2;
+    min-width: 6rem;
+  }
+
+  .dialNumber {
+    flex: 5;
+    display: flex;
+    align-items: center;
+  }
+}

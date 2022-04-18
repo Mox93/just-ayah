@@ -1,0 +1,18 @@
+@import "styles/utils";
+
+.Input {
+  .field {
+    width: 100%;
+    font-size: 1rem;
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .ErrorMessage {
+    position: absolute;
+    width: 100%;
+  }
+}

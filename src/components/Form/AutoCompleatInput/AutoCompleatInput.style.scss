@@ -1,0 +1,43 @@
+.AutoCompleatInput {
+  position: relative;
+
+  .arrow {
+    transform: rotate(180deg);
+
+    &.isOpen {
+      transform: unset;
+    }
+  }
+
+  .menu {
+    min-width: 100%;
+    max-height: 30rem;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--c-shadow);
+    background-color: var(--c-white);
+    box-shadow: 2px 2px 8px var(--c-shadow);
+    list-style-type: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    z-index: 2;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+
+    .element {
+      height: 2.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding-inline: 1.25rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      white-space: nowrap;
+
+      &:hover {
+        background-color: var(--c-shadow-light);
+      }
+    }
+  }
+}
