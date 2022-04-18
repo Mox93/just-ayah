@@ -6,8 +6,6 @@ import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 import Input, { InputProps } from "../Input";
 
-type PhoneNumberParent = { [key: string | number]: PhoneNumberInfo };
-
 interface PhoneNumberInputProps extends InputProps {}
 
 const PhoneNumberInput = ({

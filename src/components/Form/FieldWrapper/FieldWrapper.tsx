@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { cn } from "utils";
-import { useDirT } from "utils/translation";
 
 interface FieldWrapperProps {
   isInvalid?: boolean;
@@ -8,13 +7,8 @@ interface FieldWrapperProps {
 }
 
 const FieldWrapper: FC<FieldWrapperProps> = ({ children, isInvalid, dir }) => {
-  const dirT = useDirT();
-
   return (
-    <div
-      className={cn("FieldWrapper", { invalid: isInvalid })}
-      dir={dir || dirT}
-    >
+    <div className={cn("FieldWrapper", { invalid: isInvalid })} dir={dir}>
       {children}
     </div>
   );

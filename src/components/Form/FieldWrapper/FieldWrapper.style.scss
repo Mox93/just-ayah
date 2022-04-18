@@ -13,10 +13,12 @@
     @include noFieldBorder();
   }
 
-  & > * + *::after {  
-    content: "";
-    width: 1px;
-    height: 1.5rem;
-    background-color: var(--c-shadow);
+  & > * + * {
+    &::before {  
+      content: "";
+      width: 1px;
+      height: 1.5rem;
+      background-color: var(--c-shadow);
+    }
   }
 }

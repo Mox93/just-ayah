@@ -2,7 +2,6 @@ import { InputHTMLAttributes, ReactNode, Ref } from "react";
 
 import { cn } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
-import { useDirT } from "utils/translation";
 
 import { forwardRef } from "react";
 import FieldHeader from "../FieldHeader";
@@ -42,10 +41,8 @@ const Input = (
   }: InputProps,
   ref: Ref<HTMLInputElement>
 ) => {
-  const dirT = useDirT();
-
   return (
-    <label className={cn("Input", className)} ref={labelRef} dir={dirT}>
+    <label className={cn("Input", className)} ref={labelRef} dir={dir}>
       {label && (
         <FieldHeader {...{ label, required, isRequired, isInvalid }}>
           {children as PositionalElement<"header">}
@@ -53,12 +50,12 @@ const Input = (
       )}
 
       {before("field", children)}
-      <FieldWrapper isInvalid={isInvalid} dir={dir}>
+      <FieldWrapper isInvalid={isInvalid}>
         {before("input", children)}
         <input
           {...props}
           {...{ required, ref }}
-          dir={autoDir ? "auto" : dir || dirT}
+          dir={autoDir ? "auto" : dir}
           placeholder={placeholder || label}
           className="field"
         />

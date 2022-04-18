@@ -1,6 +1,6 @@
 import { ErrorMessage as ErrorMessageComponent } from "@hookform/error-message";
 import { FieldErrors, FieldPath } from "react-hook-form";
-import { useMsgT } from "utils/translation";
+import { useDirT, useMsgT } from "utils/translation";
 
 interface ErrorMessageProps<
   TFieldValues,
@@ -14,6 +14,7 @@ const ErrorMessage = <TFieldValues,>({
   name,
   errors,
 }: ErrorMessageProps<TFieldValues>) => {
+  const dirT = useDirT();
   const msgT = useMsgT();
 
   return (
@@ -24,12 +25,14 @@ const ErrorMessage = <TFieldValues,>({
       render={({ message, messages }) =>
         messages ? (
           Object.entries(messages).map(([type, message]) => (
-            <p className="ErrorMessage" key={type}>
+            <p className="ErrorMessage" key={type} dir={dirT}>
               {message}
             </p>
           ))
         ) : (
-          <p className="ErrorMessage">{message}</p>
+          <p className="ErrorMessage" dir={dirT}>
+            {message}
+          </p>
         )
       }
     />

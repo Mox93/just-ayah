@@ -1,5 +1,6 @@
 import { cn } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
+import { useDirT } from "utils/translation";
 
 type Location = "header";
 
@@ -20,8 +21,10 @@ const FieldHeader = ({
   isRequired,
   children,
 }: FieldHeaderProps) => {
+  const dirT = useDirT();
+
   return (
-    <div className="FieldHeader">
+    <div className="FieldHeader" dir={dirT}>
       {before("header", children)}
       <h3
         className={cn(
