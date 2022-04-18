@@ -9,6 +9,12 @@ export type RequiredKeys<T> = {
 
 export type Merge<Obj1, Obj2> = Omit<Obj1, keyof Obj2> & Obj2;
 
+export type UnionToIntersection<U> = (
+  U extends any ? (k: U) => void : never
+) extends (k: infer I) => void
+  ? I
+  : never;
+
 // SERVER REQUEST TYPES
 export type AddData<TData> = (
   data: TData,
