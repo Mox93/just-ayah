@@ -23,29 +23,16 @@ interface MetaInDB extends Omit<Meta, "dateCreated" | "dateUpdated"> {
 
 export interface CustomerInfo {
   fullName: string;
-  phoneNumber: PhoneNumberInfo;
-  secondaryPhoneNumber?: PhoneNumberInfo[];
-  facebookLink?: string;
+  phoneNumber: [PhoneNumberInfo, ...PhoneNumberInfo[]];
+  facebook?: string;
 }
-
-export type CustomerValidation = {
-  [K in keyof Required<CustomerInfo>]: boolean;
-};
-
-export const customerValidation: CustomerValidation = {
-  fullName: false,
-  phoneNumber: false,
-  secondaryPhoneNumber: true,
-  facebookLink: true,
-};
 
 export interface Customer extends CustomerInfo {
   id: string;
   meta: Meta;
 }
 
-export interface CustomerInDB extends Omit<Customer, "id" | "meta"> {
-  dateOfBirth: DateInDB;
+export interface CustomerInDB extends CustomerInfo {
   meta: MetaInDB;
 }
 
