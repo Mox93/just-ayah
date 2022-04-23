@@ -1,7 +1,7 @@
-import { getCountry } from "./country";
+import { CountryCode, getCountry } from "./country";
 
 export interface PhoneNumberInfo {
-  code: string;
+  code: CountryCode;
   number: string;
   tags?: string[];
 }
@@ -64,7 +64,7 @@ export const phoneNumberToString = (obj: PhoneNumberInfo) => {
   return countryCode ? `${countryCode}-${obj.number}` : obj.number;
 };
 
-export const getCountryCode = (code: string): string => {
+export const getCountryCode = (code: CountryCode): string => {
   const country = getCountry(code);
   return country ? `+${country.phone}` : "";
 };

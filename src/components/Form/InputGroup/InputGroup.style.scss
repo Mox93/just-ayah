@@ -1,13 +1,12 @@
 @import "styles/utils";
 
 .InputGroup {
-    display: flex;
-    gap: 2rem 1rem;
-  
-  &.canWrap {
-    @include mobile {
-      flex-direction: column;
-    }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem 1rem;
+
+  @include mobile {
+    flex-direction: column;
   }
 
   & > * {

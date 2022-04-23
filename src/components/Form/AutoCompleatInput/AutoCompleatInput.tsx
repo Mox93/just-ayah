@@ -3,10 +3,10 @@ import { forwardRef, ReactNode, Ref, useEffect, useRef, useState } from "react";
 import { ReactComponent as Angle } from "assets/icons/angle-up-svgrepo-com.svg";
 import { Merge } from "models";
 import { cn, identity, omit } from "utils";
-import { after } from "utils/position";
+import { after, before } from "utils/position";
+import { useDirT } from "utils/translation";
 
 import Input, { InputProps } from "../Input";
-import { useDirT } from "utils/translation";
 
 const OVERFLOW_DIR = { left: "rtl", right: "ltr" };
 
@@ -15,6 +15,7 @@ export type AutoCompleatInputProps<TOption> = Merge<
   {
     options: TOption[];
     overflowDir?: "right" | "left";
+    selected?: ReactNode;
     getKey?: (option: TOption) => string | number;
     setValue?: (option: TOption) => void;
     renderElement?: (option: TOption) => ReactNode;
@@ -33,6 +34,7 @@ const AutoCompleatInput = <TOption,>(
     options,
     dir,
     overflowDir,
+    selected,
     getKey = identity,
     setValue = omit,
     renderElement = identity,
@@ -82,8 +84,12 @@ const AutoCompleatInput = <TOption,>(
         readOnly // TODO remove when filtering is implemented
         ref={ref}
         labelRef={inputRef}
+        hidden={!isOpen && !!selected}
         onClick={() => !isOpen && setIsOpen(true)}
       >
+        {!isOpen && selected
+          ? before("input", <div className="selected">{selected}</div>)
+          : null}
         {after("input", <Angle className={cn({ isOpen }, "arrow")} />)}
       </Input>
 

@@ -10,24 +10,27 @@ import Input from "../Input";
 import InputGroup from "../InputGroup";
 import PhoneNumberInput from "../PhoneNumberInput";
 import {
-  complexChild,
   formChild,
+  phoneNumberMapper,
   processProps,
-  simpleChild,
+  selector,
+  singleField,
 } from "./formChild";
 
-const AutoCompleatInputMap = {
+const autoCompleatInputMap = {
   Customer: transformer(
     AutoCompleatInput,
     formChild,
     processProps<CustomerInfo>(),
-    simpleChild<CustomerInfo>()
+    selector<CustomerInfo>(),
+    singleField<CustomerInfo>()
   ),
   Student: transformer(
     AutoCompleatInput,
     formChild,
     processProps<StudentInfo>(),
-    simpleChild<StudentInfo>()
+    selector<StudentInfo>(),
+    singleField<StudentInfo>()
   ),
 };
 
@@ -37,21 +40,20 @@ const AutoCompleatInputMap = {
  */
 
 const formAtoms = <TFieldValues>() => {
-  const applyRegisterMod = simpleChild<TFieldValues>();
-  const complexChildMod = complexChild<TFieldValues>();
+  const singleFieldMod = singleField<TFieldValues>();
   const processPropsMod = processProps<TFieldValues>();
 
   return {
     Form: Form as FC<FormProps<TFieldValues>>,
-    Input: transformer(Input, formChild, processPropsMod, applyRegisterMod),
+    Input: transformer(Input, formChild, processPropsMod, singleFieldMod),
     InputGroup: transformer(InputGroup, formChild),
     PhoneNumberInput: transformer(
       PhoneNumberInput,
       formChild,
       processPropsMod,
-      complexChildMod
+      phoneNumberMapper<TFieldValues>()
     ),
-    AutoCompleatInput: AutoCompleatInputMap,
+    AutoCompleatInput: autoCompleatInputMap,
   };
 };
 

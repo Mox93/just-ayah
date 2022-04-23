@@ -121,6 +121,7 @@
   "messages": {
     "noFullName": "من فضلك ادخل اسمك الثلاثي",
     "noPhoneNumber": "من فضلك ادخل رقم الهاتف",
+    "wrongPhoneNumber": "من فضلك تأكد من ادخال رقم هاتف صحيح",
     "fieldRequired": "هذا الحقل مطلوب"
   }
 }

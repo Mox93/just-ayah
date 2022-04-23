@@ -11,8 +11,5 @@
     }
   }
 
-  .ErrorMessage {
-    position: absolute;
-    width: 100%;
-  }
+  @include errorMessage();
 }

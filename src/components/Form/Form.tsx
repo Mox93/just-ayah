@@ -1,8 +1,10 @@
-import { Merge } from "models";
 import { FormHTMLAttributes, PropsWithChildren, ReactNode } from "react";
 import { UnpackNestedValue, useForm, UseFormProps } from "react-hook-form";
+
+import { Merge } from "models";
 import { cn } from "utils";
 import { useDirT, useGlobalT } from "utils/translation";
+
 import { handleFormChildren } from "./utils/formChild";
 
 export type FormProps<TFieldValues> = Merge<
@@ -30,8 +32,8 @@ const Form = <TFieldValues,>({
 
   const { handleSubmit, ...formHook } = useForm<TFieldValues>({
     ...config,
-    // ...(config?.shouldUseNativeValidation === undefined
-    //   ? { shouldUseNativeValidation: true }
+    // ...(config?.shouldUnregister === undefined
+    //   ? { shouldUnregister: true }
     //   : {}),
   });
 

@@ -117,6 +117,7 @@
   "messages": {
     "noFullName": "please enter your full name",
     "noPhoneNumber": "please enter your phone number",
+    "wrongPhoneNumber": "please make sure you've entered a correct phone number",
     "fieldRequired": "this field is required"
   }
 }

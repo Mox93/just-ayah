@@ -1,4 +1,4 @@
-.FieldHeader{
+.FieldHeader {
   margin-block-end: 0.5rem;
   display: flex;
   align-items: center;
@@ -6,11 +6,11 @@
   .label {
     font-size: 1rem;
     text-transform: capitalize;
-  
+
     &.invalid {
       color: var(--c-error);
     }
-  
+
     &.required::after {
       content: " *";
       color: var(--c-error);

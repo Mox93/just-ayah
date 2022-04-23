@@ -124,3 +124,10 @@
     border-color: var(--c-error);
   }
 }
+
+@mixin errorMessage {
+  .ErrorMessage {
+    position: absolute;
+    width: 100%;
+  }
+}

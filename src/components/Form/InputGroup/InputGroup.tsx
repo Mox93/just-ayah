@@ -1,20 +1,22 @@
-import { FC, InputHTMLAttributes } from "react";
+import { FC } from "react";
+
 import { cn } from "utils";
 import { handleFormChildren } from "../utils/formChild";
 
-export interface InputGroupProps extends InputHTMLAttributes<HTMLInputElement> {
-  canWrap?: boolean;
+export interface InputGroupProps {
+  className?: string;
+  dir?: string;
 }
 
 const InputGroup: FC<InputGroupProps> = ({
-  canWrap,
+  className,
   children,
   dir,
   ...props
 }) => {
   return (
-    <div className={cn({ canWrap }, "InputGroup")} dir={dir}>
-      {handleFormChildren(children, { ...props })}
+    <div className={cn("InputGroup", className)} dir={dir}>
+      {handleFormChildren(children, props)}
     </div>
   );
 };

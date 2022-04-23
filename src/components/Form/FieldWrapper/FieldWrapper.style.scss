@@ -1,6 +1,6 @@
 @import "styles/utils";
 
-.FieldWrapper{
+.FieldWrapper {
   height: 2.5rem;
   width: 100%;
   padding: 0.5rem;
@@ -13,8 +13,11 @@
     @include noFieldBorder();
   }
 
-  & > * + * {
-    &::before {  
+  & > .partition + .partition {
+    display: flex;
+    align-items: center;
+
+    &::before {
       content: "";
       width: 1px;
       height: 1.5rem;
