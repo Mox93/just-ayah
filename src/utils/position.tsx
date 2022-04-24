@@ -24,9 +24,9 @@ type Position<
 
 export type PositionalElement<TLocation extends string> =
   | ReactElement<{ position: Position<TLocation> }>
-  | ReactElement<{ position: Position<TLocation> }>[]
   | undefined
-  | null;
+  | null
+  | (ReactElement<{ position: Position<TLocation> }> | undefined | null)[];
 
 export const before: PositionWrapper<"before"> = (
   location,

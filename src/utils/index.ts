@@ -1,6 +1,9 @@
 import { MutableRefObject, Ref } from "react";
 
-// PLACEHOLDER FUNCTIONS
+/***********************************\
+|****** PLACEHOLDER FUNCTIONS ******|
+\***********************************/
+
 export const identity = (value: any) => value;
 
 export const omit = () => {};
@@ -12,7 +15,10 @@ export const fromYesNo = (value?: string) =>
 export const toYesNo = (value?: boolean) =>
   value === true ? "yes" : value === false ? "no" : undefined;
 
-// PASSTHROUGH FUNCTIONS
+/*****************************\
+|****** MERGE FUNCTIONS ******|
+\*****************************/
+
 export const mergeRefs =
   <T>(...refs: Ref<T>[]) =>
   (node: T) => {
@@ -25,5 +31,20 @@ export const mergeRefs =
     });
   };
 
-// PASSING DEFAULT EXPORTS AS NAMED EXPORTS FOR AUTO IMPORT
+export const mergeCallbacks = (...callbacks: (Function | undefined)[]) => {
+  const validCallbacks = callbacks.filter(
+    (callback) => typeof callback === "function"
+  );
+
+  return validCallbacks.length
+    ? (...args: any) => {
+        validCallbacks.forEach((callback) => callback!(...args));
+      }
+    : undefined;
+};
+
+/********************************************************************\
+|***** PASSING DEFAULT EXPORTS AS NAMED EXPORTS FOR AUTO IMPORT *****|
+\********************************************************************/
+
 export { default as cn } from "classnames";
