@@ -1,10 +1,12 @@
 import { FC } from "react";
 
+import { getCountryCode } from "models/country";
 import { StudentInfo } from "models/student";
 import { CustomerInfo } from "models/customer";
 import { transformer } from "utils/transformer";
 
 import AutoCompleatInput from "../AutoCompleatInput";
+import CountrySelectorInput from "../CountrySelectorInput";
 import Form, { FormProps } from "../Form";
 import Input from "../Input";
 import InputGroup from "../InputGroup";
@@ -54,6 +56,13 @@ const formAtoms = <TFieldValues>() => {
       phoneNumberMapper<TFieldValues>()
     ),
     AutoCompleatInput: autoCompleatInputMap,
+    CountrySelectorInput: transformer(
+      CountrySelectorInput,
+      formChild,
+      processPropsMod,
+      selector<TFieldValues>(getCountryCode),
+      singleFieldMod
+    ),
   };
 };
 

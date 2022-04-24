@@ -1,11 +1,11 @@
 import { ChangeEvent, Ref, useState } from "react";
 
 import { Merge } from "models";
-import { Country, countryList, getCountry } from "models/country";
+import { Country } from "models/country";
 import { PhoneNumberInfo } from "models/phoneNumber";
 import { cn, omit } from "utils";
 
-import AutoCompleatInput from "../AutoCompleatInput";
+import CountrySelectorInput from "../CountrySelectorInput";
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 import Input, { InputProps } from "../Input";
@@ -35,11 +35,11 @@ const PhoneNumberInput = ({
   className,
   ...props
 }: PhoneNumberInputProps) => {
-  const [innerValue, setInnerValue] = useState<Partial<PhoneNumberInfo>>();
+  const [_, setInnerValue] = useState<Partial<PhoneNumberInfo>>();
 
-  const handleCode = (value: Country) =>
+  const handleCode = (value?: Country) =>
     setInnerValue((state) => {
-      const newState = { ...state, code: value.code };
+      const newState = { ...state, code: value?.code };
       onChange(newState);
       return newState;
     });
@@ -62,19 +62,16 @@ const PhoneNumberInput = ({
       </FieldHeader>
 
       <FieldWrapper dir="ltr" isInvalid={isInvalid} addPartitions>
-        <AutoCompleatInput
+        <CountrySelectorInput
           {...props}
-          ref={innerRef?.code}
-          value={value?.code}
-          setValue={handleCode}
-          renderElement={renderCode}
-          getKey={getCode}
-          selected={renderCode(getCountry(innerValue?.code))}
           name={`${name}.code`}
-          options={countryList}
+          renderSections={["emoji", "code", "phone"]}
           dir="ltr"
           className="countryCode"
           placeholder="+00"
+          ref={innerRef?.code}
+          value={value?.code}
+          setValue={handleCode}
         />
 
         <Input
@@ -94,14 +91,3 @@ const PhoneNumberInput = ({
 };
 
 export default PhoneNumberInput;
-
-const renderCode = (country?: Country) =>
-  country && (
-    <>
-      <p>{country.emoji}</p>
-      <p>{country.code}</p>
-      <p>+{country.phone}</p>
-    </>
-  );
-
-const getCode = (country: Country) => country.code;

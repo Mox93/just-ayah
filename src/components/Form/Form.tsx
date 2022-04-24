@@ -15,7 +15,7 @@ export type FormProps<TFieldValues> = Merge<
       data: UnpackNestedValue<TFieldValues>,
       event?: React.BaseSyntheticEvent
     ) => any | Promise<any>;
-    submitButton?: ReactNode;
+    submitLabel?: ReactNode;
   }
 >;
 
@@ -24,7 +24,7 @@ const Form = <TFieldValues,>({
   className,
   config,
   onSubmit,
-  submitButton,
+  submitLabel,
   ...props
 }: PropsWithChildren<FormProps<TFieldValues>>) => {
   const dirT = useDirT();
@@ -55,7 +55,7 @@ const Form = <TFieldValues,>({
         type="submit"
         disabled={isSubmitting || isSubmitSuccessful}
       >
-        {submitButton ?? glb("submit")}
+        {submitLabel ?? glb("submit")}
       </button>
     </form>
   );

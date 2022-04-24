@@ -17,7 +17,7 @@ import {
 
 import { Merge } from "models";
 import { PhoneNumberInfo } from "models/phoneNumber";
-import { mergeCallbacks } from "utils";
+import { identity, mergeCallbacks } from "utils";
 import { createModifier, Modifier } from "utils/transformer";
 
 import ErrorMessage from "../ErrorMessage";
@@ -143,7 +143,7 @@ export const processProps = <TFieldValues>() =>
     }
   );
 
-export const selector = <TFieldValues>() =>
+export const selector = <TFieldValues>(convert: Function = identity) =>
   createModifier<NamedChildProps<TFieldValues>>(
     ({ formHook, name, ...props }: WithFormHook<TFieldValues>) => {
       if (!formHook) return { ...props, name };
@@ -158,7 +158,7 @@ export const selector = <TFieldValues>() =>
         name,
         formHook,
         setValue: (value: any) =>
-          setValue(name, value, { shouldValidate: isSubmitted }),
+          setValue(name, convert(value), { shouldValidate: isSubmitted }),
       };
     }
   );

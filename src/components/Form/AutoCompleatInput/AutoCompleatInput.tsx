@@ -17,7 +17,7 @@ export type AutoCompleatInputProps<TOption> = Merge<
     overflowDir?: "right" | "left";
     selected?: ReactNode;
     getKey?: (option: TOption) => string | number;
-    setValue?: (option: TOption) => void;
+    setValue?: (option?: TOption) => void;
     renderElement?: (option: TOption) => ReactNode;
   }
 >;

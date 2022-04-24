@@ -13,3 +13,5 @@ export type Country = typeof countryList[number];
 
 export const getCountry = (code?: CountryCode): Country | undefined =>
   code && { ...countries[code], code };
+
+export const getCountryCode = (country: Country) => country.code;
