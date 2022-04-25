@@ -13,14 +13,18 @@ const OVERFLOW_DIR = { left: "rtl", right: "ltr" };
 export type AutoCompleatInputProps<TOption> = Merge<
   InputProps,
   {
-    options: TOption[];
     overflowDir?: "right" | "left";
-    selected?: ReactNode;
-    getKey?: (option: TOption) => string | number;
     setValue?: (option?: TOption) => void;
-    renderElement?: (option: TOption) => ReactNode;
   }
 >;
+
+interface InternalAutoCompleatInputProps<TOption>
+  extends AutoCompleatInputProps<TOption> {
+  options: TOption[];
+  selected?: ReactNode;
+  renderElement?: (option: TOption) => ReactNode;
+  getKey?: (option: TOption) => string | number;
+}
 
 /**
  * TODO:
@@ -39,7 +43,7 @@ const AutoCompleatInput = <TOption,>(
     setValue = omit,
     renderElement = identity,
     ...props
-  }: AutoCompleatInputProps<TOption>,
+  }: InternalAutoCompleatInputProps<TOption>,
   ref: Ref<HTMLInputElement>
 ) => {
   const dirT = useDirT();
@@ -81,13 +85,13 @@ const AutoCompleatInput = <TOption,>(
       <Input
         {...props}
         dir={dir || dirT}
-        readOnly // TODO remove when filtering is implemented
+        readOnly // TODO remove once filtering is implemented
         ref={ref}
         labelRef={inputRef}
-        hidden={!isOpen && !!selected}
+        hidden={!!selected} // TODO add once filtering is implemented `!isOpen &&`
         onClick={() => !isOpen && setIsOpen(true)}
       >
-        {!isOpen && selected
+        {selected // TODO add once filtering is implemented `!isOpen &&`
           ? before("input", <div className="selected">{selected}</div>)
           : null}
         {after("input", <Angle className={cn({ isOpen }, "arrow")} />)}

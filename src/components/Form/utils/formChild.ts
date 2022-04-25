@@ -4,8 +4,7 @@ import {
   InputHTMLAttributes,
   ReactElement,
   ReactNode,
-  useEffect,
-  useState,
+  useMemo,
 } from "react";
 import {
   FieldPath,
@@ -149,16 +148,18 @@ export const selector = <TFieldValues>(convert: Function = identity) =>
       if (!formHook) return { ...props, name };
 
       const {
-        setValue,
+        setValue: setValueInternal,
         formState: { isSubmitted },
       } = formHook;
+
+      const setValue = (value: any) =>
+        setValueInternal(name, convert(value), { shouldValidate: isSubmitted });
 
       return {
         ...props,
         name,
         formHook,
-        setValue: (value: any) =>
-          setValue(name, convert(value), { shouldValidate: isSubmitted }),
+        setValue,
       };
     }
   );
@@ -196,41 +197,25 @@ export const phoneNumberMapper = <TFieldValues>() =>
         formState: { errors, isSubmitted },
       } = formHook;
 
-      const [registerMap, setRegisterMap] =
-        useState<RegisterMap<PhoneNumberInfo>>();
-
-      useEffect(() => {
-        setRegisterMap(
-          fields.reduce((obj, field) => {
-            const processedRules = { ...rules };
-
-            if (field === "number") {
-              processedRules.pattern = {
-                value: /^[0-9]{5,16}$/g,
-                message: "wrongPhoneNumber",
-              };
-            }
-
-            return {
-              ...obj,
-              [field]: register(`${name}.${field}` as any, processedRules),
-            };
-          }, {})
-        );
-      }, [name, rules]);
-
-      const innerRef = fields.reduce(
-        (obj, field) => ({ ...obj, [field]: registerMap?.[field]?.ref }),
-        {}
+      const innerProps = useMemo<RegisterMap<PhoneNumberInfo>>(
+        () => ({
+          code: {
+            ...register(`${name}.code` as any, rules),
+            setValue: (value: any) =>
+              setValue(`${name}.code` as any, value?.code, {
+                shouldValidate: isSubmitted,
+              }),
+          },
+          number: register(`${name}.number` as any, {
+            ...rules,
+            pattern: {
+              value: /^[0-9]{5,16}$/g,
+              message: "wrongPhoneNumber",
+            },
+          }),
+        }),
+        [name, rules]
       );
-
-      const onChange = (value?: any) => {
-        for (let field in value) {
-          setValue(`${name}.${field}` as any, value![field], {
-            shouldValidate: isSubmitted,
-          });
-        }
-      };
 
       const fieldWithError = fields.find((field) =>
         get(errors, `${name}.${field}`)
@@ -238,14 +223,48 @@ export const phoneNumberMapper = <TFieldValues>() =>
 
       return {
         ...props,
-        onChange,
-        innerRef,
+        innerProps,
         name,
         isInvalid: !!fieldWithError,
         errorMessage: ErrorMessage({
           name: `${name}.${fieldWithError}` as any,
           errors,
         }),
+      };
+    }
+  );
+
+export const GovernorateMapper = <TFieldValues>() =>
+  createModifier<
+    NamedChildProps<TFieldValues> & {
+      countryField?: FieldPath<TFieldValues>;
+    }
+  >(
+    ({
+      formHook,
+      name,
+      countryField,
+      ...props
+    }: WithFormHook<TFieldValues> & {
+      countryField?: FieldPath<TFieldValues>;
+    }) => {
+      if (!formHook) return { ...props, name };
+
+      const {
+        watch,
+        setValue,
+        formState: { isSubmitted },
+      } = formHook;
+
+      const country = countryField && watch(countryField);
+
+      return {
+        ...props,
+        name,
+        country,
+        formHook,
+        setValue: (value: any) =>
+          setValue(name, value, { shouldValidate: isSubmitted }),
       };
     }
   );

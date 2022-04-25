@@ -1,18 +1,22 @@
 import { FC } from "react";
 
 import { getCountryCode } from "models/country";
-import { StudentInfo } from "models/student";
 import { CustomerInfo } from "models/customer";
+import { StudentInfo } from "models/student";
+import { getTzCode } from "models/timezone";
 import { transformer } from "utils/transformer";
 
 import AutoCompleatInput from "../AutoCompleatInput";
 import CountrySelectorInput from "../CountrySelectorInput";
 import Form, { FormProps } from "../Form";
+import GovernorateSelectorInput from "../GovernorateSelectorInput";
 import Input from "../Input";
 import InputGroup from "../InputGroup";
 import PhoneNumberInput from "../PhoneNumberInput";
+import TimezoneSelectorInput from "../TimezoneSelectorInput";
 import {
   formChild,
+  GovernorateMapper,
   phoneNumberMapper,
   processProps,
   selector,
@@ -61,6 +65,20 @@ const formAtoms = <TFieldValues>() => {
       formChild,
       processPropsMod,
       selector<TFieldValues>(getCountryCode),
+      singleFieldMod
+    ),
+    TimezoneSelectorInput: transformer(
+      TimezoneSelectorInput,
+      formChild,
+      processPropsMod,
+      selector<TFieldValues>(getTzCode),
+      singleFieldMod
+    ),
+    GovernorateSelectorInput: transformer(
+      GovernorateSelectorInput,
+      formChild,
+      processPropsMod,
+      GovernorateMapper<TFieldValues>(),
       singleFieldMod
     ),
   };

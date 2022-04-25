@@ -13,15 +13,9 @@
     @include noFieldBorder();
   }
 
-  & > .partition + .partition {
-    display: flex;
-    align-items: center;
-
-    &::before {
-      content: "";
-      width: 1px;
-      height: 1.5rem;
-      background-color: var(--c-shadow);
-    }
+  .partition {
+    width: 1px;
+    height: 1.5rem;
+    background-color: var(--c-shadow);
   }
 }

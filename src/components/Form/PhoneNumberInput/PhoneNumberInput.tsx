@@ -1,88 +1,63 @@
-import { ChangeEvent, Ref, useState } from "react";
+import { HTMLAttributes, ReactNode } from "react";
 
-import { Merge } from "models";
-import { Country } from "models/country";
-import { PhoneNumberInfo } from "models/phoneNumber";
-import { cn, omit } from "utils";
+import { InnerProps } from "models";
+import { cn } from "utils";
+import { PositionalElement } from "utils/position";
 
-import CountrySelectorInput from "../CountrySelectorInput";
+import CountrySelectorInput, {
+  CountrySelectorInputProps,
+} from "../CountrySelectorInput";
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 import Input, { InputProps } from "../Input";
 
-type PhoneNumberInputProps = Merge<
-  InputProps,
-  {
-    value?: Partial<PhoneNumberInfo>;
-    innerRef?: {
-      [key in keyof PhoneNumberInfo]+?: Ref<HTMLInputElement>;
-    };
-    onChange?: (value?: Partial<PhoneNumberInfo>) => void;
-  }
->;
+interface PhoneNumberInputProps extends HTMLAttributes<HTMLDivElement> {
+  label?: string;
+  name?: string;
+  isInvalid?: boolean;
+  isRequired?: boolean;
+  children?: PositionalElement<string>;
+  errorMessage?: ReactNode;
+  innerProps?: {
+    code?: InnerProps<CountrySelectorInputProps>;
+    number?: InnerProps<InputProps>;
+  };
+}
 
 const PhoneNumberInput = ({
   label,
-  required,
   isRequired,
   isInvalid,
   name,
   children,
-  value,
-  innerRef,
-  onChange = omit,
   errorMessage,
   className,
+  innerProps: { code: codeProps, number: numberProps } = {},
   ...props
 }: PhoneNumberInputProps) => {
-  const [_, setInnerValue] = useState<Partial<PhoneNumberInfo>>();
-
-  const handleCode = (value?: Country) =>
-    setInnerValue((state) => {
-      const newState = { ...state, code: value?.code };
-      onChange(newState);
-      return newState;
-    });
-
-  const handleNumber = (event: ChangeEvent<HTMLInputElement>) =>
-    setInnerValue((state) => {
-      const newState = {
-        ...state,
-        number: event.target.value,
-      };
-      onChange(newState);
-      return newState;
-    });
-
   // TODO add tags
   return (
-    <div className={cn("PhoneNumberInput", className)}>
-      <FieldHeader {...{ label, required, isRequired, isInvalid }}>
+    <div {...props} className={cn("PhoneNumberInput", className)}>
+      <FieldHeader {...{ label, isRequired, isInvalid }}>
         {children}
       </FieldHeader>
 
       <FieldWrapper dir="ltr" isInvalid={isInvalid} addPartitions>
         <CountrySelectorInput
-          {...props}
           name={`${name}.code`}
           renderSections={["emoji", "code", "phone"]}
           dir="ltr"
-          className="countryCode"
           placeholder="+00"
-          ref={innerRef?.code}
-          value={value?.code}
-          setValue={handleCode}
+          {...codeProps}
+          className={cn("countryCode", codeProps?.className)}
         />
 
         <Input
-          {...props}
-          ref={innerRef?.number}
-          value={value?.number}
-          onChange={handleNumber}
           name={`${name}.number`}
           dir="ltr"
-          className="dialNumber"
           placeholder="000-000-0000"
+          {...numberProps}
+          className={cn("dialNumber", numberProps?.className)}
         />
       </FieldWrapper>
       {errorMessage}

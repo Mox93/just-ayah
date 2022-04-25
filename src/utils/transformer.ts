@@ -27,7 +27,7 @@ export const createModifier: CreateModifier = (propsModifier) => (Component) =>
   });
 
 const sanitize: Modifier = (Component) =>
-  forwardRef(({ __defaultProps, ...props }: any, ref) =>
+  forwardRef(({ __originalProps, ...props }: any, ref) =>
     createElement(Component, { ...props, ...(ref && { ref }) })
   );
 

@@ -8,8 +8,8 @@ import AutoCompleatInput, {
 } from "../AutoCompleatInput";
 import { omit } from "utils";
 
-interface CountrySelectorInputProps
-  extends Omit<AutoCompleatInputProps<Country>, "renderElement" | "options"> {
+export interface CountrySelectorInputProps
+  extends AutoCompleatInputProps<Country> {
   renderSections: (keyof Country)[];
 }
 
@@ -17,12 +17,12 @@ const CountrySelectorInput = (
   { renderSections, setValue = omit, ...props }: CountrySelectorInputProps,
   ref: Ref<HTMLInputElement>
 ) => {
-  const [country, setCountry] = useState<Country>();
+  const [selected, setSelected] = useState<Country>();
 
   const renderElement = renderAttributes(...renderSections);
 
   const handleSelect = (value?: Country) => {
-    setCountry(value);
+    setSelected(value);
     setValue(value);
   };
 
@@ -34,7 +34,7 @@ const CountrySelectorInput = (
       getKey={getCountryCode}
       setValue={handleSelect}
       renderElement={renderElement}
-      selected={renderElement(country)}
+      selected={renderElement(selected)}
     />
   );
 };

@@ -1,8 +1,12 @@
 import { FieldPath, OrderByDirection, WhereFilterOp } from "firebase/firestore";
+import { Ref } from "react";
 
 export const UNKNOWN = "unknown";
 
-// UTILITY TYPES
+/***************************\
+|****** UTILITY TYPES ******|
+\***************************/
+
 export type RequiredKeys<T> = {
   [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K;
 }[keyof T];
@@ -15,7 +19,17 @@ export type UnionToIntersection<U> = (
   ? I
   : never;
 
-// SERVER REQUEST TYPES
+export type InnerProps<
+  TProps,
+  TElement = HTMLInputElement
+> = Partial<TProps> & {
+  ref: Ref<TElement>;
+};
+
+/**********************************\
+|****** SERVER REQUEST TYPES ******|
+\**********************************/
+
 export type AddData<TData> = (
   data: TData,
   callback?: {
@@ -43,7 +57,10 @@ export type UpdateData<TData> = (
   }
 ) => void;
 
-// Redeclare forwardRef
+/***********************************\
+|****** REDECLARE FORWARD-REF ******|
+\***********************************/
+
 declare module "react" {
   function forwardRef<T, P = {}>(
     render: (props: P, ref: Ref<T>) => ReactElement | null

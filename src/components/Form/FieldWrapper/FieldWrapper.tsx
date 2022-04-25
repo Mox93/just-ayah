@@ -1,6 +1,19 @@
-import { Children, createElement, FC, isValidElement } from "react";
+import { Children, FC, ReactNode } from "react";
 
 import { cn } from "utils";
+
+const injectPartitions = (children: ReactNode) => {
+  const newChildren: ReactNode[] = [];
+
+  Children.forEach(children, (child, index) => {
+    console.log("FieldWrapper", child);
+
+    if (index > 0) newChildren.push(<div className="partition" />);
+    newChildren.push(child);
+  });
+
+  return newChildren;
+};
 
 interface FieldWrapperProps {
   isInvalid?: boolean;
@@ -16,16 +29,7 @@ const FieldWrapper: FC<FieldWrapperProps> = ({
 }) => {
   return (
     <div className={cn("FieldWrapper", { invalid: isInvalid })} dir={dir}>
-      {addPartitions
-        ? Children.map(children, (child) =>
-            isValidElement(child)
-              ? createElement(child.type, {
-                  ...child.props,
-                  className: cn(child.props.className, "partition"),
-                })
-              : child
-          )
-        : children}
+      {addPartitions ? injectPartitions(children) : children}
     </div>
   );
 };
