@@ -48,12 +48,12 @@
   }
 
   .title.invalid {
-    color: var(--c-error);
+    color: var(--c-danger-300);
   }
 
   .option.invalid {
-    outline: 2px solid var(--c-error);
-    border-color: var(--c-error);
-    color: var(--c-error);
+    outline: 2px solid var(--c-danger-300);
+    border-color: var(--c-danger-300);
+    color: var(--c-danger-300);
   }
 }

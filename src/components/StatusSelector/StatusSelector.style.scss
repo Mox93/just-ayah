@@ -1,8 +1,8 @@
-@import "styles/utils";
+@use "styles/abstracts/mixins" as *;
 
 .StatusSelector {
   @include optionsList();
-  @include colorCodedButton($studentState);
+  @include colorCoded(studentStatus);
 
   .postponed {
     &.date {

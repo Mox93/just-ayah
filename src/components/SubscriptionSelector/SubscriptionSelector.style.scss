@@ -1,8 +1,8 @@
-@import "styles/utils";
+@use "styles/abstracts/mixins" as *;
 
 .SubscriptionSelector {
   @include optionsList();
-  @include colorCodedButton($subscription);
+  @include colorCoded(subscription);
 
   .partialPay {
     &.amount {
@@ -14,7 +14,7 @@
         padding: 0.2rem 0.5rem;
         width: 4rem;
         border-radius: 1rem;
-        border: 2px solid var(--c-success);
+        border: 2px solid var(--c-partialPay);
 
         &:focus {
           outline: none;
@@ -32,7 +32,7 @@
       }
 
       button {
-        background-color: var(--c-success);
+        background-color: var(--c-partialPay);
         width: 1.75rem;
         height: 1.75rem;
         border-radius: 50%;

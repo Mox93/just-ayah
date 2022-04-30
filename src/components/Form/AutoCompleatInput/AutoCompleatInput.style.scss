@@ -17,6 +17,7 @@
   .arrow {
     min-width: 1.5rem;
     transform: rotate(180deg);
+    fill: var(--c-gray-400);
 
     &.isOpen {
       transform: unset;
@@ -28,9 +29,9 @@
     max-height: 30rem;
     padding: 0.25rem;
     border-radius: 0.375rem;
-    border: 1px solid var(--c-shadow);
+    border: 1px solid var(--c-gray-200);
     background-color: var(--c-white);
-    box-shadow: 2px 2px 8px var(--c-shadow);
+    box-shadow: 2px 2px 8px var(--c-shadow-200);
     list-style-type: none;
     position: absolute;
     top: calc(100% + 0.375rem);
@@ -47,7 +48,7 @@
       @include option();
 
       &:hover {
-        background-color: var(--c-shadow-light);
+        background-color: var(--c-shadow-100);
       }
     }
   }

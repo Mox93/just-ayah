@@ -36,7 +36,7 @@
 
   thead {
     tr {
-      border-block-end: 1px solid var(--c-shadow-dark);
+      border-block-end: 1px solid var(--c-gray-300);
 
       th {
         text-align: start;
@@ -50,7 +50,7 @@
         }
 
         &:hover {
-          background-color: var(--c-shadow-light);
+          background-color: var(--c-shadow-200);
         }
       }
     }
@@ -58,15 +58,15 @@
 
   tbody {
     tr {
-      border-block-end: 1px solid var(--c-shadow);
+      border-block-end: 1px solid var(--c-gray-200);
 
       &:hover {
-        background-color: var(--c-shadow-light);
+        background-color: var(--c-shadow-100);
       }
 
       td {
         &.prefix {
-          color: var(--c-shadow-dark);
+          color: var(--c-gray-400);
         }
       }
     }

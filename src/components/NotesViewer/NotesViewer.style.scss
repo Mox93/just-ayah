@@ -1,4 +1,4 @@
-@import "styles/utils";
+@use "styles/abstracts/mixins" as *;
 
 .NotesViewer {
   max-width: 50rem;
@@ -47,7 +47,7 @@
       }
 
       .cancel {
-        background-color: var(--c-error);
+        background-color: var(--c-danger-300);
 
         &::after {
           content: "X";
@@ -68,7 +68,7 @@
     .noteItem {
       margin-inline: 0.5rem;
       padding: 0.5rem;
-      border: 1px solid var(--c-shadow);
+      border: 1px solid var(--c-gray-200);
       border-radius: 0.25rem;
 
       .username {
@@ -77,7 +77,7 @@
 
       .body {
         padding-block-start: 1rem;
-        border-block-start: 1px solid var(--c-shadow-light);
+        border-block-start: 1px solid var(--c-gray-100);
       }
     }
   }

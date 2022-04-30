@@ -5,7 +5,7 @@
   min-height: 40rem;
   width: 6rem;
   padding: 3rem 1rem;
-  background-color: var(--c-primary-dark);
+  background-color: var(--c-primary-400);
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -68,38 +68,36 @@
       height: 4rem;
       padding: 0.5rem;
       border-radius: 0.5rem;
-      background-color: var(--c-primary-dark);
       display: flex;
       justify-content: center;
       align-items: center;
       text-transform: capitalize;
 
       &:focus {
-        outline: none;
-        background-color: var(--c-shadow-light);
+        outline: 3px solid var(--c-shadow-200);
       }
 
       &:hover {
-        background-color: var(--c-shadow-light);
+        background-color: var(--c-shadow-300);
       }
 
       &.selected {
         background-color: var(--c-white);
-        font-weight: 600;
 
         h3 {
-          color: var(--c-primary-dark);
+          color: var(--c-primary-400);
         }
 
         svg {
-          fill: var(--c-primary-dark);
-          stroke: var(--c-primary-dark);
+          fill: var(--c-primary-400);
+          stroke: var(--c-primary-400);
         }
       }
 
       h3 {
         color: var(--c-white);
         font-size: 1.5rem;
+        font-weight: 600;
       }
 
       svg {
@@ -128,7 +126,7 @@
 
     .signOut {
       height: 2.25rem;
-      background-color: var(--c-error);
+      background-color: var(--c-danger-300);
       color: var(--c-white);
       text-transform: uppercase;
       border-radius: 0.25rem;

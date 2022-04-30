@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&family=Josefin+Sans:wght@300;400;500;600;700&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+  font-family: "Josefin Sans", "Almarai", sans-serif;
+  font-weight: 400;
+  color: var(--c-black);
+}
+
+html {
+  /* scrollbar-gutter: stable; */
+  // min-width: 800px;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: initial;
+}
+
+input {
+  line-height: 2;
+}
+
+::-webkit-input-placeholder {
+  line-height: 2;
+}

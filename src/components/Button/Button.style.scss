@@ -1,0 +1,12 @@
+@use "styles/components/button" as *;
+
+.Button {
+  padding: 0.75em 1.5em;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  bottom: 0;
+
+  @include buttonVariants();
+}

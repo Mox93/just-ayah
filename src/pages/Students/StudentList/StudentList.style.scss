@@ -1,4 +1,4 @@
-@import "styles/utils";
+@use "styles/abstracts/mixins" as *;
 
 .StudentList {
   td {
@@ -28,6 +28,6 @@
       }
     }
 
-    @include colorCodedButton($studentState, $subscription);
+    @include colorCoded(studentStatus, subscription);
   }
 }

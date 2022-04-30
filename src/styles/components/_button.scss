@@ -1,0 +1,36 @@
+@use "../abstracts/colors" as *;
+
+@mixin buttonVariants {
+  @each $color, $_ in $colors {
+    &.#{$color}-solid {
+      background-color: var(--c-#{$color}-300);
+      color: var(--c-white);
+
+      &:hover {
+        background-color: var(--c-#{$color}-200);
+      }
+
+      &:active {
+        background-color: var(--c-#{$color}-400);
+      }
+    }
+
+    &.#{$color}-outline {
+      outline-offset: -2px;
+      outline: 2px solid var(--c-#{$color}-300);
+      color: var(--c-#{$color}-300);
+
+      &:hover {
+        outline: none;
+        background-color: var(--c-#{$color}-200);
+        color: var(--c-white);
+      }
+
+      &:active {
+        outline: none;
+        background-color: var(--c-#{$color}-400);
+        color: var(--c-white);
+      }
+    }
+  }
+}

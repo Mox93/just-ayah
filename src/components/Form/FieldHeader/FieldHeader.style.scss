@@ -8,12 +8,12 @@
     text-transform: capitalize;
 
     &.invalid {
-      color: var(--c-error);
+      color: var(--c-danger-300);
     }
 
     &.required::after {
       content: " *";
-      color: var(--c-error);
+      color: var(--c-danger-300);
     }
   }
 }

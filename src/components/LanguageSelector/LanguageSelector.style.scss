@@ -9,14 +9,15 @@
   .element {
     width: 2.25rem;
     height: 2.25rem;
-    background-color: var(--c-shadow-dark);
+    background-color: var(--c-shadow-100);
     border-radius: 0.25rem;
     font-weight: 600;
-    color: var(--c-white);
+    color: var(--c-gray-500);
 
     &.selected {
-      background-color: var(--c-success);
-      box-shadow: 2px 2px 8px var(--c-shadow);
+      background-color: var(--c-secondary-300);
+      color: var(--c-white);
+      box-shadow: 2px 2px 8px var(--c-shadow-400);
     }
 
     &.ar {

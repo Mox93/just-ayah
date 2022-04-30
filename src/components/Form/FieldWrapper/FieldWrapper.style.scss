@@ -1,4 +1,4 @@
-@import "styles/utils";
+@use "styles/abstracts/mixins" as *;
 
 .FieldWrapper {
   height: 2.5rem;
@@ -16,6 +16,6 @@
   .partition {
     width: 1px;
     height: 1.5rem;
-    background-color: var(--c-shadow);
+    background-color: var(--c-gray-200);
   }
 }
