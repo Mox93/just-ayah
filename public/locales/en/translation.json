@@ -24,7 +24,9 @@
     "canceled": "canceled",
     "fullPay": "full payment",
     "partialPay": "partial payment",
-    "noPay": "no payment"
+    "noPay": "no payment",
+    "submit": "submit",
+    "reset": "reset"
   },
   "nav": {
     "home": "home",
@@ -51,14 +53,15 @@
     "email": "email",
     "facebookLink": "facebook link",
     "nationality": "nationality",
-    "timeZone": "tine zone",
+    "timezone": "tine zone",
     "country": "country",
     "governorate": "governorate",
     "residence": "residence",
     "education": "education level",
     "doesWork": "do you work?",
     "occupation": "job",
-    "noWorkReason": "are you a ...",
+    "noWorkReason": "are you?",
+    "noWorkDetails": "work status",
     "student": "student",
     "housewife": "housewife",
     "retired": "retired",
@@ -76,7 +79,11 @@
       "active": "existing students",
       "archived": "archive",
       "counter_one": "1 student selected",
-      "counter_other": "{{count}} students selected"
+      "counter_other": "{{count}} students selected",
+      "formTitle": "student info"
+    },
+    "customers": {
+      "formTitle": "contact us"
     },
     "teachers": {
       "active": "teachers",
@@ -116,8 +123,19 @@
   },
   "messages": {
     "noFullName": "please enter your full name",
+    "noFirstName": "please enter your first name",
+    "noMiddleName": "please enter your middle name",
+    "noLastName": "please enter your last name",
     "noPhoneNumber": "please enter your phone number",
     "wrongPhoneNumber": "please make sure you've entered a correct phone number",
+    "noEducation": "please enter your education status",
+    "noDateOfBirth": "please enter your date of birth",
+    "noNationality": "please select your nationality",
+    "noResidence": "please select your country of residence",
+    "noGovernorate": "please enter your governorate",
+    "noGender": "please select you gender",
+    "noWorkStatus": "please enter you work status",
+    "onAnswer": "pleaser answer this question",
     "fieldRequired": "this field is required"
   }
 }

@@ -24,7 +24,9 @@
     "canceled": "توقف",
     "fullPay": "تكلفة كاملة",
     "partialPay": "تكلفة جزئية",
-    "noPay": "بدون تكلفة"
+    "noPay": "بدون تكلفة",
+    "submit": "إرسال",
+    "reset": "حذف البيانات"
   },
   "nav": {
     "home": "الرئيسية",
@@ -51,14 +53,15 @@
     "email": "البريد الالكتروني",
     "facebookLink": "رابط الفيسبوك",
     "nationality": "الجنسية",
-    "timeZone": "المنطة الزمنية",
+    "timezone": "المنطة الزمنية",
     "country": "الدولة",
     "governorate": "المحافظة",
     "residence": "محل الإقامة",
     "education": "المؤهل",
     "doesWork": "هل تعمل؟",
-    "occupation": "العمل",
-    "noWorkReason": "هل انت/ي ...",
+    "occupation": "الوظيفة",
+    "noWorkReason": "هل انت/ي؟",
+    "noWorkDetails": "الحالة الوظيفية",
     "student": "طالب",
     "housewife": "ربة منزل",
     "retired": "متقاعد",
@@ -80,7 +83,11 @@
       "counter_two": "تم تحديد طالبان",
       "counter_few": "تم تحديد {{count}} طلاب",
       "counter_many": "تم تحديد {{count}} طالب",
-      "counter_other": "تم تحديد {{count}} طالب"
+      "counter_other": "تم تحديد {{count}} طالب",
+      "formTitle": "بيانات الطالب"
+    },
+    "customers": {
+      "formTitle": "تواصل معنا"
     },
     "teachers": {
       "active": "المعلمون",
@@ -120,8 +127,19 @@
   },
   "messages": {
     "noFullName": "من فضلك ادخل اسمك الثلاثي",
+    "noFirstName": "من فضلك ادخل اسمك",
+    "noMiddleName": "من فضلك ادخل اسم اﻷب",
+    "noLastName": "من فضلك ادخل اسم العائلة",
     "noPhoneNumber": "من فضلك ادخل رقم الهاتف",
     "wrongPhoneNumber": "من فضلك تأكد من ادخال رقم هاتف صحيح",
+    "noEducation": "من فضلك ادخل المؤهل الدراسي",
+    "noDateOfBirth": "من فضلك ادخل تاريخ الميلاد",
+    "noNationality": "من فضلك اختر الجنسيت",
+    "noResidence": "من فضلك اختر محل الاقامة",
+    "noGovernorate": "من فضلك ادخل المحافظة",
+    "noGender": "من فضلك اختر النوع",
+    "noWorkStatus": "من فضلك ادخل الحالة الوظيفية",
+    "noAnswer": "من فضلك اجب عن هذا السؤال",
     "fieldRequired": "هذا الحقل مطلوب"
   }
 }
