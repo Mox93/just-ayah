@@ -28,6 +28,35 @@
     "submit": "إرسال",
     "reset": "حذف البيانات"
   },
+  "dateTime": {
+    "day": "يوم",
+    "month": "شهر",
+    "year": "سنة",
+    "week": "اسبوع",
+    "symbols": {
+      "day": "يوم",
+      "month": "شهر",
+      "year": "سنة"
+    },
+    "weekDays": {
+      "Monday": "الاثنين",
+      "Tuesday": "الثلاثاء",
+      "Wednesday": "اﻷربعاء",
+      "Thursday": "الخميس",
+      "Friday": "الجمعة",
+      "Saturday": "السبت",
+      "Sunday": "اﻷحد",
+      "short": {
+        "Monday": "الاثنين",
+        "Tuesday": "الثلاثاء",
+        "Wednesday": "اﻷربعاء",
+        "Thursday": "الخميس",
+        "Friday": "الجمعة",
+        "Saturday": "السبت",
+        "Sunday": "اﻷحد"
+      }
+    }
+  },
   "nav": {
     "home": "الرئيسية",
     "students": "الطلاب",
