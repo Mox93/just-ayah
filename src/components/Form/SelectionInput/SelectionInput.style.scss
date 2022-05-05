@@ -1,0 +1,54 @@
+.SelectionInput {
+  .FieldWrapper {
+    padding: 0.125rem;
+
+    .partition {
+      margin-inline: 0.125rem;
+    }
+  }
+
+  .option {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: 100%;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    position: relative;
+
+    &:hover {
+      background-color: var(--c-shadow-200);
+    }
+
+    & > input {
+      opacity: 0;
+      position: absolute;
+
+      &:focus + label {
+        background-color: var(--c-shadow-200);
+      }
+
+      &:checked {
+        & + label {
+          background-color: var(--c-primary-300);
+          color: var(--c-white);
+
+          &:hover {
+            background-color: var(--c-primary-200);
+          }
+        }
+
+        &:focus + label {
+          background-color: var(--c-primary-200);
+        }
+      }
+    }
+
+    label {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

@@ -30,31 +30,24 @@ export type InnerProps<
 |****** SERVER REQUEST TYPES ******|
 \**********************************/
 
-export type AddData<TData> = (
-  data: TData,
-  callback?: {
-    onfulfilled?: (response: any) => void;
-    onrejected?: (response: any) => void;
-  }
-) => void;
+type RequestCallback = {
+  onFulfilled?: (response?: any) => void;
+  onRejected?: (reason?: any) => void;
+};
+
+export type AddData<TData> = (data: TData, callback?: RequestCallback) => void;
 
 export type FetchData = (options?: {
   filters?: [string, WhereFilterOp, any][];
   size?: number;
   sort?: { by: string | FieldPath; direction?: OrderByDirection };
-  callback?: {
-    onfulfilled?: (response: any) => void;
-    onrejected?: (response: any) => void;
-  };
+  callback?: RequestCallback;
 }) => void;
 
 export type UpdateData<TData> = (
   id: string,
   updates: Partial<TData>,
-  callback?: {
-    onfulfilled?: () => void;
-    onrejected?: (response: any) => void;
-  }
+  callback?: RequestCallback
 ) => void;
 
 /***********************************\

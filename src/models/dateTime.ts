@@ -3,6 +3,22 @@ export interface DateInDB {
   seconds: number;
 }
 
+export interface DateInfo {
+  day: number;
+  month: number;
+  year: number;
+}
+
+export const daysOfWeek = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
 export const getAge = (date: string | number | Date) => {
   const today = new Date();
   const birthDate = new Date(date);
@@ -34,3 +50,20 @@ export const shortDateRep = (date: Date): string => {
 export const dateFromDB = (date: DateInDB): Date => {
   return new Date(date.seconds * 1000);
 };
+
+export const clampDate = ({
+  day,
+  month,
+  year,
+}: Partial<DateInfo> = {}): Partial<DateInfo> => {
+  const lasDay = new Date(year || 2000, month || 1, 0).getDate();
+
+  return {
+    ...(day && { day: day > lasDay ? lasDay : day }),
+    ...(month && { month }),
+    ...(year && { year }),
+  };
+};
+
+export const getDate = ({ day, month, year }: DateInfo) =>
+  new Date(year, month - 1, day);

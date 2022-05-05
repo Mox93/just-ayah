@@ -1,0 +1,15 @@
+.DateInput {
+  .day,
+  .month {
+    width: 5rem;
+  }
+
+  .year {
+    width: 6rem;
+  }
+
+  .element,
+  .selected {
+    justify-content: center;
+  }
+}

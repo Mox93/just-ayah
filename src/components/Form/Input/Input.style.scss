@@ -1,5 +1,3 @@
-@use "styles/abstracts/mixins" as *;
-
 .Input {
   .field {
     width: 100%;
@@ -10,6 +8,4 @@
       outline: none;
     }
   }
-
-  @include errorMessage();
 }

@@ -1,15 +1,20 @@
+import { get, set } from "react-hook-form";
+
+import { Merge } from "models";
 import { dateFromDB, DateInDB } from "models/dateTime";
+
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
 import { Note, NoteMapInDB, noteListFromDB } from "./note";
-import { PhoneNumberInfo } from "./phoneNumber";
+import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
 import {
   StudentStatus,
-  statusFromDB,
+  studentStatusFromDB,
   StudentStatusInDB,
 } from "./studentStatus";
 import { Subscription } from "./subscription";
-import { WorkStatus } from "./work";
+import { parseWorkStatus, WorkStatus } from "./work";
+import { fromYesNo } from "../utils/yesNo";
 
 interface Meta {
   dateCreated: Date;
@@ -18,54 +23,33 @@ interface Meta {
   subscription?: Subscription;
 }
 
-interface MetaInDB
-  extends Omit<Meta, "dateCreated" | "dateUpdated" | "status"> {
-  dateCreated: DateInDB;
-  dateUpdated: DateInDB;
-  status: StudentStatusInDB;
-}
+type MetaInDB = Merge<
+  Meta,
+  {
+    dateCreated: DateInDB;
+    dateUpdated: DateInDB;
+    status: StudentStatusInDB;
+  }
+>;
 
 export interface StudentInfo {
   firstName: string;
   middleName: string;
   lastName: string;
+  dateOfBirth: Date;
   gender: Gender;
+  nationality: CountryCode;
   country: CountryCode;
   governorate?: string;
-  dateOfBirth: Date;
-  nationality: CountryCode;
-  timeZone: string;
-  phoneNumbers: { [idx: number]: PhoneNumberInfo };
+  timezone: string;
+  phoneNumber: PhoneNumberList;
   email?: string;
   facebook?: string;
   education: string;
   workStatus: WorkStatus;
   Quran: boolean;
-  Zoom?: boolean;
+  Zoom: boolean;
 }
-
-export type StudentValidation = {
-  [K in keyof Required<StudentInfo>]: boolean;
-};
-
-export const studentValidation: StudentValidation = {
-  firstName: false,
-  middleName: false,
-  lastName: false,
-  gender: false,
-  dateOfBirth: false,
-  country: false,
-  governorate: true,
-  nationality: false,
-  timeZone: false,
-  phoneNumbers: false,
-  email: true,
-  facebook: true,
-  education: false,
-  workStatus: false,
-  Quran: false,
-  Zoom: false,
-};
 
 export interface Student extends StudentInfo {
   id: string;
@@ -73,32 +57,74 @@ export interface Student extends StudentInfo {
   notes?: Note[];
 }
 
-export interface StudentInDB
-  extends Omit<Student, "id" | "dateOfBirth" | "meta" | "notes"> {
-  dateOfBirth: DateInDB;
-  meta: MetaInDB;
-  notes?: NoteMapInDB;
-}
+export type StudentInDB = Merge<
+  StudentInfo,
+  {
+    dateOfBirth: DateInDB;
+    meta: MetaInDB;
+    notes?: NoteMapInDB;
+  }
+>;
 
-export const studentFromDB = (id: string, data: StudentInDB): Student => {
+const defaultMeta = (): Meta => {
+  const now = new Date();
+  return { dateCreated: now, dateUpdated: now, status: { type: "pending" } };
+};
+
+export const studentFromDB = (
+  id: string,
+  {
+    dateOfBirth,
+    notes,
+    meta: { dateCreated, dateUpdated, status, ...meta },
+    ...data
+  }: StudentInDB
+): Student => {
+  const now = new Date();
+
   return {
     ...data,
     id,
-    dateOfBirth: dateFromDB(data.dateOfBirth),
+    dateOfBirth: dateFromDB(dateOfBirth),
     meta: {
-      ...data.meta,
-      dateCreated: dateFromDB(data.meta.dateCreated),
-      dateUpdated: dateFromDB(data.meta.dateUpdated),
-      status: statusFromDB(data.meta.status),
+      ...meta,
+      dateCreated: dateCreated ? dateFromDB(dateCreated) : now,
+      dateUpdated: dateUpdated ? dateFromDB(dateUpdated) : now,
+      ...(status && { status: studentStatusFromDB(status) }),
     },
-    notes: data.notes && noteListFromDB(data.notes),
+    notes: notes && noteListFromDB(notes),
   };
 };
 
-export const studentFromInfo = (data: StudentInfo): Omit<Student, "id"> => {
-  const now = new Date();
-  return {
+export const studentFromInfo = ({
+  phoneNumber,
+  dateOfBirth,
+  governorate,
+  email,
+  facebook,
+  workStatus,
+  Quran,
+  Zoom,
+  ...data
+}: StudentInfo) => {
+  const processedData: Omit<Student, "id"> = {
     ...data,
-    meta: { dateCreated: now, dateUpdated: now, status: { type: "pending" } },
+    dateOfBirth: new Date(dateOfBirth),
+    phoneNumber: filterPhoneNumberList(phoneNumber),
+    workStatus: parseWorkStatus(workStatus),
+    Quran: fromYesNo(Quran),
+    Zoom: fromYesNo(Zoom),
+    meta: defaultMeta(),
   };
+
+  const optionalData = { governorate, email, facebook };
+
+  for (let key in optionalData) {
+    const value = get(optionalData, key);
+    if (value !== undefined) set(processedData, key, value);
+  }
+
+  console.log(processedData);
+
+  return processedData;
 };

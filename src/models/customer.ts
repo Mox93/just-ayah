@@ -1,5 +1,9 @@
+import { get, set } from "react-hook-form";
+
+import { Merge } from "models";
 import { dateFromDB, DateInDB } from "models/dateTime";
-import { PhoneNumberInfo } from "./phoneNumber";
+
+import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
 
 const statuses = [
   "registered",
@@ -16,14 +20,17 @@ interface Meta {
   status: Status;
 }
 
-interface MetaInDB extends Omit<Meta, "dateCreated" | "dateUpdated"> {
-  dateCreated: DateInDB;
-  dateUpdated: DateInDB;
-}
+type MetaInDB = Merge<
+  Meta,
+  {
+    dateCreated: DateInDB;
+    dateUpdated: DateInDB;
+  }
+>;
 
 export interface CustomerInfo {
   fullName: string;
-  phoneNumber: [PhoneNumberInfo, ...PhoneNumberInfo[]];
+  phoneNumber: PhoneNumberList;
   facebook?: string;
 }
 
@@ -36,28 +43,42 @@ export interface CustomerInDB extends CustomerInfo {
   meta: MetaInDB;
 }
 
-export const customerFromDB = (id: string, data: CustomerInDB): Customer => {
-  return {
-    ...data,
-    id,
-    meta: data.meta
-      ? {
-          ...data.meta,
-          dateCreated: dateFromDB(data.meta.dateCreated),
-          dateUpdated: dateFromDB(data.meta.dateUpdated),
-        }
-      : {
-          dateCreated: new Date(),
-          dateUpdated: new Date(),
-          status: "registered",
-        },
-  };
+const defaultMeta = (): Meta => {
+  const now = new Date();
+  return { dateCreated: now, dateUpdated: now, status: "registered" };
 };
 
-export const customerFromInfo = (data: CustomerInfo): Omit<Customer, "id"> => {
-  const now = new Date();
-  return {
-    ...data,
-    meta: { dateCreated: now, dateUpdated: now, status: "registered" },
+export const customerFromDB = (
+  id: string,
+  { meta: { dateCreated, dateUpdated, ...meta }, ...data }: CustomerInDB
+): Customer => ({
+  ...data,
+  id,
+  meta: {
+    ...defaultMeta(),
+    ...meta,
+    ...(dateCreated && { dateCreated: dateFromDB(dateCreated) }),
+    ...(dateUpdated && { dateUpdated: dateFromDB(dateUpdated) }),
+  },
+});
+
+export const customerFromInfo = ({
+  fullName,
+  phoneNumber,
+  ...data
+}: CustomerInfo) => {
+  const processedData: Omit<Customer, "id"> = {
+    fullName,
+    phoneNumber: filterPhoneNumberList(phoneNumber),
+    meta: defaultMeta(),
   };
+
+  for (let key in data) {
+    const value = get(data, key);
+    if (value !== undefined) set(processedData, key, value);
+  }
+
+  console.log(processedData);
+
+  return processedData;
 };

@@ -2,9 +2,8 @@ import { FunctionComponent } from "react";
 
 import { useCustomers } from "context/Customers";
 import { CustomerInfo } from "models/customer";
-import { useDirT, useGlobalT, usePersonalInfoT } from "utils/translation";
+import { useDirT, usePageT, usePersonalInfoT } from "utils/translation";
 import { formAtoms } from "components/Form";
-import { get, set } from "react-hook-form";
 
 const { Form, Input, InputGroup, PhoneNumberInput } = formAtoms<CustomerInfo>();
 
@@ -18,43 +17,18 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
   onrejected,
 }) => {
   const dirT = useDirT();
-  const glb = useGlobalT();
   const pi = usePersonalInfoT();
+  const cst = usePageT("customers");
 
   const { addCustomer } = useCustomers();
 
-  const onSubmit = ({
-    fullName,
-    phoneNumber: [mainPhoneNumber, ...otherPhoneNumbers],
-    ...data
-  }: CustomerInfo) => {
-    const sanitizedData: CustomerInfo = {
-      fullName,
-      phoneNumber: [mainPhoneNumber],
-    };
-
-    for (let key in data) {
-      const value = get(data, key);
-      if (value) set(sanitizedData, key, value);
-    }
-
-    otherPhoneNumbers?.forEach((phoneNumber) => {
-      if (phoneNumber.code && phoneNumber.number)
-        sanitizedData.phoneNumber.push(phoneNumber);
-    });
-
-    console.log(sanitizedData);
-
-    addCustomer(sanitizedData, { onfulfilled, onrejected });
-  };
+  const onSubmit = (data: CustomerInfo) =>
+    addCustomer(data, { onFulfilled: onfulfilled, onRejected: onrejected });
 
   return (
-    <Form
-      className="Container"
-      dir={dirT}
-      onSubmit={onSubmit}
-      submitButton={glb("joinInitiative")}
-    >
+    <Form className="Container" dir={dirT} onSubmit={onSubmit}>
+      <h2 className="header">{cst("formTitle")}</h2>
+
       <Input
         name="fullName"
         label={pi("fullName")}

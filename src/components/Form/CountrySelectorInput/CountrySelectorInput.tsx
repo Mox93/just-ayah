@@ -19,7 +19,11 @@ const CountrySelectorInput = (
 ) => {
   const [selected, setSelected] = useState<Country>();
 
-  const renderElement = renderAttributes(...renderSections);
+  const renderElement = renderAttributes(
+    ...renderSections.map((field) =>
+      field === "phone" ? (obj: Country) => `+${obj["phone"]}` : field
+    )
+  );
 
   const handleSelect = (value?: Country) => {
     setSelected(value);

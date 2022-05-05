@@ -7,13 +7,12 @@ import { after, before } from "utils/position";
 import { useDirT } from "utils/translation";
 
 import Input, { InputProps } from "../Input";
-
-const OVERFLOW_DIR = { left: "rtl", right: "ltr" };
+import { OverflowDir, useOverflowDir } from "utils/overflow";
 
 export type AutoCompleatInputProps<TOption> = Merge<
   InputProps,
   {
-    overflowDir?: "right" | "left";
+    overflowDir?: OverflowDir;
     setValue?: (option?: TOption) => void;
   }
 >;
@@ -29,7 +28,7 @@ interface InternalAutoCompleatInputProps<TOption>
 /**
  * TODO:
  *  - Implement filtering
- *  - Handle unselect
+ *  - Handle reset selection
  */
 
 const AutoCompleatInput = <TOption,>(
@@ -54,7 +53,7 @@ const AutoCompleatInput = <TOption,>(
   const menuRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) =>
+    const handleWentOutside = (event: Event) =>
       event.target instanceof Node &&
       !menuRef.current?.contains(event.target) &&
       !inputRef?.current?.contains(event.target) &&
@@ -63,35 +62,53 @@ const AutoCompleatInput = <TOption,>(
     const handelCancelButtons = (event: KeyboardEvent) =>
       ["Escape"].includes(event.key) && setIsOpen(false);
 
-    if (isOpen) {
-      document.addEventListener("mouseup", handleClickOutside);
-      document.addEventListener("keyup", handelCancelButtons);
-    } else {
-      document.removeEventListener("mouseup", handleClickOutside);
-      document.removeEventListener("keyup", handelCancelButtons);
-    }
-
-    return () => {
-      document.removeEventListener("mouseup", handleClickOutside);
-      document.removeEventListener("keyup", handelCancelButtons);
+    const events = {
+      mouseup: handleWentOutside,
+      focusin: handleWentOutside,
+      keyup: handelCancelButtons,
     };
+
+    const addEvents = () => {
+      Object.entries(events).forEach(([type, callback]) =>
+        document.addEventListener(
+          type as keyof DocumentEventMap,
+          callback as EventListenerOrEventListenerObject
+        )
+      );
+    };
+
+    const RemoveEvents = () => {
+      Object.entries(events).forEach(([type, callback]) =>
+        document.removeEventListener(
+          type as keyof DocumentEventMap,
+          callback as EventListenerOrEventListenerObject
+        )
+      );
+    };
+
+    isOpen ? addEvents() : RemoveEvents();
+
+    return RemoveEvents;
   }, [isOpen]);
+
+  // TODO add a second input field for searching
 
   return (
     <div
       className={cn("AutoCompleatInput", className)}
-      dir={overflowDir ? OVERFLOW_DIR[overflowDir] : dir}
+      dir={useOverflowDir(overflowDir) || dir}
+      onFocus={() => setIsOpen(true)}
     >
       <Input
         {...props}
+        className={cn({ hidden: selected })} // TODO once filtering is implemented replace condition with `!isOpen && selected`
         dir={dir || dirT}
         readOnly // TODO remove once filtering is implemented
         ref={ref}
         labelRef={inputRef}
-        hidden={!!selected} // TODO add once filtering is implemented `!isOpen &&`
-        onClick={() => !isOpen && setIsOpen(true)}
+        onClick={() => setIsOpen(true)}
       >
-        {selected // TODO add once filtering is implemented `!isOpen &&`
+        {selected // TODO once filtering is implemented replace condition with `!isOpen && selected`
           ? before("input", <div className="selected">{selected}</div>)
           : null}
         {after("input", <Angle className={cn({ isOpen }, "arrow")} />)}
@@ -100,6 +117,7 @@ const AutoCompleatInput = <TOption,>(
       {isOpen && (
         <ul ref={menuRef} className="menu" dir={dir || dirT}>
           {options.map((option) => (
+            // TODO convert to radio input
             <li
               className="element"
               key={getKey(option)}

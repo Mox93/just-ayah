@@ -1,7 +1,11 @@
 import { identity } from "./index";
 import { useTranslation } from "react-i18next";
+import { Callback, TFunction } from "i18next";
 
-export const useLanguage = (): [string, (lng: string) => void] => {
+export const useLanguage = (): [
+  string,
+  (lng?: string, callback?: Callback) => Promise<TFunction>
+] => {
   const { i18n } = useTranslation();
   return [i18n.resolvedLanguage, i18n.changeLanguage];
 };
@@ -16,14 +20,14 @@ export const useNST = (ns: string) => {
   };
 };
 
-export const useDirT = () => useTranslation().t("dir");
-export const usePageT = (ns?: string) => useNST(append("pages", ns));
-export const useGlobalT = (ns?: string) => useNST(append("globals", ns));
-export const useNavT = (ns?: string) => useNST(append("nav", ns));
-export const useGovT = (ns?: string) => useNST(append("governorate", ns));
-export const usePersonalInfoT = (ns?: string) =>
-  useNST(append("personalInfo", ns));
-export const useMsgT = () => useNST("messages");
+const createHook = (root: string) => (ns?: string) =>
+  useNST([root, ns].filter(identity).join("."));
 
-const append = (...args: (string | undefined)[]): string =>
-  args.filter(identity).join(".");
+export const useDirT = () => useTranslation().t("dir");
+export const usePageT = createHook("pages");
+export const useGlobalT = createHook("globals");
+export const useNavT = createHook("nav");
+export const useGovT = createHook("governorate");
+export const usePersonalInfoT = createHook("personalInfo");
+export const useMessageT = createHook("messages");
+export const useDateTimeT = createHook("dateTime");

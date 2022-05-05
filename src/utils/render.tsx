@@ -1,10 +1,23 @@
 export const renderAttributes =
-  <Obj,>(...keys: (keyof Obj)[]) =>
-  (obj?: Obj) =>
-    obj && (
+  <Obj,>(...fields: (keyof Obj | ((obj: Obj) => any))[]) =>
+  (obj?: Obj) => {
+    if (!obj) return;
+
+    const parts: any[] = [];
+
+    for (let field of fields) {
+      if (typeof field === "string") {
+        parts.push(obj[field]);
+      } else if (typeof field === "function") {
+        parts.push(field(obj));
+      }
+    }
+
+    return (
       <>
-        {keys.map((key) => (
-          <p key={key as string}>{obj[key]}</p>
+        {parts.map((part) => (
+          <div key={part as string}>{part}</div>
         ))}
       </>
     );
+  };

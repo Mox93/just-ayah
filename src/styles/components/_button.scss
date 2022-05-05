@@ -5,12 +5,19 @@
     &.#{$color}-solid {
       background-color: var(--c-#{$color}-300);
       color: var(--c-white);
+      outline-offset: -2px;
 
-      &:hover {
+      &:focus:enabled {
+        outline: 3px solid var(--c-#{$color}-200);
+      }
+
+      &:hover:enabled {
+        outline: none;
         background-color: var(--c-#{$color}-200);
       }
 
-      &:active {
+      &:active:enabled {
+        outline: none;
         background-color: var(--c-#{$color}-400);
       }
     }
@@ -20,13 +27,17 @@
       outline: 2px solid var(--c-#{$color}-300);
       color: var(--c-#{$color}-300);
 
-      &:hover {
+      &:focus:enabled {
+        background-color: var(--c-#{$color}-100);
+      }
+
+      &:hover:enabled {
         outline: none;
-        background-color: var(--c-#{$color}-200);
+        background-color: var(--c-#{$color}-300);
         color: var(--c-white);
       }
 
-      &:active {
+      &:active:enabled {
         outline: none;
         background-color: var(--c-#{$color}-400);
         color: var(--c-white);

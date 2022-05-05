@@ -15,7 +15,7 @@ const NewStudent: FunctionComponent<NewStudentProps> = () => {
       <img className="banner" src={justAyahBG} alt="" />
       <LanguageSelector />
       <StudentForm
-        onfulfilled={() =>
+        onFulfilled={() =>
           showPopup(
             <>
               <h1>Thank you for joining</h1>

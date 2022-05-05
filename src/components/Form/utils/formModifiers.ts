@@ -10,16 +10,62 @@ import {
   FieldPath,
   get,
   RegisterOptions,
+  SubmitErrorHandler,
+  SubmitHandler,
+  useForm,
+  UseFormProps,
   UseFormRegisterReturn,
   UseFormReturn,
 } from "react-hook-form";
 
 import { Merge } from "models";
 import { PhoneNumberInfo } from "models/phoneNumber";
-import { identity, mergeCallbacks } from "utils";
+import { cn, identity, mergeCallbacks } from "utils";
 import { createModifier, Modifier } from "utils/transformer";
 
 import ErrorMessage from "../ErrorMessage";
+import { FormProps } from "../Form";
+
+/*************************\
+|***** From Modifier *****|
+\*************************/
+
+export type FormHook<TFieldValues> = Omit<
+  UseFormReturn<TFieldValues>,
+  "handleSubmit"
+>;
+
+type SmartFormProps<TFieldValues> = Merge<
+  FormProps,
+  {
+    config?: UseFormProps<TFieldValues>;
+    onSubmit?: SubmitHandler<TFieldValues>;
+    onFail?: SubmitErrorHandler<TFieldValues>;
+  }
+>;
+
+export const smartForm = <TFieldValues>() =>
+  createModifier<SmartFormProps<TFieldValues>>(
+    ({ config, children, onSubmit, onFail, ...props }) => {
+      const { handleSubmit, ...formHook } = useForm<TFieldValues>({
+        ...config,
+        // ...(config?.shouldUnregister === undefined
+        //   ? { shouldUnregister: true }
+        //   : {}),
+      });
+
+      const { reset } = formHook;
+
+      const processedProps = {
+        ...props,
+        children: handleFormChildren(children, { formHook }),
+        onSubmit: handleSubmit(onSubmit, onFail),
+        onReset: () => reset(config?.defaultValue),
+      };
+
+      return processedProps;
+    }
+  );
 
 /*******************************\
 |***** From Child Creation *****|
@@ -70,8 +116,6 @@ const COMMON_RULES = [
   "minLength",
   "pattern",
 ] as const;
-
-type FormHook<TFieldValues> = Omit<UseFormReturn<TFieldValues>, "handleSubmit">;
 
 type DefaultInputProps = InputHTMLAttributes<HTMLInputElement>;
 
@@ -148,12 +192,12 @@ export const selector = <TFieldValues>(convert: Function = identity) =>
       if (!formHook) return { ...props, name };
 
       const {
-        setValue: setValueInternal,
+        setValue: setValueByName,
         formState: { isSubmitted },
       } = formHook;
 
       const setValue = (value: any) =>
-        setValueInternal(name, convert(value), { shouldValidate: isSubmitted });
+        setValueByName(name, convert(value), { shouldValidate: isSubmitted });
 
       return {
         ...props,
@@ -164,7 +208,7 @@ export const selector = <TFieldValues>(convert: Function = identity) =>
     }
   );
 
-export const singleField = <TFieldValues>() =>
+export const singleField = <TFieldValues>(convert: Function = identity) =>
   createModifier<NamedChildProps<TFieldValues>>(
     ({ formHook, rules, name, ...props }: WithFormHook<TFieldValues>) => {
       if (!formHook) return { ...props, name };
@@ -173,14 +217,15 @@ export const singleField = <TFieldValues>() =>
         register,
         formState: { errors },
       } = formHook;
-
       const errorMessage = get(errors, name);
+      const { className } = props as DefaultInputProps;
 
       return {
         ...props,
+        className: cn(className, "withErrors"),
         isInvalid: !!errorMessage,
         errorMessage: ErrorMessage({ name, errors }),
-        ...register(name, rules),
+        ...convert(register(name, rules)),
       };
     }
   );
@@ -220,9 +265,11 @@ export const phoneNumberMapper = <TFieldValues>() =>
       const fieldWithError = fields.find((field) =>
         get(errors, `${name}.${field}`)
       );
+      const { className } = props as DefaultInputProps;
 
       return {
         ...props,
+        className: cn(className, "withErrorMessage"),
         innerProps,
         name,
         isInvalid: !!fieldWithError,

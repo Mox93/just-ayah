@@ -51,9 +51,9 @@ export const CustomersProvider: FunctionComponent<CustomersProviderProps> = ({
   const collectionRef = collection(db, "customers");
 
   const addCustomer: AddData<CustomerInfo> = useCallback(
-    (data, { onfulfilled = omit, onrejected = console.log } = {}) => {
+    (data, { onFulfilled = omit, onRejected = console.log } = {}) => {
       addDoc(collectionRef, customerFromInfo(data))
-        .then(onfulfilled, onrejected)
+        .then(onFulfilled, onRejected)
         .catch(console.log);
     },
     [collectionRef]
@@ -64,7 +64,10 @@ export const CustomersProvider: FunctionComponent<CustomersProviderProps> = ({
       filters = [],
       size = 20,
       sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
-      callback: { onfulfilled = omit, onrejected = console.log } = {},
+      callback: {
+        onFulfilled: onfulfilled = omit,
+        onRejected: onrejected = console.log,
+      } = {},
     } = {}) => {
       const q = query(
         collectionRef,

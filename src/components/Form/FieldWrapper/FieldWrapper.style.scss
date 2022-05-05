@@ -9,7 +9,13 @@
 
   @include fieldBorder();
 
+  &.contentFullWidth {
+    padding-inline: 0;
+  }
+
   .FieldWrapper {
+    height: calc(2.5rem - 2px);
+
     @include noFieldBorder();
   }
 

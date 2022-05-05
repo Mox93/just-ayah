@@ -6,9 +6,7 @@ const injectPartitions = (children: ReactNode) => {
   const newChildren: ReactNode[] = [];
 
   Children.forEach(children, (child, index) => {
-    console.log("FieldWrapper", child);
-
-    if (index > 0) newChildren.push(<div className="partition" />);
+    if (index > 0) newChildren.push(<div className="partition" key={index} />);
     newChildren.push(child);
   });
 
@@ -19,6 +17,7 @@ interface FieldWrapperProps {
   isInvalid?: boolean;
   dir?: string;
   addPartitions?: boolean;
+  contentFullWidth?: boolean;
 }
 
 const FieldWrapper: FC<FieldWrapperProps> = ({
@@ -26,9 +25,13 @@ const FieldWrapper: FC<FieldWrapperProps> = ({
   isInvalid,
   dir,
   addPartitions,
+  contentFullWidth,
 }) => {
   return (
-    <div className={cn("FieldWrapper", { invalid: isInvalid })} dir={dir}>
+    <div
+      className={cn("FieldWrapper", { invalid: isInvalid, contentFullWidth })}
+      dir={dir}
+    >
       {addPartitions ? injectPartitions(children) : children}
     </div>
   );

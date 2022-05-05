@@ -2,18 +2,23 @@ import { FC } from "react";
 
 import { getCountryCode } from "models/country";
 import { CustomerInfo } from "models/customer";
+import { getDate } from "models/dateTime";
 import { StudentInfo } from "models/student";
 import { getTzCode } from "models/timezone";
 import { transformer } from "utils/transformer";
 
-import AutoCompleatInput from "../AutoCompleatInput";
-import CountrySelectorInput from "../CountrySelectorInput";
-import Form, { FormProps } from "../Form";
-import GovernorateSelectorInput from "../GovernorateSelectorInput";
-import Input from "../Input";
-import InputGroup from "../InputGroup";
-import PhoneNumberInput from "../PhoneNumberInput";
-import TimezoneSelectorInput from "../TimezoneSelectorInput";
+import {
+  AutoCompleatInput,
+  CountrySelectorInput,
+  DateInput,
+  Form,
+  GovernorateSelectorInput,
+  Input,
+  InputGroup,
+  PhoneNumberInput,
+  SelectionInput,
+  TimezoneSelectorInput,
+} from "../";
 import {
   formChild,
   GovernorateMapper,
@@ -21,9 +26,11 @@ import {
   processProps,
   selector,
   singleField,
-} from "./formChild";
+  smartForm,
+} from "./formModifiers";
 
 const autoCompleatInputMap = {
+  //NOT USED
   Customer: transformer(
     AutoCompleatInput,
     formChild,
@@ -31,11 +38,21 @@ const autoCompleatInputMap = {
     selector<CustomerInfo>(),
     singleField<CustomerInfo>()
   ),
+  //NOT USED
   Student: transformer(
     AutoCompleatInput,
     formChild,
     processProps<StudentInfo>(),
     selector<StudentInfo>(),
+    singleField<StudentInfo>()
+  ),
+};
+
+const selectionInput = {
+  Student: transformer(
+    SelectionInput,
+    formChild,
+    processProps<StudentInfo>(),
     singleField<StudentInfo>()
   ),
 };
@@ -50,16 +67,12 @@ const formAtoms = <TFieldValues>() => {
   const processPropsMod = processProps<TFieldValues>();
 
   return {
-    Form: Form as FC<FormProps<TFieldValues>>,
-    Input: transformer(Input, formChild, processPropsMod, singleFieldMod),
+    // Wrapper Components
+    Form: transformer(Form as FC<{}>, smartForm<TFieldValues>()),
     InputGroup: transformer(InputGroup, formChild),
-    PhoneNumberInput: transformer(
-      PhoneNumberInput,
-      formChild,
-      processPropsMod,
-      phoneNumberMapper<TFieldValues>()
-    ),
-    AutoCompleatInput: autoCompleatInputMap,
+
+    // Single Field Components
+    Input: transformer(Input, formChild, processPropsMod, singleFieldMod),
     CountrySelectorInput: transformer(
       CountrySelectorInput,
       formChild,
@@ -81,6 +94,25 @@ const formAtoms = <TFieldValues>() => {
       GovernorateMapper<TFieldValues>(),
       singleFieldMod
     ),
+    DateInput: transformer(
+      DateInput,
+      formChild,
+      processPropsMod,
+      selector<TFieldValues>(getDate),
+      singleField<TFieldValues>((innerProps: any) => ({ innerProps }))
+    ),
+
+    // Nested Fields Components
+    PhoneNumberInput: transformer(
+      PhoneNumberInput,
+      formChild,
+      processPropsMod,
+      phoneNumberMapper<TFieldValues>()
+    ),
+
+    // Generic Components
+    AutoCompleatInput: autoCompleatInputMap,
+    SelectionInput: selectionInput,
   };
 };
 

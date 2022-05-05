@@ -84,13 +84,6 @@ $sMobile: 35em; // can't use var in @media
   }
 }
 
-@mixin errorMessage {
-  .ErrorMessage {
-    position: absolute;
-    width: 100%;
-  }
-}
-
 @mixin mainButton {
   height: 3rem;
   padding: 1rem 2rem;
@@ -100,4 +93,13 @@ $sMobile: 35em; // can't use var in @media
   font-weight: 600;
   color: var(--c-white);
   text-transform: capitalize;
+}
+
+@mixin menuListItem {
+  width: 100%;
+  height: 2.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  white-space: nowrap;
 }

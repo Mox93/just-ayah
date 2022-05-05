@@ -1,237 +1,219 @@
-import { FunctionComponent, MouseEvent, useState } from "react";
+import { useState, VFC } from "react";
 
-import InputField from "components/InputField";
-import DatePicker from "components/DatePicker";
-import RadioSelector from "components/RadioSelector";
-import {
-  StudentInfo,
-  StudentValidation,
-  studentValidation,
-} from "models/student";
+import { formAtoms } from "components/Form";
 import { useStudents } from "context/Students";
 import { genders } from "models/gender";
-import { Keys } from "models";
-import { cn, fromYesNo, toYesNo } from "utils";
-import WorkStatusTree from "components/WorkStatus";
-import CountrySelector from "components/CountrySelector";
-import GovernorateSelector from "components/GovernorateSelector";
-import PhoneNumber from "components/PhoneNumber";
-import TimeZoneSelector from "components/TimeZoneSelector";
-import { useDirT, useGlobalT, usePersonalInfoT } from "utils/translation";
+import { StudentInfo } from "models/student";
+import { NoWorkReason, noWorkReasons, WorkStatusInfo } from "models/work";
+import {
+  useDirT,
+  useGlobalT,
+  usePageT,
+  usePersonalInfoT,
+} from "utils/translation";
+import { fromYesNo, yesNo } from "utils/yesNo";
+
+const {
+  CountrySelectorInput,
+  DateInput,
+  Form,
+  GovernorateSelectorInput,
+  Input,
+  InputGroup,
+  PhoneNumberInput,
+  SelectionInput: { Student: SelectionInput },
+  TimezoneSelectorInput,
+} = formAtoms<StudentInfo>();
 
 interface StudentFormProps {
-  onfulfilled?: (response: any) => void;
-  onrejected?: (response: any) => void;
+  onFulfilled?: (response: any) => void;
+  onRejected?: (response: any) => void;
 }
 
-const StudentForm: FunctionComponent<StudentFormProps> = ({
-  onfulfilled,
-  onrejected,
-}) => {
-  const dir = useDirT();
+const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
+  const dirT = useDirT();
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
+  const stu = usePageT("students");
 
   const { addStudent } = useStudents();
 
-  const [student, setStudent] = useState<Partial<StudentInfo>>({});
-  const [validation, setValidation] =
-    useState<StudentValidation>(studentValidation);
+  const [workStatus, setWorkStatus] = useState<WorkStatusInfo>();
 
-  const [submitting, setSubmitting] = useState(false);
-
-  const update =
-    (key: Keys<StudentInfo>, validByDefault: boolean = true) =>
-    (value: any, valid: boolean = validByDefault) => {
-      setStudent((state) => ({ ...state, [key]: value }));
-      setValidation((state) => ({ ...state, [key]: valid }));
-    };
-
-  const submitForm = (e: MouseEvent) => {
-    e.preventDefault();
-
-    setSubmitting(true);
-    addStudent(student as StudentInfo, { onfulfilled, onrejected });
+  const onSubmit = (data: StudentInfo) => {
+    addStudent(data, { onFulfilled, onRejected });
   };
 
-  const valid = Object.values(validation).reduce(
-    (acc, cur) => acc && cur,
-    true
-  );
-
-  const availabilityOptions = ["whatsapp", "telegram", "call"].map(
-    (option) => ({ name: pi(option), option })
-  );
+  const now = new Date();
 
   return (
-    <form className="Form Container" dir={dir}>
-      <div className="inputGroup">
-        <InputField
-          required
+    <Form
+      className="Container"
+      dir={dirT}
+      onSubmit={onSubmit}
+      submitProps={{ children: glb("joinInitiative") }}
+    >
+      <h2 className="header">{stu("formTitle")}</h2>
+
+      <InputGroup>
+        <Input
           name="firstName"
           label={pi("firstName")}
-          value={student.firstName}
-          onChange={update("firstName")}
-          validators={[Boolean]}
+          rules={{ required: "noFirstName" }}
         />
-        <InputField
-          required
+        <Input
           name="middleName"
           label={pi("middleName")}
-          value={student.middleName}
-          onChange={update("middleName")}
-          validators={[Boolean]}
+          rules={{ required: "noMiddleName" }}
         />
-        <InputField
-          required
+        <Input
           name="lastName"
           label={pi("lastName")}
-          value={student.lastName}
-          onChange={update("lastName")}
-          validators={[Boolean]}
+          rules={{ required: "noLastName" }}
         />
-      </div>
+      </InputGroup>
 
-      <div className="inputGroup">
-        <DatePicker
+      <InputGroup>
+        <DateInput
+          name="dateOfBirth"
           label={pi("dateOfBirth")}
-          onChange={update("dateOfBirth")}
-          value={student.dateOfBirth}
-          required
-          validators={[Boolean]}
+          rules={{ required: "noDateOfBirth" }}
+          yearsRange={{
+            start: now.getFullYear(),
+            end: now.getFullYear() - 151,
+          }}
         />
-        <RadioSelector
-          name="gender"
-          label={pi("gender")}
-          options={genders.map((g) => ({ value: g, name: pi(g) }))}
-          selected={student.gender}
-          onChange={update("gender")}
-          required
-        />
-      </div>
 
-      <div className="inputGroup">
-        <CountrySelector
+        <SelectionInput
+          name="gender"
+          type="radio"
+          label={pi("gender")}
+          options={[...genders]}
+          renderElement={(value) => pi(value)}
+          rules={{ required: "noGender" }}
+        />
+      </InputGroup>
+
+      <InputGroup>
+        <CountrySelectorInput
           name="nationality"
           label={pi("nationality")}
-          selected={student.nationality}
-          onChange={update("nationality")}
-          required
+          renderSections={["emoji", "native"]}
+          rules={{ required: "noNationality" }}
         />
 
-        <CountrySelector
-          name="residence"
+        <CountrySelectorInput
+          name="country"
           label={pi("residence")}
-          selected={student.country}
-          onChange={update("country")}
-          required
+          renderSections={["emoji", "native"]}
+          rules={{ required: "noResidence" }}
+          overflowDir="start"
         />
-      </div>
+      </InputGroup>
 
-      <div className="inputGroup">
-        <GovernorateSelector
-          country={student.country}
+      <InputGroup>
+        <GovernorateSelectorInput
+          name="governorate"
+          countryField={"country"}
           label={pi("governorate")}
-          value={student.governorate}
-          onChange={update("governorate")}
-          required
+          rules={{ required: "noGovernorate" }}
         />
 
-        <TimeZoneSelector
-          label={pi("timeZone")}
-          selected={student.timeZone}
-          onChange={update("timeZone")}
+        <TimezoneSelectorInput
+          name="timezone"
+          label={pi("timezone")}
+          overflowDir="start"
         />
-      </div>
+      </InputGroup>
 
-      <PhoneNumber
-        label={pi("phoneNumber")}
-        value={(student.phoneNumbers || {})[0]}
-        tags={availabilityOptions}
-        map={(value) => ({ ...(student.phoneNumbers || {}), 0: value })}
-        onChange={update("phoneNumbers")}
-        required
-      />
-      <PhoneNumber
-        label={pi("secondPhoneNumber")}
-        value={(student.phoneNumbers || [])[1]}
-        tags={availabilityOptions}
-        map={(value) => ({ ...(student.phoneNumbers || {}), 1: value })}
-        onChange={update("phoneNumbers")}
-      />
+      <InputGroup>
+        <PhoneNumberInput
+          name="phoneNumber.0"
+          label={pi("phoneNumber")}
+          rules={{ required: "noPhoneNumber" }}
+          // tags={availabilityOptions}
+        />
+        <PhoneNumberInput
+          name="phoneNumber.1"
+          label={pi("secondPhoneNumber")}
+          // tags={availabilityOptions}
+        />
+      </InputGroup>
 
-      <InputField
-        name="email"
-        label={pi("email")}
-        value={student.email}
-        onChange={update("email")}
-      />
+      <InputGroup>
+        <Input name="email" label={pi("email")} type="email" />
 
-      <div className="inputGroup">
-        <InputField
+        <Input
           name="education"
           label={pi("education")}
-          value={student.education}
-          onChange={update("education")}
-          required
-          validators={[Boolean]}
+          rules={{ required: "noEducation" }}
         />
-        <RadioSelector
-          name="doesWork"
-          label={pi("doesWork")}
-          options={[
-            { value: "yes", name: glb("yes") },
-            { value: "no", name: glb("no") },
-          ]}
-          selected={student.workStatus && toYesNo(student.workStatus.doesWork)}
-          map={(value) => ({ doesWork: fromYesNo(value) })}
-          onChange={update("workStatus", false)}
-          required
-        />
-      </div>
+      </InputGroup>
 
-      {student.workStatus && (
-        <WorkStatusTree
-          status={student.workStatus}
-          onChange={update("workStatus")}
+      <InputGroup>
+        <SelectionInput
+          name="workStatus.doesWork"
+          type="radio"
+          label={pi("doesWork")}
+          options={yesNo}
+          renderElement={glb}
+          rules={{ required: "noWorkStatus" }}
+          onChange={(e) =>
+            setWorkStatus({ doesWork: fromYesNo(e.target.value) as boolean })
+          }
+        />
+
+        {workStatus &&
+          (workStatus.doesWork ? (
+            <Input
+              name="workStatus.job"
+              label={pi("occupation")}
+              rules={{ required: "noWorkStatus", shouldUnregister: true }}
+            />
+          ) : (
+            <SelectionInput
+              name="workStatus.reason"
+              type="radio"
+              options={[...noWorkReasons]}
+              renderElement={pi}
+              label={pi("noWorkReason")}
+              rules={{ required: "noWorkStatus", shouldUnregister: true }}
+              onChange={(e) =>
+                setWorkStatus((state) => ({
+                  ...state,
+                  reason: e.target.value as NoWorkReason,
+                }))
+              }
+            />
+          ))}
+      </InputGroup>
+
+      {workStatus?.reason === "other" && (
+        <Input
+          name="workStatus.explanation"
+          label={pi("noWorkDetails")}
+          rules={{ required: "noWorkStatus", shouldUnregister: true }}
         />
       )}
 
-      <RadioSelector
-        name="previousQuranMemorization"
+      <SelectionInput
+        name="Quran"
+        type="radio"
         label={pi("quran")}
-        options={[
-          { value: "yes", name: glb("yes") },
-          { value: "no", name: glb("no") },
-        ]}
-        selected={toYesNo(student.Quran)}
-        map={fromYesNo}
-        onChange={update("Quran")}
-        required
+        options={yesNo}
+        renderElement={glb}
+        rules={{ required: "noAnswer" }}
       />
 
-      <RadioSelector
-        name="canUseZoom"
+      <SelectionInput
+        name="Zoom"
+        type="radio"
         label={pi("zoom")}
-        options={[
-          { value: "yes", name: glb("yes") },
-          { value: "no", name: glb("no") },
-        ]}
-        selected={toYesNo(student.Zoom)}
-        map={fromYesNo}
-        onChange={update("Zoom")}
-        required
+        options={yesNo}
+        renderElement={glb}
+        rules={{ required: "noAnswer" }}
       />
-
-      <button
-        className={cn({ submitting }, "submitBtn ctaBtn")}
-        type="submit"
-        onClick={submitForm}
-        disabled={!valid || submitting}
-      >
-        {glb("joinInitiative")}
-      </button>
-    </form>
+    </Form>
   );
 };
 

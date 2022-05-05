@@ -6,15 +6,7 @@ export interface PhoneNumberInfo {
   tags?: string[];
 }
 
-export type PhoneNumberValidation = {
-  [K in keyof Required<PhoneNumberInfo>]: boolean;
-};
-
-export const phoneNumberValidation: PhoneNumberValidation = {
-  code: false,
-  number: false,
-  tags: true,
-};
+export type PhoneNumberList = [PhoneNumberInfo, ...PhoneNumberInfo[]];
 
 const notInPhoneNumber = /\D/g; // /(?<!^)\+|[^\+0-9]+/g
 
@@ -67,4 +59,17 @@ export const phoneNumberToString = (obj: PhoneNumberInfo) => {
 export const getCountryCode = (code: CountryCode): string => {
   const country = getCountry(code);
   return country ? `+${country.phone}` : "";
+};
+
+export const filterPhoneNumberList = ([
+  mainPhoneNumber,
+  ...otherPhoneNumbers
+]: PhoneNumberList) => {
+  const output: PhoneNumberList = [mainPhoneNumber];
+
+  otherPhoneNumbers.forEach((phoneNumber) => {
+    if (phoneNumber.code && phoneNumber.number) output.push(phoneNumber);
+  });
+
+  return output;
 };

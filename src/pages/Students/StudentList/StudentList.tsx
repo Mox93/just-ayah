@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { useState, VFC } from "react";
 
 import { getCountry } from "models/country";
 import { handleEgGov } from "models/governorate";
@@ -17,7 +17,7 @@ import { getPhoneNumberByTag } from "models/phoneNumber";
 import { getSubscription, Subscription } from "models/subscription";
 import SubscriptionSelector from "components/SubscriptionSelector";
 import StatusSelector from "components/StatusSelector";
-import { getStatus, StudentStatus } from "models/studentStatus";
+import { getStudentStatus, StudentStatus } from "models/studentStatus";
 import { UNKNOWN } from "models";
 import { usePopup } from "context/Popup";
 import StudentNotes from "../StudentNotes";
@@ -25,7 +25,7 @@ import { cn } from "utils";
 
 interface StudentListProps {}
 
-const StudentList: FunctionComponent<StudentListProps> = () => {
+const StudentList: VFC<StudentListProps> = () => {
   const glb = useGlobalT();
   const gov = useGovT("egypt");
   const stu = usePageT("students");
@@ -91,7 +91,7 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       className: "colorCoded",
       getValue: (data: Student) => {
         const type = data.meta.status?.type || UNKNOWN;
-        const status = getStatus(data.meta.status, glb);
+        const status = getStudentStatus(data.meta.status, glb);
 
         return (
           <button
@@ -127,8 +127,8 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
       name: "phoneNumber",
       header: pi("phoneNumber"),
       className: "phoneNumber",
-      getValue: ({ phoneNumbers }: Student) =>
-        getPhoneNumberByTag(phoneNumbers, "whatsapp"),
+      getValue: ({ phoneNumber }: Student) =>
+        getPhoneNumberByTag(phoneNumber, "whatsapp"),
       fit: true,
     },
     {
@@ -144,8 +144,7 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
     {
       name: "occupation",
       header: pi("occupation"),
-      getValue: ({ workStatus }: Student) =>
-        workStatus && getOccupation(workStatus, pi),
+      getValue: ({ workStatus }: Student) => getOccupation(workStatus, pi),
     },
     {
       name: "nationality",

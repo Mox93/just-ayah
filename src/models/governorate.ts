@@ -30,13 +30,11 @@ export const governorate = [
 
 export type Governorate = typeof governorate[number];
 
-export const egPrefix = "EG.";
-export const egStrip = (value: string) => value.replace(egPrefix, "");
+export const EG_PREFIX = "EG.";
+export const egStrip = (value: string) => value.replace(EG_PREFIX, "");
 
-export const governorateList = governorate.map(
-  (element) => `${egPrefix}${element}`
-);
+export const egGovernorate = governorate.map((value) => `${EG_PREFIX}${value}`);
 
 export const handleEgGov = (value: string, g: (value: string) => string) => {
-  return value.startsWith(egPrefix) ? g(egStrip(value)) : value;
+  return value.startsWith(EG_PREFIX) ? g(egStrip(value)) : value;
 };

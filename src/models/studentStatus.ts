@@ -20,18 +20,18 @@ export type StudentStatusInDB =
   | { type: Exclude<StudentStatusType, "postponed"> }
   | { type: "postponed"; date: DateInDB };
 
-export const getStatus = (
-  obj?: StudentStatus,
+export const getStudentStatus = (
+  status?: StudentStatus,
   glb: (value: string) => string = identity
 ): string => {
-  return obj
-    ? obj.type === "postponed"
-      ? `${glb(obj.type)} (${shortDateRep(obj.date)})`
-      : glb(obj.type)
+  return status
+    ? status.type === "postponed" && status.date
+      ? `${glb(status.type)} (${shortDateRep(status.date)})`
+      : glb(status.type)
     : glb(UNKNOWN);
 };
 
-export const statusFromDB = (
+export const studentStatusFromDB = (
   status?: StudentStatusInDB
 ): StudentStatus | undefined => {
   return status && status.type === "postponed"

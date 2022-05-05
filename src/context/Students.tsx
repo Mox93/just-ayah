@@ -56,9 +56,9 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
   const collectionRef = collection(db, "students");
 
   const addStudent: AddData<StudentInfo> = useCallback(
-    (data, { onfulfilled = omit, onrejected = console.log } = {}) => {
+    (data, { onFulfilled = omit, onRejected = console.log } = {}) => {
       addDoc(collectionRef, studentFromInfo(data))
-        .then(onfulfilled, onrejected)
+        .then(onFulfilled, onRejected)
         .catch(console.log);
     },
     [collectionRef]
@@ -69,7 +69,10 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
       filters = [],
       size = 20,
       sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
-      callback: { onfulfilled = omit, onrejected = console.log } = {},
+      callback: {
+        onFulfilled: onfulfilled = omit,
+        onRejected: onrejected = console.log,
+      } = {},
     } = {}) => {
       const q = query(
         collectionRef,
@@ -101,7 +104,7 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
   );
 
   const updateStudent: UpdateData<Student> = useCallback(
-    (id, updates, { onfulfilled = omit, onrejected = console.log } = {}) => {
+    (id, updates, { onFulfilled = omit, onRejected = console.log } = {}) => {
       const { notes, ...rest } = updates;
       const updatesDB = {
         ...rest,
@@ -113,8 +116,8 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
           state.map((data) => (data.id === id ? { ...data, ...updates } : data))
         );
 
-        onfulfilled();
-      }, onrejected);
+        onFulfilled();
+      }, onRejected);
     },
     [collectionRef]
   );

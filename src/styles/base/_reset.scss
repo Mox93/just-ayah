@@ -21,6 +21,15 @@ button {
   border: none;
   background-color: transparent;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 50%;
+    cursor: default;
+  }
+
+  &:focus {
+    outline: none;
+  }
 }
 
 a {

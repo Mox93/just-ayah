@@ -1,4 +1,7 @@
+import { UNKNOWN } from "models";
 import { identity } from "utils";
+
+import { fromYesNo } from "../utils/yesNo";
 
 export const noWorkReasons = [
   "student",
@@ -17,12 +20,36 @@ export type WorkStatus =
     }
   | { doesWork: false; reason: "other"; explanation: string };
 
+export type WorkStatusInfo = {
+  doesWork?: boolean;
+  job?: string;
+  reason?: NoWorkReason;
+  explanation?: string;
+};
+
+export const parseWorkStatus = ({
+  doesWork: dw,
+  job,
+  reason,
+  explanation,
+}: WorkStatusInfo): WorkStatus => {
+  const doesWork = fromYesNo(dw);
+
+  return doesWork
+    ? { doesWork, job: job! }
+    : reason !== "other"
+    ? { doesWork: doesWork!, reason: reason! }
+    : { doesWork: doesWork!, reason: reason!, explanation: explanation! };
+};
+
 export const getOccupation = (
-  status: WorkStatus,
+  status?: WorkStatus,
   pi: (value: string) => string = identity
-): string =>
-  status.doesWork
-    ? status.job
-    : status.reason === "other"
-    ? status.explanation
-    : pi(status.reason);
+) =>
+  status
+    ? status.doesWork
+      ? status.job
+      : status.reason !== "other"
+      ? pi(status.reason || UNKNOWN)
+      : status.explanation || pi(status.reason)
+    : pi(UNKNOWN);

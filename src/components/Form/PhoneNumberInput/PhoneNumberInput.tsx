@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from "react";
+import { FC, HTMLAttributes, ReactNode } from "react";
 
 import { InnerProps } from "models";
 import { cn } from "utils";
@@ -24,7 +24,7 @@ interface PhoneNumberInputProps extends HTMLAttributes<HTMLDivElement> {
   };
 }
 
-const PhoneNumberInput = ({
+const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
   label,
   isRequired,
   isInvalid,
@@ -34,7 +34,7 @@ const PhoneNumberInput = ({
   className,
   innerProps: { code: codeProps, number: numberProps } = {},
   ...props
-}: PhoneNumberInputProps) => {
+}) => {
   // TODO add tags
   return (
     <div {...props} className={cn("PhoneNumberInput", className)}>
@@ -42,7 +42,12 @@ const PhoneNumberInput = ({
         {children}
       </FieldHeader>
 
-      <FieldWrapper dir="ltr" isInvalid={isInvalid} addPartitions>
+      <FieldWrapper
+        dir="ltr"
+        isInvalid={isInvalid}
+        addPartitions
+        contentFullWidth
+      >
         <CountrySelectorInput
           name={`${name}.code`}
           renderSections={["emoji", "code", "phone"]}

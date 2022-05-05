@@ -1,21 +1,15 @@
 import { FC } from "react";
 
 import { cn } from "utils";
-import { handleFormChildren } from "../utils/formChild";
+import { handleFormChildren } from "../utils/formModifiers";
 
 export interface InputGroupProps {
   className?: string;
-  dir?: string;
 }
 
-const InputGroup: FC<InputGroupProps> = ({
-  className,
-  children,
-  dir,
-  ...props
-}) => {
+const InputGroup: FC<InputGroupProps> = ({ className, children, ...props }) => {
   return (
-    <div className={cn("InputGroup", className)} dir={dir}>
+    <div className={cn("InputGroup", className)}>
       {handleFormChildren(children, props)}
     </div>
   );
