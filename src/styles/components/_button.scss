@@ -20,6 +20,11 @@
         outline: none;
         background-color: var(--c-#{$color}-400);
       }
+
+      &:disabled {
+        background-color: var(--c-gray-100);
+        color: var(--c-gray-200);
+      }
     }
 
     &.#{$color}-outline {
@@ -42,6 +47,44 @@
         background-color: var(--c-#{$color}-400);
         color: var(--c-white);
       }
+
+      &:disabled {
+        outline-color: var(--c-gray-200);
+        border-color: var(--c-gray-200);
+        color: var(--c-gray-200);
+      }
     }
+
+    &.#{$color}-ghost {
+      color: var(--c-#{$color}-300);
+
+      &:focus:enabled {
+        outline-offset: -2px;
+        outline: 3px solid var(--c-#{$color}-100);
+      }
+
+      &:hover:enabled {
+        outline: none;
+        background-color: var(--c-#{$color}-100);
+      }
+
+      &:active:enabled {
+        background-color: var(--c-#{$color}-400);
+        color: var(--c-white);
+      }
+
+      &:disabled {
+        color: var(--c-gray-200);
+      }
+    }
+  }
+
+  &.default {
+    padding: 0.75em 1.5em;
+    font-weight: 600;
+  }
+
+  &.small {
+    padding: 0.5em 1em;
   }
 }

@@ -5,7 +5,7 @@ import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 import { InputProps } from "../Input";
 
-interface SelectionInputProps<TOption>
+export interface SelectionInputProps<TOption>
   extends Omit<InputProps, "hidden" | "value" | "id"> {
   options: TOption[];
   type: "radio" | "checkbox";

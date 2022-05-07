@@ -22,6 +22,7 @@ import { UNKNOWN } from "models";
 import { usePopup } from "context/Popup";
 import StudentNotes from "../StudentNotes";
 import { cn } from "utils";
+import { Button } from "components/Buttons";
 
 interface StudentListProps {}
 
@@ -127,8 +128,8 @@ const StudentList: VFC<StudentListProps> = () => {
       name: "phoneNumber",
       header: pi("phoneNumber"),
       className: "phoneNumber",
-      getValue: ({ phoneNumber }: Student) =>
-        getPhoneNumberByTag(phoneNumber, "whatsapp"),
+      getValue: ({ phoneNumber, phoneNumbers }: any) =>
+        getPhoneNumberByTag(phoneNumber || phoneNumbers, "whatsapp"),
       fit: true,
     },
     {
@@ -222,9 +223,9 @@ const StudentList: VFC<StudentListProps> = () => {
           setSelected(checked ? new Set(data.map(({ id }) => id)) : new Set())
         }
       />
-      <button className="ctaBtn" onClick={() => fetchStudents()}>
+      <Button variant="gray-ghost" size="small" onClick={() => fetchStudents()}>
         {`${glb("loadMore")} ...`}
-      </button>
+      </Button>
     </main>
   );
 };

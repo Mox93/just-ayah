@@ -61,6 +61,16 @@ export const range: Range = (startOrEnd, end?: number, step?: number) => {
   return output;
 };
 
+/******************************\
+|****** STRING FUNCTIONS ******| 
+\******************************/
+
+export const toCapitalized = (value: string) =>
+  `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
+
+export const toTitle = (value: string) =>
+  value.split(" ").map(toCapitalized).join(" ");
+
 /********************************************************************\
 |***** PASSING DEFAULT EXPORTS AS NAMED EXPORTS FOR AUTO IMPORT *****|
 \********************************************************************/

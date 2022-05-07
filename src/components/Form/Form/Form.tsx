@@ -1,6 +1,6 @@
 import { FC, FormHTMLAttributes } from "react";
 
-import Button, { ButtonProps } from "components/Button";
+import { Button, ButtonProps } from "components/Buttons";
 import { cn } from "utils";
 import { useDirT, useGlobalT } from "utils/translation";
 
@@ -41,14 +41,14 @@ const Form: FC<FormProps> = ({
           {submitChildren ?? glb("submit")}
         </Button>
         {resetProps && (
-          // TODO add popup for reset consent.
+          // TODO add popup for reset confirmation.
           <Button
-            variant="danger-outline"
+            variant="danger-ghost"
             {...resetProps}
             className={cn(resetProps.className, "reset")}
             type="reset"
           >
-            {resetProps.children ?? glb("reset")}
+            {resetProps.children ?? glb("clearForm")}
           </Button>
         )}
       </InputGroup>

@@ -165,7 +165,7 @@
     "noGender": "please select you gender",
     "noWorkStatus": "please enter you work status",
     "onAnswer": "please answer this question",
-    "noTags": "please select at least one communication method",
+    "noContactMethod": "please select at least one communication method",
     "fieldRequired": "this field is required"
   }
 }

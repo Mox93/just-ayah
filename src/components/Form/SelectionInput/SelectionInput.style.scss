@@ -49,6 +49,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-wrap: nowrap;
+      overflow-x: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      * {
+        max-height: 2rem;
+      }
     }
   }
 }

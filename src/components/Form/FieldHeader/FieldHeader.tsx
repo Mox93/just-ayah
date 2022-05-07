@@ -1,8 +1,8 @@
 import { FC } from "react";
 
-import { cn } from "utils";
+import { cn, toCapitalized } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
-import { useDirT } from "utils/translation";
+import { useDirT, useLanguage } from "utils/translation";
 
 type Location = "header";
 
@@ -24,17 +24,22 @@ const FieldHeader: FC<FieldHeaderProps> = ({
   children,
 }) => {
   const dirT = useDirT();
+  const [lang] = useLanguage();
 
   return label ? (
     <div className="FieldHeader" dir={dirT}>
       {before("header", children as PositionalElement<Location>)}
       <h4
         className={cn(
-          { required: isRequired ?? required, invalid: isInvalid },
+          {
+            required: isRequired ?? required,
+            invalid: isInvalid,
+            title: lang !== "ar",
+          },
           "label"
         )}
       >
-        {label}
+        {toCapitalized(label)}
       </h4>
       {after("header", children as PositionalElement<Location>)}
     </div>

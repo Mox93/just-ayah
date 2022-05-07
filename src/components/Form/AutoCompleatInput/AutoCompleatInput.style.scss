@@ -12,22 +12,28 @@
         opacity: 0;
       }
     }
+
+    &:focus-within {
+      .arrow {
+        fill: var(--c-primary-200);
+      }
+    }
+
+    .arrow {
+      min-width: 1.5rem;
+      transform: rotate(180deg);
+      fill: var(--c-gray-400);
+
+      &.isOpen {
+        transform: unset;
+      }
+    }
   }
 
   .selected {
     @include menuListItem();
 
     cursor: text;
-  }
-
-  .arrow {
-    min-width: 1.5rem;
-    transform: rotate(180deg);
-    fill: var(--c-gray-400);
-
-    &.isOpen {
-      transform: unset;
-    }
   }
 
   .menu {

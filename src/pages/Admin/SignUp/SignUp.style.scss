@@ -1,4 +1,4 @@
-/* SIGN UP */
+@use "styles/abstracts/mixins" as *;
 
 .SignUp {
   width: 100vw;
@@ -12,7 +12,5 @@
   background-size: cover;
   background-position: center;
 
-  .googleSignIn {
-    background-color: var(--c-white);
-  }
+  @include floatingLanguageSelector();
 }

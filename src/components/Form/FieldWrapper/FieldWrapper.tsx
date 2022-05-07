@@ -14,6 +14,7 @@ const injectPartitions = (children: ReactNode) => {
 };
 
 interface FieldWrapperProps {
+  className?: string;
   isInvalid?: boolean;
   dir?: string;
   addPartitions?: boolean;
@@ -21,6 +22,7 @@ interface FieldWrapperProps {
 }
 
 const FieldWrapper: FC<FieldWrapperProps> = ({
+  className,
   children,
   isInvalid,
   dir,
@@ -29,7 +31,11 @@ const FieldWrapper: FC<FieldWrapperProps> = ({
 }) => {
   return (
     <div
-      className={cn("FieldWrapper", { invalid: isInvalid, contentFullWidth })}
+      className={cn(
+        "FieldWrapper",
+        { invalid: isInvalid, contentFullWidth },
+        className
+      )}
       dir={dir}
     >
       {addPartitions ? injectPartitions(children) : children}

@@ -8,12 +8,11 @@ export interface PhoneNumberInfo {
 
 export type PhoneNumberList = [PhoneNumberInfo, ...PhoneNumberInfo[]];
 
-const notInPhoneNumber = /\D/g; // /(?<!^)\+|[^\+0-9]+/g
+// const notInPhoneNumber = /\D/g; // /(?<!^)\+|[^\+0-9]+/g
 
-export const sanitizePhoneNumber = (value: any) =>
-  typeof value === "string"
-    ? value.replace(notInPhoneNumber, "").slice(0, 16)
-    : undefined;
+export const phoneNumberTags = ["call", "whatsapp", "telegram"] as const;
+
+export type PhoneNumberTags = typeof phoneNumberTags[number];
 
 export const addTag = (
   obj: Partial<PhoneNumberInfo>,
@@ -37,18 +36,18 @@ export const removeTag = (
 };
 
 export const getPhoneNumberByTag = (
-  numbers: { [idx: number]: PhoneNumberInfo },
+  phoneNumbers: PhoneNumberList,
   tag: string
 ): string => {
-  for (let key in numbers) {
-    const obj = numbers[key];
+  for (let key in phoneNumbers) {
+    const obj = phoneNumbers[key];
 
     if (obj.tags?.includes(tag)) {
       return phoneNumberToString(obj);
     }
   }
 
-  return numbers[0] ? phoneNumberToString(numbers[0]) : "";
+  return phoneNumbers[0] ? phoneNumberToString(phoneNumbers[0]) : "";
 };
 
 export const phoneNumberToString = (obj: PhoneNumberInfo) => {

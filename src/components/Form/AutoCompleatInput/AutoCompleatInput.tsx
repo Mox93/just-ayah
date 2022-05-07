@@ -1,4 +1,12 @@
-import { forwardRef, ReactNode, Ref, useEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  ReactNode,
+  Ref,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { ReactComponent as Angle } from "assets/icons/angle-up-svgrepo-com.svg";
 import { Merge } from "models";
@@ -52,6 +60,16 @@ const AutoCompleatInput = <TOption,>(
   const inputRef = useRef<HTMLLabelElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
 
+  const handleToggleButtons = useCallback(
+    (event: KeyboardEvent) =>
+      [" "].includes(event.key)
+        ? setIsOpen((state) => !state)
+        : ["ArrowDown"].includes(event.key)
+        ? setIsOpen(true)
+        : undefined,
+    []
+  );
+
   useEffect(() => {
     const handleWentOutside = (event: Event) =>
       event.target instanceof Node &&
@@ -91,13 +109,14 @@ const AutoCompleatInput = <TOption,>(
     return RemoveEvents;
   }, [isOpen]);
 
-  // TODO add a second input field for searching
+  // TODO add a second input field for searching and use autoFocus
 
   return (
     <div
       className={cn("AutoCompleatInput", className)}
       dir={useOverflowDir(overflowDir) || dir}
-      onFocus={() => setIsOpen(true)}
+      onFocus={() => document.addEventListener("keyup", handleToggleButtons)}
+      onBlur={() => document.removeEventListener("keyup", handleToggleButtons)}
     >
       <Input
         {...props}

@@ -1,0 +1,10 @@
+@use "styles/abstracts/mixins" as *;
+
+.Card {
+  margin-inline: auto;
+
+  @include desktop() {
+    box-shadow: 4px 4px 16px var(--c-shadow-200);
+    border-radius: 1rem;
+  }
+}

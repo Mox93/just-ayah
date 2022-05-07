@@ -1,0 +1,16 @@
+.CloseButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: var(--c-danger-300);
+
+    .icon {
+      fill: var(--c-white);
+    }
+  }
+}

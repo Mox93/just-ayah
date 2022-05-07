@@ -48,10 +48,10 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
 
   return (
     <Form
-      className="Container"
       dir={dirT}
       onSubmit={onSubmit}
       submitProps={{ children: glb("joinInitiative") }}
+      resetProps={{}}
     >
       <h2 className="header">{stu("formTitle")}</h2>
 
@@ -131,12 +131,12 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
           name="phoneNumber.0"
           label={pi("phoneNumber")}
           rules={{ required: "noPhoneNumber" }}
-          // tags={availabilityOptions}
+          withTags
         />
         <PhoneNumberInput
           name="phoneNumber.1"
           label={pi("secondPhoneNumber")}
-          // tags={availabilityOptions}
+          withTags
         />
       </InputGroup>
 

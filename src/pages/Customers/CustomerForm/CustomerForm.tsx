@@ -26,7 +26,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
     addCustomer(data, { onFulfilled: onfulfilled, onRejected: onrejected });
 
   return (
-    <Form className="Container" dir={dirT} onSubmit={onSubmit}>
+    <Form className="Container" dir={dirT} onSubmit={onSubmit} resetProps={{}}>
       <h2 className="header">{cst("formTitle")}</h2>
 
       <Input
@@ -40,10 +40,12 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
           label={pi("phoneNumber")}
           name="phoneNumber.0"
           rules={{ required: "noPhoneNumber" }}
+          withTags
         />
         <PhoneNumberInput
           label={pi("secondPhoneNumber")}
           name="phoneNumber.1"
+          withTags
         />
       </InputGroup>
 

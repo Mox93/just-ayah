@@ -4,8 +4,6 @@
   align-items: center;
 
   .label {
-    text-transform: capitalize;
-
     &.invalid {
       color: var(--c-danger-300);
     }

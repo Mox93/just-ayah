@@ -109,6 +109,7 @@ export const handleFormChildren = (
 \********************************/
 
 const COMMON_RULES = [
+  "disabled",
   "required",
   "min",
   "max",
@@ -235,7 +236,7 @@ export const phoneNumberMapper = <TFieldValues>() =>
     ({ formHook, rules, name, ...props }: WithFormHook<TFieldValues>) => {
       if (!formHook) return { ...props, name };
 
-      const fields = ["code", "number"] as const;
+      const fields = ["code", "number", "tags"] as const;
       const {
         register,
         setValue,
@@ -258,6 +259,20 @@ export const phoneNumberMapper = <TFieldValues>() =>
               message: "wrongPhoneNumber",
             },
           }),
+          tags: register(
+            `${name}.tags` as any,
+            rules?.required
+              ? {
+                  validate: {
+                    ...(typeof rules?.validate === "function"
+                      ? { main: rules?.validate }
+                      : rules?.validate),
+                    contactMethod: (v?: any) =>
+                      (!!v && (v.length || 0) > 0) || "noContactMethod",
+                  },
+                }
+              : {}
+          ),
         }),
         [name, rules]
       );
@@ -269,7 +284,7 @@ export const phoneNumberMapper = <TFieldValues>() =>
 
       return {
         ...props,
-        className: cn(className, "withErrorMessage"),
+        className: cn(className, "withErrors"),
         innerProps,
         name,
         isInvalid: !!fieldWithError,
