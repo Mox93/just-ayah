@@ -1,7 +1,7 @@
 {
   "dir": "ltr",
   "globals": {
-    "google_signIn": "enter with google",
+    "googleSignIn": "enter with Google",
     "joinInitiative": "join the initiative",
     "signOut": "sign out",
     "yes": "yes",
@@ -26,7 +26,10 @@
     "partialPay": "partial payment",
     "noPay": "no payment",
     "submit": "submit",
-    "reset": "reset"
+    "clearForm": "clear form",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "call": "Call"
   },
   "dateTime": {
     "day": "day",
@@ -71,9 +74,6 @@
     "countryCode": "country code",
     "phoneNumber": "phone number",
     "secondPhoneNumber": "another phone number",
-    "whatsapp": "WhatsApp",
-    "telegram": "Telegram",
-    "call": "available for calling",
     "gender": "gender",
     "male": "male",
     "female": "female",
@@ -86,7 +86,7 @@
     "country": "country",
     "governorate": "governorate",
     "residence": "residence",
-    "education": "education level",
+    "education": "education",
     "doesWork": "do you work?",
     "occupation": "job",
     "noWorkReason": "are you?",
@@ -164,7 +164,8 @@
     "noGovernorate": "please enter your governorate",
     "noGender": "please select you gender",
     "noWorkStatus": "please enter you work status",
-    "onAnswer": "pleaser answer this question",
+    "onAnswer": "please answer this question",
+    "noTags": "please select at least one communication method",
     "fieldRequired": "this field is required"
   }
 }

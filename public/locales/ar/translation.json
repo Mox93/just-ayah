@@ -26,7 +26,10 @@
     "partialPay": "تكلفة جزئية",
     "noPay": "بدون تكلفة",
     "submit": "إرسال",
-    "reset": "حذف البيانات"
+    "clearForm": "حذف البيانات",
+    "whatsapp": "واتسأب",
+    "telegram": "تيليجرام",
+    "call": "اتصال"
   },
   "dateTime": {
     "day": "يوم",
@@ -71,9 +74,6 @@
     "countryCode": "كود الدولة",
     "phoneNumber": "رقم الهاتف",
     "secondPhoneNumber": "رقم هاتف آخر",
-    "whatsapp": "WhatsApp",
-    "telegram": "Telegram",
-    "call": "متاح للاتصال",
     "gender": "النوع",
     "male": "ذكر",
     "female": "أنثى",
@@ -169,6 +169,7 @@
     "noGender": "من فضلك اختر النوع",
     "noWorkStatus": "من فضلك ادخل الحالة الوظيفية",
     "noAnswer": "من فضلك اجب عن هذا السؤال",
+    "noPhoneNumberTags": "من فضلك اختر طريقة التواصل",
     "fieldRequired": "هذا الحقل مطلوب"
   }
 }
