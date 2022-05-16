@@ -2,24 +2,19 @@ import { get, set } from "react-hook-form";
 
 import { Merge } from "models";
 import { dateFromDB, DateInDB } from "models/dateTime";
+import { fromYesNo } from "utils";
 
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
 import { Note, NoteMapInDB, noteListFromDB } from "./note";
 import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
-import {
-  StudentStatus,
-  studentStatusFromDB,
-  StudentStatusInDB,
-} from "./studentStatus";
-import { Subscription } from "./subscription";
+import { getStatus, Progress, ProgressInDB, Subscription } from "./status";
 import { parseWorkStatus, WorkStatus } from "./work";
-import { fromYesNo } from "../utils/yesNo";
 
 interface Meta {
   dateCreated: Date;
   dateUpdated: Date;
-  status?: StudentStatus;
+  progress?: Progress;
   subscription?: Subscription;
 }
 
@@ -28,7 +23,7 @@ type MetaInDB = Merge<
   {
     dateCreated: DateInDB;
     dateUpdated: DateInDB;
-    status: StudentStatusInDB;
+    progress: ProgressInDB;
   }
 >;
 
@@ -68,7 +63,7 @@ export type StudentInDB = Merge<
 
 const defaultMeta = (): Meta => {
   const now = new Date();
-  return { dateCreated: now, dateUpdated: now, status: { type: "pending" } };
+  return { dateCreated: now, dateUpdated: now, progress: { type: "pending" } };
 };
 
 export const studentFromDB = (
@@ -76,7 +71,7 @@ export const studentFromDB = (
   {
     dateOfBirth,
     notes,
-    meta: { dateCreated, dateUpdated, status, ...meta },
+    meta: { dateCreated, dateUpdated, progress, subscription, ...meta },
     ...data
   }: StudentInDB
 ): Student => {
@@ -90,7 +85,10 @@ export const studentFromDB = (
       ...meta,
       dateCreated: dateCreated ? dateFromDB(dateCreated) : now,
       dateUpdated: dateUpdated ? dateFromDB(dateUpdated) : now,
-      ...(status && { status: studentStatusFromDB(status) }),
+      ...(progress && { progress: getStatus("progress", progress) }),
+      ...(subscription && {
+        subscription: getStatus("subscription", subscription),
+      }),
     },
     notes: notes && noteListFromDB(notes),
   };
@@ -123,8 +121,6 @@ export const studentFromInfo = ({
     const value = get(optionalData, key);
     if (value !== undefined) set(processedData, key, value);
   }
-
-  console.log(processedData);
 
   return processedData;
 };

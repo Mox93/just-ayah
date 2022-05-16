@@ -1,0 +1,16 @@
+@use "styles/abstracts/mixins" as *;
+
+.MiniForm {
+  display: flex;
+  gap: 0.5rem;
+
+  .Button {
+    position: relative;
+
+    &.submit {
+      &::after {
+        @include checkMark($y: -2px, $color: var(--c-foreground));
+      }
+    }
+  }
+}

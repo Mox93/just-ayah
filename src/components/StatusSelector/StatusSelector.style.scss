@@ -1,39 +1,67 @@
+@use "styles/components/button" as *;
 @use "styles/abstracts/mixins" as *;
 
-.StatusSelector {
-  @include optionsList();
-  @include colorCoded(studentStatus);
+.StatusButton {
+  .divider {
+    height: 1px;
+    background-color: var(--c-gray-200);
+  }
 
-  .postponed {
-    &.date {
-      display: flex;
-      gap: 0.5rem;
+  .statusMenu {
+    overflow: visible;
+  }
 
-      input {
-        line-height: normal;
-        padding: 0.2rem 0.5rem;
-        width: 8rem;
-        border-radius: 1rem;
-        border: 2px solid var(--c-postponed);
+  .driver,
+  .option {
+    position: relative;
+    padding-inline-end: 2.5em !important;
 
-        &:focus {
-          outline: none;
+    @include statusButton("subscription", "progress") {
+      .DropdownArrow {
+        --spacing: 0.5em;
+
+        fill: var(--c-foreground);
+        position: absolute;
+
+        &[dir="ltr"] {
+          left: none;
+          right: var(--spacing);
+        }
+
+        &[dir="rtl"] {
+          left: var(--spacing);
+          right: none;
         }
       }
 
-      button {
-        background-color: var(--c-postponed);
-        width: 1.75rem;
-        height: 1.75rem;
-        border-radius: 50%;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      .checkMark {
+        --spacing: 1em;
 
-        &::after {
-          @include checkMark($y: -2px);
+        &[dir="ltr"] {
+          left: none;
+          right: var(--spacing);
         }
+
+        &[dir="rtl"] {
+          left: var(--spacing);
+          right: none;
+        }
+
+        @include checkMark($y: -2px, $color: var(--c-foreground));
+      }
+    }
+  }
+
+  .statusField {
+    input {
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &[type="number"] {
+        -moz-appearance: textfield;
       }
     }
   }

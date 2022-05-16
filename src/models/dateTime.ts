@@ -47,10 +47,6 @@ export const shortDateRep = (date: Date): string => {
   return `${date.getDate()}/${date.getMonth() + 1}${year}`;
 };
 
-export const dateFromDB = (date: DateInDB): Date => {
-  return new Date(date.seconds * 1000);
-};
-
 export const clampDate = ({
   day,
   month,
@@ -65,5 +61,23 @@ export const clampDate = ({
   };
 };
 
-export const getDate = ({ day, month, year }: DateInfo) =>
+export const dateFromDB = (date: DateInDB): Date => {
+  return new Date(date.seconds * 1000);
+};
+
+export const fromDateInfo = ({ day, month, year }: DateInfo) =>
   new Date(year, month - 1, day);
+
+export const toDateInfo = (date?: any): DateInfo | undefined => {
+  if (!date) return;
+
+  const _date = new Date(date);
+
+  return isNaN(_date.getDate())
+    ? undefined
+    : {
+        day: _date.getDate(),
+        month: _date.getMonth() + 1,
+        year: _date.getFullYear(),
+      };
+};

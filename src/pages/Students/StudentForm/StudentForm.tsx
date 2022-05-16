@@ -11,7 +11,7 @@ import {
   usePageT,
   usePersonalInfoT,
 } from "utils/translation";
-import { fromYesNo, yesNo } from "utils/yesNo";
+import { fromYesNo, capitalize, yesNo } from "utils";
 
 const {
   CountrySelectorInput,
@@ -89,7 +89,7 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
           type="radio"
           label={pi("gender")}
           options={[...genders]}
-          renderElement={(value) => pi(value)}
+          renderElement={[pi, capitalize]}
           rules={{ required: "noGender" }}
         />
       </InputGroup>

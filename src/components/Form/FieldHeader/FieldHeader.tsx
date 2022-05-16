@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { cn, toCapitalized } from "utils";
+import { cn, capitalize } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
 import { useDirT, useLanguage } from "utils/translation";
 
@@ -39,7 +39,7 @@ const FieldHeader: FC<FieldHeaderProps> = ({
           "label"
         )}
       >
-        {toCapitalized(label)}
+        {capitalize(label)}
       </h4>
       {after("header", children as PositionalElement<Location>)}
     </div>

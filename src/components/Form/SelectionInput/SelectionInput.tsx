@@ -1,15 +1,17 @@
 import { forwardRef, ReactNode, Ref } from "react";
-import { cn, identity } from "utils";
+
+import { applyInOrder, cn, FunctionOrChain, identity } from "utils";
 import { useDirT } from "utils/translation";
+
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 import { InputProps } from "../Input";
 
 export interface SelectionInputProps<TOption>
-  extends Omit<InputProps, "hidden" | "value" | "id"> {
+  extends Omit<InputProps, "value" | "id"> {
   options: TOption[];
   type: "radio" | "checkbox";
-  renderElement?: (option: TOption) => ReactNode;
+  renderElement?: FunctionOrChain<TOption, ReactNode>;
   getKey?: (option: TOption) => string | number;
   getValue?: (option: TOption) => string;
 }
@@ -49,11 +51,10 @@ const SelectionInput = <TOption,>(
           return (
             <div className="option" key={key}>
               <input
-                {...props}
-                {...{ ref, name, type, id }}
+                {...{ ...props, ref, name, type, id }}
                 value={getValue(option)}
               />
-              <label htmlFor={id}>{renderElement(option)}</label>
+              <label htmlFor={id}>{applyInOrder(renderElement)(option)}</label>
             </div>
           );
         })}

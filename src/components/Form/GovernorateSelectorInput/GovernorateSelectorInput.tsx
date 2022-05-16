@@ -42,7 +42,7 @@ const GovernorateSelectorInput = (
       {...props}
       ref={ref}
       options={egGovernorate}
-      renderElement={(value) => gov(egStrip(value))}
+      renderElement={[egStrip, gov]}
       setValue={handleSelect}
       selected={selected && gov(egStrip(selected))}
     />

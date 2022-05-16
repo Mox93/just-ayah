@@ -19,10 +19,9 @@
     min-width: 10rem;
     max-height: calc(100vh - 2rem);
     margin: 1rem;
-    padding: 1rem;
 
     &.closable {
-      padding-block-start: 4rem;
+      padding-block-start: 3rem;
     }
 
     .CloseButton {

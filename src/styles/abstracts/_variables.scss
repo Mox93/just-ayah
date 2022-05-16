@@ -10,14 +10,4 @@
       --c-#{$color}-#{$shade}: #{$value};
     }
   }
-
-  // COLOR CODING
-  --c-unknown: var(--c-gray-200);
-  --c-unknown-text: var(--c-gray-400);
-
-  @each $_, $colors in $colorCodes {
-    @each $code, $value in $colors {
-      --c-#{$code}: #{$value};
-    }
-  }
 }

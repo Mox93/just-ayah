@@ -3,7 +3,7 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithRedirect,
-  signOut,
+  signOut as SignOutFB,
   User,
 } from "firebase/auth";
 import {
@@ -15,37 +15,42 @@ import {
 } from "react";
 
 import { auth } from "services/firebase";
-import { omit } from "utils";
 
-interface AuthContextObj {
+const googleAuthProvider = new GoogleAuthProvider();
+
+interface AuthContext {
   user: User | null;
   signIn: () => void;
   signOut: () => void;
   authorized: (path?: string) => boolean;
 }
 
-const AuthContext = createContext<AuthContextObj>({
+const InitialState: AuthContext = {
   user: null,
-  signIn: omit,
-  signOut: omit,
+  signIn: () =>
+    signInWithRedirect(auth, googleAuthProvider).then((result) =>
+      console.log("signInWithRedirect", result)
+    ),
+  signOut: () =>
+    SignOutFB(auth)
+      .then(() => console.log("Signed out successfully"))
+      .catch(console.log),
   authorized: () => false,
-});
+};
 
-export const useAuth = () => useContext(AuthContext);
+const authContext = createContext(InitialState);
+
+export const useAuth = () => useContext(authContext);
 
 interface AuthProviderProps {}
 
 export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
   children,
 }) => {
-  const signIn = () => signInWithRedirect(auth, new GoogleAuthProvider());
+  const [user, setUser] = useState<User | null>(null);
+  const [ready, setReady] = useState(false);
 
-  const signOut$ = () =>
-    signOut(auth)
-      .then(() => console.log("Success"))
-      .catch((err) => console.log(err));
-
-  const authorized = () => (user ? true : false);
+  const authorized = () => !!user;
 
   useEffect(() => {
     /*
@@ -82,18 +87,13 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
         setUser(user);
         setReady(true);
       },
-      (err) => console.log(err)
+      console.log
     );
   }, []);
 
-  const [user, setUser] = useState<User | null>(null);
-  const [ready, setReady] = useState(false);
-
   return (
-    <AuthContext.Provider
-      value={{ user, signIn, signOut: signOut$, authorized }}
-    >
+    <authContext.Provider value={{ ...InitialState, user, authorized }}>
       {ready ? children : "loading..."}
-    </AuthContext.Provider>
+    </authContext.Provider>
   );
 };

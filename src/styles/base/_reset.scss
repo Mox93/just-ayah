@@ -21,6 +21,7 @@ button {
   border: none;
   background-color: transparent;
   cursor: pointer;
+  white-space: nowrap;
 
   &:disabled {
     cursor: default;
@@ -37,6 +38,16 @@ a {
 
 input {
   line-height: 2;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
 }
 
 ::-webkit-input-placeholder {

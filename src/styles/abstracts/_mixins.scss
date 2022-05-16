@@ -2,7 +2,7 @@
 @use "colors" as *;
 
 // Screen Sizes
-$sMobile: 35em; // can't use var in @media
+$sMobile: 35rem; // can't use var in @media
 
 @mixin mobile {
   @media screen and (max-width: $sMobile) {
@@ -16,46 +16,22 @@ $sMobile: 35em; // can't use var in @media
   }
 }
 
-@mixin colorCoded($types...) {
-  .colorCoded {
-    &.unknown {
-      background-color: var(--c-unknown);
-      color: var(--c-unknown-text);
-    }
+@mixin checkMark($x: 0px, $y: 0px, $color: var(--c-white)) {
+  --c-checkMark: #{$color};
 
-    @each $type in $types {
-      @each $code in map.get($colorCodes, $type) {
-        &.#{$type} {
-          background-color: var(--c-#{$type});
-
-          @if index((noPay, postponed), $type) {
-            color: var(--c-black);
-          } @else {
-            color: var(--c-White);
-          }
-        }
-      }
-    }
-  }
-}
-
-@mixin optionsList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-@mixin checkMark($x: 0px, $y: 0px) {
   content: "";
   width: 1rem;
   height: 0.5rem;
-  border-left: 2px solid var(--c-white);
-  border-bottom: 2px solid var(--c-white);
+  border-left: 2px solid var(--c-checkMark);
+  border-bottom: 2px solid var(--c-checkMark);
   position: absolute;
   transform: translate($x, $y) rotate(-45deg);
 }
 
-@mixin noFieldBorder {
+@mixin withoutBorder($borderRadius: none) {
+  --r-border: #{$borderRadius};
+
+  border-radius: var(--r-border);
   border: none;
 
   &:focus-within {
@@ -69,21 +45,35 @@ $sMobile: 35em; // can't use var in @media
   }
 }
 
-@mixin fieldBorder {
-  border: 1px solid var(--c-gray-300);
-  border-radius: 0.375rem;
+@mixin withBorder(
+  $states: none,
+  $borderRadius: 0.375rem,
+  $borderColor: var(--c-gray-300)
+) {
+  --c-border: #{$borderColor};
+  --r-border: #{$borderRadius};
+  --outline: none;
 
-  &:focus-within {
-    outline: 1px solid var(--c-primary-200);
-    border-color: var(--c-primary-200);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-border);
+  outline: var(--outline);
+
+  @if index($states, "focus") {
+    &:focus-within {
+      --c-border: var(--c-primary-200);
+      --outline: 1px solid var(--c-border);
+    }
   }
 
-  &.invalid {
-    outline: 1px solid var(--c-danger-300);
-    border-color: var(--c-danger-300);
+  @if index($states, "invalid") {
+    &.invalid {
+      --c-border: var(--c-danger-300);
+      --outline: 1px solid var(--c-border);
+    }
   }
 }
 
+// deprecated
 @mixin mainButton {
   height: 3rem;
   padding: 1rem 2rem;
@@ -102,6 +92,8 @@ $sMobile: 35em; // can't use var in @media
   gap: 0.5rem;
   align-items: center;
   white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 @mixin floatingLanguageSelector {

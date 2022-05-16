@@ -7,7 +7,12 @@
   display: flex;
   align-items: center;
 
-  @include fieldBorder();
+  @include withBorder(
+    $states: (
+      "focus",
+      "invalid",
+    )
+  );
 
   &.contentFullWidth {
     padding-inline: 0;
@@ -16,7 +21,7 @@
   .FieldWrapper {
     height: calc(2.5rem - 2px);
 
-    @include noFieldBorder();
+    @include withoutBorder();
   }
 
   .partition {

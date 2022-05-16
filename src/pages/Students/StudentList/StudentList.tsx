@@ -1,28 +1,26 @@
 import { useState, VFC } from "react";
 
+import { Button } from "components/Buttons";
+import StatusSelector from "components/StatusSelector";
+import Table, { FieldProps } from "components/Table";
+import { usePopup } from "context/Popup";
+import { useStudents } from "context/Students";
 import { getCountry } from "models/country";
+import { getAge, historyRep } from "models/dateTime";
 import { handleEgGov } from "models/governorate";
+import { getPhoneNumberByTag } from "models/phoneNumber";
+import { Progress, Subscription } from "models/status";
 import { Student } from "models/student";
 import { getOccupation } from "models/work";
-import { getAge, historyRep } from "models/dateTime";
-import Table, { FieldProps } from "components/Table";
-import { useStudents } from "context/Students";
+import { cn } from "utils";
 import {
   useGlobalT,
   useGovT,
   usePageT,
   usePersonalInfoT,
 } from "utils/translation";
-import { getPhoneNumberByTag } from "models/phoneNumber";
-import { getSubscription, Subscription } from "models/subscription";
-import SubscriptionSelector from "components/SubscriptionSelector";
-import StatusSelector from "components/StatusSelector";
-import { getStudentStatus, StudentStatus } from "models/studentStatus";
-import { UNKNOWN } from "models";
-import { usePopup } from "context/Popup";
+
 import StudentNotes from "../StudentNotes";
-import { cn } from "utils";
-import { Button } from "components/Buttons";
 
 interface StudentListProps {}
 
@@ -36,29 +34,18 @@ const StudentList: VFC<StudentListProps> = () => {
 
   const { showPopup, closePopup } = usePopup();
 
-  // Status
-  const updateStatus = (student: Student, status: StudentStatus) => {
-    updateStudent(student.id, { meta: { ...student.meta, status } });
+  // Progress
+  const updateProgress = (student: Student) => (status: Progress) => {
+    updateStudent(student.id, { meta: { ...student.meta, progress: status } });
     closePopup();
   };
-
-  const showStatusPopup = (student: Student) => () =>
-    showPopup(
-      <StatusSelector onChange={(status) => updateStatus(student, status)} />
-    );
 
   // Subscription
-  const updateSubscription = (student: Student, subscription: Subscription) => {
-    updateStudent(student.id, { meta: { ...student.meta, subscription } });
-    closePopup();
-  };
-
-  const showSubscriptionPopup = (student: Student) => () =>
-    showPopup(
-      <SubscriptionSelector
-        onChange={(subscription) => updateSubscription(student, subscription)}
-      />
-    );
+  const updateSubscription =
+    (student: Student) => (subscription: Subscription) => {
+      updateStudent(student.id, { meta: { ...student.meta, subscription } });
+      closePopup();
+    };
 
   // Notes
   const showNotesPopup = (studentId: string) => () =>
@@ -69,13 +56,13 @@ const StudentList: VFC<StudentListProps> = () => {
       name: "gender",
       header: (
         <div
-          className="smallCircle"
+          className="tightCircle"
           style={{ border: "2px solid var(--c-black)" }}
         ></div>
       ),
       className: "prefix",
       getValue: ({ gender }: Student) => (
-        <div className={cn("smallCircle", gender)}></div>
+        <div className={cn("tightCircle", gender)}></div>
       ),
       fit: true,
     },
@@ -89,18 +76,18 @@ const StudentList: VFC<StudentListProps> = () => {
     {
       name: "status",
       header: pi("status"),
-      className: "colorCoded",
+      className: "statusButton",
       getValue: (data: Student) => {
-        const type = data.meta.status?.type || UNKNOWN;
-        const status = getStudentStatus(data.meta.status, glb);
+        const {
+          meta: { progress },
+        } = data;
 
         return (
-          <button
-            className={cn("colorCoded", type)}
-            onClick={showStatusPopup(data)}
-          >
-            {status}
-          </button>
+          <StatusSelector
+            variant="progress"
+            status={progress}
+            onChange={updateProgress(data)}
+          />
         );
       },
       fit: true,
@@ -108,18 +95,18 @@ const StudentList: VFC<StudentListProps> = () => {
     {
       name: "subscription",
       header: pi("subscription"),
-      className: "colorCoded",
+      className: "statusButton",
       getValue: (data: Student) => {
-        const type = data.meta.subscription?.type || UNKNOWN;
-        const subscription = getSubscription(data.meta.subscription, glb);
+        const {
+          meta: { subscription },
+        } = data;
 
         return (
-          <button
-            className={cn("colorCoded", type)}
-            onClick={showSubscriptionPopup(data)}
-          >
-            {subscription}
-          </button>
+          <StatusSelector
+            variant="subscription"
+            status={subscription}
+            onChange={updateSubscription(data)}
+          />
         );
       },
       fit: true,
@@ -223,8 +210,8 @@ const StudentList: VFC<StudentListProps> = () => {
           setSelected(checked ? new Set(data.map(({ id }) => id)) : new Set())
         }
       />
-      <Button variant="gray-ghost" size="small" onClick={() => fetchStudents()}>
-        {`${glb("loadMore")} ...`}
+      <Button variant="gray-text" size="tight" onClick={() => fetchStudents()}>
+        {glb("loadMore")}
       </Button>
     </main>
   );

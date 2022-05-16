@@ -109,10 +109,10 @@
       "archived": "archive",
       "counter_one": "1 student selected",
       "counter_other": "{{count}} students selected",
-      "formTitle": "student info"
+      "formTitle": "student information"
     },
     "customers": {
-      "formTitle": "contact us"
+      "formTitle": "reach out"
     },
     "teachers": {
       "active": "teachers",

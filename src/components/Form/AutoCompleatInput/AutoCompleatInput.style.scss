@@ -14,18 +14,8 @@
     }
 
     &:focus-within {
-      .arrow {
+      .DropdownArrow {
         fill: var(--c-primary-200);
-      }
-    }
-
-    .arrow {
-      min-width: 1.5rem;
-      transform: rotate(180deg);
-      fill: var(--c-gray-400);
-
-      &.isOpen {
-        transform: unset;
       }
     }
   }
@@ -37,30 +27,19 @@
   }
 
   .menu {
-    min-width: 100%;
-    max-height: 20rem;
-    padding: 0.25rem;
-    background-color: var(--c-white);
-    box-shadow: 2px 2px 8px var(--c-shadow-200);
-    list-style-type: none;
-    position: absolute;
-    top: calc(100% + 0.375rem);
-    z-index: 2;
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
+    .list {
+      list-style-type: none;
 
-    @include fieldBorder();
+      .element {
+        padding-inline: 0.75rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
 
-    .element {
-      padding-inline: 0.75rem;
-      border-radius: 0.25rem;
-      cursor: pointer;
+        @include menuListItem();
 
-      @include menuListItem();
-
-      &:hover {
-        background-color: var(--c-shadow-200);
+        &:hover {
+          background-color: var(--c-shadow-200);
+        }
       }
     }
   }

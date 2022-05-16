@@ -3,15 +3,16 @@ import { Teacher } from "models/teacher";
 import { historyRep } from "models/dateTime";
 import Table, { FieldProps } from "../../../components/Table";
 import { useGlobalT, usePageT, usePersonalInfoT } from "utils/translation";
+import { useTeachers } from "context/Teacher";
 
-interface StudentListProps {
-  data: Teacher[];
-}
+interface StudentListProps {}
 
-const StudentList: FunctionComponent<StudentListProps> = ({ data }) => {
+const StudentList: FunctionComponent<StudentListProps> = () => {
   const glb = useGlobalT();
   const stu = usePageT("students");
   const pi = usePersonalInfoT();
+
+  const { data } = useTeachers();
 
   const fields: FieldProps[] = [
     {

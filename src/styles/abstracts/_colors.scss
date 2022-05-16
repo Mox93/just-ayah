@@ -20,6 +20,13 @@ $colors: (
     400: hsl(157, 78%, 22%),
     500: hsl(157, 78%, 15%),
   ),
+  info: (
+    100: hsl(197, 96%, 90%),
+    200: hsl(197, 96%, 55%),
+    300: hsl(197, 96%, 44%),
+    400: hsl(197, 96%, 33%),
+    500: hsl(197, 96%, 15%),
+  ),
   warning: (
     100: hsl(39, 96%, 95%),
     200: hsl(39, 96%, 58%),
@@ -50,17 +57,17 @@ $colors: (
   ),
 );
 
-$colorCodes: (
+$statusColors: (
   subscription: (
-    fullPay: var(--c-secondary-500),
-    partialPay: var(--c-secondary-300),
-    noPay: var(--c-secondary-100),
+    fullPay: success,
+    partialPay: warning,
+    noPay: danger,
   ),
-  studentStatus: (
-    canceled: #e04024,
-    active: #53a307,
-    pending: #9023bb,
-    finished: #227aff,
-    postponed: #d3b300,
+  progress: (
+    canceled: warning,
+    active: success,
+    pending: danger,
+    finished: warning,
+    postponed: info,
   ),
 );

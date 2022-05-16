@@ -8,15 +8,13 @@ import { PopupProvider } from "context/Popup";
 
 import "services/i18n";
 import "styles/index.scss";
-import "styles/components.scss";
-import "styles/pages.scss";
 
-import Compose from "./Compose";
+import Composer from "./Composer";
 import ViewHandler from "./ViewHandler";
 
 function App() {
   return (
-    <Compose
+    <Composer
       components={[
         StrictMode,
         BrowserRouter,
@@ -30,7 +28,7 @@ function App() {
       <div className="App">
         <ViewHandler />
       </div>
-    </Compose>
+    </Composer>
   );
 }
 

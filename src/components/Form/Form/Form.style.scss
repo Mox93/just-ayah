@@ -1,60 +1,39 @@
 .Form {
   max-width: 50rem;
   min-width: 20rem;
-  padding: 1rem;
-  margin-inline: auto;
-  display: grid;
-  gap: 2rem;
-  background-color: var(--c-white);
+  margin-block: 2rem;
 
-  & > .header {
-    max-width: 90%;
-    min-width: 50%;
-    padding-inline: 2rem;
-    padding-block-end: 0.5rem;
-    margin-inline: auto;
-    border-block-end: 1px solid var(--c-gray-200);
-    text-align: center;
-    text-transform: capitalize;
-  }
+  .body {
+    display: grid;
+    gap: 2rem;
 
-  .withErrors {
-    position: relative;
-
-    .ErrorMessage {
-      position: absolute;
-      width: 100%;
-    }
-  }
-
-  .actions {
-    justify-content: space-between;
-    gap: 1rem;
-
-    & > * {
-      flex: unset;
+    & > .header {
+      max-width: 90%;
+      min-width: 50%;
+      padding-inline: 2rem;
+      padding-block-end: 0.5rem;
+      margin-inline: auto;
+      border-block-end: 1px solid var(--c-gray-200);
+      text-align: center;
+      text-transform: capitalize;
     }
 
-    .submit {
-      // position: relative;
-      // bottom: 0;
-      // transition: bottom 50ms ease-in;
+    .withErrors {
+      position: relative;
 
-      // &:hover {
-      //   bottom: 0.125rem;
-      //   box-shadow: 0 0.25rem 3px -1.5px var(--c-shadow);
-      // }
+      .ErrorMessage {
+        position: absolute;
+        width: 100%;
+      }
+    }
 
-      // &.isSubmitting {
-      //   color: var(--c-gray-400);
-      //   background-color: var(--c-gray-200);
-      //   cursor: default;
-      // }
+    .actions {
+      justify-content: space-between;
+      gap: 1rem;
 
-      // &.isSubmitSuccessful {
-      //   background-color: var(--c-success-300);
-      //   cursor: default;
-      // }
+      & > * {
+        flex: unset;
+      }
     }
   }
 }

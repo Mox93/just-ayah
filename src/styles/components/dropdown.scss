@@ -1,0 +1,14 @@
+.DropdownWrapper {
+  position: relative;
+
+  & > * {
+    min-width: 100%;
+  }
+
+  .buffer {
+    padding-block-end: 2rem;
+    position: absolute;
+    top: calc(100% + 0.375rem);
+    z-index: 2;
+  }
+}

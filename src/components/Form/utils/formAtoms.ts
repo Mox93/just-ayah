@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { getCountryCode } from "models/country";
 import { CustomerInfo } from "models/customer";
-import { getDate } from "models/dateTime";
+import { fromDateInfo, toDateInfo } from "models/dateTime";
 import { StudentInfo } from "models/student";
 import { getTzCode } from "models/timezone";
 import { transformer } from "utils/transformer";
@@ -15,6 +15,7 @@ import {
   GovernorateSelectorInput,
   Input,
   InputGroup,
+  MiniForm,
   PhoneNumberInput,
   SelectionInput,
   TimezoneSelectorInput,
@@ -62,13 +63,25 @@ const selectionInput = {
  *  - Investigate the possibility of using overload to pass a namespace and get back the correct type
  */
 
-const formAtoms = <TFieldValues>() => {
+const formAtoms = <TFieldValues = any>() => {
   const singleFieldMod = singleField<TFieldValues>();
   const processPropsMod = processProps<TFieldValues>();
 
   return {
     // Wrapper Components
     Form: transformer(Form as FC<{}>, smartForm<TFieldValues>()),
+    MiniForm: transformer(
+      MiniForm as FC<{}>,
+      smartForm<TFieldValues>(
+        ({
+          formHook: {
+            formState: { errors },
+          },
+        }) => ({
+          isInvalid: Object.keys(errors || {}).length > 0,
+        })
+      )
+    ),
     InputGroup: transformer(InputGroup, formChild),
 
     // Single Field Components
@@ -77,14 +90,14 @@ const formAtoms = <TFieldValues>() => {
       CountrySelectorInput,
       formChild,
       processPropsMod,
-      selector<TFieldValues>(getCountryCode),
+      selector<TFieldValues>({ convertValue: getCountryCode }),
       singleFieldMod
     ),
     TimezoneSelectorInput: transformer(
       TimezoneSelectorInput,
       formChild,
       processPropsMod,
-      selector<TFieldValues>(getTzCode),
+      selector<TFieldValues>({ convertValue: getTzCode }),
       singleFieldMod
     ),
     GovernorateSelectorInput: transformer(
@@ -98,7 +111,12 @@ const formAtoms = <TFieldValues>() => {
       DateInput,
       formChild,
       processPropsMod,
-      selector<TFieldValues>(getDate),
+      selector<TFieldValues>({
+        convertValue: fromDateInfo,
+        extraProps: ({ name, formHook: { watch } }) => ({
+          selected: toDateInfo(watch(name)),
+        }),
+      }),
       singleField<TFieldValues>((innerProps: any) => ({ innerProps }))
     ),
 

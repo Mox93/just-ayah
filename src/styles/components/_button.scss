@@ -1,90 +1,201 @@
 @use "../abstracts/colors" as *;
 
+@mixin solid($color) {
+  --c-foreground: var(--c-white);
+  --c-background: var(--c-#{$color}-300);
+
+  background-color: var(--c-background);
+  color: var(--c-foreground);
+  outline-offset: -2px;
+
+  &:focus:enabled {
+    outline-offset: 0;
+    outline: 2px solid var(--c-#{$color}-200);
+  }
+
+  &:hover:enabled {
+    --c-background: var(--c-#{$color}-200);
+
+    outline: none;
+  }
+
+  &:active:enabled {
+    --c-background: var(--c-#{$color}-400);
+
+    outline: none;
+  }
+
+  &:disabled {
+    --c-foreground: var(--c-gray-200);
+    --c-background: var(--c-gray-100);
+  }
+
+  @content;
+}
+
+@mixin outline($color) {
+  --c-foreground: var(--c-#{$color}-300);
+  --c-background: transparent;
+
+  outline-offset: -2px;
+  outline: 2px solid var(--c-foreground);
+  color: var(--c-foreground);
+  background-color: var(--c-background);
+
+  &:focus:enabled {
+    --c-background: var(--c-#{$color}-100);
+  }
+
+  &:hover:enabled {
+    --c-foreground: var(--c-white);
+    --c-background: var(--c-#{$color}-300);
+
+    outline: none;
+  }
+
+  &:active:enabled {
+    --c-foreground: var(--c-white);
+    --c-background: var(--c-#{$color}-400);
+
+    outline: none;
+  }
+
+  &:disabled {
+    --c-foreground: var(--c-gray-200);
+  }
+
+  @content;
+}
+
+@mixin text($color) {
+  --c-foreground: var(--c-#{$color}-300);
+  --c-background: transparent;
+
+  color: var(--c-foreground);
+  background-color: var(--c-background);
+
+  &:focus:enabled {
+    outline-offset: -2px;
+    outline: 2px solid var(--c-#{$color}-100);
+  }
+
+  &:hover:enabled {
+    --c-background: var(--c-#{$color}-100);
+
+    outline: none;
+  }
+
+  &:active:enabled {
+    --c-foreground: var(--c-white);
+    --c-background: var(--c-#{$color}-400);
+  }
+
+  &:disabled {
+    --c-foreground: var(--c-gray-200);
+  }
+
+  @content;
+}
+
+@mixin ghost($color) {
+  --c-foreground: var(--c-#{$color}-300);
+  --c-background: var(--c-#{$color}-100);
+
+  background-color: var(--c-background);
+  color: var(--c-foreground);
+
+  &:focus:enabled {
+    outline-offset: -2px;
+    outline: 2px solid var(--c-#{$color}-200);
+  }
+
+  &:hover:enabled {
+    --c-foreground: var(--c-white);
+    --c-background: var(--c-#{$color}-200);
+
+    outline: none;
+  }
+
+  &:active:enabled {
+    --c-foreground: var(--c-white);
+    --c-background: var(--c-#{$color}-300);
+  }
+
+  &:disabled {
+    --c-foreground: var(--c-gray-200);
+    --c-background: var(--c-shadow-100);
+  }
+
+  @content;
+}
+
+@mixin default {
+  padding: 0.75em 1.5em;
+  font-weight: bold;
+  border-radius: 0.375em;
+}
+
+@mixin tight {
+  padding: 0.5em 1em;
+  border-radius: 0.25em;
+}
+
 @mixin buttonVariants {
   @each $color, $_ in $colors {
     &.#{$color}-solid {
-      background-color: var(--c-#{$color}-300);
-      color: var(--c-white);
-      outline-offset: -2px;
-
-      &:focus:enabled {
-        outline: 3px solid var(--c-#{$color}-200);
-      }
-
-      &:hover:enabled {
-        outline: none;
-        background-color: var(--c-#{$color}-200);
-      }
-
-      &:active:enabled {
-        outline: none;
-        background-color: var(--c-#{$color}-400);
-      }
-
-      &:disabled {
-        background-color: var(--c-gray-100);
-        color: var(--c-gray-200);
+      @include solid($color) {
+        @content;
       }
     }
 
     &.#{$color}-outline {
-      outline-offset: -2px;
-      outline: 2px solid var(--c-#{$color}-300);
-      color: var(--c-#{$color}-300);
-
-      &:focus:enabled {
-        background-color: var(--c-#{$color}-100);
+      @include outline($color) {
+        @content;
       }
+    }
 
-      &:hover:enabled {
-        outline: none;
-        background-color: var(--c-#{$color}-300);
-        color: var(--c-white);
-      }
-
-      &:active:enabled {
-        outline: none;
-        background-color: var(--c-#{$color}-400);
-        color: var(--c-white);
-      }
-
-      &:disabled {
-        outline-color: var(--c-gray-200);
-        border-color: var(--c-gray-200);
-        color: var(--c-gray-200);
+    &.#{$color}-text {
+      @include text($color) {
+        @content;
       }
     }
 
     &.#{$color}-ghost {
-      color: var(--c-#{$color}-300);
-
-      &:focus:enabled {
-        outline-offset: -2px;
-        outline: 3px solid var(--c-#{$color}-100);
-      }
-
-      &:hover:enabled {
-        outline: none;
-        background-color: var(--c-#{$color}-100);
-      }
-
-      &:active:enabled {
-        background-color: var(--c-#{$color}-400);
-        color: var(--c-white);
-      }
-
-      &:disabled {
-        color: var(--c-gray-200);
+      @include ghost($color) {
+        @content;
       }
     }
   }
 
   &.default {
-    padding: 0.75em 1.5em;
-    font-weight: 600;
+    @include default();
   }
 
-  &.small {
-    padding: 0.5em 1em;
+  &.tight {
+    @include tight();
+  }
+}
+
+@mixin statusButton($types...) {
+  @each $type, $colorCodes in $statusColors {
+    @if index($types, $type) {
+      &.#{$type} {
+        @each $code, $color in $colorCodes {
+          &.#{$code} {
+            @include ghost($color) {
+              @content;
+            }
+            @include tight();
+          }
+        }
+
+        &.unknown {
+          @include ghost("gray") {
+            @content;
+          }
+          @include tight();
+        }
+      }
+    }
   }
 }

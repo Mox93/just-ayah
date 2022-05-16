@@ -2,16 +2,12 @@ import { useDirT } from "./translation";
 
 export type OverflowDir = "start" | "end";
 
-export const useOverflowDir = (direction?: OverflowDir) => {
+export const useOverflowDir = (direction?: OverflowDir, fallback?: string) => {
   const dirT = useDirT();
 
-  if (!direction) return;
-
-  let overflowDir = { start: "rtl", end: "ltr" };
-
-  if (dirT === "rtl") {
-    overflowDir = { start: "ltr", end: "rtl" };
-  }
-
-  return overflowDir[direction];
+  if (dirT === "rtl" && direction === "start") return "ltr";
+  if (dirT === "rtl" && direction === "end") return "rtl";
+  if (dirT === "ltr" && direction === "start") return "rtl";
+  if (dirT === "ltr" && direction === "end") return "ltr";
+  return fallback;
 };

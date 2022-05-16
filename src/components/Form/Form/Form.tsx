@@ -1,6 +1,7 @@
 import { FC, FormHTMLAttributes } from "react";
 
 import { Button, ButtonProps } from "components/Buttons";
+import Card from "components/Card";
 import { cn } from "utils";
 import { useDirT, useGlobalT } from "utils/translation";
 
@@ -29,30 +30,32 @@ const Form: FC<FormProps> = ({
   const glb = useGlobalT();
 
   return (
-    <form {...props} className={cn("Form", className)} dir={dir || dirT}>
-      {children}
+    <Card className={cn("Form", className)}>
+      <form {...props} className="body" dir={dir || dirT}>
+        {children}
 
-      <InputGroup className="actions">
-        <Button
-          {...submitProps}
-          className={cn(submitClassName, "submit")}
-          type="submit"
-        >
-          {submitChildren ?? glb("submit")}
-        </Button>
-        {resetProps && (
-          // TODO add popup for reset confirmation.
+        <InputGroup className="actions">
           <Button
-            variant="danger-ghost"
-            {...resetProps}
-            className={cn(resetProps.className, "reset")}
-            type="reset"
+            {...submitProps}
+            className={cn(submitClassName, "submit")}
+            type="submit"
           >
-            {resetProps.children ?? glb("clearForm")}
+            {submitChildren ?? glb("submit")}
           </Button>
-        )}
-      </InputGroup>
-    </form>
+          {resetProps && (
+            // TODO add popup for reset confirmation.
+            <Button
+              variant="danger-text"
+              {...resetProps}
+              className={cn(resetProps.className, "reset")}
+              type="reset"
+            >
+              {resetProps.children ?? glb("clearForm")}
+            </Button>
+          )}
+        </InputGroup>
+      </form>
+    </Card>
   );
 };
 

@@ -1,12 +1,20 @@
-import { FC } from "react";
+import { forwardRef, PropsWithChildren, Ref } from "react";
 import { cn } from "utils";
 
 interface CardProps {
   className?: string;
+  variant?: "menu" | "container" | null;
 }
 
-const Card: FC<CardProps> = ({ className, children }) => {
-  return <div className={cn("Card", className)}>{children}</div>;
+const Card = (
+  { className, children, variant = "container" }: PropsWithChildren<CardProps>,
+  ref: Ref<HTMLDivElement>
+) => {
+  return (
+    <div ref={ref} className={cn("Card", variant, className)}>
+      {children}
+    </div>
+  );
 };
 
-export default Card;
+export default forwardRef(Card);
