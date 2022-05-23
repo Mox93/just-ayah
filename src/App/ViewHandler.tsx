@@ -15,7 +15,7 @@ import {
   StudentProfile,
   NewStudent,
 } from "pages/Students";
-import useAuthGuard from "utils/authGuard";
+import useAuthGuard from "hooks/authGuard";
 import { TeacherList, TeacherProfile, Teachers } from "pages/Teachers";
 import MainUI from "pages/UI/Main";
 import FormUI from "pages/UI/Form";

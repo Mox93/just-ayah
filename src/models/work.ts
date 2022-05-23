@@ -1,7 +1,6 @@
 import { UNKNOWN } from "models";
 import { identity } from "utils";
-
-import { fromYesNo } from "../utils/yesNo";
+import { fromYesNo } from "utils/yesNo";
 
 export const noWorkReasons = [
   "student",

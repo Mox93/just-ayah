@@ -1,7 +1,7 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { applyInOrder, cn, FunctionOrChain, identity } from "utils";
-import { useDirT } from "utils/translation";
+import { useDirT } from "hooks";
+import { applyInOrder, capitalize, cn, FunctionOrChain, identity } from "utils";
 
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
@@ -12,6 +12,7 @@ export interface SelectionInputProps<TOption>
   options: TOption[];
   type: "radio" | "checkbox";
   renderElement?: FunctionOrChain<TOption, ReactNode>;
+  keepFormat?: boolean;
   getKey?: (option: TOption) => string | number;
   getValue?: (option: TOption) => string;
 }
@@ -28,6 +29,7 @@ const SelectionInput = <TOption,>(
     type,
     dir,
     errorMessage,
+    keepFormat = false,
     renderElement = identity,
     getKey = identity,
     getValue = identity,
@@ -47,6 +49,7 @@ const SelectionInput = <TOption,>(
         {options.map((option) => {
           const key = getKey(option);
           const id = `${name}_${key}`;
+          const label = applyInOrder(renderElement)(option);
 
           return (
             <div className="option" key={key}>
@@ -54,7 +57,11 @@ const SelectionInput = <TOption,>(
                 {...{ ...props, ref, name, type, id }}
                 value={getValue(option)}
               />
-              <label htmlFor={id}>{applyInOrder(renderElement)(option)}</label>
+              <label htmlFor={id}>
+                {typeof label !== "string" || keepFormat
+                  ? label
+                  : capitalize(label)}
+              </label>
             </div>
           );
         })}

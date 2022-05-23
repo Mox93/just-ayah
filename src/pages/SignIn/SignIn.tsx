@@ -5,7 +5,7 @@ import { ReactComponent as GoogleLogo } from "assets/icons/google-svgrepo-com.sv
 import { Button } from "components/Buttons";
 import LanguageSelector from "components/LanguageSelector";
 import { useAuth } from "context/Auth";
-import { useGlobalT } from "utils/translation";
+import { useGlobalT } from "hooks";
 import { capitalize } from "utils";
 
 interface SignInProps {}

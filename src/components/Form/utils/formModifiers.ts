@@ -1,10 +1,12 @@
+import { isEmpty, mapValues } from "lodash";
 import {
   Children,
   createElement,
   InputHTMLAttributes,
   ReactElement,
   ReactNode,
-  useMemo,
+  useCallback,
+  useEffect,
 } from "react";
 import {
   FieldPath,
@@ -19,23 +21,29 @@ import {
 } from "react-hook-form";
 
 import { Merge } from "models";
-import { PhoneNumberInfo } from "models/phoneNumber";
 import { cn, identity, mergeCallbacks, omit, pass } from "utils";
 import { createModifier, Modifier } from "utils/transformer";
 
 import ErrorMessage from "../ErrorMessage";
 import { FormProps } from "../Form";
+import useFormPersist from "./formPersist";
 
 /*************************\
 |***** From Modifier *****|
 \*************************/
 
-type FormHook<TFieldValues> = Omit<UseFormReturn<TFieldValues>, "handleSubmit">;
+export type FormHook<TFieldValues> = Omit<
+  UseFormReturn<TFieldValues>,
+  "handleSubmit"
+>;
 
-type ExtraProps<TFieldValues, TExtraProps extends {} = {}> = (
-  props: {
-    formHook: FormHook<TFieldValues>;
-  } & TExtraProps
+type GenerateExtraProps<TFieldValues, TProps = {}> = (
+  props: Merge<
+    TProps,
+    {
+      formHook: FormHook<TFieldValues>;
+    }
+  >
 ) => Record<string, any>;
 
 type SmartFormProps<TFieldValues> = Merge<
@@ -43,23 +51,27 @@ type SmartFormProps<TFieldValues> = Merge<
   {
     config?: UseFormProps<TFieldValues>;
     noErrorMessage?: boolean;
+    storageKey?: string;
     onSubmit?: SubmitHandler<TFieldValues>;
     onFail?: SubmitErrorHandler<TFieldValues>;
+    hook?: (formHook: FormHook<TFieldValues>) => void;
   }
 >;
 
 export const smartForm = <TFieldValues>(
-  extraProps: ExtraProps<TFieldValues> = pass({})
+  extraProps: GenerateExtraProps<TFieldValues> = pass({})
 ) =>
   createModifier<SmartFormProps<TFieldValues>>(
     ({
       config,
       children,
+      noErrorMessage = false,
+      storageKey,
       onSubmit = omit,
       onFail,
-      noErrorMessage = false,
+      hook = omit,
       ...props
-    }) => {
+    }: SmartFormProps<TFieldValues>) => {
       const { handleSubmit, ...formHook } = useForm<TFieldValues>({
         ...config,
         // ...(config?.shouldUnregister === undefined
@@ -67,17 +79,41 @@ export const smartForm = <TFieldValues>(
         //   : {}),
       });
 
-      const { reset } = formHook;
+      useEffect(() => hook(formHook));
 
-      const processedProps = {
+      const { watch, setValue, reset } = formHook;
+
+      const { clear } = useFormPersist(
+        storageKey
+          ? {
+              storageKey,
+              watch,
+              setValue,
+            }
+          : undefined
+      );
+
+      const { defaultValues } = config || {};
+
+      const handleReset = useCallback(() => {
+        const values = watch();
+        const resetValues = mapValues(values as any, () => null);
+
+        reset(
+          !isEmpty(defaultValues) || !isEmpty(resetValues)
+            ? ({ ...resetValues, ...defaultValues } as any)
+            : undefined
+        );
+        clear();
+      }, [defaultValues, reset, clear]);
+
+      return {
         ...props,
         children: handleFormChildren(children, { formHook, noErrorMessage }),
-        onSubmit: handleSubmit(onSubmit, onFail),
-        onReset: () => reset(config?.defaultValue),
+        onSubmit: handleSubmit(mergeCallbacks(onSubmit) as any, onFail),
+        onReset: handleReset,
         ...extraProps({ formHook }),
       };
-
-      return processedProps;
     }
   );
 
@@ -132,11 +168,14 @@ const COMMON_RULES = [
   "pattern",
 ] as const;
 
-type DefaultInputProps = InputHTMLAttributes<HTMLInputElement>;
+export type DefaultInputProps = InputHTMLAttributes<HTMLInputElement>;
 
-type WithFormHook<TFieldValues> = NamedChildProps<TFieldValues> & {
-  formHook?: FormHook<TFieldValues>;
-};
+export type WithFormHook<TFieldValues, TExtraProps = {}> = Merge<
+  TExtraProps,
+  {
+    formHook?: FormHook<TFieldValues>;
+  }
+>;
 
 type ProcessedProps<TProps, TFieldValues> = Partial<
   Merge<
@@ -149,11 +188,11 @@ type ProcessedProps<TProps, TFieldValues> = Partial<
   >
 >;
 
-type RegisterMap<TFieldValues> = {
+export type RegisterMap<TFieldValues> = {
   [key in keyof TFieldValues]+?: UseFormRegisterReturn;
 };
 
-interface NamedChildProps<
+export interface NamedChildProps<
   TFieldValues,
   TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > {
@@ -162,21 +201,39 @@ interface NamedChildProps<
   noErrorMessage?: boolean;
 }
 
-type SelectorHandlers<
+type WithExtraProps<
   TFieldValues,
+  TProps = {},
   TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = {
-  convertValue?: Function;
-  extraProps?: ExtraProps<TFieldValues, { name: TFieldName }>;
-};
+> = Merge<
+  TProps,
+  {
+    extraProps?: GenerateExtraProps<TFieldValues, { name: TFieldName }>;
+  }
+>;
+
+type SelectorHandlers<TFieldValues> = WithExtraProps<
+  TFieldValues,
+  {
+    toValue?: Function;
+    toSelected?: Function;
+  }
+>;
 
 /**
  * TODO:
  *  - In case of no formHook maybe we still want to parse the rules
  */
-export const processProps = <TFieldValues>() =>
+export const processProps = <TFieldValues>({
+  extraProps = pass({}),
+}: WithExtraProps<TFieldValues> = {}) =>
   createModifier<NamedChildProps<TFieldValues>>(
-    ({ formHook, rules, name, ...props }: WithFormHook<TFieldValues>) => {
+    ({
+      formHook,
+      rules,
+      name,
+      ...props
+    }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
       if (!formHook) return { ...props, name };
 
       const { onChange, onBlur, value, required, ...rest } =
@@ -206,25 +263,31 @@ export const processProps = <TFieldValues>() =>
       if (value !== undefined && processedRules.value === undefined)
         processedRules.value = value as any;
 
-      return processedProps;
+      return { ...processedProps, ...extraProps({ name, formHook }) };
     }
   );
 
 export const selector = <TFieldValues>({
-  convertValue = identity,
+  toValue = identity,
+  toSelected = identity,
   extraProps = pass({}),
 }: SelectorHandlers<TFieldValues> = {}) =>
   createModifier<NamedChildProps<TFieldValues>>(
-    ({ formHook, name, ...props }: WithFormHook<TFieldValues>) => {
+    ({
+      formHook,
+      name,
+      ...props
+    }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
       if (!formHook) return { ...props, name };
 
       const {
         setValue: setValueByName,
         formState: { isSubmitted },
+        watch,
       } = formHook;
 
       const setValue = (value: any) =>
-        setValueByName(name, convertValue(value), {
+        setValueByName(name, toValue(value), {
           shouldValidate: isSubmitted,
         });
 
@@ -233,6 +296,7 @@ export const selector = <TFieldValues>({
         name,
         formHook,
         setValue,
+        selected: toSelected(watch(name)),
         ...extraProps({ name, formHook }),
       };
     }
@@ -246,7 +310,7 @@ export const singleField = <TFieldValues>(convert: Function = identity) =>
       name,
       noErrorMessage,
       ...props
-    }: WithFormHook<TFieldValues>) => {
+    }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
       if (!formHook) return { ...props, name };
 
       const {
@@ -262,115 +326,6 @@ export const singleField = <TFieldValues>(convert: Function = identity) =>
         isInvalid: !!errorMessage,
         errorMessage: !noErrorMessage && ErrorMessage({ name, errors }),
         ...convert(register(name, rules)),
-      };
-    }
-  );
-
-const fields = ["code", "number", "tags"] as const;
-
-export const phoneNumberMapper = <TFieldValues>() =>
-  createModifier<NamedChildProps<TFieldValues>>(
-    ({
-      formHook,
-      rules,
-      name,
-      noErrorMessage,
-      ...props
-    }: WithFormHook<TFieldValues>) => {
-      if (!formHook) return { ...props, name };
-
-      const {
-        register,
-        setValue,
-        formState: { errors, isSubmitted },
-      } = formHook;
-
-      const innerProps = useMemo<RegisterMap<PhoneNumberInfo>>(
-        () => ({
-          code: {
-            ...register(`${name}.code` as any, rules),
-            setValue: (value: any) =>
-              setValue(`${name}.code` as any, value?.code, {
-                shouldValidate: isSubmitted,
-              }),
-          },
-          number: register(`${name}.number` as any, {
-            ...rules,
-            pattern: {
-              value: /^[0-9]{5,16}$/g,
-              message: "wrongPhoneNumber",
-            },
-          }),
-          tags: register(
-            `${name}.tags` as any,
-            rules?.required
-              ? {
-                  validate: {
-                    ...(typeof rules?.validate === "function"
-                      ? { main: rules?.validate }
-                      : rules?.validate),
-                    contactMethod: (v?: any) =>
-                      (!!v && (v.length || 0) > 0) || "noContactMethod",
-                  },
-                }
-              : {}
-          ),
-        }),
-        [name, rules, isSubmitted]
-      );
-
-      const fieldWithError = fields.find((field) =>
-        get(errors, `${name}.${field}`)
-      );
-      const { className } = props as DefaultInputProps;
-
-      return {
-        ...props,
-        className: cn(className, "withErrors"),
-        innerProps,
-        name,
-        isInvalid: !!fieldWithError,
-        errorMessage:
-          !noErrorMessage &&
-          ErrorMessage({
-            name: `${name}.${fieldWithError}` as any,
-            errors,
-          }),
-      };
-    }
-  );
-
-export const GovernorateMapper = <TFieldValues>() =>
-  createModifier<
-    NamedChildProps<TFieldValues> & {
-      countryField?: FieldPath<TFieldValues>;
-    }
-  >(
-    ({
-      formHook,
-      name,
-      countryField,
-      ...props
-    }: WithFormHook<TFieldValues> & {
-      countryField?: FieldPath<TFieldValues>;
-    }) => {
-      if (!formHook) return { ...props, name };
-
-      const {
-        watch,
-        setValue,
-        formState: { isSubmitted },
-      } = formHook;
-
-      const country = countryField && watch(countryField);
-
-      return {
-        ...props,
-        name,
-        country,
-        formHook,
-        setValue: (value: any) =>
-          setValue(name, value, { shouldValidate: isSubmitted }),
       };
     }
   );

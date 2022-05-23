@@ -1,8 +1,8 @@
 import { FC, FormHTMLAttributes } from "react";
 
 import { Button } from "components/Buttons";
+import { useDirT } from "hooks";
 import { cn } from "utils";
-import { useDirT } from "utils/translation";
 
 interface MiniFormProps extends FormHTMLAttributes<HTMLFormElement> {
   canReset?: boolean;

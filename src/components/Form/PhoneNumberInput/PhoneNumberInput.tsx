@@ -3,18 +3,17 @@ import { FC, HTMLAttributes, ReactNode } from "react";
 import { ReactComponent as CallIcon } from "assets/icons/call-svgrepo-com.svg";
 import { ReactComponent as WhatsAppIcon } from "assets/icons/whatsapp-svgrepo-com.svg";
 import { ReactComponent as TelegramIcon } from "assets/icons/telegram-svgrepo-com.svg";
+import { useCountrySelector, useGlobalT } from "hooks";
 import { InnerProps } from "models";
+import { Country, CountryCode } from "models/country";
 import { phoneNumberTags, PhoneNumberTags } from "models/phoneNumber";
 import { cn } from "utils";
 import { PositionalElement } from "utils/position";
-import { useGlobalT } from "utils/translation";
 
-import CountrySelectorInput, {
-  CountrySelectorInputProps,
-} from "../CountrySelectorInput";
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 import Input, { InputProps } from "../Input";
+import MenuInput, { MenuInputProps } from "../MenuInput";
 import SelectionInput, { SelectionInputProps } from "../SelectionInput";
 
 interface PhoneNumberInputProps extends HTMLAttributes<HTMLDivElement> {
@@ -26,7 +25,7 @@ interface PhoneNumberInputProps extends HTMLAttributes<HTMLDivElement> {
   errorMessage?: ReactNode;
   withTags?: boolean;
   innerProps?: {
-    code?: InnerProps<CountrySelectorInputProps>;
+    code?: InnerProps<MenuInputProps<Country> & { selected?: CountryCode }>;
     number?: InnerProps<InputProps>;
     tags?: InnerProps<SelectionInputProps<PhoneNumberTags>>;
   };
@@ -46,7 +45,6 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
 }) => {
   const glb = useGlobalT();
 
-  // TODO add tags
   return (
     <div {...props} className={cn("PhoneNumberInput", className)}>
       <FieldHeader {...{ label, isRequired, isInvalid }}>
@@ -59,13 +57,16 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
         addPartitions
         contentFullWidth
       >
-        <CountrySelectorInput
+        <MenuInput
           name={`${name}.code`}
-          renderSections={["emoji", "code", "phone"]}
           dir="ltr"
           placeholder="+00"
           {...codeProps}
           className={cn("countryCode", codeProps?.className)}
+          {...useCountrySelector({
+            renderSections: ["emoji", "code", "phone"],
+            selectedCountry: codeProps?.selected,
+          })}
         />
 
         <Input
@@ -90,6 +91,7 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
             </>
           )}
           {...tagsProps}
+          className={cn("contactOptions", tagsProps?.className)}
         />
       )}
       {errorMessage}

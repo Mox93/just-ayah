@@ -2,8 +2,8 @@ import { FC, FormHTMLAttributes } from "react";
 
 import { Button, ButtonProps } from "components/Buttons";
 import Card from "components/Card";
+import { useDirT, useGlobalT } from "hooks";
 import { cn } from "utils";
-import { useDirT, useGlobalT } from "utils/translation";
 
 import InputGroup from "../InputGroup";
 

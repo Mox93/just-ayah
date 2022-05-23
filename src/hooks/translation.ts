@@ -1,6 +1,7 @@
-import { identity } from "./index";
-import { useTranslation } from "react-i18next";
 import { Callback, TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
+
+import { identity } from "utils";
 
 export const useLanguage = (): [
   string,

@@ -5,6 +5,7 @@ import StatusSelector from "components/StatusSelector";
 import Table, { FieldProps } from "components/Table";
 import { usePopup } from "context/Popup";
 import { useStudents } from "context/Students";
+import { useGlobalT, useGovT, usePageT, usePersonalInfoT } from "hooks";
 import { getCountry } from "models/country";
 import { getAge, historyRep } from "models/dateTime";
 import { handleEgGov } from "models/governorate";
@@ -13,12 +14,6 @@ import { Progress, Subscription } from "models/status";
 import { Student } from "models/student";
 import { getOccupation } from "models/work";
 import { cn } from "utils";
-import {
-  useGlobalT,
-  useGovT,
-  usePageT,
-  usePersonalInfoT,
-} from "utils/translation";
 
 import StudentNotes from "../StudentNotes";
 
@@ -115,8 +110,9 @@ const StudentList: VFC<StudentListProps> = () => {
       name: "phoneNumber",
       header: pi("phoneNumber"),
       className: "phoneNumber",
-      getValue: ({ phoneNumber, phoneNumbers }: any) =>
-        getPhoneNumberByTag(phoneNumber || phoneNumbers, "whatsapp"),
+      getValue: (
+        { phoneNumber, phoneNumbers }: any // TODO update field name in fireStore
+      ) => getPhoneNumberByTag(phoneNumber || phoneNumbers, "whatsapp"),
       fit: true,
     },
     {

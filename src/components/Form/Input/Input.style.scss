@@ -1,4 +1,28 @@
 .Input {
+  &[dir="ltr"] {
+    .field {
+      &::placeholder {
+        text-align: left;
+      }
+
+      &:placeholder-shown {
+        direction: ltr;
+      }
+    }
+  }
+
+  &[dir="rtl"] {
+    .field {
+      &::placeholder {
+        text-align: right;
+      }
+
+      &:placeholder-shown {
+        direction: rtl;
+      }
+    }
+  }
+
   .field {
     width: 100%;
     font-size: 1rem;

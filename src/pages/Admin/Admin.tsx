@@ -2,7 +2,7 @@ import { VFC } from "react";
 import { Outlet } from "react-router-dom";
 
 import SideBar from "components/SideBar";
-import { useDirT } from "utils/translation";
+import { useDirT } from "hooks";
 
 interface AdminProps {}
 

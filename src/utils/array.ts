@@ -18,14 +18,3 @@ export const range: Range = (startOrEnd, end?: number, step?: number) => {
 
   return output;
 };
-
-export type FunctionChain<TIn = any, TOut = any> = [
-  (value: TIn) => any,
-  ...Function[],
-  (value: any) => TOut
-];
-
-export const reduceChain =
-  <TIn, TOut>(chain: FunctionChain<TIn, TOut>) =>
-  (value: TIn): TOut =>
-    chain.reduce((node, func) => func(node), value) as any;

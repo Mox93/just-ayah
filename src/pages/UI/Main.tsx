@@ -2,7 +2,7 @@ import { VFC } from "react";
 
 import { Button } from "components/Buttons";
 import StatusSelector from "components/StatusSelector";
-import { useDirT } from "utils/translation";
+import { useDirT } from "hooks";
 import { mapStatusType, mapStatusVariant } from "models/status";
 
 interface MainProps {}

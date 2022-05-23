@@ -1,8 +1,8 @@
 import { forwardRef, InputHTMLAttributes, ReactNode, Ref } from "react";
 
+import { useDirT } from "hooks";
 import { cn } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
-import { useDirT } from "utils/translation";
 
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
@@ -14,7 +14,6 @@ const { before, after } = filterByPosition<Location>();
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  autoDir?: boolean;
   isInvalid?: boolean;
   isRequired?: boolean;
   children?: PositionalElement<Location>;
@@ -28,7 +27,6 @@ const Input = (
     dir,
     label,
     placeholder,
-    autoDir,
     required,
     isInvalid,
     isRequired,
@@ -53,7 +51,7 @@ const Input = (
         <input
           {...props}
           {...{ required, ref }}
-          dir={autoDir ? "auto" : dir || dirT}
+          dir="auto"
           placeholder={placeholder || label}
           className="field"
         />

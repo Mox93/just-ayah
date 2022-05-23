@@ -2,22 +2,14 @@ import { forwardRef, ReactNode, Ref } from "react";
 
 import Card from "components/Card";
 import DropdownArrow from "components/DropdownArrow";
+import { OverflowDir, useDirT, useDropdown } from "hooks";
 import { Merge } from "models";
-import {
-  applyInOrder,
-  cn,
-  FunctionOrChain,
-  identity,
-  omit,
-  OverflowDir,
-} from "utils";
-import { useDropdown } from "utils/dropdown";
+import { applyInOrder, cn, FunctionOrChain, identity, omit } from "utils";
 import { after, before } from "utils/position";
-import { useDirT } from "utils/translation";
 
 import Input, { InputProps } from "../Input";
 
-export type AutoCompleatInputProps<TOption> = Merge<
+export type MenuInputProps<TOption> = Merge<
   InputProps,
   {
     overflowDir?: OverflowDir;
@@ -25,10 +17,9 @@ export type AutoCompleatInputProps<TOption> = Merge<
   }
 >;
 
-interface InternalAutoCompleatInputProps<TOption>
-  extends AutoCompleatInputProps<TOption> {
+interface InternalMenuInputProps<TOption> extends MenuInputProps<TOption> {
   options: TOption[];
-  selected?: ReactNode;
+  selected?: TOption;
   renderElement?: FunctionOrChain<TOption, ReactNode>;
   getKey?: (option: TOption) => string | number;
 }
@@ -39,7 +30,7 @@ interface InternalAutoCompleatInputProps<TOption>
  *  - Handle reset selection
  */
 
-const AutoCompleatInput = <TOption,>(
+const MenuInput = <TOption,>(
   {
     className,
     options,
@@ -50,13 +41,13 @@ const AutoCompleatInput = <TOption,>(
     setValue = omit,
     renderElement = identity,
     ...props
-  }: InternalAutoCompleatInputProps<TOption>,
+  }: InternalMenuInputProps<TOption>,
   ref: Ref<HTMLInputElement>
 ) => {
   const dirT = useDirT();
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
     useDropdown({
-      className: cn("AutoCompleatInput", className),
+      className: cn("MenuInput", className),
       dir,
       overflowDir,
     });
@@ -74,28 +65,35 @@ const AutoCompleatInput = <TOption,>(
       onClick={() => dropdownAction("open")}
     >
       {selected // TODO once filtering is implemented replace condition with `!isOpen && selected`
-        ? before("input", <div className="selected">{selected}</div>)
+        ? before(
+            "input",
+            <div className="selected">
+              {applyInOrder(renderElement)(selected)}
+            </div>
+          )
         : null}
       {after("input", <DropdownArrow isOpen={isOpen} />)}
     </Input>,
     <Card variant="menu">
-      <ul ref={drivenRef} className="list" dir={dir || dirT}>
-        {options.map((option) => (
-          // TODO convert to radio input
-          <li
-            className="element"
-            key={getKey(option)}
-            onClick={() => {
-              setValue(option);
-              dropdownAction("close");
-            }}
-          >
-            {applyInOrder(renderElement)(option)}
-          </li>
-        ))}
-      </ul>
+      {isOpen && ( // TODO generalize this optimization
+        <ul ref={drivenRef} className="list" dir={dir || dirT}>
+          {options.map((option) => (
+            // TODO convert to radio input
+            <li
+              className="element"
+              key={getKey(option)}
+              onClick={() => {
+                setValue(option);
+                dropdownAction("close");
+              }}
+            >
+              {applyInOrder(renderElement)(option)}
+            </li>
+          ))}
+        </ul>
+      )}
     </Card>
   );
 };
 
-export default forwardRef(AutoCompleatInput);
+export default forwardRef(MenuInput);

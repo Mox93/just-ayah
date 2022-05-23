@@ -1,39 +1,42 @@
-import { FC } from "react";
+import { FC, VFC } from "react";
 
-import { getCountryCode } from "models/country";
+import { Country } from "models/country";
 import { CustomerInfo } from "models/customer";
 import { fromDateInfo, toDateInfo } from "models/dateTime";
 import { StudentInfo } from "models/student";
-import { getTzCode } from "models/timezone";
+import { Timezone } from "models/timezone";
 import { transformer } from "utils/transformer";
 
 import {
-  AutoCompleatInput,
-  CountrySelectorInput,
   DateInput,
   Form,
   GovernorateSelectorInput,
   Input,
   InputGroup,
+  MenuInput,
+  MenuInputProps,
   MiniForm,
   PhoneNumberInput,
   SelectionInput,
-  TimezoneSelectorInput,
 } from "../";
 import {
   formChild,
-  GovernorateMapper,
-  phoneNumberMapper,
   processProps,
   selector,
   singleField,
   smartForm,
 } from "./formModifiers";
+import {
+  countryMapper,
+  governorateMapper,
+  phoneNumberMapper,
+  timezoneMapper,
+} from "./mappers";
 
 const autoCompleatInputMap = {
   //NOT USED
   Customer: transformer(
-    AutoCompleatInput,
+    MenuInput,
     formChild,
     processProps<CustomerInfo>(),
     selector<CustomerInfo>(),
@@ -41,7 +44,7 @@ const autoCompleatInputMap = {
   ),
   //NOT USED
   Student: transformer(
-    AutoCompleatInput,
+    MenuInput,
     formChild,
     processProps<StudentInfo>(),
     selector<StudentInfo>(),
@@ -66,6 +69,7 @@ const selectionInput = {
 const formAtoms = <TFieldValues = any>() => {
   const singleFieldMod = singleField<TFieldValues>();
   const processPropsMod = processProps<TFieldValues>();
+  const selectorMod = selector<TFieldValues>();
 
   return {
     // Wrapper Components
@@ -87,24 +91,26 @@ const formAtoms = <TFieldValues = any>() => {
     // Single Field Components
     Input: transformer(Input, formChild, processPropsMod, singleFieldMod),
     CountrySelectorInput: transformer(
-      CountrySelectorInput,
+      MenuInput as VFC<MenuInputProps<Country>>,
       formChild,
       processPropsMod,
-      selector<TFieldValues>({ convertValue: getCountryCode }),
+      selectorMod,
+      countryMapper,
       singleFieldMod
     ),
     TimezoneSelectorInput: transformer(
-      TimezoneSelectorInput,
+      MenuInput as VFC<MenuInputProps<Timezone>>,
       formChild,
       processPropsMod,
-      selector<TFieldValues>({ convertValue: getTzCode }),
+      selectorMod,
+      timezoneMapper,
       singleFieldMod
     ),
     GovernorateSelectorInput: transformer(
       GovernorateSelectorInput,
       formChild,
       processPropsMod,
-      GovernorateMapper<TFieldValues>(),
+      governorateMapper<TFieldValues>(),
       singleFieldMod
     ),
     DateInput: transformer(
@@ -112,10 +118,8 @@ const formAtoms = <TFieldValues = any>() => {
       formChild,
       processPropsMod,
       selector<TFieldValues>({
-        convertValue: fromDateInfo,
-        extraProps: ({ name, formHook: { watch } }) => ({
-          selected: toDateInfo(watch(name)),
-        }),
+        toValue: fromDateInfo,
+        toSelected: toDateInfo,
       }),
       singleField<TFieldValues>((innerProps: any) => ({ innerProps }))
     ),
@@ -129,7 +133,7 @@ const formAtoms = <TFieldValues = any>() => {
     ),
 
     // Generic Components
-    AutoCompleatInput: autoCompleatInputMap,
+    OldAutoCompleatInput: autoCompleatInputMap,
     SelectionInput: selectionInput,
   };
 };

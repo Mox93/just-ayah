@@ -1,9 +1,9 @@
 import { FunctionComponent, ReactNode, useEffect } from "react";
 
-import Card from "components/Card";
-import { cn } from "utils";
-import { useDirT } from "utils/translation";
 import { CloseButton } from "components/Buttons";
+import Card from "components/Card";
+import { useDirT } from "hooks";
+import { cn } from "utils";
 
 export interface PopupProps {
   children?: ReactNode;

@@ -13,11 +13,5 @@ export const renderAttributes =
       }
     }
 
-    return (
-      <>
-        {parts.map((part) => (
-          <div key={part as string}>{part}</div>
-        ))}
-      </>
-    );
+    return parts.map((part, index) => <div key={index}>{part}</div>);
   };

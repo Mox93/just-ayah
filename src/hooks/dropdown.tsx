@@ -6,10 +6,23 @@ import {
   useRef,
 } from "react";
 
-import { cn } from ".";
-import { OverflowDir, useOverflowDir } from "./overflow";
+import { cn } from "utils";
+
+import { useDirT } from "./translation";
 
 import "styles/components/dropdown.scss";
+
+export type OverflowDir = "start" | "end";
+
+const useOverflowDir = (direction?: OverflowDir, fallback?: string) => {
+  const dirT = useDirT();
+
+  if (dirT === "rtl" && direction === "start") return "ltr";
+  if (dirT === "rtl" && direction === "end") return "rtl";
+  if (dirT === "ltr" && direction === "start") return "rtl";
+  if (dirT === "ltr" && direction === "end") return "ltr";
+  return fallback;
+};
 
 type DropdownState = { isOpen: boolean };
 export type DropdownAction = "open" | "close" | "toggle";
@@ -30,17 +43,13 @@ const reduce = (
   }
 };
 
-export interface DropdownWrapperProps {
+interface UseDropdownProps {
   className?: string;
   dir?: string;
   overflowDir?: OverflowDir;
 }
 
-export const useDropdown = ({
-  className,
-  dir,
-  overflowDir,
-}: DropdownWrapperProps) => {
+const useDropdown = ({ className, dir, overflowDir }: UseDropdownProps) => {
   const [{ isOpen }, dispatch] = useReducer(reduce, { isOpen: false });
 
   const driverRef = useRef<any>(null);
@@ -126,3 +135,5 @@ export const useDropdown = ({
     dropdownWrapper: wrapper,
   };
 };
+
+export default useDropdown;

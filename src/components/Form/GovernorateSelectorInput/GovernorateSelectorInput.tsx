@@ -1,50 +1,45 @@
-import { forwardRef, Ref, useEffect, useState } from "react";
+import { forwardRef, Ref, useEffect } from "react";
 
+import { useGovT } from "hooks";
 import { CountryCode } from "models/country";
 import { egStrip, egGovernorate, EG_PREFIX } from "models/governorate";
 import { omit } from "utils";
-import { useGovT } from "utils/translation";
 
-import AutoCompleatInput, {
-  AutoCompleatInputProps,
-} from "../AutoCompleatInput";
+import MenuInput, { MenuInputProps } from "../MenuInput";
 import Input from "../Input";
 
-interface GovernorateSelectorInputProps extends AutoCompleatInputProps<string> {
+interface GovernorateSelectorInputProps extends MenuInputProps<string> {
   country?: CountryCode;
+  selected?: string;
 }
 
 const GovernorateSelectorInput = (
-  { country, setValue = omit, ...props }: GovernorateSelectorInputProps,
+  {
+    country,
+    selected,
+    setValue = omit,
+    ...props
+  }: GovernorateSelectorInputProps,
   ref: Ref<HTMLInputElement>
 ) => {
   const gov = useGovT("egypt");
-
-  const [selected, setSelected] = useState<string>();
-
-  const handleSelect = (value?: string) => {
-    setSelected(value);
-    setValue(value);
-  };
 
   useEffect(() => {
     if (
       (country === "EG" && !selected?.startsWith(EG_PREFIX)) ||
       (country !== "EG" && selected?.startsWith(EG_PREFIX))
-    ) {
-      setSelected(undefined);
-      setValue(undefined);
-    }
-  }, [country]);
+    )
+      setValue();
+  }, [country, selected]);
 
   return country === "EG" ? (
-    <AutoCompleatInput
+    <MenuInput
       {...props}
       ref={ref}
       options={egGovernorate}
       renderElement={[egStrip, gov]}
-      setValue={handleSelect}
-      selected={selected && gov(egStrip(selected))}
+      setValue={setValue}
+      selected={selected}
     />
   ) : (
     <Input {...props} ref={ref} />

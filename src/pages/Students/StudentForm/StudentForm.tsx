@@ -1,17 +1,13 @@
+import { isEqual } from "lodash";
 import { useState, VFC } from "react";
 
 import { formAtoms } from "components/Form";
 import { useStudents } from "context/Students";
+import { useDirT, useGlobalT, usePageT, usePersonalInfoT } from "hooks";
 import { genders } from "models/gender";
 import { StudentInfo } from "models/student";
-import { NoWorkReason, noWorkReasons, WorkStatusInfo } from "models/work";
-import {
-  useDirT,
-  useGlobalT,
-  usePageT,
-  usePersonalInfoT,
-} from "utils/translation";
-import { fromYesNo, capitalize, yesNo } from "utils";
+import { noWorkReasons, WorkStatusInfo } from "models/work";
+import { fromYesNo, yesNo } from "utils";
 
 const {
   CountrySelectorInput,
@@ -38,7 +34,7 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
 
   const { addStudent } = useStudents();
 
-  const [workStatus, setWorkStatus] = useState<WorkStatusInfo>();
+  const [workStatus, setWorkStatus] = useState<WorkStatusInfo>({});
 
   const onSubmit = (data: StudentInfo) => {
     addStudent(data, { onFulfilled, onRejected });
@@ -52,6 +48,15 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
       onSubmit={onSubmit}
       submitProps={{ children: glb("joinInitiative") }}
       resetProps={{}}
+      storageKey="studentForm"
+      hook={({ watch }) => {
+        const value = watch("workStatus");
+        const newValue = value
+          ? { ...value, doesWork: fromYesNo(value.doesWork) }
+          : {};
+
+        !isEqual(newValue, workStatus) && setWorkStatus(newValue);
+      }}
     >
       <h2 className="header">{stu("formTitle")}</h2>
 
@@ -74,6 +79,12 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
       </InputGroup>
 
       <InputGroup>
+        {/* <Input
+          name="dateOfBirth"
+          type="date"
+          label={pi("dateOfBirth")}
+          rules={{ required: "noDateOfBirth" }}
+        /> */}
         <DateInput
           name="dateOfBirth"
           label={pi("dateOfBirth")}
@@ -89,7 +100,7 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
           type="radio"
           label={pi("gender")}
           options={[...genders]}
-          renderElement={[pi, capitalize]}
+          renderElement={pi}
           rules={{ required: "noGender" }}
         />
       </InputGroup>
@@ -158,37 +169,27 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
           options={yesNo}
           renderElement={glb}
           rules={{ required: "noWorkStatus" }}
-          onChange={(e) =>
-            setWorkStatus({ doesWork: fromYesNo(e.target.value) as boolean })
-          }
         />
 
-        {workStatus &&
-          (workStatus.doesWork ? (
-            <Input
-              name="workStatus.job"
-              label={pi("occupation")}
-              rules={{ required: "noWorkStatus", shouldUnregister: true }}
-            />
-          ) : (
-            <SelectionInput
-              name="workStatus.reason"
-              type="radio"
-              options={[...noWorkReasons]}
-              renderElement={pi}
-              label={pi("noWorkReason")}
-              rules={{ required: "noWorkStatus", shouldUnregister: true }}
-              onChange={(e) =>
-                setWorkStatus((state) => ({
-                  ...state,
-                  reason: e.target.value as NoWorkReason,
-                }))
-              }
-            />
-          ))}
+        {workStatus.doesWork === true ? (
+          <Input
+            name="workStatus.job"
+            label={pi("occupation")}
+            rules={{ required: "noWorkStatus", shouldUnregister: true }}
+          />
+        ) : workStatus.doesWork === false ? (
+          <SelectionInput
+            name="workStatus.reason"
+            type="radio"
+            options={[...noWorkReasons]}
+            renderElement={pi}
+            label={pi("noWorkReason")}
+            rules={{ required: "noWorkStatus", shouldUnregister: true }}
+          />
+        ) : null}
       </InputGroup>
 
-      {workStatus?.reason === "other" && (
+      {workStatus.reason === "other" && (
         <Input
           name="workStatus.explanation"
           label={pi("noWorkDetails")}

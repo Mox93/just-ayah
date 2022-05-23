@@ -1,9 +1,9 @@
 import { FunctionComponent } from "react";
 
-import { useCustomers } from "context/Customers";
-import { CustomerInfo } from "models/customer";
-import { useDirT, usePageT, usePersonalInfoT } from "utils/translation";
 import { formAtoms } from "components/Form";
+import { useCustomers } from "context/Customers";
+import { useDirT, usePageT, usePersonalInfoT } from "hooks";
+import { CustomerInfo } from "models/customer";
 
 const { Form, Input, InputGroup, PhoneNumberInput } = formAtoms<CustomerInfo>();
 

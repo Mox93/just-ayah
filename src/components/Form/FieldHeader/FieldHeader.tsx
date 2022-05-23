@@ -1,8 +1,8 @@
 import { FC } from "react";
 
+import { useDirT, useLanguage } from "hooks";
 import { cn, capitalize } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
-import { useDirT, useLanguage } from "utils/translation";
 
 type Location = "header";
 
