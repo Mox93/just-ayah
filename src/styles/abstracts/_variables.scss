@@ -5,9 +5,18 @@
   --c-white: white;
   --c-black: black;
 
+  --c-male: hsl(197, 71%, 73%);
+  --c-female: hsl(350, 100%, 88%);
+
   @each $color, $shades in $colors {
     @each $shade, $value in $shades {
       --c-#{$color}-#{$shade}: #{$value};
     }
   }
+
+  // MEASUREMENTS
+  --w-sidebar-closed: 4rem;
+  --w-sidebar-open: 9rem;
+  --h-page-header: 6rem;
+  --menu-spacing: 0.25rem;
 }

@@ -129,11 +129,6 @@ export const getStatus = <TVariant extends StatusVariants>(
   };
 };
 
-export const getStatusField = <TVariant extends StatusVariants>(
-  variant: TVariant,
-  name: string
-): ReactNode => getCustomStatus(variant, name)?.field;
-
 /*********************\
 |****** Mappers ******|
 \*********************/
@@ -147,10 +142,10 @@ export const mapStatusType = <
   TVariant extends StatusVariants,
   TOutput = StatusTypes[TVariant]
 >(
-  name: TVariant,
+  variant: TVariant,
   convert: (status: StatusTypes[TVariant]) => TOutput = identity
 ): TOutput[] =>
-  statusMap[name].map((status) =>
+  statusMap[variant].map((status) =>
     convert(
       (typeof status === "string"
         ? { type: status }

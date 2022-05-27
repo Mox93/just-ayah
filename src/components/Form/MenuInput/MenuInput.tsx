@@ -1,6 +1,6 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
-import Card from "components/Card";
+import Container from "components/Container";
 import DropdownArrow from "components/DropdownArrow";
 import { OverflowDir, useDirT, useDropdown } from "hooks";
 import { Merge } from "models";
@@ -74,7 +74,7 @@ const MenuInput = <TOption,>(
         : null}
       {after("input", <DropdownArrow isOpen={isOpen} />)}
     </Input>,
-    <Card variant="menu">
+    <Container variant="menu">
       {isOpen && ( // TODO generalize this optimization
         <ul ref={drivenRef} className="list" dir={dir || dirT}>
           {options.map((option) => (
@@ -92,7 +92,7 @@ const MenuInput = <TOption,>(
           ))}
         </ul>
       )}
-    </Card>
+    </Container>
   );
 };
 

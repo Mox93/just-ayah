@@ -2,13 +2,14 @@ import {
   Dispatch,
   forwardRef,
   MouseEventHandler,
+  ReactElement,
   Ref,
   useEffect,
   useReducer,
 } from "react";
 
 import { Button } from "components/Buttons";
-import Card from "components/Card";
+import Container from "components/Container";
 import DropdownArrow from "components/DropdownArrow";
 import { formAtoms } from "components/Form";
 import { DropdownAction, useDirT, useDropdown, useGlobalT } from "hooks";
@@ -20,7 +21,7 @@ import {
   mapStatusString,
   StatusTypes,
   StatusVariants,
-  getStatusField,
+  getCustomStatus,
 } from "models/status";
 
 const { MiniForm } = formAtoms();
@@ -79,12 +80,7 @@ interface StatusSelectorProps<TVariant extends StatusVariants> {
   onClick?: MouseEventHandler;
 }
 
-/**
- * TODO
- *  - add input field
- */
-
-const StatusSelectorButton = <TVariant extends StatusVariants>(
+const StatusSelector = <TVariant extends StatusVariants>(
   {
     className,
     variant,
@@ -127,64 +123,63 @@ const StatusSelectorButton = <TVariant extends StatusVariants>(
       }).join(" | ")}
       <DropdownArrow dir={dirT} isOpen={isOpen} />
     </Button>,
-    <Card variant="menu" ref={drivenRef} className="statusMenu">
-      {mapStatusType(variant, (statusOption: Status) => {
-        const selected =
-          (activeStatus?.type || currentStatus.type) === statusOption.type;
-        const checkMark = selected && <div className="checkMark" dir={dirT} />;
+    <Container variant="menu" ref={drivenRef} className="statusMenu">
+      {isOpen &&
+        mapStatusType(variant, (statusOption: Status) => {
+          const selected =
+            (activeStatus?.type || currentStatus.type) === statusOption.type;
+          const customStatus = getCustomStatus(variant, statusOption.type);
 
-        const inputField = getStatusField(variant, statusOption.type);
-        const divider = selected && inputField && <div className="divider" />;
+          const onSubmit = (data: any) =>
+            dispatch({
+              type: "setValue",
+              payload: {
+                type: statusOption.type,
+                value: data[statusOption.type],
+              },
+            });
 
-        const onSubmit = (data: any) =>
-          dispatch({
-            type: "setValue",
-            payload: {
-              type: statusOption.type,
-              value: data[statusOption.type],
-            },
-          });
+          const onClick = () =>
+            dispatch({
+              type: customStatus ? "awaitValue" : "setType",
+              payload: statusOption,
+            });
 
-        return (
-          <>
-            {divider}
+          const wrapper = (statusButton: ReactElement) =>
+            selected && customStatus ? (
+              <div key={statusOption.type} className="customStatusWrapper">
+                {statusButton}
+                <MiniForm
+                  onSubmit={onSubmit}
+                  config={{
+                    defaultValues: {
+                      [statusOption.type]: statusOption.value,
+                      [currentStatus.type]: currentStatus.value,
+                    },
+                  }}
+                  noErrorMessage
+                >
+                  {customStatus?.field}
+                </MiniForm>
+              </div>
+            ) : (
+              statusButton
+            );
 
+          return wrapper(
             <Button
               {...commonProps}
               key={statusOption.type}
               className={cn({ selected }, "option", variant, statusOption.type)}
-              onClick={() =>
-                dispatch({
-                  type: inputField ? "awaitValue" : "setType",
-                  payload: statusOption,
-                })
-              }
+              onClick={onClick}
             >
               {capitalize(glb(statusOption.type))}
-              {checkMark}
+              {selected && <div className="checkMark" dir={dirT} />}
             </Button>
-
-            {selected && inputField && (
-              <MiniForm
-                onSubmit={onSubmit}
-                config={{
-                  defaultValues: {
-                    [statusOption.type]: statusOption.value,
-                    [currentStatus.type]: currentStatus.value,
-                  },
-                }}
-                noErrorMessage
-              >
-                {inputField}
-              </MiniForm>
-            )}
-
-            {divider}
-          </>
-        );
-      })}
-    </Card>
+          );
+        })}
+    </Container>
   );
 };
 
-export default forwardRef(StatusSelectorButton);
+export default forwardRef(StatusSelector);

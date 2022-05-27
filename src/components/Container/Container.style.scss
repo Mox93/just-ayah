@@ -1,6 +1,6 @@
 @use "styles/abstracts/mixins" as *;
 
-.Card {
+.Container {
   margin-inline: auto;
   background-color: var(--c-white);
   overscroll-behavior: contain;
@@ -8,25 +8,21 @@
   &.menu {
     max-width: calc(100vw - 2rem);
     max-height: min(calc(100vh - 2rem), 20rem);
-    padding: 0.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
     overflow-y: auto;
 
+    @include menuLayout();
     @include withBorder($borderColor: var(--c-gray-200));
   }
 
-  &.container {
+  &.card {
     padding: 1rem;
-
-    @include withoutBorder($borderRadius: 0.75rem);
   }
 
   @include desktop() {
+    border-radius: 0.75rem;
     box-shadow: 4px 4px 16px var(--c-shadow-200);
 
-    &.container {
+    &.card {
       padding: 2rem;
     }
   }

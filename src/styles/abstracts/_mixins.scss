@@ -96,6 +96,13 @@ $sMobile: 35rem; // can't use var in @media
   text-overflow: ellipsis;
 }
 
+@mixin menuLayout {
+  padding: var(--menu-spacing);
+  display: flex;
+  flex-direction: column;
+  gap: var(--menu-spacing);
+}
+
 @mixin floatingLanguageSelector {
   position: relative;
 

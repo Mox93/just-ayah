@@ -2,9 +2,15 @@
 @use "styles/abstracts/mixins" as *;
 
 .StatusButton {
-  .divider {
-    height: 1px;
-    background-color: var(--c-gray-200);
+  .MiniForm {
+    gap: var(--menu-spacing);
+  }
+
+  .customStatusWrapper {
+    @include menuLayout();
+
+    border-block: 1px solid var(--c-gray-100);
+    padding-inline: unset;
   }
 
   .statusMenu {

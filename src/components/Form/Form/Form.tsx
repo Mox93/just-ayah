@@ -1,7 +1,7 @@
 import { FC, FormHTMLAttributes } from "react";
 
 import { Button, ButtonProps } from "components/Buttons";
-import Card from "components/Card";
+import Container from "components/Container";
 import { useDirT, useGlobalT } from "hooks";
 import { cn } from "utils";
 
@@ -30,7 +30,7 @@ const Form: FC<FormProps> = ({
   const glb = useGlobalT();
 
   return (
-    <Card className={cn("Form", className)}>
+    <Container variant="card" className={cn("Form", className)}>
       <form {...props} className="body" dir={dir || dirT}>
         {children}
 
@@ -55,7 +55,7 @@ const Form: FC<FormProps> = ({
           )}
         </InputGroup>
       </form>
-    </Card>
+    </Container>
   );
 };
 

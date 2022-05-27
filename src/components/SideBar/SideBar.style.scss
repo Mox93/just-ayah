@@ -1,38 +1,35 @@
-/* SIDE BAR */
-
 .SideBar {
   height: 100vh;
   min-height: 40rem;
-  width: 6rem;
-  padding: 3rem 1rem;
+  width: var(--w-sidebar-closed);
+  padding: 2rem 0.5rem;
   background-color: var(--c-primary-400);
   position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
-  transition: width 200ms ease-in-out;
-  z-index: 1;
+  transition: width 100ms ease-in-out;
+  z-index: 10;
 
   &[dir="ltr"] {
-    right: none;
+    right: unset;
     left: 0;
   }
 
   &[dir="rtl"] {
     right: 0;
-    left: none;
+    left: unset;
   }
 
   &:hover {
-    width: 12rem;
-    transition: width 200ms ease-in-out;
+    width: var(--w-sidebar-open);
 
-    .expanded {
-      display: block;
+    .label {
+      display: unset;
     }
 
-    .shrunk {
+    .icon {
       display: none;
     }
 
@@ -45,29 +42,25 @@
 
       .signOut {
         opacity: 100%;
-        transition-delay: 100ms;
+        transition-delay: 50ms;
       }
     }
   }
 
-  .expanded {
+  .label {
     display: none;
-  }
-
-  .shrunk {
-    display: block;
   }
 
   .navSection {
     display: flex;
-    gap: 1rem;
     flex-direction: column;
+    gap: 0.5rem;
 
     .element {
       width: 100%;
-      height: 4rem;
+      height: 3rem;
       padding: 0.5rem;
-      border-radius: 0.5rem;
+      border-radius: 0.25rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -84,25 +77,24 @@
       &.selected {
         background-color: var(--c-white);
 
-        h3 {
+        .label {
           color: var(--c-primary-400);
         }
 
-        svg {
+        .icon {
           fill: var(--c-primary-400);
           stroke: var(--c-primary-400);
         }
       }
 
-      h3 {
+      .label {
         color: var(--c-white);
-        font-size: 1.5rem;
         font-weight: 600;
       }
 
-      svg {
-        width: 2.5rem;
-        height: 2.5rem;
+      .icon {
+        width: 100%;
+        height: 100%;
         fill: var(--c-white);
         stroke: var(--c-white);
       }
@@ -112,7 +104,7 @@
   .settingsSection {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
 
     .LanguageSelector {
       .element {
@@ -125,11 +117,6 @@
     }
 
     .signOut {
-      height: 2.25rem;
-      background-color: var(--c-danger-300);
-      color: var(--c-white);
-      text-transform: uppercase;
-      border-radius: 0.25rem;
       opacity: 0;
     }
   }

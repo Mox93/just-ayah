@@ -1,7 +1,7 @@
 import { VFC } from "react";
 import { useForm } from "react-hook-form";
 
-import Card from "components/Card";
+import Container from "components/Container";
 import {
   DateInput,
   Input,
@@ -126,13 +126,13 @@ const FormUI: VFC<TestFormProps> = () => {
         />
       </Form>
 
-      <Card className="Form">
+      <Container variant="card" className="Form">
         <MiniForm onSubmit={miniHS(onSubmit)}>
           <Input {...miniR("value", { required: true })} />
         </MiniForm>
-      </Card>
+      </Container>
 
-      <Card className="Form">
+      <Container variant="card" className="Form">
         <form
           className="body"
           onSubmit={rawHS(console.log)}
@@ -175,7 +175,7 @@ const FormUI: VFC<TestFormProps> = () => {
             </button>
           </div>
         </form>
-      </Card>
+      </Container>
     </main>
   );
 };

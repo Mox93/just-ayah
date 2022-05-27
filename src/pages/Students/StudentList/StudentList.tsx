@@ -5,7 +5,13 @@ import StatusSelector from "components/StatusSelector";
 import Table, { FieldProps } from "components/Table";
 import { usePopup } from "context/Popup";
 import { useStudents } from "context/Students";
-import { useGlobalT, useGovT, usePageT, usePersonalInfoT } from "hooks";
+import {
+  useDirT,
+  useGlobalT,
+  useGovT,
+  usePageT,
+  usePersonalInfoT,
+} from "hooks";
 import { getCountry } from "models/country";
 import { getAge, historyRep } from "models/dateTime";
 import { handleEgGov } from "models/governorate";
@@ -24,6 +30,7 @@ const StudentList: VFC<StudentListProps> = () => {
   const gov = useGovT("egypt");
   const stu = usePageT("students");
   const pi = usePersonalInfoT();
+  const dirT = useDirT();
 
   const { data, fetchStudents, updateStudent } = useStudents();
 
@@ -47,20 +54,6 @@ const StudentList: VFC<StudentListProps> = () => {
     showPopup(<StudentNotes studentId={studentId} />);
 
   const fields: FieldProps[] = [
-    {
-      name: "gender",
-      header: (
-        <div
-          className="tightCircle"
-          style={{ border: "2px solid var(--c-black)" }}
-        ></div>
-      ),
-      className: "prefix",
-      getValue: ({ gender }: Student) => (
-        <div className={cn("tightCircle", gender)}></div>
-      ),
-      fit: true,
-    },
     {
       name: "name",
       header: pi("fullName"),
@@ -191,7 +184,7 @@ const StudentList: VFC<StudentListProps> = () => {
     });
 
   return (
-    <main className="mainSection StudentList">
+    <main className="StudentList">
       {selected.size > 0 && (
         <div className="selectionCounter">
           {stu("counter", { count: selected.size })}
@@ -205,10 +198,18 @@ const StudentList: VFC<StudentListProps> = () => {
         toggleSelectAll={(checked) =>
           setSelected(checked ? new Set(data.map(({ id }) => id)) : new Set())
         }
-      />
-      <Button variant="gray-text" size="tight" onClick={() => fetchStudents()}>
-        {glb("loadMore")}
-      </Button>
+        extraProps={(data: Student) => ({ gender: data.gender })}
+      >
+        <Button
+          className="loadMore"
+          variant="gray-text"
+          size="tight"
+          onClick={() => fetchStudents()}
+          dir={dirT}
+        >
+          {glb("loadMore")}
+        </Button>
+      </Table>
     </main>
   );
 };

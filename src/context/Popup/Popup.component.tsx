@@ -1,7 +1,7 @@
 import { FunctionComponent, ReactNode, useEffect } from "react";
 
 import { CloseButton } from "components/Buttons";
-import Card from "components/Card";
+import Container from "components/Container";
 import { useDirT } from "hooks";
 import { cn } from "utils";
 
@@ -25,10 +25,13 @@ const Popup: FunctionComponent<PopupProps> = ({ children, close }) => {
   return (
     <div className="Popup" dir={dir}>
       <div className="background" onClick={close} />
-      <Card className={cn({ closable: close }, "foreground")}>
+      <Container
+        variant="card"
+        className={cn({ closable: close }, "foreground")}
+      >
         {close && <CloseButton onClick={close} />}
         {children}
-      </Card>
+      </Container>
     </div>
   );
 };

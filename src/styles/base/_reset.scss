@@ -50,6 +50,10 @@ input {
   }
 }
 
+table {
+  border-collapse: collapse;
+}
+
 ::-webkit-input-placeholder {
   line-height: 2;
 }
