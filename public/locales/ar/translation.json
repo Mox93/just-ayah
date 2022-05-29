@@ -8,7 +8,7 @@
     "no": "ﻻ",
     "dateCreated": "تاريخ الانشاء",
     "dateUpdated": "آخر تعديل",
-    "course": "الدورة",
+    "course": "البرنامج",
     "teacher": "المعلم",
     "schedule": "المواعيد",
     "notes": "ملاحظات",
@@ -64,7 +64,7 @@
     "home": "الرئيسية",
     "students": "الطلاب",
     "teachers": "المعلمون",
-    "courses": "الدورات"
+    "courses": "البرامج"
   },
   "personalInfo": {
     "fullName": "الاسم الثلاثي",
@@ -104,9 +104,7 @@
   },
   "pages": {
     "students": {
-      "pending": "الطلاب المستجدون",
-      "active": "الطلاب القائمون",
-      "archived": "اﻷرشيف",
+      "title": "الطُلاب",
       "counter_zero": "لا يوجد طلاب مختارين",
       "counter_one": "تم تحديد طالب",
       "counter_two": "تم تحديد طالبان",

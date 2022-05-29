@@ -8,7 +8,7 @@
     "no": "no",
     "dateCreated": "date created",
     "dateUpdated": "last updated",
-    "course": "course",
+    "course": "program",
     "teacher": "teacher",
     "schedule": "schedule",
     "notes": "notes",
@@ -64,7 +64,7 @@
     "home": "home",
     "students": "students",
     "teachers": "teachers",
-    "courses": "courses"
+    "courses": "programs"
   },
   "personalInfo": {
     "fullName": "full name",
@@ -104,9 +104,7 @@
   },
   "pages": {
     "students": {
-      "pending": "pending students",
-      "active": "existing students",
-      "archived": "archive",
+      "title": "students",
       "counter_one": "1 student selected",
       "counter_other": "{{count}} students selected",
       "formTitle": "student information"
