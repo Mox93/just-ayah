@@ -37,26 +37,16 @@
       padding-inline: var(--spacing-m);
 
       .mutableValue {
-        .driver,
-        .option {
-          &:not(.empty) {
-            justify-content: flex-start;
+        width: 100%;
+
+        .Ellipsis {
+          width: 100%;
+
+          &.empty {
+            text-align: center;
+            color: var(--c-gray-300);
           }
         }
-      }
-    }
-
-    .note {
-      background-color: transparent;
-      width: 100%;
-      text-align: start;
-      overflow-x: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      font-size: 1rem;
-
-      &.createNote {
-        text-align: center;
       }
     }
   }

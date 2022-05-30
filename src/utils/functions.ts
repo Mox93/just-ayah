@@ -1,3 +1,6 @@
+import { get } from "lodash";
+import { FieldPath } from "react-hook-form";
+
 export const identity = (value: any) => value;
 export const omit = () => {};
 
@@ -11,9 +14,9 @@ export const pass: Pass =
     typeof funcOrValue === "function" ? funcOrValue(...args) : funcOrValue;
 
 export const pluck =
-  <T>(key: keyof T) =>
-  (obj?: T) =>
-    obj?.[key];
+  <TObject>(path: FieldPath<TObject>) =>
+  (obj?: TObject) =>
+    get(obj, path);
 
 /****************************\
 |****** Function Chain ******|

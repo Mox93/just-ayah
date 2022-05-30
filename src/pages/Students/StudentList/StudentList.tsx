@@ -4,7 +4,7 @@ import { FieldPath, FieldPathValue } from "react-hook-form";
 
 import { Button } from "components/Buttons";
 import DropdownMenu from "components/DropdownMenu";
-import { ellipsis } from "components/Ellipsis";
+import Ellipsis, { ellipsis } from "components/Ellipsis";
 import StatusSelector from "components/StatusSelector";
 import Table, { FieldProps } from "components/Table";
 import {
@@ -153,7 +153,7 @@ const StudentList: VFC<StudentListProps> = () => {
           options={courses}
           size="small"
           setValue={updateField("course", id)}
-          renderElement={[pluck("element"), ellipsis]}
+          renderElement={[pluck("element"), ellipsis()]}
         />
       ),
     },
@@ -168,7 +168,7 @@ const StudentList: VFC<StudentListProps> = () => {
           options={teacherList}
           size="small"
           setValue={updateField("teacher", id)}
-          renderElement={[pluck("element"), ellipsis]}
+          renderElement={[pluck("element"), ellipsis()]}
         />
       ),
     },
@@ -179,19 +179,20 @@ const StudentList: VFC<StudentListProps> = () => {
     {
       name: "notes",
       header: glb("notes"),
-      getValue: ({ id, notes }: Student) => {
-        const lastNote = notes?.[0];
-
-        return (
-          <button
-            className={cn({ createNote: !lastNote }, "note")}
-            onClick={showNotesPopup(id)}
-            dir="auto"
-          >
+      className: "buttonCell",
+      getValue: ({ id, notes: [lastNote, ..._] = [] }: Student) => (
+        <Button
+          variant="plain-text"
+          size="small"
+          className="mutableValue"
+          onClick={showNotesPopup(id)}
+          dir="auto"
+        >
+          <Ellipsis className={cn({ empty: !lastNote })}>
             {lastNote?.body || ". . ."}
-          </button>
-        );
-      },
+          </Ellipsis>
+        </Button>
+      ),
     },
     {
       name: "dateCreated",

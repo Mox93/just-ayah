@@ -4,9 +4,9 @@ import { cn } from "utils";
 
 interface EllipsisProps extends HTMLAttributes<HTMLParagraphElement> {}
 
-const Ellipsis: FC<EllipsisProps> = ({ children, ...props }) =>
+const Ellipsis: FC<EllipsisProps> = ({ children, className, ...props }) =>
   typeof children === "string" ? (
-    <p {...props} className={cn("Ellipsis")}>
+    <p {...props} className={cn("Ellipsis", className)}>
       {children}
     </p>
   ) : (
@@ -15,4 +15,5 @@ const Ellipsis: FC<EllipsisProps> = ({ children, ...props }) =>
 
 export default Ellipsis;
 
-export const ellipsis = (value: ReactNode) => <Ellipsis>{value}</Ellipsis>;
+export const ellipsis = (props?: EllipsisProps) => (value: ReactNode) =>
+  <Ellipsis {...props}>{value}</Ellipsis>;
