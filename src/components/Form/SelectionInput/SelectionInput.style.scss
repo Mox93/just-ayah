@@ -1,9 +1,9 @@
 .SelectionInput {
   .FieldWrapper {
-    padding: 0.125rem;
+    padding: var(--spacing-s);
 
     .partition {
-      margin-inline: 0.125rem;
+      margin-inline: var(--spacing-s);
     }
   }
 

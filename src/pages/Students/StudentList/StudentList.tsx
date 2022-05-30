@@ -1,10 +1,18 @@
+import { deleteField } from "firebase/firestore";
 import { useState, VFC } from "react";
+import { FieldPath, FieldPathValue } from "react-hook-form";
 
 import { Button } from "components/Buttons";
+import DropdownMenu from "components/DropdownMenu";
+import { ellipsis } from "components/Ellipsis";
 import StatusSelector from "components/StatusSelector";
 import Table, { FieldProps } from "components/Table";
-import { usePopup } from "context/Popup";
-import { useStudents } from "context/Students";
+import {
+  useCourseContext,
+  usePopupContext,
+  useStudentContext,
+  useTeacherContext,
+} from "context";
 import {
   useDirT,
   useGlobalT,
@@ -16,10 +24,9 @@ import { getCountry } from "models/country";
 import { getAge, historyRep } from "models/dateTime";
 import { handleEgGov } from "models/governorate";
 import { getPhoneNumberByTag } from "models/phoneNumber";
-import { Progress, Subscription } from "models/status";
 import { Student } from "models/student";
 import { getOccupation } from "models/work";
-import { cn } from "utils";
+import { cn, pluck } from "utils";
 
 import StudentNotes from "../StudentNotes";
 
@@ -32,26 +39,32 @@ const StudentList: VFC<StudentListProps> = () => {
   const pi = usePersonalInfoT();
   const dirT = useDirT();
 
-  const { data, fetchStudents, updateStudent } = useStudents();
+  const {
+    data: { students },
+    fetch,
+    update,
+  } = useStudentContext();
 
-  const { showPopup, closePopup } = usePopup();
+  const {
+    data: { courses },
+  } = useCourseContext();
 
-  // Progress
-  const updateProgress = (student: Student) => (status: Progress) => {
-    updateStudent(student.id, { meta: { ...student.meta, progress: status } });
-    closePopup();
-  };
+  const {
+    data: { teacherList },
+  } = useTeacherContext();
 
-  // Subscription
-  const updateSubscription =
-    (student: Student) => (subscription: Subscription) => {
-      updateStudent(student.id, { meta: { ...student.meta, subscription } });
-      closePopup();
-    };
+  const { showPopup } = usePopupContext();
 
   // Notes
   const showNotesPopup = (studentId: string) => () =>
     showPopup(<StudentNotes studentId={studentId} />);
+
+  const updateField =
+    <TKey extends FieldPath<Student>>(name: TKey, id: string) =>
+    (value?: FieldPathValue<Student, TKey>) =>
+      update(id, {
+        [name]: value || (deleteField() as any),
+      });
 
   const fields: FieldProps[] = [
     {
@@ -64,17 +77,13 @@ const StudentList: VFC<StudentListProps> = () => {
     {
       name: "status",
       header: pi("status"),
-      className: "statusButton",
-      getValue: (data: Student) => {
-        const {
-          meta: { progress },
-        } = data;
-
+      className: "buttonCell",
+      getValue: ({ id, meta: { progress } }: Student) => {
         return (
           <StatusSelector
             variant="progress"
             status={progress}
-            onChange={updateProgress(data)}
+            onChange={updateField("meta.progress", id)}
           />
         );
       },
@@ -83,17 +92,13 @@ const StudentList: VFC<StudentListProps> = () => {
     {
       name: "subscription",
       header: pi("subscription"),
-      className: "statusButton",
-      getValue: (data: Student) => {
-        const {
-          meta: { subscription },
-        } = data;
-
+      className: "buttonCell",
+      getValue: ({ id, meta: { subscription } }: Student) => {
         return (
           <StatusSelector
             variant="subscription"
             status={subscription}
-            onChange={updateSubscription(data)}
+            onChange={updateField("meta.subscription", id)}
           />
         );
       },
@@ -140,10 +145,32 @@ const StudentList: VFC<StudentListProps> = () => {
     {
       name: "course",
       header: glb("course"),
+      className: "buttonCell",
+      getValue: ({ id, course }: Student) => (
+        <DropdownMenu
+          className="mutableValue"
+          selected={course}
+          options={courses}
+          size="small"
+          setValue={updateField("course", id)}
+          renderElement={[pluck("element"), ellipsis]}
+        />
+      ),
     },
     {
       name: "teacher",
       header: glb("teacher"),
+      className: "buttonCell",
+      getValue: ({ id, teacher }: Student) => (
+        <DropdownMenu
+          className="mutableValue"
+          selected={teacher}
+          options={teacherList}
+          size="small"
+          setValue={updateField("teacher", id)}
+          renderElement={[pluck("element"), ellipsis]}
+        />
+      ),
     },
     {
       name: "schedule",
@@ -184,33 +211,35 @@ const StudentList: VFC<StudentListProps> = () => {
     });
 
   return (
-    <main className="StudentList">
+    <div className="StudentList">
       {selected.size > 0 && (
         <div className="selectionCounter">
           {stu("counter", { count: selected.size })}
         </div>
       )}
       <Table
-        {...{ fields, data, selected }}
+        {...{ fields, selected }}
+        data={students}
         toggleSelect={(checked, id) =>
           checked ? handleSelect(id) : handleDeselect(id)
         }
         toggleSelectAll={(checked) =>
-          setSelected(checked ? new Set(data.map(({ id }) => id)) : new Set())
+          setSelected(
+            checked ? new Set(students.map(({ id }) => id)) : new Set()
+          )
         }
         extraProps={(data: Student) => ({ gender: data.gender })}
       >
         <Button
           className="loadMore"
           variant="gray-text"
-          size="tight"
-          onClick={() => fetchStudents()}
+          onClick={() => fetch()}
           dir={dirT}
         >
           {glb("loadMore")}
         </Button>
       </Table>
-    </main>
+    </div>
   );
 };
 

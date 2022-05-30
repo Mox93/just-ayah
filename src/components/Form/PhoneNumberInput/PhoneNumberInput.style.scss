@@ -10,7 +10,7 @@
   }
 
   .SelectionInput {
-    margin-inline: 0.5rem;
+    margin-inline: var(--spacing-m);
 
     & > .FieldWrapper {
       border-block-start: none;

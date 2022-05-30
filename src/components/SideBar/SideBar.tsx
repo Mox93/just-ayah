@@ -7,7 +7,7 @@ import { ReactComponent as TeachersIcon } from "assets/icons/teacher-svgrepo-com
 import { ReactComponent as CoursesIcon } from "assets/icons/closed-book-svgrepo-com.svg";
 import { Button } from "components/Buttons";
 import LanguageSelector from "components/LanguageSelector";
-import { useAuth } from "context/Auth";
+import { useAuthContext } from "context";
 import { useDirT, useGlobalT, useNavT } from "hooks";
 import { cn } from "utils";
 
@@ -18,7 +18,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
   const glb = useGlobalT();
   const nav = useNavT();
 
-  const { signOut } = useAuth();
+  const { signOut } = useAuthContext();
 
   const classHandler = ({ isActive }: { isActive: boolean }) =>
     cn({ selected: isActive }, "element");
@@ -45,12 +45,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
       </div>
       <div className="settingsSection">
         <LanguageSelector />
-        <Button
-          variant="danger-solid"
-          size="tight"
-          className="signOut"
-          onClick={signOut}
-        >
+        <Button variant="danger-solid" className="signOut" onClick={signOut}>
           {glb("signOut")}
         </Button>
       </div>

@@ -3,7 +3,7 @@
 .InputGroup {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem 1rem;
+  gap: var(--spacing-xl) var(--spacing-l);
 
   @include mobile {
     flex-direction: column;

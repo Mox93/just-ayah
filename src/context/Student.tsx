@@ -32,39 +32,37 @@ import { AddData, FetchData, UpdateData } from "models";
 import { omit } from "utils";
 import { toNoteMap } from "models/note";
 
-interface StudentsContextObj {
-  data: Student[];
-  addStudent: AddData<StudentInfo>;
-  fetchStudents: FetchData;
-  updateStudent: UpdateData<Student>;
+const collectionRef = collection(db, "students");
+
+interface StudentContext {
+  data: { students: Student[] };
+  add: AddData<StudentInfo>;
+  fetch: FetchData;
+  update: UpdateData<Student>;
 }
 
-const StudentsContext = createContext<StudentsContextObj>({
-  data: [],
-  addStudent: omit,
-  fetchStudents: omit,
-  updateStudent: omit,
-});
+const initialState: StudentContext = {
+  data: { students: [] },
+  add: (data, { onFulfilled = omit, onRejected = console.log } = {}) => {
+    addDoc(collectionRef, studentFromInfo(data))
+      .then(onFulfilled, onRejected)
+      .catch(console.log);
+  },
+  fetch: omit,
+  update: omit,
+};
 
-interface StudentsProviderProps {}
+const studentContext = createContext(initialState);
 
-export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
+interface StudentProviderProps {}
+
+export const StudentProvider: FunctionComponent<StudentProviderProps> = ({
   children,
 }) => {
-  const [data, setData] = useState<Student[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
-  const collectionRef = collection(db, "students");
 
-  const addStudent: AddData<StudentInfo> = useCallback(
-    (data, { onFulfilled = omit, onRejected = console.log } = {}) => {
-      addDoc(collectionRef, studentFromInfo(data))
-        .then(onFulfilled, onRejected)
-        .catch(console.log);
-    },
-    [collectionRef]
-  );
-
-  const fetchStudents: FetchData = useCallback(
+  const fetch: FetchData = useCallback(
     ({
       filters = [],
       size = 20,
@@ -83,7 +81,7 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
       );
 
       getDocs(q).then((querySnapshot) => {
-        setData((state) => {
+        setStudents((state) => {
           const newState = [...state];
 
           querySnapshot.docs.forEach((doc, i) => {
@@ -100,10 +98,10 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
         onfulfilled(querySnapshot);
       }, onrejected);
     },
-    [collectionRef, lastDoc]
+    [lastDoc]
   );
 
-  const updateStudent: UpdateData<Student> = useCallback(
+  const update: UpdateData<Student> = useCallback(
     (id, updates, { onFulfilled = omit, onRejected = console.log } = {}) => {
       const { notes, ...rest } = updates;
       const updatesDB = {
@@ -112,23 +110,23 @@ export const StudentsProvider: FunctionComponent<StudentsProviderProps> = ({
       };
 
       updateDoc(doc(collectionRef, id), updatesDB).then(() => {
-        setData((state) =>
+        setStudents((state) =>
           state.map((data) => (data.id === id ? { ...data, ...updates } : data))
         );
 
         onFulfilled();
       }, onRejected);
     },
-    [collectionRef]
+    []
   );
 
   return (
-    <StudentsContext.Provider
-      value={{ addStudent, fetchStudents, updateStudent, data }}
+    <studentContext.Provider
+      value={{ ...initialState, fetch, update, data: { students } }}
     >
       {children}
-    </StudentsContext.Provider>
+    </studentContext.Provider>
   );
 };
 
-export const useStudents = () => useContext(StudentsContext);
+export const useStudentContext = () => useContext(studentContext);

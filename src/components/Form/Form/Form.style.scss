@@ -1,17 +1,17 @@
 .Form {
   max-width: 50rem;
   min-width: 20rem;
-  margin-block: 2rem;
+  margin-block: var(--spacing-xl);
 
   .body {
     display: grid;
-    gap: 2rem;
+    gap: var(--spacing-xl);
 
     & > .header {
       max-width: 90%;
       min-width: 50%;
-      padding-inline: 2rem;
-      padding-block-end: 0.5rem;
+      padding-inline: var(--spacing-xl);
+      padding-block-end: var(--spacing-m);
       margin-inline: auto;
       border-block-end: 1px solid var(--c-gray-200);
       text-align: center;
@@ -29,7 +29,7 @@
 
     .actions {
       justify-content: space-between;
-      gap: 1rem;
+      gap: var(--spacing-l);
 
       & > * {
         flex: unset;

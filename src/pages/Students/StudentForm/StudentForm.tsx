@@ -2,7 +2,7 @@ import { isEqual } from "lodash";
 import { useState, VFC } from "react";
 
 import { formAtoms } from "components/Form";
-import { useStudents } from "context/Students";
+import { useStudentContext } from "context";
 import { useDirT, useGlobalT, usePageT, usePersonalInfoT } from "hooks";
 import { genders } from "models/gender";
 import { StudentInfo } from "models/student";
@@ -32,12 +32,12 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
   const pi = usePersonalInfoT();
   const stu = usePageT("students");
 
-  const { addStudent } = useStudents();
+  const { add } = useStudentContext();
 
   const [workStatus, setWorkStatus] = useState<WorkStatusInfo>({});
 
   const onSubmit = (data: StudentInfo) => {
-    addStudent(data, { onFulfilled, onRejected });
+    add(data, { onFulfilled, onRejected });
   };
 
   const now = new Date();

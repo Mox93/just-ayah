@@ -12,13 +12,13 @@ type ShowPopup = (content: ReactNode, closable?: boolean) => void;
 type UpdatePopup = (props: PopupProps) => void;
 type ClosePopup = () => void;
 
-interface PopupContextObj {
+interface PopupContext {
   showPopup: ShowPopup;
   updatePopup: UpdatePopup;
   closePopup: ClosePopup;
 }
 
-const PopupContext = createContext<PopupContextObj>({
+const popupContext = createContext<PopupContext>({
   showPopup: omit,
   updatePopup: omit,
   closePopup: omit,
@@ -47,11 +47,11 @@ export const PopupProvider: FunctionComponent<PopupProviderProps> = ({
   const closePopup: ClosePopup = () => setIsOpen(false);
 
   return (
-    <PopupContext.Provider value={{ showPopup, closePopup, updatePopup }}>
+    <popupContext.Provider value={{ showPopup, closePopup, updatePopup }}>
       {children}
       {isOpen && <Popup {...props} />}
-    </PopupContext.Provider>
+    </popupContext.Provider>
   );
 };
 
-export const usePopup = () => useContext(PopupContext);
+export const usePopupContext = () => useContext(popupContext);

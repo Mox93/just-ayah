@@ -1,8 +1,5 @@
 .Table {
   margin-inline: unset;
-  flex-grow: 1;
-  max-width: 100%;
-  max-height: 100vh;
   overflow: auto;
 
   .wrapper {
@@ -23,10 +20,10 @@
 
     th,
     td {
-      padding-inline: 0.5rem;
+      padding-inline: var(--spacing-m);
 
       &:first-child {
-        padding-inline-start: 1rem;
+        padding-inline-start: var(--spacing-l);
       }
     }
 
@@ -76,7 +73,7 @@
 
   th,
   td {
-    padding-inline: 1rem;
+    padding-inline: var(--spacing-l);
 
     &.fit {
       width: 1%;

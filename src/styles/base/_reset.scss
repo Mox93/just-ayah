@@ -6,7 +6,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  line-height: normal;
+  line-height: 1.5rem;
   font-family: "Josefin Sans", "Almarai", sans-serif;
   font-weight: 400;
   color: var(--c-black);
@@ -39,15 +39,15 @@ a {
 input {
   line-height: 2;
 
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+  // &::-webkit-outer-spin-button,
+  // &::-webkit-inner-spin-button {
+  //   -webkit-appearance: none;
+  //   margin: 0;
+  // }
 
-  &[type="number"] {
-    -moz-appearance: textfield;
-  }
+  // &[type="number"] {
+  //   -moz-appearance: textfield;
+  // }
 }
 
 table {

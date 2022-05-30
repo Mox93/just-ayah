@@ -10,5 +10,10 @@
     position: absolute;
     top: calc(100% + 0.375rem);
     z-index: 20;
+    pointer-events: none;
+
+    * {
+      pointer-events: auto;
+    }
   }
 }

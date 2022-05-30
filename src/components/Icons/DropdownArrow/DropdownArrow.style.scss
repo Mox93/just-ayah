@@ -1,0 +1,56 @@
+.DropdownArrow {
+  $kf1: 0%;
+  $kf2: 50%;
+  $kf3: 100%;
+
+  --fill-color: var(--c-gray-400);
+  --duration: 0.5s;
+
+  min-width: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .icon {
+    width: 100%;
+    fill: var(--fill-color);
+    transform: rotate(180deg);
+
+    &.isOpen {
+      transform: rotate(0);
+    }
+
+    &.opening {
+      animation: openMotion var(--duration);
+    }
+
+    &.closing {
+      animation: closeMotion var(--duration);
+    }
+
+    @keyframes openMotion {
+      #{$kf1} {
+        transform: rotate(180deg);
+      }
+      #{$kf2} {
+        transform: rotate(-20deg);
+      }
+      #{$kf3} {
+        transform: rotate(0);
+      }
+    }
+
+    @keyframes closeMotion {
+      #{$kf1} {
+        transform: rotate(0);
+      }
+      #{$kf2} {
+        transform: rotate(200deg);
+      }
+
+      #{$kf3} {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}

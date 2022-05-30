@@ -7,7 +7,7 @@ import { cn } from "utils";
 
 import InputGroup from "../InputGroup";
 
-type FormButton = Omit<ButtonProps, "type">;
+export type FormButton = Omit<ButtonProps, "type">;
 
 export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
   submitProps?: FormButton;

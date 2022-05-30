@@ -16,16 +16,51 @@ $sMobile: 35rem; // can't use var in @media
   }
 }
 
-@mixin checkMark($x: 0px, $y: 0px, $color: var(--c-white)) {
-  --c-checkMark: #{$color};
+@mixin positioning(
+  $position: absolute,
+  $blockDir: "start",
+  $inlineDir: "start",
+  // if $x is 0 without a unit it misbehaves
+  $x: -50%,
+  $y: -50%,
+  $inline: 50%,
+  $block: 50%
+) {
+  --x-displacement: #{$x};
+  --y-displacement: #{$y};
 
-  content: "";
-  width: 1rem;
-  height: 0.5rem;
-  border-left: 2px solid var(--c-checkMark);
-  border-bottom: 2px solid var(--c-checkMark);
-  position: absolute;
-  transform: translate($x, $y) rotate(-45deg);
+  position: $position;
+  transform: translate(var(--x-displacement), var(--y-displacement));
+
+  @if $blockDir == "start" {
+    top: $block;
+  } @else if $blockDir == "end" {
+    bottom: $block;
+  }
+
+  @if $inlineDir == "start" {
+    &[dir="ltr"],
+    &:not([dir]) {
+      left: $inline;
+    }
+
+    &[dir="rtl"] {
+      --x-displacement: calc(#{$x} * -1);
+
+      right: $inline;
+    }
+  } @else if $inlineDir == "end" {
+    &[dir="ltr"],
+    &:not([dir]) {
+      --x-displacement: calc(#{$x} * -1);
+
+      right: $inline;
+    }
+
+    &[dir="rtl"] {
+      left: $inline;
+    }
+  }
 }
 
 @mixin withoutBorder($borderRadius: none) {
@@ -47,7 +82,7 @@ $sMobile: 35rem; // can't use var in @media
 
 @mixin withBorder(
   $states: none,
-  $borderRadius: 0.375rem,
+  $borderRadius: 0.25rem,
   $borderColor: var(--c-gray-300)
 ) {
   --c-border: #{$borderColor};
@@ -89,7 +124,7 @@ $sMobile: 35rem; // can't use var in @media
   width: 100%;
   height: 2.5rem;
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-m);
   align-items: center;
   white-space: nowrap;
   overflow-x: hidden;
@@ -97,10 +132,10 @@ $sMobile: 35rem; // can't use var in @media
 }
 
 @mixin menuLayout {
-  padding: var(--menu-spacing);
+  padding: var(--spacing-s);
   display: flex;
   flex-direction: column;
-  gap: var(--menu-spacing);
+  gap: var(--spacing-s);
 }
 
 @mixin floatingLanguageSelector {

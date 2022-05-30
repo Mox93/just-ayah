@@ -1,24 +1,13 @@
 .StudentList {
-  height: 100vh;
-  padding: 1rem;
+  padding: var(--spacing-l);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-
-  tr {
-    &[gender="male"] {
-      background-color: var(--c-male);
-    }
-
-    &[gender="female"] {
-      background-color: var(--c-female);
-    }
-  }
+  gap: var(--spacing-l);
 
   .loadMore {
     position: sticky;
     top: 100%;
-    margin-block: 0.5rem;
+    margin-block: var(--spacing-m);
 
     &[dir="rtl"] {
       right: 50%;
@@ -31,6 +20,10 @@
     }
   }
 
+  .Table {
+    flex-grow: 1;
+  }
+
   td {
     &.phoneNumber {
       direction: ltr;
@@ -40,8 +33,17 @@
       text-transform: capitalize;
     }
 
-    &.statusButton {
-      padding-inline: 0.5rem;
+    &.buttonCell {
+      padding-inline: var(--spacing-m);
+
+      .mutableValue {
+        .driver,
+        .option {
+          &:not(.empty) {
+            justify-content: flex-start;
+          }
+        }
+      }
     }
 
     .note {
@@ -56,6 +58,16 @@
       &.createNote {
         text-align: center;
       }
+    }
+  }
+
+  tr {
+    &[gender="male"] {
+      background-color: var(--c-male);
+    }
+
+    &[gender="female"] {
+      background-color: var(--c-female);
     }
   }
 }

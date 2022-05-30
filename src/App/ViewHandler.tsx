@@ -37,12 +37,12 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
   //     return <PublicView />;
   // }
 
-  const fallbackNav = <Navigate replace to={"/reach-out"} />;
-  const fallbackAdminNav = <Navigate replace to={"/admin"} />;
+  const fallbackNav = (path = "/reach-out") => <Navigate replace to={path} />;
 
   return (
     <Routes>
       <Route path="/">
+        {/* Admin */}
         <Route
           {...useAuthGuard({
             path: "admin",
@@ -75,7 +75,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
           </Route>
 
           {/* Fallback */}
-          <Route path="*" element={fallbackAdminNav} />
+          <Route path="*" element={fallbackNav("/admin")} />
         </Route>
 
         <Route
@@ -87,6 +87,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
           })}
         />
 
+        {/* Public */}
         <Route path="reach-out" element={<NewCustomer />} />
         <Route path="enroll" element={<NewStudent />} />
 
@@ -95,8 +96,8 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
           <Route path="form" element={<FormUI />} />
         </Route>
 
-        <Route index element={fallbackNav} />
-        <Route path="*" element={fallbackNav} />
+        <Route index element={fallbackNav()} />
+        <Route path="*" element={fallbackNav()} />
       </Route>
     </Routes>
   );

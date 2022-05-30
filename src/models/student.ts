@@ -50,6 +50,8 @@ export interface Student extends StudentInfo {
   id: string;
   meta: Meta;
   notes?: Note[];
+  course?: string;
+  teacher?: string;
 }
 
 export type StudentInDB = Merge<

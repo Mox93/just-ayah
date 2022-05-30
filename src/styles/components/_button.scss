@@ -1,5 +1,7 @@
 @use "../abstracts/colors" as *;
 
+$fillVariants: ("solid", "outline", "ghost", "text");
+
 @mixin solid($color) {
   --c-foreground: var(--c-white);
   --c-background: var(--c-#{$color}-300);
@@ -29,8 +31,6 @@
     --c-foreground: var(--c-gray-200);
     --c-background: var(--c-gray-100);
   }
-
-  @content;
 }
 
 @mixin outline($color) {
@@ -63,8 +63,6 @@
   &:disabled {
     --c-foreground: var(--c-gray-200);
   }
-
-  @content;
 }
 
 @mixin text($color) {
@@ -93,8 +91,6 @@
   &:disabled {
     --c-foreground: var(--c-gray-200);
   }
-
-  @content;
 }
 
 @mixin ghost($color) {
@@ -125,54 +121,82 @@
     --c-foreground: var(--c-gray-200);
     --c-background: var(--c-shadow-100);
   }
-
-  @content;
 }
 
-@mixin default {
-  padding: 0.75em 1.5em;
+@mixin large {
+  padding: 1em 2em;
   font-weight: bold;
   border-radius: 0.375em;
 }
 
-@mixin tight {
+@mixin medium {
   padding: 0.5em 1em;
   border-radius: 0.25em;
 }
 
+@mixin small {
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+}
+
 @mixin buttonVariants {
-  @each $color, $_ in $colors {
-    &.#{$color}-solid {
-      @include solid($color) {
-        @content;
+  @each $fill in $fillVariants {
+    @each $color, $_ in $colors {
+      &.#{$color}-solid {
+        @include solid($color);
       }
-    }
 
-    &.#{$color}-outline {
-      @include outline($color) {
-        @content;
+      &.#{$color}-outline {
+        @include outline($color);
       }
-    }
 
-    &.#{$color}-text {
-      @include text($color) {
-        @content;
+      &.#{$color}-text {
+        @include text($color);
       }
-    }
 
-    &.#{$color}-ghost {
-      @include ghost($color) {
-        @content;
+      &.#{$color}-ghost {
+        @include ghost($color);
       }
     }
   }
 
-  &.default {
-    @include default();
+  &.plain-text {
+    --c-foreground: var(--c-black);
+    --c-background: transparent;
+
+    color: var(--c-foreground);
+    background-color: var(--c-background);
+
+    &:focus:enabled {
+      outline-offset: -2px;
+      outline: 2px solid var(--c-gray-100);
+    }
+
+    &:hover:enabled {
+      --c-background: var(--c-gray-100);
+
+      outline: none;
+    }
+
+    &:active:enabled {
+      --c-background: var(--c-gray-200);
+    }
+
+    &:disabled {
+      --c-foreground: var(--c-gray-200);
+    }
   }
 
-  &.tight {
-    @include tight();
+  &.large {
+    @include large();
+  }
+
+  &.medium {
+    @include medium();
+  }
+
+  &.small {
+    @include small();
   }
 }
 
@@ -182,18 +206,14 @@
       &.#{$type} {
         @each $code, $color in $colorCodes {
           &.#{$code} {
-            @include ghost($color) {
-              @content;
-            }
-            @include tight();
+            @include ghost($color);
+            @include small();
           }
         }
 
         &.unknown {
-          @include ghost("gray") {
-            @content;
-          }
-          @include tight();
+          @include ghost("gray");
+          @include small();
         }
       }
     }

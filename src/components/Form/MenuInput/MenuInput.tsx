@@ -1,7 +1,7 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
 import Container from "components/Container";
-import DropdownArrow from "components/DropdownArrow";
+import { DropdownArrow } from "components/Icons";
 import { OverflowDir, useDirT, useDropdown } from "hooks";
 import { Merge } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, omit } from "utils";
@@ -74,9 +74,9 @@ const MenuInput = <TOption,>(
         : null}
       {after("input", <DropdownArrow isOpen={isOpen} />)}
     </Input>,
-    <Container variant="menu">
+    <Container variant="menu" ref={drivenRef}>
       {isOpen && ( // TODO generalize this optimization
-        <ul ref={drivenRef} className="list" dir={dir || dirT}>
+        <ul className="list" dir={dir || dirT}>
           {options.map((option) => (
             // TODO convert to radio input
             <li

@@ -9,30 +9,36 @@ import {
 } from "firebase/firestore";
 import { createContext, FunctionComponent, useContext, useState } from "react";
 
-import { db } from "services/firebase";
 import { TeacherInfo, Teacher } from "models/teacher";
+import { db } from "services/firebase";
 import { omit } from "utils";
 
-interface TeacherContextObj {
-  data: Teacher[];
+import { useMetaContext } from ".";
+
+interface TeacherContext {
+  data: { teachers: Teacher[]; teacherList: string[] };
   add: (data: TeacherInfo) => void;
   fetch: (state?: string) => void;
   archive: (id: string) => void;
 }
 
-const TeachersContext = createContext<TeacherContextObj>({
-  data: [],
+const teacherContext = createContext<TeacherContext>({
+  data: { teachers: [], teacherList: [] },
   add: omit,
   fetch: omit,
   archive: omit,
 });
 
-interface TeachersProviderProps {}
+interface TeacherProviderProps {}
 
-export const TeachersProvider: FunctionComponent<TeachersProviderProps> = ({
+export const TeacherProvider: FunctionComponent<TeacherProviderProps> = ({
   children,
 }) => {
-  const [data, setData] = useState<Teacher[]>([]);
+  const {
+    data: { shortList: { teachers: teacherList = [] } = {} },
+  } = useMetaContext();
+
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
   const teachersRef = collection(db, "teachers");
 
   const add = (data: TeacherInfo) => {
@@ -48,7 +54,7 @@ export const TeachersProvider: FunctionComponent<TeachersProviderProps> = ({
     //   (doc) => (newData[doc.id] = { ...(doc.data() as TeacherInfo) })
     // );
 
-    setData(newData);
+    setTeachers(newData);
   };
 
   const archive = (id: string) => {
@@ -56,10 +62,12 @@ export const TeachersProvider: FunctionComponent<TeachersProviderProps> = ({
   };
 
   return (
-    <TeachersContext.Provider value={{ add, fetch, archive, data }}>
+    <teacherContext.Provider
+      value={{ add, fetch, archive, data: { teachers, teacherList } }}
+    >
       {children}
-    </TeachersContext.Provider>
+    </teacherContext.Provider>
   );
 };
 
-export const useTeachers = () => useContext(TeachersContext);
+export const useTeacherContext = () => useContext(teacherContext);

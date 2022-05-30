@@ -10,9 +10,9 @@ import {
 
 import { Button } from "components/Buttons";
 import Container from "components/Container";
-import DropdownArrow from "components/DropdownArrow";
+import { CheckMark, DropdownArrow } from "components/Icons";
 import { formAtoms } from "components/Form";
-import { DropdownAction, useDirT, useDropdown, useGlobalT } from "hooks";
+import { DropdownAction, useDropdown, useGlobalT } from "hooks";
 import { UNKNOWN } from "models";
 import { cn, mergeCallbacks, mergeRefs, omit, capitalize } from "utils";
 import {
@@ -91,7 +91,6 @@ const StatusSelector = <TVariant extends StatusVariants>(
   }: StatusSelectorProps<TVariant>,
   ref: Ref<HTMLButtonElement>
 ) => {
-  const dirT = useDirT();
   const glb = useGlobalT();
 
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
@@ -121,12 +120,12 @@ const StatusSelector = <TVariant extends StatusVariants>(
       {mapStatusString(variant, currentStatus, {
         type: (t: string) => capitalize(glb(t)),
       }).join(" | ")}
-      <DropdownArrow dir={dirT} isOpen={isOpen} />
+      <DropdownArrow isOpen={isOpen} />
     </Button>,
     <Container variant="menu" ref={drivenRef} className="statusMenu">
       {isOpen &&
         mapStatusType(variant, (statusOption: Status) => {
-          const selected =
+          const isSelected =
             (activeStatus?.type || currentStatus.type) === statusOption.type;
           const customStatus = getCustomStatus(variant, statusOption.type);
 
@@ -146,7 +145,7 @@ const StatusSelector = <TVariant extends StatusVariants>(
             });
 
           const wrapper = (statusButton: ReactElement) =>
-            selected && customStatus ? (
+            isSelected && customStatus ? (
               <div key={statusOption.type} className="customStatusWrapper">
                 {statusButton}
                 <MiniForm
@@ -170,11 +169,11 @@ const StatusSelector = <TVariant extends StatusVariants>(
             <Button
               {...commonProps}
               key={statusOption.type}
-              className={cn({ selected }, "option", variant, statusOption.type)}
+              className={cn("option", variant, statusOption.type)}
               onClick={onClick}
             >
               {capitalize(glb(statusOption.type))}
-              {selected && <div className="checkMark" dir={dirT} />}
+              {isSelected && <CheckMark />}
             </Button>
           );
         })}

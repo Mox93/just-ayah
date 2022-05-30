@@ -1,6 +1,6 @@
 import { Navigate, RouteProps } from "react-router-dom";
 
-import { useAuth } from "context/Auth";
+import { useAuthContext } from "context";
 
 interface authGuardProps extends RouteProps {
   guestOnly?: boolean;
@@ -14,7 +14,7 @@ const useAuthGuard = ({
   to,
   ...rest
 }: authGuardProps): RouteProps => {
-  const { authorized } = useAuth();
+  const { authorized } = useAuthContext();
 
   const [authCase, noAuthCase] = guestOnly
     ? [<Navigate to={to} />, element]

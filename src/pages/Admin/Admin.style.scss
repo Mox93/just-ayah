@@ -1,3 +1,8 @@
 .Admin {
-  margin-inline-start: var(--w-sidebar-closed);
+  margin-inline-start: var(--closed-sidebar-width);
+
+  & > main {
+    height: 100vh;
+    overflow: auto;
+  }
 }

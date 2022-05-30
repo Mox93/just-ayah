@@ -29,28 +29,30 @@ import {
 import { AddData, FetchData } from "models";
 import { omit } from "utils";
 
-interface CustomersContextObj {
-  data: Customer[];
-  addCustomer: AddData<CustomerInfo>;
-  fetchCustomers: FetchData;
+interface CustomerContext {
+  data: { customers: Customer[] };
+  add: AddData<CustomerInfo>;
+  fetch: FetchData;
 }
 
-const CustomersContext = createContext<CustomersContextObj>({
-  data: [],
-  addCustomer: omit,
-  fetchCustomers: omit,
-});
+const initialState: CustomerContext = {
+  data: { customers: [] },
+  add: omit,
+  fetch: omit,
+};
 
-interface CustomersProviderProps {}
+const customerContext = createContext(initialState);
 
-export const CustomersProvider: FunctionComponent<CustomersProviderProps> = ({
+interface CustomerProviderProps {}
+
+export const CustomerProvider: FunctionComponent<CustomerProviderProps> = ({
   children,
 }) => {
-  const [data, setData] = useState<Customer[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
   const collectionRef = collection(db, "customers");
 
-  const addCustomer: AddData<CustomerInfo> = useCallback(
+  const add: AddData<CustomerInfo> = useCallback(
     (data, { onFulfilled = omit, onRejected = console.log } = {}) => {
       addDoc(collectionRef, customerFromInfo(data))
         .then(onFulfilled, onRejected)
@@ -59,7 +61,7 @@ export const CustomersProvider: FunctionComponent<CustomersProviderProps> = ({
     [collectionRef]
   );
 
-  const fetchCustomers: FetchData = useCallback(
+  const fetch: FetchData = useCallback(
     ({
       filters = [],
       size = 20,
@@ -78,7 +80,7 @@ export const CustomersProvider: FunctionComponent<CustomersProviderProps> = ({
       );
 
       getDocs(q).then((querySnapshot) => {
-        setData((state) => {
+        setCustomers((state) => {
           const newState = [...state];
 
           querySnapshot.docs.forEach((doc, i) => {
@@ -99,10 +101,10 @@ export const CustomersProvider: FunctionComponent<CustomersProviderProps> = ({
   );
 
   return (
-    <CustomersContext.Provider value={{ addCustomer, fetchCustomers, data }}>
+    <customerContext.Provider value={{ add, fetch, data: { customers } }}>
       {children}
-    </CustomersContext.Provider>
+    </customerContext.Provider>
   );
 };
 
-export const useCustomers = () => useContext(CustomersContext);
+export const useCustomerContext = () => useContext(customerContext);

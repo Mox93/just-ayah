@@ -15,7 +15,7 @@
 
     &:focus-within {
       .DropdownArrow {
-        fill: var(--c-primary-200);
+        --fill-color: var(--c-primary-200);
       }
     }
   }

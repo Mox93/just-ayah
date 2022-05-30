@@ -3,12 +3,12 @@ import { FunctionComponent } from "react";
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import LanguageSelector from "components/LanguageSelector";
 import StudentForm from "../StudentForm";
-import { usePopup } from "context/Popup";
+import { usePopupContext } from "context";
 
 interface NewStudentProps {}
 
 const NewStudent: FunctionComponent<NewStudentProps> = () => {
-  const { showPopup } = usePopup();
+  const { showPopup } = usePopupContext();
 
   return (
     <div className="NewStudent">

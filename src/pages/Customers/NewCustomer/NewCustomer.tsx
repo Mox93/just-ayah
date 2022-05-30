@@ -4,12 +4,12 @@ import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import LanguageSelector from "components/LanguageSelector";
 
 import CustomerForm from "../CustomerForm";
-import { usePopup } from "context/Popup";
+import { usePopupContext } from "context";
 
 interface NewCustomerProps {}
 
 const NewCustomer: FunctionComponent<NewCustomerProps> = () => {
-  const { showPopup } = usePopup();
+  const { showPopup } = usePopupContext();
 
   return (
     <div className="NewCustomer">

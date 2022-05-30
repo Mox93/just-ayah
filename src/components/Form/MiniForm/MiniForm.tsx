@@ -1,11 +1,16 @@
 import { FC, FormHTMLAttributes } from "react";
 
 import { Button } from "components/Buttons";
+import { CheckMark } from "components/Icons";
 import { useDirT } from "hooks";
 import { cn } from "utils";
 
+import { FormButton } from "../Form";
+
 interface MiniFormProps extends FormHTMLAttributes<HTMLFormElement> {
-  canReset?: boolean;
+  submitProps?: FormButton;
+  resetProps?: FormButton;
+
   isInvalid?: boolean;
 }
 
@@ -13,8 +18,9 @@ const MiniForm: FC<MiniFormProps> = ({
   children,
   className,
   dir,
-  canReset = false,
   isInvalid = false,
+  submitProps,
+  resetProps,
   ...props
 }) => {
   const dirT = useDirT();
@@ -24,14 +30,21 @@ const MiniForm: FC<MiniFormProps> = ({
       {children}
 
       <Button
-        className="submit"
         variant="success-solid"
+        {...submitProps}
+        className={cn("submit", submitProps?.className)}
         type="submit"
         disabled={isInvalid}
+        children={submitProps?.children || <CheckMark />}
       />
-      {canReset && (
+      {resetProps && (
         // TODO add popup for reset confirmation.
-        <Button variant="danger-text" className="reset" type="reset" />
+        <Button
+          variant="danger-text"
+          {...resetProps}
+          className={cn("reset", resetProps?.className)}
+          type="reset"
+        />
       )}
     </form>
   );

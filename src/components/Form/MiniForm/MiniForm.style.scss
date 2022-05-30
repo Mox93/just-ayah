@@ -2,15 +2,9 @@
 
 .MiniForm {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-m);
 
-  .Button {
-    position: relative;
-
-    &.submit {
-      &::after {
-        @include checkMark($y: -2px, $color: var(--c-foreground));
-      }
-    }
+  .CheckMark {
+    fill: var(--c-white);
   }
 }

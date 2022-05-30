@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 
 import { formAtoms } from "components/Form";
-import { useCustomers } from "context/Customers";
+import { useCustomerContext } from "context";
 import { useDirT, usePageT, usePersonalInfoT } from "hooks";
 import { CustomerInfo } from "models/customer";
 
@@ -20,10 +20,10 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
   const pi = usePersonalInfoT();
   const cst = usePageT("customers");
 
-  const { addCustomer } = useCustomers();
+  const { add } = useCustomerContext();
 
   const onSubmit = (data: CustomerInfo) =>
-    addCustomer(data, { onFulfilled: onfulfilled, onRejected: onrejected });
+    add(data, { onFulfilled: onfulfilled, onRejected: onrejected });
 
   return (
     <Form className="Container" dir={dirT} onSubmit={onSubmit} resetProps={{}}>

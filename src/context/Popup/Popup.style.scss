@@ -17,8 +17,8 @@
     position: absolute;
     background-color: var(--c-white);
     min-width: 10rem;
-    max-height: calc(100vh - 2rem);
-    margin: 1rem;
+    max-height: calc(100vh - var(--spacing-l) * 2);
+    margin: var(--spacing-l);
 
     &.closable {
       padding-block-start: 3rem;
@@ -26,8 +26,8 @@
 
     .CloseButton {
       position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
+      top: var(--spacing-m);
+      right: var(--spacing-m);
     }
   }
 }

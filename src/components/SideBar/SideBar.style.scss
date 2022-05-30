@@ -1,10 +1,13 @@
+@use "styles/abstracts/mixins" as *;
+
 .SideBar {
+  --sidebar-width: var(--closed-sidebar-width);
+
+  width: var(--sidebar-width);
   height: 100vh;
-  min-height: 40rem;
-  width: var(--w-sidebar-closed);
-  padding: 2rem 0.5rem;
+  overflow-y: scroll;
+  padding: var(--spacing-xl) var(--spacing-m);
   background-color: var(--c-primary-400);
-  position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -12,18 +15,18 @@
   transition: width 100ms ease-in-out;
   z-index: 10;
 
-  &[dir="ltr"] {
-    right: unset;
-    left: 0;
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
   }
 
-  &[dir="rtl"] {
-    right: 0;
-    left: unset;
-  }
+  @include positioning($position: fixed, $inline: 0, $block: 0, $x: 0%, $y: 0%);
 
   &:hover {
-    width: var(--w-sidebar-open);
+    --sidebar-width: var(--opened-sidebar-width);
 
     .label {
       display: unset;
@@ -54,12 +57,12 @@
   .navSection {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--spacing-m);
 
     .element {
       width: 100%;
       height: 3rem;
-      padding: 0.5rem;
+      padding: var(--spacing-m);
       border-radius: 0.25rem;
       display: flex;
       justify-content: center;
@@ -102,9 +105,10 @@
   }
 
   .settingsSection {
+    margin-block-start: var(--spacing-xl);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-l);
 
     .LanguageSelector {
       .element {

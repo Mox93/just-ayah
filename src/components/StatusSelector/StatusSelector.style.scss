@@ -3,7 +3,7 @@
 
 .StatusButton {
   .MiniForm {
-    gap: var(--menu-spacing);
+    gap: var(--spacing-s);
   }
 
   .customStatusWrapper {
@@ -19,56 +19,18 @@
 
   .driver,
   .option {
-    position: relative;
+    --icon-space: 2.5em;
+
     padding-inline-end: 2.5em !important;
 
-    @include statusButton("subscription", "progress") {
-      .DropdownArrow {
-        --spacing: 0.5em;
+    @include statusButton("subscription", "progress");
 
-        fill: var(--c-foreground);
-        position: absolute;
+    .DropdownArrow,
+    .CheckMark {
+      --fill-color: var(--c-foreground);
+      --spacing: calc(var(--icon-space) / 2);
 
-        &[dir="ltr"] {
-          left: none;
-          right: var(--spacing);
-        }
-
-        &[dir="rtl"] {
-          left: var(--spacing);
-          right: none;
-        }
-      }
-
-      .checkMark {
-        --spacing: 1em;
-
-        &[dir="ltr"] {
-          left: none;
-          right: var(--spacing);
-        }
-
-        &[dir="rtl"] {
-          left: var(--spacing);
-          right: none;
-        }
-
-        @include checkMark($y: -2px, $color: var(--c-foreground));
-      }
-    }
-  }
-
-  .statusField {
-    input {
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      &[type="number"] {
-        -moz-appearance: textfield;
-      }
+      @include positioning($inline: var(--spacing), $inlineDir: "end");
     }
   }
 }

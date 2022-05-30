@@ -10,22 +10,38 @@ export const pass: Pass =
   () =>
     typeof funcOrValue === "function" ? funcOrValue(...args) : funcOrValue;
 
+export const pluck =
+  <T>(key: keyof T) =>
+  (obj?: T) =>
+    obj?.[key];
+
+/****************************\
+|****** Function Chain ******|
+\****************************/
+
 export type FunctionChain<TIn = any, TOut = any> = [
   (value: TIn) => any,
   ...Function[],
   (value: any) => TOut
 ];
 
-export const reduceChain =
-  <TIn, TOut>(chain: FunctionChain<TIn, TOut>) =>
-  (value: TIn): TOut =>
-    chain.reduce((node, func) => func(node), value) as any;
-
 export type FunctionOrChain<TIn = any, TOut = any> =
   | ((value: TIn) => TOut)
   | FunctionChain<TIn, TOut>;
 
+export const reduceChain =
+  <TIn, TOut>(chain: Function[]) =>
+  (value: TIn): TOut =>
+    chain.reduce((node, func) => func(node), value) as any;
+
 export const applyInOrder = <TIn = any, TOut = any>(
-  funcOrChain: FunctionOrChain<TIn, TOut>
-) =>
-  typeof funcOrChain === "function" ? funcOrChain : reduceChain(funcOrChain);
+  ...funcOrChain: FunctionOrChain<TIn, TOut>[]
+) => {
+  const chain: Function[] = [];
+
+  funcOrChain.forEach((foc) =>
+    typeof foc === "function" ? chain.push(foc) : chain.push(...foc)
+  );
+
+  return reduceChain<TIn, TOut>(chain);
+};

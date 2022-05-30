@@ -1,10 +1,15 @@
 import { StrictMode, Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 
-import { AuthProvider } from "context/Auth";
-import { CustomersProvider } from "context/Customers";
-import { StudentsProvider } from "context/Students";
-import { PopupProvider } from "context/Popup";
+import {
+  AuthProvider,
+  CourseProvider,
+  CustomerProvider,
+  MetaProvider,
+  StudentProvider,
+  PopupProvider,
+  TeacherProvider,
+} from "context";
 
 import "services/i18n";
 import "styles/index.scss";
@@ -19,8 +24,11 @@ function App() {
         StrictMode,
         BrowserRouter,
         AuthProvider,
-        StudentsProvider,
-        CustomersProvider,
+        MetaProvider,
+        TeacherProvider,
+        CourseProvider,
+        CustomerProvider,
+        StudentProvider,
         [Suspense, { fallback: "...is loading" }],
         PopupProvider,
       ]}

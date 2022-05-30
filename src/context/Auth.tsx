@@ -25,7 +25,7 @@ interface AuthContext {
   authorized: (path?: string) => boolean;
 }
 
-const InitialState: AuthContext = {
+const initialState: AuthContext = {
   user: null,
   signIn: () =>
     signInWithRedirect(auth, googleAuthProvider).then((result) =>
@@ -38,9 +38,9 @@ const InitialState: AuthContext = {
   authorized: () => false,
 };
 
-const authContext = createContext(InitialState);
+const authContext = createContext(initialState);
 
-export const useAuth = () => useContext(authContext);
+export const useAuthContext = () => useContext(authContext);
 
 interface AuthProviderProps {}
 
@@ -92,7 +92,7 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
   }, []);
 
   return (
-    <authContext.Provider value={{ ...InitialState, user, authorized }}>
+    <authContext.Provider value={{ ...initialState, user, authorized }}>
       {ready ? children : "loading..."}
     </authContext.Provider>
   );

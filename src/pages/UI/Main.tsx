@@ -17,7 +17,7 @@ const colorVariants = [
   "gray",
 ];
 const fillVariants = ["solid", "outline", "text", "ghost"];
-const sizes = ["default", "tight"];
+const sizes = ["large", "medium", "small"];
 
 const rowStyle = { display: "flex", gap: "1rem", marginBlockEnd: "2rem" };
 const sectionHeaderStyle: any = {
