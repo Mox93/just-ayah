@@ -8,9 +8,7 @@ import {
 
 import { cn } from "utils";
 
-import { useDirT } from "./translation";
-
-import "styles/components/dropdown.scss";
+import { useDirT } from "../Translation";
 
 export type OverflowDir = "start" | "end";
 
@@ -49,7 +47,11 @@ interface UseDropdownProps {
   overflowDir?: OverflowDir;
 }
 
-const useDropdown = ({ className, dir, overflowDir }: UseDropdownProps) => {
+const useDropdown = ({
+  className,
+  dir,
+  overflowDir,
+}: UseDropdownProps = {}) => {
   const [{ isOpen }, dispatch] = useReducer(reduce, { isOpen: false });
 
   const driverRef = useRef<any>(null);
@@ -107,7 +109,7 @@ const useDropdown = ({ className, dir, overflowDir }: UseDropdownProps) => {
   // }, []);
 
   const wrapper = useCallback(
-    (driver: ReactElement, driven: ReactElement) => {
+    (driver: ReactElement, driven: () => ReactElement) => {
       return (
         <div
           className={cn("DropdownWrapper", className)}
@@ -120,7 +122,7 @@ const useDropdown = ({ className, dir, overflowDir }: UseDropdownProps) => {
           // }
         >
           {driver}
-          {isOpen && <div className="buffer">{driven}</div>}
+          {isOpen && <div className="buffer">{driven()}</div>}
         </div>
       );
     },

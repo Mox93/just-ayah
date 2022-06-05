@@ -1,14 +1,9 @@
-import {
-  Country,
-  CountryCode,
-  countryList,
-  getCountry,
-  getCountryCode,
-} from "models/country";
-import { renderAttributes } from "utils/render";
+import { Country, CountryCode, countryList, getCountry } from "models/country";
+import { pluck } from "utils";
+import { PathsOrConverters, renderAttributes } from "utils/render";
 
 interface CountryHookProps {
-  renderSections: (keyof Country)[];
+  renderSections: PathsOrConverters<Country>;
   selectedCountry?: CountryCode;
 }
 
@@ -17,12 +12,12 @@ const useCountrySelector = ({
   selectedCountry,
 }: CountryHookProps) => ({
   renderElement: renderAttributes(
-    ...renderSections.map((field) =>
+    renderSections.map((field) =>
       field === "phone" ? (obj: Country) => `+${obj["phone"]}` : field
     )
   ),
   options: countryList,
-  getKey: getCountryCode,
+  getKey: pluck<Country>("code"),
   selected: getCountry(selectedCountry),
 });
 

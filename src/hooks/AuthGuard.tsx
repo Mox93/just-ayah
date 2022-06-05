@@ -10,7 +10,7 @@ interface authGuardProps extends RouteProps {
 const useAuthGuard = ({
   element,
   path,
-  guestOnly = false,
+  guestOnly,
   to,
   ...rest
 }: authGuardProps): RouteProps => {
