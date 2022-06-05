@@ -6,7 +6,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  line-height: 1.5rem;
+  line-height: var(--line-height);
   font-family: "Josefin Sans", "Almarai", sans-serif;
   font-weight: 400;
   color: var(--c-black);
@@ -37,7 +37,7 @@ a {
 }
 
 input {
-  line-height: 2;
+  line-height: var(--input-line-height);
 
   // &::-webkit-outer-spin-button,
   // &::-webkit-inner-spin-button {
@@ -55,5 +55,21 @@ table {
 }
 
 ::-webkit-input-placeholder {
-  line-height: 2;
+  line-height: var(--input-line-height);
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--placeholder-color);
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: var(--placeholder-color);
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: var(--placeholder-color);
 }

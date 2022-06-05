@@ -1,17 +1,33 @@
+import { get, isArray } from "lodash";
+import { ReactNode } from "react";
+import { FieldPath } from "react-hook-form";
+
+export type PathsOrConverters<TObject, TOutput = any> = (
+  | FieldPath<TObject>
+  | ((obj: TObject) => TOutput | TOutput[])
+)[];
+
 export const renderAttributes =
-  <Obj,>(...fields: (keyof Obj | ((obj: Obj) => any))[]) =>
-  (obj?: Obj) => {
+  <TObject, TOutput = any>(
+    pathsOrConverters: PathsOrConverters<TObject, TOutput>,
+    mapper: (part: TOutput, index?: number) => ReactNode = (part, index) => (
+      <p key={index}>{part}</p>
+    )
+  ) =>
+  (obj?: TObject) => {
     if (!obj) return;
 
     const parts: any[] = [];
 
-    for (let field of fields) {
+    pathsOrConverters.forEach((field) => {
       if (typeof field === "string") {
-        parts.push(obj[field]);
+        const part = get(obj, field);
+        if (part) parts.push(part);
       } else if (typeof field === "function") {
-        parts.push(field(obj));
+        const output = field(obj);
+        parts.push(...(isArray(output) ? output : [output]));
       }
-    }
+    });
 
-    return parts.map((part, index) => <div key={index}>{part}</div>);
+    return parts.map(mapper);
   };

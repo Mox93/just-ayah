@@ -2,16 +2,18 @@
 @use "colors" as *;
 
 // Screen Sizes
-$sMobile: 35rem; // can't use var in @media
+// can't use var or calc in @media
+$mobileSize: 35rem;
+$desktopSize: 35.01rem;
 
 @mixin mobile {
-  @media screen and (max-width: $sMobile) {
+  @media screen and (max-width: $mobileSize) {
     @content;
   }
 }
 
 @mixin desktop {
-  @media screen and (min-width: calc($sMobile + 1px)) {
+  @media screen and (min-width: $desktopSize) {
     @content;
   }
 }
@@ -20,7 +22,6 @@ $sMobile: 35rem; // can't use var in @media
   $position: absolute,
   $blockDir: "start",
   $inlineDir: "start",
-  // if $x is 0 without a unit it misbehaves
   $x: -50%,
   $y: -50%,
   $inline: 50%,
@@ -87,23 +88,24 @@ $sMobile: 35rem; // can't use var in @media
 ) {
   --c-border: #{$borderColor};
   --r-border: #{$borderRadius};
-  --outline: none;
+  --c-outline: none;
 
   border: 1px solid var(--c-border);
   border-radius: var(--r-border);
-  outline: var(--outline);
+  outline: 2px solid var(--c-outline);
+  outline-offset: -2px;
 
   @if index($states, "focus") {
     &:focus-within {
       --c-border: var(--c-primary-200);
-      --outline: 1px solid var(--c-border);
+      --c-outline: var(--c-border);
     }
   }
 
   @if index($states, "invalid") {
     &.invalid {
       --c-border: var(--c-danger-300);
-      --outline: 1px solid var(--c-border);
+      --c-outline: var(--c-border);
     }
   }
 }
@@ -120,7 +122,7 @@ $sMobile: 35rem; // can't use var in @media
   text-transform: capitalize;
 }
 
-@mixin menuListItem {
+@mixin menuItem {
   width: 100%;
   height: 2.5rem;
   display: flex;
@@ -139,12 +141,11 @@ $sMobile: 35rem; // can't use var in @media
 }
 
 @mixin floatingLanguageSelector {
-  position: relative;
-
   .LanguageSelector {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
+    position: fixed;
+    top: var(--spacing-l);
+    right: var(--spacing-l);
+    z-index: -1;
   }
 }
 
@@ -154,5 +155,15 @@ $sMobile: 35rem; // can't use var in @media
     max-height: 25rem;
     object-fit: cover;
     object-position: center;
+    position: sticky;
+    top: 0;
+    z-index: -1;
   }
+}
+
+@mixin sidebarAnimation($property, $delay: 0) {
+  transition-delay: $delay;
+  transition-property: $property;
+  transition-duration: 100ms;
+  transition-timing-function: ease-in-out;
 }

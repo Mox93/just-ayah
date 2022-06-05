@@ -5,7 +5,7 @@ export const identity = (value: any) => value;
 export const omit = () => {};
 
 type Pass = {
-  (func: Function, ...args: any): () => any;
+  (func?: Function, ...args: any): () => any;
   (value: any): () => any;
 };
 export const pass: Pass =

@@ -1,21 +1,37 @@
 import { isArray, isPlainObject } from "lodash";
 import { FieldPath } from "react-hook-form";
 
-export const paths = <T>(obj: T, parentKey?: FieldPath<T>): FieldPath<T>[] => {
-  const leaves: FieldPath<T>[] = [];
+interface PathsOptions<TFieldName> {
+  parentKey?: TFieldName;
+  includeAll?: boolean;
+}
 
-  if (isArray(obj) && obj.every((value) => !isPlainObject(value))) {
-    parentKey && leaves.push(parentKey);
+export const paths = <
+  TFieldValues,
+  TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>(
+  obj: TFieldValues,
+  { parentKey, includeAll }: PathsOptions<TFieldName> = {}
+): TFieldName[] => {
+  const leafs: TFieldName[] = [];
+
+  if (
+    !includeAll &&
+    isArray(obj) &&
+    obj.every((value) => !isPlainObject(value))
+  ) {
+    parentKey && leafs.push(parentKey);
     // console.log("array of primitive types", obj);
   } else if (isArray(obj) || isPlainObject(obj)) {
-    Object.keys(obj).forEach((key) => {
-      paths((obj as any)[key], parentKey ? `${parentKey}.${key}` : key).forEach(
-        (path) => leaves.push(path as FieldPath<T>)
-      );
+    Object.entries(obj).forEach(([key, subObj]) => {
+      paths(subObj, {
+        parentKey: parentKey ? `${parentKey}.${key}` : key,
+        includeAll,
+      }).forEach((path) => leafs.push(path as TFieldName));
     });
   } else if (parentKey) {
-    leaves.push(parentKey);
+    leafs.push(parentKey);
   }
 
-  return leaves;
+  return leafs;
 };

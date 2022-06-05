@@ -15,12 +15,32 @@
     }
   }
 
-  // MEASUREMENTS
-  --closed-sidebar-width: 4rem;
-  --opened-sidebar-width: 9rem;
-  --page-min-height: 40rem;
+  --placeholder-color: var(--c-gray-300);
 
+  // MEASUREMENTS
   @each $size, $value in $spacing {
     --spacing-#{$size}: #{$value};
   }
+
+  // Sidebar
+  --closed-sidebar-width: 4rem;
+  --opened-sidebar-width: 9rem;
+  --sidebar-delta: calc(
+    var(--opened-sidebar-width) - var(--closed-sidebar-width)
+  );
+  --sidebar-offset: 0;
+
+  // Page
+  --page-min-height: 40rem;
+
+  // Header
+  --header-height: 4rem;
+  --current-header-height: var(--header-height);
+
+  // Body
+  --body-height: calc(100vh - var(--current-header-height));
+
+  //Typography
+  --input-line-height: 2rem;
+  --line-height: 1.5rem;
 }
