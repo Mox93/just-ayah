@@ -1,7 +1,7 @@
 import { VFC } from "react";
 import { Outlet } from "react-router-dom";
 
-import SideBar from "components/SideBar";
+import Sidebar from "components/Sidebar";
 import { useDirT } from "hooks";
 
 interface AdminProps {}
@@ -11,7 +11,7 @@ const Admin: VFC<AdminProps> = () => {
 
   return (
     <div className="Admin" dir={dir}>
-      <SideBar />
+      <Sidebar />
       <Outlet />
     </div>
   );
