@@ -1,32 +1,57 @@
 @use "styles/abstracts/mixins" as *;
 
 .Container {
+  --border-radius: 0;
+
   margin-inline: auto;
   background-color: var(--c-white);
+  border-radius: var(--border-radius);
+
+  @include desktop() {
+    --border-radius: 0.75rem;
+    box-shadow: 4px 4px 16px var(--c-shadow-200);
+  }
 
   &.menu {
-    max-width: calc(100vw - var(--spacing-l) * 2);
-    max-height: min(calc(100vh - var(--spacing-l) * 2), 20rem);
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    --border-radius: 0.375rem;
 
-    @include menuLayout();
+    max-width: calc(100vw - var(--spacing-l) * 2);
+
     @include withBorder(
-      $borderRadius: 0.375rem,
-      $borderColor: var(--c-gray-200)
+      $borderColor: var(--c-gray-200),
+      $borderRadius: var(--border-radius)
     );
+
+    & > .header,
+    & > .footer {
+      padding: var(--spacing-s);
+      background-color: var(--c-white);
+    }
+
+    & > .body {
+      max-height: min(calc(100vh - var(--spacing-l) * 2), 20rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+
+      @include menuLayout();
+    }
   }
 
   &.card {
-    padding: var(--spacing-l);
+    & > .body {
+      padding: var(--spacing-l);
+
+      @include desktop() {
+        padding: var(--spacing-xl);
+      }
+    }
   }
 
-  @include desktop() {
-    border-radius: 0.75rem;
-    box-shadow: 4px 4px 16px var(--c-shadow-200);
+  & > .header {
+    border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+  }
 
-    &.card {
-      padding: var(--spacing-xl);
-    }
+  & > .footer {
+    border-radius: 0 0 var(--border-radius) var(--border-radius) !important;
   }
 }
