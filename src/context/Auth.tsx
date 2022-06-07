@@ -15,9 +15,9 @@ import {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { useLanguage } from "hooks";
 import { LocationState } from "models";
 import { auth } from "services/firebase";
+import { pass } from "utils";
 
 const AUTH_SIGN_IN = "authSignIn";
 
@@ -56,9 +56,6 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
   const [ready, setReady] = useState(false);
   const { state } = useLocation();
   const navigate = useNavigate();
-  const [language] = useLanguage();
-
-  auth.languageCode = language;
 
   const authorized = () => !!user;
 
