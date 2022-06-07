@@ -1,7 +1,12 @@
 import { FieldPath, OrderByDirection, WhereFilterOp } from "firebase/firestore";
 import { Ref } from "react";
+import { Location } from "react-router-dom";
 
 export const UNKNOWN = "unknown";
+
+export interface LocationState {
+  from?: Location;
+}
 
 /***************************\
 |****** UTILITY TYPES ******|

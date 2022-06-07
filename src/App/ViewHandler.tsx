@@ -70,11 +70,11 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
           </Route>
         </Route>
 
+        {/* Public */}
         <Route element={<AuthGuard redirect="/admin" guestOnly />}>
           <Route path="sign-in" element={<SignIn />} />
         </Route>
 
-        {/* Public */}
         <Route path="reach-out" element={<NewCustomer />} />
         <Route path="enroll" element={<NewStudent />} />
 

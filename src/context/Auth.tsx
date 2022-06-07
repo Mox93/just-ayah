@@ -1,5 +1,5 @@
 import {
-  // getRedirectResult,
+  getRedirectResult,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithRedirect,
@@ -13,8 +13,13 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
+import { useLanguage } from "hooks";
+import { LocationState } from "models";
 import { auth } from "services/firebase";
+
+const AUTH_SIGN_IN = "authSignIn";
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -28,14 +33,14 @@ interface AuthContext {
 const initialState: AuthContext = {
   user: null,
   signIn: () =>
-    signInWithRedirect(auth, googleAuthProvider).then((result) =>
-      console.log("signInWithRedirect", result)
-    ),
+    signInWithRedirect(auth, googleAuthProvider)
+      .then(() => console.log("Signed in successfully"))
+      .catch((error) => console.log("signInWithRedirect.ERROR", error)),
   signOut: () =>
     SignOutFB(auth)
       .then(() => console.log("Signed out successfully"))
-      .catch(console.log),
-  authorized: () => false,
+      .catch((error) => console.log("SignOutFB.ERROR", error)),
+  authorized: pass(false),
 };
 
 const authContext = createContext(initialState);
@@ -49,12 +54,40 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const [language] = useLanguage();
+
+  auth.languageCode = language;
 
   const authorized = () => !!user;
 
+  const signIn = () => {
+    if (state) {
+      window.localStorage.setItem(AUTH_SIGN_IN, JSON.stringify(state));
+    }
+
+    signInWithRedirect(auth, googleAuthProvider)
+      .then(() => {
+        console.log("Signed in successfully");
+      })
+      .catch((error) => console.log("signInWithRedirect.ERROR", error));
+  };
+
   useEffect(() => {
+    getRedirectResult(auth).then((result) => {
+      if (!result) return;
+
+      const authSignIn = window.localStorage.getItem(AUTH_SIGN_IN);
+      window.localStorage.removeItem(AUTH_SIGN_IN);
+
+      const { from } = (
+        authSignIn ? JSON.parse(authSignIn) : {}
+      ) as LocationState;
+
+      if (from) navigate(from);
+    });
     /*
-    getRedirectResult(auth)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access Google APIs.
         if (result) {
@@ -87,12 +120,12 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
         setUser(user);
         setReady(true);
       },
-      console.log
+      (error) => console.log("onAuthStateChanged.ERROR", error)
     );
   }, []);
 
   return (
-    <authContext.Provider value={{ ...initialState, user, authorized }}>
+    <authContext.Provider value={{ ...initialState, user, authorized, signIn }}>
       {ready ? children : "loading..."}
     </authContext.Provider>
   );
