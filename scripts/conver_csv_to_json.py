@@ -157,9 +157,7 @@ def parse_phone_numbers(data):
             **({"tags": ["whatsapp"]} if i == 0 else {})
         })
 
-    return {
-        "phoneNumbers": {k: v for k, v in enumerate(phone_numbers)}
-    }
+    return {"phoneNumber": phone_numbers}
 
 
 def parse_email(data):
@@ -269,98 +267,115 @@ def is_active_student(data):
     return data, found_match
 
 
-students = []
-remaining_students = []
-remaining_active_students = []
-active = []
-remaining_active = []
+def convert_student_data():
+    students = []
+    remaining_students = []
+    remaining_active_students = []
+    active = []
+    remaining_active = []
 
-with open("data/Students Data - general.csv", "r") as csv_file:
-    table = csv.DictReader(csv_file)
+    with open("data/Students Data - general.csv", "r") as csv_file:
+        table = csv.DictReader(csv_file)
 
-    for data in table:
-        n = " ".join(filter(bool, data.get("name").split()))
-        pn1 = data.get("phone number", "").replace(" ", "")
-        pn2 = data.get("second phone number", "").replace(" ", "")
-        pns = []
+        for data in table:
+            n = " ".join(filter(bool, data.get("name").split()))
+            pn1 = data.get("phone number", "").replace(" ", "")
+            pn2 = data.get("second phone number", "").replace(" ", "")
+            pns = []
 
-        if len(pn1) > 1:
-            pns.append(pn1)
-        if len(pn2) > 1:
-            pns.append(pn2)
+            if len(pn1) > 1:
+                pns.append(pn1)
+            if len(pn2) > 1:
+                pns.append(pn2)
 
-        remaining_active_students.append(data)
-        active.append((n, pns))
-        remaining_active.append((n, pns))
+            remaining_active_students.append(data)
+            active.append((n, pns))
+            remaining_active.append((n, pns))
 
-    # pprint(active_students)
+        # pprint(active_students)
 
-with open("data/Students Data - form.csv", "r") as csv_file:
-    table = csv.DictReader(csv_file)
+    with open("data/Students Data - form.csv", "r") as csv_file:
+        table = csv.DictReader(csv_file)
 
-    for i, data in enumerate(table):
-        student = {}
+        for i, data in enumerate(table):
+            student = {}
 
-        # FILTER
-        data, is_active = is_active_student(data)
+            # FILTER
+            data, is_active = is_active_student(data)
 
-        if not is_active:
-            remaining_students.append(data)
-            continue
+            if not is_active:
+                remaining_students.append(data)
+                continue
 
-        # NAME
-        student.update(parse_name(data))
+            # NAME
+            student.update(parse_name(data))
 
-        # DATE OF BIRTH
-        student.update(parse_date_of_birth(data))
+            # DATE OF BIRTH
+            student.update(parse_date_of_birth(data))
 
-        # GENDER
-        student.update(parse_gender(data))
+            # GENDER
+            student.update(parse_gender(data))
 
-        # NATIONALITY
-        student["nationality"] = data["nationality"].strip()
+            # NATIONALITY
+            student["nationality"] = data["nationality"].strip()
 
-        # RESIDENCY
-        student.update(parse_residency(data))
+            # RESIDENCY
+            student.update(parse_residency(data))
 
-        # PHOENE NUMBERS
-        student.update(parse_phone_numbers(data))
+            # PHOENE NUMBERS
+            student.update(parse_phone_numbers(data))
 
-        # EMAIL
-        student.update(parse_email(data))
+            # EMAIL
+            student.update(parse_email(data))
 
-        # EDUCATION
-        student["education"] = data["education"].strip()
+            # EDUCATION
+            student["education"] = data["education"].strip()
 
-        # WORK STATUS
-        student.update(parse_work_status(data))
+            # WORK STATUS
+            student.update(parse_work_status(data))
 
-        # QURAN
-        student.update(parse_quran(data))
+            # QURAN
+            student.update(parse_quran(data))
 
-        # ZOOM
-        student.update(parse_zoom(data))
+            # ZOOM
+            student.update(parse_zoom(data))
 
-        # META
-        student.update(parse_meta(data))
+            # META
+            student.update(parse_meta(data))
 
-        # ADD TO STUDENTS
-        students.append(student)
+            # ADD TO STUDENTS
+            students.append(student)
 
-print(f"found {len(students)} out of {len(active)}")
-print(f"remaining {len(remaining_students)} out of {i}")
+    print(f"found {len(students)} out of {len(active)}")
+    print(f"remaining {len(remaining_students)} out of {i}")
 
 
-with open("data/student_data.json", "w", encoding="utf8") as json_file:
-    json.dump(students, json_file, ensure_ascii=False)
+    with open("data/student_data.json", "w", encoding="utf8") as json_file:
+        json.dump(students, json_file, ensure_ascii=False)
 
-with open("data/remaining_student_data.json", "w", encoding="utf8") as json_file:
-    json.dump(remaining_students, json_file, ensure_ascii=False)
+    with open("data/remaining_student_data.json", "w", encoding="utf8") as json_file:
+        json.dump(remaining_students, json_file, ensure_ascii=False)
 
-with open("data/remaining_active_student_data.json", "w", encoding="utf8") as json_file:
-    json.dump(remaining_active, json_file, ensure_ascii=False)
+    with open("data/remaining_active_student_data.json", "w", encoding="utf8") as json_file:
+        json.dump(remaining_active, json_file, ensure_ascii=False)
 
-with open("data/remaining_active_student_data.csv", "w", encoding="utf8") as csv_file:
-    writer = csv.DictWriter(csv_file, remaining_active_students[0].keys())
-    writer.writeheader()
-    writer.writerows(remaining_active_students)
+    with open("data/remaining_active_student_data.csv", "w", encoding="utf8") as csv_file:
+        writer = csv.DictWriter(csv_file, remaining_active_students[0].keys())
+        writer.writeheader()
+        writer.writerows(remaining_active_students)
+
+
+def convert_teacher_data():
+    with open("data/Students Data - Teachers.csv", "r") as csv_file:
+        table = csv.reader(csv_file)
+        data = [row[0].strip() for row in table]
+
+    pprint(data)
+
+    with open("data/teacher.json", "w") as json_file:
+        json.dump(data, json_file, ensure_ascii=False)
+
+
+if __name__ == "__main__":
+    # convert_student_data()
+    convert_teacher_data()
