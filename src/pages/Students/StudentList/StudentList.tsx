@@ -1,5 +1,5 @@
 import { deleteField } from "firebase/firestore";
-import { useState, VFC } from "react";
+import { useEffect, useState, VFC } from "react";
 import { FieldPath, FieldPathValue } from "react-hook-form";
 
 import { Button } from "components/Buttons";
@@ -203,6 +203,10 @@ const StudentList: VFC<StudentListProps> = () => {
       state.delete(id);
       return new Set(state);
     });
+
+  useEffect(() => {
+    if (process.env.REACT_APP_ENV === "production") fetch();
+  }, []);
 
   return (
     <div className="StudentList">
