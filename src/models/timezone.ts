@@ -9,7 +9,5 @@ const timezoneMap: Record<string, Timezone> = timezones.reduce(
 
 export const timeZoneList = timezones;
 
-export const getTimezoneCode = (tz: Timezone) => tz.tzCode;
-
 export const getTimezone = (code?: string) =>
   code ? timezoneMap[code] : undefined;

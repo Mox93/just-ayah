@@ -19,6 +19,7 @@ interface FieldWrapperProps {
   dir?: string;
   addPartitions?: boolean;
   contentFullWidth?: boolean;
+  alwaysVisible?: boolean;
 }
 
 const FieldWrapper: FC<FieldWrapperProps> = ({
@@ -28,12 +29,13 @@ const FieldWrapper: FC<FieldWrapperProps> = ({
   dir,
   addPartitions,
   contentFullWidth,
+  alwaysVisible,
 }) => {
   return (
     <div
       className={cn(
         "FieldWrapper",
-        { invalid: isInvalid, contentFullWidth },
+        { invalid: isInvalid, contentFullWidth, alwaysVisible },
         className
       )}
       dir={dir}

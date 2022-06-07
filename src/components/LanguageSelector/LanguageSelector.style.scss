@@ -1,9 +1,7 @@
-/* LANGUAGE SELECTOR */
-
 .LanguageSelector {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: var(--spacing-l);
   direction: ltr;
 
   .element {

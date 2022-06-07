@@ -10,13 +10,14 @@ type ColorVariant =
   | "danger"
   | "gray";
 type FillVariant = "solid" | "outline" | "text" | "ghost";
-type Size = "large" | "medium" | "small";
-type Variant = `${ColorVariant}-${FillVariant}` | "plain-text";
+
+export type ButtonSize = "large" | "medium" | "small";
+export type ButtonVariant = `${ColorVariant}-${FillVariant}` | "plain-text";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
-  variant?: Variant | null;
-  size?: Size | null;
+  variant?: ButtonVariant | null;
+  size?: ButtonSize | null;
   keepFocused?: boolean;
   keepFormat?: boolean;
 }
@@ -28,8 +29,8 @@ const Button = (
     isLoading,
     variant = "primary-solid",
     size = "medium",
-    keepFocused = false,
-    keepFormat = false,
+    keepFocused,
+    keepFormat,
     onClick,
     ...props
   }: ButtonProps,

@@ -51,10 +51,10 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
       storageKey="studentForm"
       hook={({ watch }) => {
         const value = watch("workStatus");
-        const newValue = value
-          ? { ...value, doesWork: fromYesNo(value.doesWork) }
-          : {};
-
+        const newValue = value && {
+          ...value,
+          doesWork: fromYesNo(value.doesWork),
+        };
         !isEqual(newValue, workStatus) && setWorkStatus(newValue);
       }}
     >
@@ -79,12 +79,6 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
       </InputGroup>
 
       <InputGroup>
-        {/* <Input
-          name="dateOfBirth"
-          type="date"
-          label={pi("dateOfBirth")}
-          rules={{ required: "noDateOfBirth" }}
-        /> */}
         <DateInput
           name="dateOfBirth"
           label={pi("dateOfBirth")}

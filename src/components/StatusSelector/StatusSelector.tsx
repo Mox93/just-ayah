@@ -122,9 +122,9 @@ const StatusSelector = <TVariant extends StatusVariants>(
       }).join(" | ")}
       <DropdownArrow isOpen={isOpen} />
     </Button>,
-    <Container variant="menu" ref={drivenRef} className="statusMenu">
-      {isOpen &&
-        mapStatusType(variant, (statusOption: Status) => {
+    () => (
+      <Container variant="menu" ref={drivenRef} className="statusMenu">
+        {mapStatusType(variant, (statusOption: Status) => {
           const isSelected =
             (activeStatus?.type || currentStatus.type) === statusOption.type;
           const customStatus = getCustomStatus(variant, statusOption.type);
@@ -177,7 +177,8 @@ const StatusSelector = <TVariant extends StatusVariants>(
             </Button>
           );
         })}
-    </Container>
+      </Container>
+    )
   );
 };
 

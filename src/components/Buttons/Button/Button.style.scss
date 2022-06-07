@@ -4,9 +4,12 @@
   font-size: 1rem;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: var(--spacing-m);
   position: relative;
+
+  &:not(.plain-text) {
+    justify-content: center;
+  }
 
   @include buttonVariants();
 }

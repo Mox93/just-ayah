@@ -1,5 +1,5 @@
 import { useCountrySelector } from "hooks";
-import { Country, getCountryCode } from "models/country";
+import { Country } from "models/country";
 import { omit } from "utils/functions";
 import { createModifier } from "utils/transformer";
 
@@ -7,6 +7,7 @@ interface CountryMapperProps {
   renderSections: (keyof Country)[];
   setValue?: (value: any) => void;
   selected?: any;
+  searchable?: boolean;
 }
 
 export const countryMapper = createModifier<{
@@ -16,10 +17,12 @@ export const countryMapper = createModifier<{
     renderSections,
     setValue: _setValue = omit,
     selected,
+    searchable,
     ...props
   }: CountryMapperProps) => ({
     ...props,
-    setValue: (value: any) => _setValue(getCountryCode(value)),
+    searchable: searchable ?? true,
+    setValue: (value: any) => _setValue(value?.code),
     ...useCountrySelector({
       renderSections,
       selectedCountry: selected,

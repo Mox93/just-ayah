@@ -31,9 +31,9 @@ const useFormPersist = <TFieldValues>(
     storage,
     exclude = [],
     onDataRestored,
-    validate = false,
-    dirty = false,
-    touch = false,
+    validate,
+    dirty,
+    touch,
     onTimeout,
     timeout,
   } = config || {};

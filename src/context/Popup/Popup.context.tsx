@@ -1,4 +1,3 @@
-import Popup, { PopupProps } from "./Popup.component";
 import {
   createContext,
   FunctionComponent,
@@ -7,6 +6,8 @@ import {
   useState,
 } from "react";
 import { omit } from "utils";
+
+import Popup, { PopupProps } from "./Popup.component";
 
 type ShowPopup = (content: ReactNode, closable?: boolean) => void;
 type UpdatePopup = (props: PopupProps) => void;
@@ -36,7 +37,7 @@ export const PopupProvider: FunctionComponent<PopupProviderProps> = ({
     content: ReactNode,
     closable: boolean = true
   ) => {
-    setProps({ children: content, ...(closable ? { close: closePopup } : {}) });
+    setProps({ children: content, ...(closable && { close: closePopup }) });
     setIsOpen(true);
   };
 

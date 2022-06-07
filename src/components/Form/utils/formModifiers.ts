@@ -65,7 +65,7 @@ export const smartForm = <TFieldValues>(
     ({
       config,
       children,
-      noErrorMessage = false,
+      noErrorMessage,
       storageKey,
       onSubmit = omit,
       onFail,
@@ -74,9 +74,9 @@ export const smartForm = <TFieldValues>(
     }: SmartFormProps<TFieldValues>) => {
       const { handleSubmit, ...formHook } = useForm<TFieldValues>({
         ...config,
-        // ...(config?.shouldUnregister === undefined
-        //   ? { shouldUnregister: true }
-        //   : {}),
+        // ...(config?.shouldUnregister === undefined && {
+        //   shouldUnregister: true,
+        // }),
       });
 
       useEffect(() => hook(formHook));

@@ -1,3 +1,5 @@
+@use "styles/abstracts/mixins" as *;
+
 .Popup {
   display: flex;
   align-items: center;
@@ -25,9 +27,13 @@
     }
 
     .CloseButton {
-      position: absolute;
-      top: var(--spacing-m);
-      right: var(--spacing-m);
+      @include positioning(
+        $inlineDir: "end",
+        $inline: var(--spacing-m),
+        $block: var(--spacing-m),
+        $x: 0,
+        $y: 0
+      );
     }
   }
 }

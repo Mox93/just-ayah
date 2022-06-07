@@ -19,6 +19,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   children?: PositionalElement<Location>;
   labelRef?: Ref<HTMLLabelElement>;
   errorMessage?: ReactNode;
+  visibleBorder?: boolean;
 }
 
 const Input = (
@@ -33,6 +34,7 @@ const Input = (
     children,
     labelRef,
     errorMessage,
+    visibleBorder,
     ...props
   }: InputProps,
   ref: Ref<HTMLInputElement>
@@ -46,13 +48,13 @@ const Input = (
       </FieldHeader>
 
       {before("field", children)}
-      <FieldWrapper isInvalid={isInvalid}>
+      <FieldWrapper isInvalid={isInvalid} alwaysVisible={visibleBorder}>
         {before("input", children)}
         <input
           {...props}
           {...{ required, ref }}
           dir="auto"
-          placeholder={placeholder || label}
+          placeholder={placeholder || label || " "}
           className="field"
         />
         {after("input", children)}

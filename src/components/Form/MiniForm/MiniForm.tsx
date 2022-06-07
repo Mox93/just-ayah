@@ -18,7 +18,7 @@ const MiniForm: FC<MiniFormProps> = ({
   children,
   className,
   dir,
-  isInvalid = false,
+  isInvalid,
   submitProps,
   resetProps,
   ...props

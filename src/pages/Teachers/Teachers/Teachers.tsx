@@ -1,36 +1,13 @@
-import { FunctionComponent, useState } from "react";
-import { Link } from "react-router-dom";
+import { FunctionComponent } from "react";
+
 import Table from "components/Table";
-import Tabs from "components/Tabs";
 import { omit } from "utils";
-import { usePageT } from "utils/translation";
 
 interface TeachersProps {}
 
 const Teachers: FunctionComponent<TeachersProps> = () => {
-  const tch = usePageT("teachers");
-
-  const tabs = ["active", "archived"].map((name, index) => ({
-    id: `te_${index}`,
-    name,
-    value: tch(name),
-  }));
-
-  const [selected, setSelected] = useState(tabs[0].id);
-
   return (
     <div>
-      <Tabs
-        elements={tabs}
-        selected={selected}
-        onChange={(selection: string) => setSelected(selection)}
-        actions={
-          <Link className="addResource" to="/teachers/new">
-            +
-          </Link>
-        }
-      />
-
       <main className="mainSection">
         <Table
           fields={[

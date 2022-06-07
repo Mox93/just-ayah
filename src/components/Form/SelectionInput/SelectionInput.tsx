@@ -6,6 +6,7 @@ import { applyInOrder, capitalize, cn, FunctionOrChain, identity } from "utils";
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 import { InputProps } from "../Input";
+import { Converter, GetKey } from "models";
 
 export interface SelectionInputProps<TOption>
   extends Omit<InputProps, "value" | "id"> {
@@ -13,8 +14,8 @@ export interface SelectionInputProps<TOption>
   type: "radio" | "checkbox";
   renderElement?: FunctionOrChain<TOption, ReactNode>;
   keepFormat?: boolean;
-  getKey?: (option: TOption) => string | number;
-  getValue?: (option: TOption) => string;
+  getKey?: GetKey<TOption>;
+  getValue?: Converter<TOption, string>;
 }
 
 const SelectionInput = <TOption,>(
@@ -29,7 +30,7 @@ const SelectionInput = <TOption,>(
     type,
     dir,
     errorMessage,
-    keepFormat = false,
+    keepFormat,
     renderElement = identity,
     getKey = identity,
     getValue = identity,

@@ -55,20 +55,17 @@ export const phoneNumberMapper = <TFieldValues>() =>
               message: "wrongPhoneNumber",
             },
           }),
-          tags: register(
-            tagName,
-            rules?.required
-              ? {
-                  validate: {
-                    ...(typeof rules?.validate === "function"
-                      ? { main: rules?.validate }
-                      : rules?.validate),
-                    contactMethod: (v?: any) =>
-                      (!!v && (v.length || 0) > 0) || "noContactMethod",
-                  },
-                }
-              : {}
-          ),
+          tags: register(tagName, {
+            ...(rules?.required && {
+              validate: {
+                ...(typeof rules?.validate === "function"
+                  ? { main: rules?.validate }
+                  : rules?.validate),
+                contactMethod: (v?: any) =>
+                  (!!v && (v.length || 0) > 0) || "noContactMethod",
+              },
+            }),
+          }),
         };
       }, [name, rules, isSubmitted, register, setValue, watch]);
 

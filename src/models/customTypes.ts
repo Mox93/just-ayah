@@ -47,6 +47,13 @@ export type UpdateData<TData> = (
   callback?: RequestCallback
 ) => void;
 
+/*********************************\
+|****** FUNCTION DEFINITION ******|
+\*********************************/
+
+export type Converter<TInput, TOutput> = (obj: TInput) => TOutput;
+export type GetKey<TInput> = Converter<TInput, string | number>;
+
 /***********************************\
 |****** REDECLARE FORWARD-REF ******|
 \***********************************/

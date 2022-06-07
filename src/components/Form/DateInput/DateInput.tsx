@@ -1,14 +1,15 @@
-import { DateInfo, clampDate, toDateInfo } from "models/dateTime";
 import {
   FC,
   HTMLAttributes,
   InputHTMLAttributes,
   ReactNode,
+  useCallback,
   useEffect,
   useReducer,
 } from "react";
 
 import { useDateTimeT } from "hooks";
+import { DateInfo, clampDate, toDateInfo } from "models/dateTime";
 import { cn, omit, range } from "utils";
 import { PositionalElement } from "utils/position";
 
@@ -82,6 +83,11 @@ const DateInput: FC<DateInputProps> = ({
       dispatch({ type: "replace", payload: selected });
   }, [selected]);
 
+  const update = useCallback(
+    (payload: Action["payload"]) => dispatch({ type: "update", payload }),
+    []
+  );
+
   // TODO move these to a reducer init
   const now = new Date();
   const {
@@ -108,21 +114,21 @@ const DateInput: FC<DateInputProps> = ({
           className="day"
           options={range(1, daysRange)}
           selected={date?.day}
-          setValue={(day) => dispatch({ type: "update", payload: { day } })}
+          setValue={(day) => update({ day })}
           placeholder={dts("day")}
         />
         <OldAutoCompleatInput
           className="month"
           options={range(1, 13)}
           selected={date?.month}
-          setValue={(month) => dispatch({ type: "update", payload: { month } })}
+          setValue={(month) => update({ month })}
           placeholder={dts("month")}
         />
         <OldAutoCompleatInput
           className="year"
           options={range(startYear, endYear)}
           selected={date?.year}
-          setValue={(year) => dispatch({ type: "update", payload: { year } })}
+          setValue={(year) => update({ year })}
           placeholder={dts("year")}
         />
       </FieldWrapper>

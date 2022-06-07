@@ -1,4 +1,13 @@
 .Input {
+  .FieldWrapper {
+    &,
+    &:not(.alwaysVisible) {
+      &:hover {
+        background-color: var(--c-shadow-100);
+      }
+    }
+  }
+
   &[dir="ltr"] {
     .field {
       &::placeholder {
@@ -27,6 +36,7 @@
     width: 100%;
     font-size: 1rem;
     border: none;
+    background-color: transparent;
 
     &:focus {
       outline: none;

@@ -1,9 +1,10 @@
 import { FunctionComponent, useState } from "react";
+
+import Table, { FieldProps } from "components/Table";
+import { useTeacherContext } from "context";
+import { useGlobalT, usePageT, usePersonalInfoT } from "hooks";
 import { Teacher } from "models/teacher";
 import { historyRep } from "models/dateTime";
-import Table, { FieldProps } from "../../../components/Table";
-import { useGlobalT, usePageT, usePersonalInfoT } from "utils/translation";
-import { useTeachers } from "context/Teacher";
 
 interface StudentListProps {}
 
@@ -12,7 +13,9 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
   const stu = usePageT("students");
   const pi = usePersonalInfoT();
 
-  const { data } = useTeachers();
+  const {
+    data: { teachers },
+  } = useTeacherContext();
 
   const fields: FieldProps[] = [
     {
@@ -47,7 +50,7 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
   const handleSelect = (id: string) =>
     setSelected((state) => {
       return id === "*"
-        ? new Set([...data.map(({ id }) => id), "*"])
+        ? new Set([...teachers.map(({ id }) => id), "*"])
         : new Set(state.add(id));
     });
 
@@ -69,13 +72,16 @@ const StudentList: FunctionComponent<StudentListProps> = () => {
         </div>
       )}
       <Table
-        {...{ fields, data }}
+        fields={fields}
+        data={teachers}
         selected={selected}
         toggleSelect={(checked, id) =>
           checked ? handleSelect(id) : handleDeselect(id)
         }
         toggleSelectAll={(checked) =>
-          setSelected(checked ? new Set(data.map(({ id }) => id)) : new Set())
+          setSelected(
+            checked ? new Set(teachers.map(({ id }) => id)) : new Set()
+          )
         }
       />
     </>

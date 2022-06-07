@@ -1,10 +1,11 @@
 .DropdownArrow {
   $kf1: 0%;
-  $kf2: 50%;
+  $kf2: 60%;
   $kf3: 100%;
 
   --fill-color: var(--c-gray-400);
-  --duration: 0.5s;
+  --duration: 0.35s;
+  --timing-function: ease;
 
   min-width: 1.5rem;
   display: flex;
@@ -14,18 +15,25 @@
   .icon {
     width: 100%;
     fill: var(--fill-color);
-    transform: rotate(180deg);
-
-    &.isOpen {
-      transform: rotate(0);
-    }
 
     &.opening {
-      animation: openMotion var(--duration);
+      animation: openMotion var(--duration) var(--timing-function);
     }
 
     &.closing {
-      animation: closeMotion var(--duration);
+      animation: closeMotion var(--duration) var(--timing-function);
+    }
+
+    &.isOpen {
+      transition-property: transform;
+      transition-delay: var(--duration);
+      transform: rotate(0);
+    }
+
+    &:not(.isOpen) {
+      transition-property: transform;
+      transition-delay: var(--duration);
+      transform: rotate(180deg);
     }
 
     @keyframes openMotion {

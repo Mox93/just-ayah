@@ -6,6 +6,7 @@
   padding: var(--spacing-m);
   display: flex;
   align-items: center;
+  background-color: var(--c-white);
 
   @include withBorder(
     $states: (
@@ -21,7 +22,11 @@
   .FieldWrapper {
     height: calc(2.5rem - 2px);
 
-    @include withoutBorder();
+    &:not(.alwaysVisible) {
+      background-color: transparent;
+
+      @include withoutBorder();
+    }
   }
 
   .partition {
