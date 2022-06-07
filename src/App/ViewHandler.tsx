@@ -15,12 +15,13 @@ import {
   StudentProfile,
   NewStudent,
 } from "pages/Students";
-import useAuthGuard from "hooks/authGuard";
+import NotFound from "pages/NotFound";
+import SignIn from "pages/SignIn";
 import { TeacherList, TeacherProfile, Teachers } from "pages/Teachers";
 import MainUI from "pages/UI/Main";
 import FormUI from "pages/UI/Form";
-import SignIn from "pages/SignIn";
 
+import AuthGuard from "./AuthGuard";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
@@ -37,55 +38,41 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
   //     return <PublicView />;
   // }
 
-  const fallbackNav = (path = "/reach-out") => <Navigate replace to={path} />;
-
   return (
     <Routes>
       <Route path="/">
         {/* Admin */}
-        <Route
-          {...useAuthGuard({
-            path: "admin",
-            to: "/sign-in",
-            element: <Admin />,
-          })}
-        >
-          {/* Courses */}
-          <Route path="courses" element={<Courses />}>
-            <Route index element={<CourseList />} />
-            <Route path=":id" element={<CourseProfile />} />
-          </Route>
+        <Route element={<AuthGuard redirect="/sign-in" />}>
+          <Route path="admin" element={<Admin />}>
+            {/* Courses */}
+            <Route path="courses" element={<Courses />}>
+              <Route index element={<CourseList />} />
+              <Route path=":id" element={<CourseProfile />} />
+            </Route>
 
-          {/* Leads */}
-          <Route path="leads" element={<Customers />}>
-            <Route index element={<CustomerList />} />
-            <Route path=":id" element={<CustomerProfile />} />
-          </Route>
+            {/* Leads */}
+            <Route path="leads" element={<Customers />}>
+              <Route index element={<CustomerList />} />
+              <Route path=":id" element={<CustomerProfile />} />
+            </Route>
 
-          {/* Students */}
-          <Route path="students" element={<Students />}>
-            <Route index element={<StudentList />} />
-            <Route path=":id" element={<StudentProfile />} />
-          </Route>
+            {/* Students */}
+            <Route path="students" element={<Students />}>
+              <Route index element={<StudentList />} />
+              <Route path=":id" element={<StudentProfile />} />
+            </Route>
 
-          {/* Teachers */}
-          <Route path="teachers" element={<Teachers />}>
-            <Route index element={<TeacherList />} />
-            <Route path=":id" element={<TeacherProfile />} />
+            {/* Teachers */}
+            <Route path="teachers" element={<Teachers />}>
+              <Route index element={<TeacherList />} />
+              <Route path=":id" element={<TeacherProfile />} />
+            </Route>
           </Route>
-
-          {/* Fallback */}
-          <Route path="*" element={fallbackNav("/admin")} />
         </Route>
 
-        <Route
-          {...useAuthGuard({
-            path: "sign-in",
-            to: "/admin",
-            guestOnly: true,
-            element: <SignIn />,
-          })}
-        />
+        <Route element={<AuthGuard redirect="/admin" guestOnly />}>
+          <Route path="sign-in" element={<SignIn />} />
+        </Route>
 
         {/* Public */}
         <Route path="reach-out" element={<NewCustomer />} />
@@ -96,8 +83,11 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
           <Route path="form" element={<FormUI />} />
         </Route>
 
-        <Route index element={fallbackNav()} />
-        <Route path="*" element={fallbackNav()} />
+        <Route element={<AuthGuard redirect="/reach-out" />}>
+          <Route index element={<Navigate replace to={"admin"} />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

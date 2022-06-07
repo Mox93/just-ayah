@@ -1,0 +1,7 @@
+@use "styles/abstracts/mixins" as *;
+
+.NotFound {
+  .title {
+    @include positioning();
+  }
+}
