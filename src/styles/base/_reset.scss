@@ -73,3 +73,22 @@ table {
   /* Microsoft Edge */
   color: var(--placeholder-color);
 }
+
+// SCROLLBAR
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--c-gray-200);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--c-gray-300);
+  border-radius: 3px;
+
+  &:hover {
+    background: var(--c-gray-400);
+  }
+}
