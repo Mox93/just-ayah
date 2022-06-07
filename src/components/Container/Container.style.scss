@@ -6,6 +6,8 @@
   margin-inline: auto;
   background-color: var(--c-white);
   border-radius: var(--border-radius);
+  position: relative;
+  z-index: 1;
 
   @include desktop() {
     --border-radius: 0.75rem;

@@ -145,7 +145,6 @@ $desktopSize: 35.01rem;
     position: fixed;
     top: var(--spacing-l);
     right: var(--spacing-l);
-    z-index: -1;
   }
 }
 
@@ -157,7 +156,6 @@ $desktopSize: 35.01rem;
     object-position: center;
     position: sticky;
     top: 0;
-    z-index: -1;
   }
 }
 
