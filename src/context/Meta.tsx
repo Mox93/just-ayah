@@ -7,7 +7,12 @@ import {
 } from "firebase/firestore";
 import { createContext, FC, useContext, useEffect, useReducer } from "react";
 
-import { MetaData, metaDataDocs } from "models/metaData";
+import {
+  MetaData,
+  metaDataDocs,
+  MetaDataInDB,
+  studentIndexFromDB,
+} from "models/metaData";
 import { db } from "services/firebase";
 
 import { useAuthContext } from ".";
@@ -19,7 +24,10 @@ interface MetaContext {
 }
 
 const initialState: MetaContext = {
-  data: {},
+  data: {
+    shortList: {},
+    studentIndex: [],
+  },
 };
 
 const metaContext = createContext(initialState);
@@ -43,12 +51,10 @@ export const MetaProvider: FC<MetaProviderProps> = ({ children }) => {
       next: (snapshot) => {
         const metaData: any = {};
         snapshot.forEach((doc) => (metaData[doc.id] = doc.data()));
-        dispatch({ type: "update", payload: metaData });
-
-        console.log("metaData", metaData);
+        dispatch({ type: "populate", payload: metaData });
       },
       error: (error) => {
-        console.log("error", error);
+        console.log("ERROR", error);
       },
     });
   }, [isAuthorized]);
@@ -62,12 +68,21 @@ export const useMetaContext = () => useContext(metaContext);
 
 type State = { context: MetaContext };
 
-type Action = { type: "update"; payload: MetaData };
+type Action = { type: "populate"; payload: MetaDataInDB };
 
 const reducer = (state: State, { type, payload }: Action): State => {
   switch (type) {
-    case "update":
-      return { ...state, context: { data: payload } };
+    case "populate":
+      const { shortList = {}, studentIndex = {} } = payload;
+      return {
+        ...state,
+        context: {
+          data: {
+            shortList,
+            studentIndex: studentIndexFromDB(studentIndex),
+          },
+        },
+      };
     default:
       return state;
   }

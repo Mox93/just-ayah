@@ -3,6 +3,7 @@ import {
   collection,
   doc,
   DocumentData,
+  getDoc,
   getDocs,
   limit,
   orderBy,
@@ -29,20 +30,24 @@ import {
   studentFromInfo,
 } from "models/student";
 import { AddData, FetchData, UpdateData } from "models";
-import { omit } from "utils";
+import { StudentIndex } from "models/metaData";
 import { toNoteMap } from "models/note";
+import { omit } from "utils";
+
+import { useMetaContext } from "./Meta";
 
 const collectionRef = collection(db, "students");
 
 interface StudentContext {
-  data: { students: Student[] };
+  data: { students: Student[]; studentIndex: StudentIndex };
   add: AddData<StudentInfo>;
   fetch: FetchData;
   update: UpdateData<Student>;
+  get: (id: string) => void;
 }
 
 const initialState: StudentContext = {
-  data: { students: [] },
+  data: { students: [], studentIndex: [] },
   add: (data, { onFulfilled = omit, onRejected = console.log } = {}) => {
     addDoc(collectionRef, studentFromInfo(data))
       .then(onFulfilled, onRejected)
@@ -50,6 +55,7 @@ const initialState: StudentContext = {
   },
   fetch: omit,
   update: omit,
+  get: omit,
 };
 
 const studentContext = createContext(initialState);
@@ -61,6 +67,15 @@ export const StudentProvider: FunctionComponent<StudentProviderProps> = ({
 }) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
+  const {
+    data: { studentIndex },
+  } = useMetaContext();
+
+  const get = (id: string) => {
+    const docRef = doc(collectionRef, id);
+
+    getDoc(docRef).then((doc) => doc.exists() && console.log(doc.data()));
+  };
 
   const fetch: FetchData = useCallback(
     ({
@@ -106,7 +121,7 @@ export const StudentProvider: FunctionComponent<StudentProviderProps> = ({
       const { notes, ...rest } = updates;
       const updatesDB = {
         ...rest,
-        ...(notes ? { notes: toNoteMap(notes) } : {}),
+        ...(notes && { notes: toNoteMap(notes) }),
       };
 
       updateDoc(doc(collectionRef, id), updatesDB).then(() => {
@@ -122,7 +137,13 @@ export const StudentProvider: FunctionComponent<StudentProviderProps> = ({
 
   return (
     <studentContext.Provider
-      value={{ ...initialState, fetch, update, data: { students } }}
+      value={{
+        ...initialState,
+        fetch,
+        update,
+        get,
+        data: { students, studentIndex },
+      }}
     >
       {children}
     </studentContext.Provider>

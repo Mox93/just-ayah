@@ -1,0 +1,14 @@
+.Highlight {
+  & > .target {
+    text-decoration: underline;
+
+    &:nth-child(odd) {
+      color: var(--c-primary-400);
+      background-color: var(--c-primary-100);
+    }
+    &:nth-child(even) {
+      color: var(--c-secondary-400);
+      background-color: var(--c-secondary-100);
+    }
+  }
+}

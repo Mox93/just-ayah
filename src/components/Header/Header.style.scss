@@ -1,0 +1,40 @@
+@use "styles/abstracts/mixins" as *;
+
+.Header {
+  width: 100%;
+  padding-inline: var(--spacing-l);
+
+  .wrapper {
+    height: var(--header-height);
+    border-block-end: 1px solid var(--c-gray-200);
+    display: flex;
+    gap: var(--spacing-l);
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    .title {
+      &.followSidebar {
+        margin-inline-start: var(--sidebar-offset);
+
+        @include sidebarAnimation(margin-inline-start, 75ms);
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: var(--spacing-l);
+
+      .newButton {
+        width: 2.5rem;
+
+        .icon {
+          width: 1.5rem;
+          fill: var(--c-foreground);
+
+          @include positioning();
+        }
+      }
+    }
+  }
+}
