@@ -1,24 +1,10 @@
 .StudentList {
+  height: var(--body-height);
+  max-height: var(--body-height);
   padding: var(--spacing-l);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-l);
-
-  .loadMore {
-    position: sticky;
-    top: 100%;
-    margin-block: var(--spacing-m);
-
-    &[dir="rtl"] {
-      right: 50%;
-      transform: translateX(50%);
-    }
-
-    &[dir="ltr"] {
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  }
 
   .Table {
     flex-grow: 1;

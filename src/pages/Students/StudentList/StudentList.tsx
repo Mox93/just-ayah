@@ -13,20 +13,14 @@ import {
   useStudentContext,
   useTeacherContext,
 } from "context";
-import {
-  useDirT,
-  useGlobalT,
-  useGovT,
-  usePageT,
-  usePersonalInfoT,
-} from "hooks";
+import { useGlobalT, useGovT, usePageT, usePersonalInfoT } from "hooks";
 import { getCountry } from "models/country";
 import { getAge, historyRep } from "models/dateTime";
 import { handleEgGov } from "models/governorate";
 import { getPhoneNumberByTag } from "models/phoneNumber";
 import { Student } from "models/student";
 import { getOccupation } from "models/work";
-import { cn, pluck } from "utils";
+import { cn } from "utils";
 
 import StudentNotes from "../StudentNotes";
 
@@ -37,7 +31,6 @@ const StudentList: VFC<StudentListProps> = () => {
   const gov = useGovT("egypt");
   const stu = usePageT("students");
   const pi = usePersonalInfoT();
-  const dirT = useDirT();
 
   const {
     data: { students },
@@ -153,7 +146,7 @@ const StudentList: VFC<StudentListProps> = () => {
           options={courses}
           size="small"
           setValue={updateField("course", id)}
-          renderElement={[pluck("element"), ellipsis()]}
+          renderElement={ellipsis()}
         />
       ),
     },
@@ -168,7 +161,7 @@ const StudentList: VFC<StudentListProps> = () => {
           options={teacherList}
           size="small"
           setValue={updateField("teacher", id)}
-          renderElement={[pluck("element"), ellipsis()]}
+          renderElement={ellipsis()}
         />
       ),
     },
@@ -230,16 +223,16 @@ const StudentList: VFC<StudentListProps> = () => {
           )
         }
         extraProps={(data: Student) => ({ gender: data.gender })}
-      >
-        <Button
-          className="loadMore"
-          variant="gray-text"
-          onClick={() => fetch()}
-          dir={dirT}
-        >
-          {glb("loadMore")}
-        </Button>
-      </Table>
+        footer={
+          <Button
+            className="loadMore"
+            variant="gray-text"
+            onClick={() => fetch()}
+          >
+            {glb("loadMore")}
+          </Button>
+        }
+      ></Table>
     </div>
   );
 };
