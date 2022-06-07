@@ -1,27 +1,20 @@
 @use "styles/abstracts/mixins" as *;
 
-.DropdownMenu {
-  .driver {
-    max-width: 100%;
-  }
+.Menu {
+  --icon-space: 2.5em;
 
-  .driver {
-    --icon-space: 2.5em;
-
-    padding-inline-end: var(--icon-space) !important;
-
-    &.empty {
-      justify-content: center;
-      color: var(--c-gray-300);
+  .item {
+    &.withCheckMark {
+      padding-inline-end: var(--icon-space);
     }
 
     &.plain-text {
-      .DropdownArrow {
+      .CheckMark {
         --fill-color: var(--c-gray-300);
       }
     }
 
-    .DropdownArrow {
+    .CheckMark {
       --fill-color: var(--c-foreground);
       --spacing: calc(var(--icon-space) / 2);
 

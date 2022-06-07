@@ -18,12 +18,12 @@
         --fill-color: var(--c-primary-200);
       }
     }
-  }
 
-  .selected {
-    @include menuListItem();
+    .selected {
+      @include menuItem();
 
-    cursor: text;
+      cursor: text;
+    }
   }
 
   .menu {
@@ -35,7 +35,7 @@
         border-radius: 0.25rem;
         cursor: pointer;
 
-        @include menuListItem();
+        @include menuItem();
 
         &:hover {
           background-color: var(--c-shadow-200);

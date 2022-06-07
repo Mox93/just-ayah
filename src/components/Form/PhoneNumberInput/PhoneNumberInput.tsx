@@ -67,6 +67,7 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
             renderSections: ["emoji", "code", "phone"],
             selectedCountry: codeProps?.selected,
           })}
+          searchable
         />
 
         <Input

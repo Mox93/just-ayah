@@ -2,9 +2,10 @@ import { isEqual } from "lodash";
 import { forwardRef, ReactNode, Ref } from "react";
 
 import { Button, ButtonProps } from "components/Buttons";
-import Container from "components/Container";
-import { CheckMark, DropdownArrow } from "components/Icons";
+import { DropdownArrow } from "components/Icons";
+import Menu from "components/Menu";
 import { OverflowDir, useDropdown } from "hooks";
+import { GetKey } from "models";
 import {
   applyInOrder,
   capitalize,
@@ -16,26 +17,19 @@ import {
   omit,
 } from "utils";
 
-interface RenderElementProps<TOption> {
-  element: TOption;
-  isSelected?: boolean;
-}
-
 interface DropdownMenuProps<TOption> extends Omit<ButtonProps, "children"> {
   options: TOption[];
   selected?: TOption;
-  renderElement?: FunctionOrChain<RenderElementProps<TOption>, ReactNode>;
+  renderElement?: FunctionOrChain<TOption, ReactNode>;
   overflowDir?: OverflowDir;
-  compact?: boolean;
   placeholder?: string;
-  getKey?: (option: TOption) => string | number;
+  getKey?: GetKey<TOption>;
   checkIsSelected?: (option: TOption, selected?: TOption) => boolean;
   setValue?: (option?: TOption) => void;
 }
 
 const DropdownMenu = <TOption,>(
   {
-    compact,
     className,
     dir,
     overflowDir,
@@ -48,7 +42,7 @@ const DropdownMenu = <TOption,>(
     setValue = omit,
     getKey = identity,
     checkIsSelected = isEqual,
-    renderElement = ({ element: option }) => option,
+    renderElement = identity,
     ...props
   }: DropdownMenuProps<TOption>,
   ref: Ref<HTMLButtonElement>
@@ -57,14 +51,9 @@ const DropdownMenu = <TOption,>(
     useDropdown({ className: cn("DropdownMenu", className), dir, overflowDir });
 
   const render = applyInOrder(
-    ({ element, ...rest }) => ({
-      element: keepFormat ? element : capitalize(element),
-      ...rest,
-    }),
+    (element) => (keepFormat ? element : capitalize(element)),
     renderElement
   );
-
-  const label = selected ? render({ element: selected }) : placeholder;
 
   return dropdownWrapper(
     <Button
@@ -73,34 +62,22 @@ const DropdownMenu = <TOption,>(
       onClick={mergeCallbacks(onClick, () => dropdownAction("toggle"))}
       ref={mergeRefs(ref, driverRef)}
     >
-      {label}
+      {selected ? render(selected) : placeholder}
       <DropdownArrow isOpen={isOpen} />
     </Button>,
-    <Container
-      variant="menu"
-      className={cn({ compact }, "driven")}
-      ref={drivenRef}
-    >
-      {isOpen &&
-        options.map((option) => {
-          const isSelected = checkIsSelected(option, selected);
-
-          return (
-            <Button
-              {...{ ...props, variant }}
-              key={getKey(option)}
-              className="option"
-              onClick={() => {
-                setValue(option);
-                dropdownAction("close");
-              }}
-            >
-              {render({ element: option, isSelected })}
-              {isSelected && <CheckMark />}
-            </Button>
-          );
-        })}
-    </Container>
+    () => (
+      <Menu
+        ref={drivenRef}
+        items={options}
+        getKey={getKey}
+        checkIsSelected={(item) => checkIsSelected(item, selected)}
+        onSelect={(item) => {
+          setValue(item);
+          dropdownAction("close");
+        }}
+        renderElement={(item) => render(item)}
+      />
+    )
   );
 };
 

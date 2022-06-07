@@ -1,13 +1,15 @@
+import { isEqual } from "lodash";
 import { forwardRef, ReactNode, Ref } from "react";
 
-import Container from "components/Container";
 import { DropdownArrow } from "components/Icons";
+import Menu from "components/Menu";
 import { OverflowDir, useDirT, useDropdown } from "hooks";
-import { Merge } from "models";
+import { GetKey, Merge } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, omit } from "utils";
 import { after, before } from "utils/position";
 
 import Input, { InputProps } from "../Input";
+import SearchBar from "components/SearchBar";
 
 export type MenuInputProps<TOption> = Merge<
   InputProps,
@@ -20,8 +22,9 @@ export type MenuInputProps<TOption> = Merge<
 interface InternalMenuInputProps<TOption> extends MenuInputProps<TOption> {
   options: TOption[];
   selected?: TOption;
+  searchable?: boolean;
   renderElement?: FunctionOrChain<TOption, ReactNode>;
-  getKey?: (option: TOption) => string | number;
+  getKey?: GetKey<TOption>;
 }
 
 /**
@@ -37,6 +40,7 @@ const MenuInput = <TOption,>(
     dir,
     overflowDir,
     selected,
+    searchable,
     getKey = identity,
     setValue = omit,
     renderElement = identity,
@@ -52,9 +56,8 @@ const MenuInput = <TOption,>(
       overflowDir,
     });
 
-  // TODO add a second input field for searching and use autoFocus
-
   return dropdownWrapper(
+    // TODO replace with Button
     <Input
       {...props}
       className={cn({ hidden: selected })} // TODO once filtering is implemented replace condition with `!isOpen && selected`
@@ -72,27 +75,23 @@ const MenuInput = <TOption,>(
             </div>
           )
         : null}
-      {after("input", <DropdownArrow isOpen={isOpen} />)}
+      {after("input", <DropdownArrow {...{ isOpen, dir }} />)}
     </Input>,
-    <Container variant="menu" ref={drivenRef}>
-      {isOpen && ( // TODO generalize this optimization
-        <ul className="list" dir={dir || dirT}>
-          {options.map((option) => (
-            // TODO convert to radio input
-            <li
-              className="element"
-              key={getKey(option)}
-              onClick={() => {
-                setValue(option);
-                dropdownAction("close");
-              }}
-            >
-              {applyInOrder(renderElement)(option)}
-            </li>
-          ))}
-        </ul>
-      )}
-    </Container>
+    () => (
+      <Menu
+        ref={drivenRef}
+        items={options}
+        checkIsSelected={(item) => isEqual(item, selected)}
+        renderElement={renderElement}
+        onSelect={(item) => {
+          setValue(item);
+          dropdownAction("close");
+        }}
+        getKey={getKey}
+        dir={dir}
+        {...(searchable && { header: <SearchBar /> })} // TODO add props
+      />
+    )
   );
 };
 
