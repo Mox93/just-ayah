@@ -104,7 +104,5 @@ export const substringMatch =
       if (!isEmpty(matches)) results.push({ value: obj, matches, bestScore });
     });
 
-    console.log("substringMatch", results);
-
     return results.sort((a, b) => b.bestScore - a.bestScore);
   };

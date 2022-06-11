@@ -51,6 +51,8 @@ export const MetaProvider: FC<MetaProviderProps> = ({ children }) => {
       next: (snapshot) => {
         const metaData: any = {};
         snapshot.forEach((doc) => (metaData[doc.id] = doc.data()));
+        console.log("Got metaData");
+
         dispatch({ type: "populate", payload: metaData });
       },
       error: (error) => {
