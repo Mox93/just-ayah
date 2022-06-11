@@ -14,13 +14,14 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-def push_student_data():
+def push_student_data(limit: int = None):
     col_ref = db.collection("students")
 
     with open("data/student_data.json", "r") as json_file:
         data = load(json_file)
+        pushed_data = data[:limit] if limit is not None else data
 
-        for student in data[:3]:
+        for student in pushed_data:
             student["dateOfBirth"] = datetime.strptime(
                 student["dateOfBirth"], "%d/%m/%Y"
             )
@@ -51,11 +52,11 @@ def push_student_index_data():
     with open("data/student_index_data.json") as json_file:
         data = load(json_file)
 
-        pprint(data)
+        # pprint(data)
         col_ref.document("studentIndex").set(data)
 
 
 if __name__ == "__main__":
-    # push_student_data()
+    # push_student_data(3)
     # push_teachers_data()
     push_student_index_data()

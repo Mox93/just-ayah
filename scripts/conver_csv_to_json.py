@@ -212,7 +212,7 @@ def parse_zoom(data):
     }
 
 
-def parse_meta(date):
+def parse_meta(data):
     ts = data["Timestamp"]
     return {
         "meta": {
@@ -268,6 +268,8 @@ def is_active_student(data):
 
 
 def convert_student_data():
+    global remaining_active_students, remaining_active
+
     students = []
     remaining_students = []
     remaining_active_students = []

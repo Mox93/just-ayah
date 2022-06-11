@@ -24,16 +24,19 @@ def handle_object(obj):
     return obj
 
 
-def pull_student_data():
+def pull_student_data(limit=None):
     col_ref = db.collection("students")
 
-    docs = col_ref.limit(5).stream()
+    if limit is not None:
+        col_ref.limit(limit)
+
+    docs = col_ref.stream()
     data = {}
 
     for doc in docs:
         data[doc.id] = handle_object(doc.to_dict())
 
-    pprint(data)
+    # pprint(data)
 
     with open("data/student_in_db.json", "w") as json_file:
         dump(data, json_file, ensure_ascii=False)
