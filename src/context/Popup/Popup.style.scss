@@ -4,10 +4,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: fixed;
-  top: 0;
-  left: 0;
   z-index: 100;
+
+  @include positioning($position: fixed, $inline: 0, $block: 0, $x: 0, $y: 0);
 
   .background {
     width: 100vw;
@@ -21,19 +20,15 @@
     min-width: 10rem;
     max-height: calc(100vh - var(--spacing-l) * 2);
     margin: var(--spacing-l);
+    overflow: auto;
 
-    &.closable {
-      padding-block-start: 3rem;
-    }
+    & > .header {
+      display: flex;
+      justify-content: flex-end;
 
-    .CloseButton {
-      @include positioning(
-        $inlineDir: "end",
-        $inline: var(--spacing-m),
-        $block: var(--spacing-m),
-        $x: 0,
-        $y: 0
-      );
+      .CloseButton {
+        margin: var(--spacing-m);
+      }
     }
   }
 }

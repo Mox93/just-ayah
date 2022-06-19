@@ -9,7 +9,11 @@ import { omit } from "utils";
 
 import Popup, { PopupProps } from "./Popup.component";
 
-type ShowPopup = (content: ReactNode, closable?: boolean) => void;
+type ShowPopup = (
+  content: ReactNode,
+  closable?: boolean,
+  dismissible?: boolean
+) => void;
 type UpdatePopup = (props: PopupProps) => void;
 type ClosePopup = () => void;
 
@@ -35,9 +39,14 @@ export const PopupProvider: FunctionComponent<PopupProviderProps> = ({
 
   const showPopup: ShowPopup = (
     content: ReactNode,
-    closable: boolean = true
+    closable?: boolean,
+    dismissible?: boolean
   ) => {
-    setProps({ children: content, ...(closable && { close: closePopup }) });
+    setProps({
+      children: content,
+      ...(closable && { close: closePopup }),
+      ...(dismissible && { dismissible }),
+    });
     setIsOpen(true);
   };
 
