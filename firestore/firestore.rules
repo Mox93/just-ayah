@@ -1,8 +1,69 @@
 rules_version = '2';
+
+function isSuperAdmin () {
+	return (
+    	request.auth.token.roles.admin
+      && request.auth.token.roles.super
+  );
+}
+
+function canEnroll() {
+	return (
+  	resource.data.awaitEnroll == true &&
+    resource.data.openedAt is timestamp &&
+    request.time - resource.data.openedAt < duration.value(48, "h")
+    );
+}
+
+function validEnroll() {
+	return (
+    !request.resource.data.keys().hasAny(["awaitEnroll", "openedAt"]) &&
+    request.resource.data.keys().hasOnly([
+      "firstName",
+      "middleName",
+      "lastName",
+      "dateOfBirth",
+      "gender",
+      "nationality",
+      "country",
+      "governorate",
+      "timezone",
+      "phoneNumber",
+      "email",
+      "facebook",
+      "education",
+      "workStatus",
+      "Quran",
+      "Zoom",
+      "meta",
+    ]) &&
+    request.resource.data.keys().hasAll([
+      "firstName",
+      "middleName",
+      "lastName",
+      "dateOfBirth",
+      "gender",
+      "nationality",
+      "country",
+      "governorate",
+      "phoneNumber",
+      "education",
+      "workStatus",
+      "Quran",
+      "Zoom",
+      "meta",
+    ])
+  );
+}
+
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if isSuperAdmin();
+    }
+    match /students/{studentId} {
+    	allow get: if canEnroll();
+      allow update: if canEnroll() && validEnroll();
     }
   }
 }

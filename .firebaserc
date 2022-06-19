@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "just-ayah-prod"
-  }
+    "default": "just-ayah-prod",
+    "dev": "just-ayah-dev"
+  },
+  "targets": {}
 }

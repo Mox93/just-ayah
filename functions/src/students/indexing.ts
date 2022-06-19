@@ -1,8 +1,6 @@
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
 
-const db = admin.firestore();
-const FieldValue = admin.firestore.FieldValue;
+import { db, FieldValue } from "../utils";
 
 interface PhoneNumber {
   number: string;
