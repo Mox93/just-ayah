@@ -1,6 +1,9 @@
 @use "styles/components/button" as *;
 
 .Button {
+  --fill-color: var(--c-gray-300);
+  --text-color: var(--c-foreground);
+
   font-size: 1rem;
   display: flex;
   align-items: center;
@@ -8,6 +11,7 @@
   position: relative;
 
   &:not(.plain-text) {
+    --fill-color: var(--c-foreground);
     justify-content: center;
   }
 

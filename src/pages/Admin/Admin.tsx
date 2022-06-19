@@ -7,10 +7,10 @@ import { useDirT } from "hooks";
 interface AdminProps {}
 
 const Admin: VFC<AdminProps> = () => {
-  const dir = useDirT();
+  const dirT = useDirT();
 
   return (
-    <div className="Admin" dir={dir}>
+    <div className="Admin" dir={dirT}>
       <Sidebar />
       <Outlet />
     </div>

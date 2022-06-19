@@ -11,7 +11,9 @@ const CheckMark: VFC<CheckMarkProps> = ({ className, ...props }) => {
 
   if (!props.dir) props.dir = dirT;
 
-  return <CheckMarkIcon {...props} className={cn("CheckMark", className)} />;
+  return (
+    <CheckMarkIcon {...props} className={cn("CheckMark icon", className)} />
+  );
 };
 
 export default CheckMark;

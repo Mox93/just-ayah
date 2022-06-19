@@ -3,7 +3,7 @@ import { forwardRef, ReactNode, Ref } from "react";
 
 import { DropdownArrow } from "components/Icons";
 import Menu from "components/Menu";
-import { OverflowDir, useDirT, useDropdown } from "hooks";
+import { OverflowDir, useDropdown } from "hooks";
 import { GetKey, Merge } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, omit } from "utils";
 import { after, before } from "utils/position";
@@ -48,24 +48,21 @@ const MenuInput = <TOption,>(
   }: InternalMenuInputProps<TOption>,
   ref: Ref<HTMLInputElement>
 ) => {
-  const dirT = useDirT();
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
     useDropdown({
       className: cn("MenuInput", className),
       dir,
       overflowDir,
+      driverAction: "open",
     });
 
   return dropdownWrapper(
     // TODO replace with Button
     <Input
-      {...props}
+      {...{ ...props, dir, ref }}
       className={cn({ hidden: selected })} // TODO once filtering is implemented replace condition with `!isOpen && selected`
-      dir={dir || dirT}
       readOnly // TODO remove once filtering is implemented
-      ref={ref}
       labelRef={driverRef}
-      onClick={() => dropdownAction("open")}
     >
       {selected // TODO once filtering is implemented replace condition with `!isOpen && selected`
         ? before(
@@ -79,6 +76,7 @@ const MenuInput = <TOption,>(
     </Input>,
     () => (
       <Menu
+        {...{ dir, getKey }}
         ref={drivenRef}
         items={options}
         checkIsSelected={(item) => isEqual(item, selected)}
@@ -87,9 +85,8 @@ const MenuInput = <TOption,>(
           setValue(item);
           dropdownAction("close");
         }}
-        getKey={getKey}
-        dir={dir}
         {...(searchable && { header: <SearchBar /> })} // TODO add props
+        withCheckMark
       />
     )
   );

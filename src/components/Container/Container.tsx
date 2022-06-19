@@ -5,7 +5,7 @@ import { cn } from "utils";
 
 interface ContainerProps {
   className?: string;
-  variant?: "menu" | "card";
+  variant?: "menu" | "card" | "form";
   dir?: string;
   header?: ReactNode;
   footer?: ReactNode;

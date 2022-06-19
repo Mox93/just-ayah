@@ -39,7 +39,7 @@ const Table: VFC<TableProps> = ({
   const dirT = useDirT();
 
   return (
-    <Container className={cn("Table", className)} footer={footer}>
+    <Container className={cn("Table", className)} {...{ footer, dir }}>
       <table className="prefix" dir={dir || dirT}>
         <thead>
           <tr>

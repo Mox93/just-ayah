@@ -4,6 +4,8 @@
   position: relative;
 
   .Input {
+    --fill-color: var(--c-gray-400);
+
     position: unset; // fixes an issue with error messages width.
 
     &.hidden {
@@ -14,9 +16,7 @@
     }
 
     &:focus-within {
-      .DropdownArrow {
-        --fill-color: var(--c-primary-200);
-      }
+      --fill-color: var(--c-primary-200);
     }
 
     .selected {

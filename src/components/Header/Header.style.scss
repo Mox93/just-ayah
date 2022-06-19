@@ -3,6 +3,9 @@
 .Header {
   width: 100%;
   padding-inline: var(--spacing-l);
+  z-index: 80;
+
+  @include positioning($position: sticky, $block: 0, $y: 0, $x: 0);
 
   .wrapper {
     height: var(--header-height);
@@ -24,17 +27,6 @@
     .actions {
       display: flex;
       gap: var(--spacing-l);
-
-      .newButton {
-        width: 2.5rem;
-
-        .icon {
-          width: 1.5rem;
-          fill: var(--c-foreground);
-
-          @include positioning();
-        }
-      }
     }
   }
 }

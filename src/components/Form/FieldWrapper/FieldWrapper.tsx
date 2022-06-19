@@ -1,5 +1,6 @@
 import { Children, FC, ReactNode } from "react";
 
+import { useDirT } from "hooks";
 import { cn } from "utils";
 
 const injectPartitions = (children: ReactNode) => {
@@ -31,6 +32,8 @@ const FieldWrapper: FC<FieldWrapperProps> = ({
   contentFullWidth,
   alwaysVisible,
 }) => {
+  const dirT = useDirT();
+
   return (
     <div
       className={cn(
@@ -38,7 +41,7 @@ const FieldWrapper: FC<FieldWrapperProps> = ({
         { invalid: isInvalid, contentFullWidth, alwaysVisible },
         className
       )}
-      dir={dir}
+      dir={dir || dirT}
     >
       {addPartitions ? injectPartitions(children) : children}
     </div>

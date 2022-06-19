@@ -8,10 +8,8 @@
   align-items: center;
 
   &:hover {
-    background-color: var(--c-danger-300);
+    --fill-color: var(--c-white);
 
-    .icon {
-      fill: var(--c-white);
-    }
+    background-color: var(--c-danger-300);
   }
 }

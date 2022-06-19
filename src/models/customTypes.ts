@@ -49,7 +49,7 @@ export type FetchData = (options?: {
 export type UpdateData<TData> = (
   id: string,
   updates: Partial<TData>,
-  callback?: RequestCallback
+  options?: RequestCallback & { applyLocally?: boolean }
 ) => void;
 
 /*********************************\

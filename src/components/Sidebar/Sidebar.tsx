@@ -14,7 +14,7 @@ import { cn } from "utils";
 interface SidebarProps {}
 
 const Sidebar: FunctionComponent<SidebarProps> = () => {
-  const dir = useDirT();
+  const dirT = useDirT();
   const glb = useGlobalT();
   const nav = useNavT();
 
@@ -24,7 +24,7 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
     cn({ selected: isActive }, "element");
 
   return (
-    <div className="Sidebar" dir={dir}>
+    <div className="Sidebar" dir={dirT}>
       <div className="navSection">
         <NavLink className={classHandler} to="/admin">
           <h4 className="label">{nav("home")}</h4>

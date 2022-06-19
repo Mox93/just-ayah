@@ -46,7 +46,7 @@ const SelectionInput = <TOption,>(
         {children}
       </FieldHeader>
 
-      <FieldWrapper addPartitions isInvalid={isInvalid}>
+      <FieldWrapper addPartitions {...{ isInvalid, dir }}>
         {options.map((option) => {
           const key = getKey(option);
           const id = `${name}_${key}`;

@@ -3,19 +3,14 @@
   $kf2: 60%;
   $kf3: 100%;
 
-  --fill-color: var(--c-gray-400);
   --duration: 0.35s;
   --timing-function: ease;
 
-  min-width: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
 
   .icon {
-    width: 100%;
-    fill: var(--fill-color);
-
     &.opening {
       animation: openMotion var(--duration) var(--timing-function);
     }

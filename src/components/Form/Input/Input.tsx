@@ -48,7 +48,7 @@ const Input = (
       </FieldHeader>
 
       {before("field", children)}
-      <FieldWrapper isInvalid={isInvalid} alwaysVisible={visibleBorder}>
+      <FieldWrapper {...{ isInvalid, dir }} alwaysVisible={visibleBorder}>
         {before("input", children)}
         <input
           {...props}

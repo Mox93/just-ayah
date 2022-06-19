@@ -1,4 +1,6 @@
 import { ButtonHTMLAttributes, forwardRef, Ref, useRef } from "react";
+
+import { useDirT } from "hooks";
 import { cn, mergeCallbacks, mergeRefs, capitalize } from "utils";
 
 type ColorVariant =
@@ -20,6 +22,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize | null;
   keepFocused?: boolean;
   keepFormat?: boolean;
+  iconButton?: boolean;
 }
 
 const Button = (
@@ -31,19 +34,30 @@ const Button = (
     size = "medium",
     keepFocused,
     keepFormat,
+    dir,
+    iconButton,
     onClick,
     ...props
   }: ButtonProps,
   ref: Ref<HTMLButtonElement>
 ) => {
+  const dirT = useDirT();
+
   const buttonRef = useRef<HTMLButtonElement>(null);
   const blur = () => keepFocused || buttonRef.current?.blur();
 
   return (
     <button
       {...props}
+      dir={dir || dirT}
       ref={mergeRefs(buttonRef, ref)}
-      className={cn("Button", variant, size, { loading: isLoading }, className)}
+      className={cn(
+        "Button",
+        variant,
+        size,
+        { loading: isLoading, iconButton },
+        className
+      )}
       onClick={mergeCallbacks(onClick, blur)}
     >
       {typeof children !== "string" || keepFormat

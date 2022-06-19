@@ -7,7 +7,6 @@
   background-color: var(--c-white);
   border-radius: var(--border-radius);
   position: relative;
-  z-index: 1;
 
   @include desktop() {
     --border-radius: 0.75rem;
@@ -27,7 +26,6 @@
     & > .header,
     & > .footer {
       padding: var(--spacing-s);
-      background-color: var(--c-white);
     }
 
     & > .body {
@@ -39,7 +37,8 @@
     }
   }
 
-  &.card {
+  &.card,
+  &.form {
     & > .body {
       padding: var(--spacing-l);
 
@@ -47,6 +46,31 @@
         padding: var(--spacing-xl);
       }
     }
+
+    & > .header {
+      background-color: var(--c-white);
+      z-index: 60;
+
+      @include positioning($position: sticky, $block: 0, $y: 0, $x: 0);
+    }
+
+    & > .footer {
+      background-color: var(--c-white);
+
+      @include positioning(
+        $position: sticky,
+        $blockDir: end,
+        $block: 0,
+        $y: 0,
+        $x: 0
+      );
+    }
+  }
+
+  &.form {
+    max-width: 50rem;
+    min-width: 20rem;
+    margin-block: var(--spacing-xl);
   }
 
   & > .header {

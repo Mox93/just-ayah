@@ -10,7 +10,6 @@ import { FormButton } from "../Form";
 interface MiniFormProps extends FormHTMLAttributes<HTMLFormElement> {
   submitProps?: FormButton;
   resetProps?: FormButton;
-
   isInvalid?: boolean;
 }
 
@@ -26,11 +25,12 @@ const MiniForm: FC<MiniFormProps> = ({
   const dirT = useDirT();
 
   return (
-    <form className={cn("MiniForm", className)} {...props} dir={dir || dirT}>
+    <form {...props} className={cn("MiniForm", className)} dir={dir || dirT}>
       {children}
 
       <Button
         variant="success-solid"
+        dir={dir}
         {...submitProps}
         className={cn("submit", submitProps?.className)}
         type="submit"
@@ -41,6 +41,7 @@ const MiniForm: FC<MiniFormProps> = ({
         // TODO add popup for reset confirmation.
         <Button
           variant="danger-text"
+          dir={dir}
           {...resetProps}
           className={cn("reset", resetProps?.className)}
           type="reset"
