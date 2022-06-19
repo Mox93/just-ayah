@@ -30,7 +30,8 @@
     "whatsapp": "واتسأب",
     "telegram": "تيليجرام",
     "call": "اتصال",
-    "search": "بحث"
+    "search": "بحث",
+    "loading": "تحميل"
   },
   "dateTime": {
     "day": "يوم",
@@ -112,7 +113,9 @@
       "counter_few": "تم تحديد {{count}} طلاب",
       "counter_many": "تم تحديد {{count}} طالب",
       "counter_other": "تم تحديد {{count}} طالب",
-      "formTitle": "بيانات الطالب"
+      "formTitle": "بيانات الطالب",
+      "generateLink": "إنشاء رابط للطالب",
+      "fillForm": "تعبئة بيانات طالب"
     },
     "customers": {
       "formTitle": "تواصل معنا"

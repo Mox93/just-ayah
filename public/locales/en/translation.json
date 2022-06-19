@@ -30,7 +30,8 @@
     "whatsapp": "WhatsApp",
     "telegram": "Telegram",
     "call": "Call",
-    "search": "search"
+    "search": "search",
+    "loading": "loading"
   },
   "dateTime": {
     "day": "day",
@@ -108,7 +109,9 @@
       "title": "students",
       "counter_one": "1 student selected",
       "counter_other": "{{count}} students selected",
-      "formTitle": "student information"
+      "formTitle": "student information",
+      "generateLink": "generate student link",
+      "fillForm": "fill student form"
     },
     "customers": {
       "formTitle": "reach out"
