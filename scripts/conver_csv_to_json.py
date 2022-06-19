@@ -1,11 +1,12 @@
+from cmath import log
 import csv
-from importlib import invalidate_caches
 from itertools import count
 import json
 from datetime import datetime
 from pprint import pprint
+import re
 
-governorate = {
+GOV = {
     "Alexandria": "الاسكندرية",
     "Aswan": "أسوان",
     "Asyut": "أسيوط",
@@ -35,8 +36,24 @@ governorate = {
     "Suez": "السويس"
 }
 
-governorate = {
-    v: k for k, v in governorate.items()
+PROGRESS = {
+    "بدأ": "active",
+    "توقف": "canceled",
+    "انتظار": "pending",
+    "مؤجل": "postponed"
+}
+
+SUB = {
+    "تكلفة كاملة": "fullPay",
+    "اشتراك كامل": "fullPay",
+    "بدون تكلفة": "noPay",
+    "نصف اشتراك": "partialPay",
+    "نصف تكلفة": "partialPay",
+    "عرض بيت الخياطة": "partialPay"
+}
+
+GOV = {
+    v: k for k, v in GOV.items()
 }
 
 
@@ -60,12 +77,25 @@ def parse_name(data):
     }
 
 
+def parse_timestamp(ts):
+    if isinstance(ts, datetime):
+        return ts
+
+    return datetime.strptime(ts, "%m/%d/%Y %H:%M:%S")
+
+
+def stringify_timestamp(ts, format="%m/%d/%Y %H:%M:%S"):
+    if isinstance(ts, str):
+        return ts
+
+    return ts.strftime(format)
+
+
 def parse_date_of_birth(data):
     try:
-        ts = datetime.strptime(
-            data["Timestamp"], "%m/%d/%Y %H:%M:%S"
-        )
-        age = int(data["age"])
+        ts = parse_timestamp(data["timestamp"])
+        age = data["age"]
+        age = int(age if age != "-" else data["age *"])
         return {
             "dateOfBirth": datetime(
                 day=ts.day, month=ts.month, year=ts.year - age
@@ -76,107 +106,132 @@ def parse_date_of_birth(data):
 
 
 def parse_residency(data):
-    gov = governorate.get(data["governorate"])
+    gov = data["governorate"]
+    eg_gov = GOV.get(gov)
 
     return {
         "country": data["country"].strip(),
-        **({"governorate": f"EG.{gov}"} if gov else {})
+        **({"governorate": f"EG.{eg_gov}" if eg_gov else gov})
     }
 
 
 def same_number(pn1, pn2):
-    idx = min(len(pn1), len(pn2))
-
-    return pn1[-idx:] == pn2[-idx:]
+    return (
+        len(pn1) > 0 and len(pn2) > 0
+    ) and (
+        3 / 4 < len(pn1) / len(pn2) < 4 / 3
+    ) and (
+        pn1 in pn2 or pn2 in pn1
+    )
 
 
 def parse_phone_numbers(data):
-    pn = data["phone number"].replace(" ", "")
-    pns = list(filter(bool, data.get("phone_numbers", [])))
+    fields = ["phone number", "phone number *",
+              "phone number **", "whatsapp", "telegram"]
+    result = []
 
-    for pni in pns:
-        if same_number(pn, pni):
-            break
-    else:
-        pns = (*pns, pn)
+    for field in fields:
+        number = re.sub('[^0-9]', '', data[field])
 
-    phone_numbers = []
+        if not number:
+            continue
 
-    for i, pn in enumerate(pns):
+        tags = {field}
+
+        if field in ["phone number", "phone number *"]:
+            tags.remove(field)
+            tags.update({"call", "whatsapp"})
+        elif field == "phone number **":
+            tags.remove(field)
+            tags.add("call")
+
+        pnx = {"number": number, "tags": tags}
+
+        for pn in result:
+            if same_number(pnx["number"], pn["number"]):
+                pn["number"] = max(
+                    pnx["number"], pn["number"], key=len)
+                pn["tags"].update(pnx["tags"])
+                break
+        else:
+            result.append(pnx)
+
+    for pni in result:
+        number = pni["number"]
         code = ""
 
-        if pn.startswith("+218"):
-            pn, code = pn[4:], "LY"
-        elif pn.startswith("00218"):
-            pn, code = pn[5:], "LY"
-        elif pn.startswith("+966"):
-            pn, code = pn[4:], "SA"
-        elif pn.startswith("00966"):
-            pn, code = pn[5:], "SA"
-        elif pn.startswith("+967"):
-            pn, code = pn[4:], "YE"
-        elif pn.startswith("00967"):
-            pn, code = pn[5:], "YE"
-        elif pn.startswith("971"):
-            pn, code = pn[3:], "AE"
-        elif pn.startswith("+971"):
-            pn, code = pn[4:], "AE"
-        elif pn.startswith("0971"):
-            pn, code = pn[4:], "AE"
-        elif pn.startswith("00971"):
-            pn, code = pn[5:], "AE"
-        elif pn.startswith("965"):
-            pn, code = pn[3:], "KW"
-        elif pn.startswith("00965"):
-            pn, code = pn[5:], "KW"
-        elif pn.startswith("00974"):
-            pn, code = pn[5:], "QA"
-        elif pn.startswith("1"):
+        if number.startswith("+218"):
+            number, code = number[4:], "LY"
+        elif number.startswith("00218"):
+            number, code = number[5:], "LY"
+        elif number.startswith("+966"):
+            number, code = number[4:], "SA"
+        elif number.startswith("00966"):
+            number, code = number[5:], "SA"
+        elif number.startswith("+967"):
+            number, code = number[4:], "YE"
+        elif number.startswith("00967"):
+            number, code = number[5:], "YE"
+        elif number.startswith("971"):
+            number, code = number[3:], "AE"
+        elif number.startswith("+971"):
+            number, code = number[4:], "AE"
+        elif number.startswith("0971"):
+            number, code = number[4:], "AE"
+        elif number.startswith("00971"):
+            number, code = number[5:], "AE"
+        elif number.startswith("965"):
+            number, code = number[3:], "KW"
+        elif number.startswith("00965"):
+            number, code = number[5:], "KW"
+        elif number.startswith("00974"):
+            number, code = number[5:], "QA"
+        elif number.startswith("1"):
             code = "EG"
-        elif pn.startswith("01"):
-            pn, code = pn[1:], "EG"
-        elif pn.startswith("+20"):
-            pn, code = pn[3:], "EG"
-        elif pn.startswith("20"):
-            pn, code = pn[2:], "EG"
-        elif pn.startswith("02"):
-            pn, code = pn[2:], "EG"
-        elif pn.startswith("0020"):
-            pn, code = pn[4:], "EG"
-        elif pn.startswith("+020"):
-            pn, code = pn[4:], "EG"
+        elif number.startswith("01"):
+            number, code = number[1:], "EG"
+        elif number.startswith("+20"):
+            number, code = number[3:], "EG"
+        elif number.startswith("20"):
+            number, code = number[2:], "EG"
+        elif number.startswith("02"):
+            number, code = number[2:], "EG"
+        elif number.startswith("0020"):
+            number, code = number[4:], "EG"
+        elif number.startswith("+020"):
+            number, code = number[4:], "EG"
         else:
-            print(f"{pn = } [code]")
+            print(f"{data['name']}: {number = } [code]")
 
-        if code == "EG" and len(pn) != 10:
-            print(f"{pn = } [len]")
+        if code == "EG" and len(number) != 10:
+            print(f"{data['name']}: {number = } [len]")
 
-        phone_numbers.append({
-            "code": code,
-            "number": pn,
-            **({"tags": ["whatsapp"]} if i == 0 else {})
-        })
+        pni["code"] = code
+        pni["number"] = number
+        pni["tags"] = list(pni["tags"])
 
-    return {"phoneNumber": phone_numbers}
+    return {"phoneNumber": result}
 
 
 def parse_email(data):
-    email = data.get("email")
+    email = data.get("email").replace(" ", "")
+    email = email if email != "-" else ""
 
-    if email and "@" not in email:
-        print(f"{email = }")
-        email = ""
+    # if email and "@" not in email and "www.facebook.com" not in email:
+    #     print(f"email = {data.get('email')}")
+    valid_email = email and "@" in email
+    valid_facebook = "www.facebook.com" in email
 
     return {
         "facebook": email
-    } if "www.facebook.com" in email else {
-        "email": email.replace(" ", "")
-    } if email else {}
+    } if valid_facebook else {
+        "email": email
+    } if valid_email else {}
 
 
 def parse_work_status(data):
     occupation = data["occupation"].strip()
-    reason = data["work status"]
+    reason = data["no work label"]
     does_work = not reason
 
     return {
@@ -193,7 +248,7 @@ def parse_work_status(data):
                 }
             )
         }
-    }
+    } if reason != "unknown" else {}
 
 
 def parse_quran(data):
@@ -213,21 +268,71 @@ def parse_zoom(data):
 
 
 def parse_meta(data):
-    ts = data["Timestamp"]
-    return {
-        "meta": {
-            "dateCreated": ts,
-            "dateUpdated": ts
-        }
-    }
+    meta = {}
+    ts = data["timestamp"]
+
+    if ts and ts != "-":
+        meta["dateCreated"] = stringify_timestamp(ts)
+        meta["dateUpdated"] = stringify_timestamp(ts)
+
+    prog = data["progress"].strip()
+
+    if prog:
+        progress = PROGRESS.get(prog)
+
+        if progress:
+            meta["progress"] = {"type": progress}
+        else:
+            print(f"{prog = }")
+
+    sub = data["subscription"]
+
+    if sub:
+        subscription = SUB.get(sub)
+
+        if subscription:
+            meta["subscription"] = {
+                "type": subscription, **({"value": 150} if sub == "عرض بيت الخياطة" else {"value": 90} if subscription == "partialPay" else {})}
+        elif sub == "نصف تكلفة / بقيمة 50 جنيه":
+            meta["subscription"] = {"type": "partialPay", "value": 50}
+        elif sub == "بتكلفة 130ج":
+            meta["subscription"] = {"type": "partialPay", "value": 130}
+        else:
+            print(f"{sub = }")
+
+    teacher = data["teacher"]
+
+    if teacher:
+        meta["teacher"] = teacher
+
+    program = data["program"]
+
+    if program:
+        meta["course"] = program
+
+    schedule = data["schedule"]
+
+    if schedule:
+        meta["schedule"] = {"notes": schedule}
+
+    return {"meta": meta}
+
+
+m = 0
+f = 0
 
 
 def parse_gender(data):
+    global m, f
+
     gender = data.get("gender", "").strip()
 
-    return {
-        "gender": "male" if gender == "m" else "female"
-    } if gender else {}
+    if gender == "ذكر":
+        m += 1
+    elif gender == "أنثي":
+        f += 1
+
+    return {"gender": "male"} if gender == "ذكر" else {"gender": "female"} if gender == "أنثي" else {}
 
 
 def is_active_student(data):
@@ -248,7 +353,7 @@ def is_active_student(data):
         pn = data.get("phone number")
 
         for pni in pns:
-            if same_number(pn, pni):
+            if same_number(pn["number"], pni["number"]):
                 found_match = True
                 break
 
@@ -267,7 +372,85 @@ def is_active_student(data):
     return data, found_match
 
 
+def fill_missing_timestamps(table: list[dict]):
+    idx = []
+
+    for i, data in enumerate(table):
+        ts = data["timestamp"]
+
+        if not ts or ts == "-":
+            idx.append(i)
+        elif len(idx):
+            l = len(idx) + 1
+            before = parse_timestamp(table[idx[0] - 1]["timestamp"])
+            after = parse_timestamp(table[idx[-1] + 1]["timestamp"])
+
+            for j, x in enumerate(idx, 1):
+                table[x]["timestamp"] = before + (after - before) * j / l
+
+            idx = []
+
+
 def convert_student_data():
+    students = []
+
+    with open("data/Students Data - Final Data.csv") as csv_file:
+        table = [{k: v for k, v in data.items()}
+                 for data in csv.DictReader(csv_file)]
+
+        fill_missing_timestamps(table)
+
+        for i, data in enumerate(table):
+            student = {}
+
+            # NAME
+            student.update(parse_name(data))
+
+            # DATE OF BIRTH
+            student.update(parse_date_of_birth(data))
+
+            # GENDER
+            student.update(parse_gender(data))
+
+            # NATIONALITY
+            student["nationality"] = data["nationality"].strip()
+
+            # RESIDENCY
+            student.update(parse_residency(data))
+
+            # PHOENE NUMBERS
+            student.update(parse_phone_numbers(data))
+
+            # EMAIL
+            student.update(parse_email(data))
+
+            # EDUCATION
+            education = data["education"].strip()
+            if education and education != "-":
+                student["education"] = education
+
+            # WORK STATUS
+            student.update(parse_work_status(data))
+
+            # QURAN
+            student.update(parse_quran(data))
+
+            # ZOOM
+            student.update(parse_zoom(data))
+
+            # META
+            student.update(parse_meta(data))
+
+            # ADD TO STUDENTS
+            students.append(student)
+
+    print(f"size = {len(students)}, {m = }, {f = }")
+
+    with open("data/student_data.json", "w", encoding="utf8") as json_file:
+        json.dump(students, json_file, ensure_ascii=False)
+
+
+def convert_student_data_old():
     global remaining_active_students, remaining_active
 
     students = []
@@ -331,7 +514,9 @@ def convert_student_data():
             student.update(parse_email(data))
 
             # EDUCATION
-            student["education"] = data["education"].strip()
+            education = data["education"].strip()
+            if education and education != "-":
+                student["education"] = education
 
             # WORK STATUS
             student.update(parse_work_status(data))
@@ -350,7 +535,6 @@ def convert_student_data():
 
     print(f"found {len(students)} out of {len(active)}")
     print(f"remaining {len(remaining_students)} out of {i}")
-
 
     with open("data/student_data.json", "w", encoding="utf8") as json_file:
         json.dump(students, json_file, ensure_ascii=False)
@@ -379,5 +563,5 @@ def convert_teacher_data():
 
 
 if __name__ == "__main__":
-    # convert_student_data()
-    convert_teacher_data()
+    convert_student_data()
+    # convert_teacher_data()

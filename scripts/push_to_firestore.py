@@ -7,11 +7,12 @@ from firebase_admin import credentials, firestore
 
 
 cred = credentials.Certificate(
-    "data/just-ayah-prod-firebase-adminsdk-x3k7g-d36c4a7926.json"
-    # "data/just-ayah-dev-firebase-adminsdk-dx8ut-fa933d1eab.json"
+    # "data/just-ayah-prod-firebase-adminsdk-x3k7g-d36c4a7926.json"
+    "data/just-ayah-dev-firebase-adminsdk-dx8ut-fa933d1eab.json"
 )
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+BATCH_LIMIT = 500
 
 
 def push_student_data(limit: int = None):
@@ -21,19 +22,35 @@ def push_student_data(limit: int = None):
         data = load(json_file)
         pushed_data = data[:limit] if limit is not None else data
 
-        for student in pushed_data:
-            student["dateOfBirth"] = datetime.strptime(
-                student["dateOfBirth"], "%d/%m/%Y"
-            )
-            student["meta"]["dateCreated"] = datetime.strptime(
-                student["meta"]["dateCreated"], "%m/%d/%Y %H:%M:%S"
-            )
-            student["meta"]["dateUpdated"] = datetime.strptime(
-                student["meta"]["dateUpdated"], "%m/%d/%Y %H:%M:%S"
-            )
+    for i in range(len(pushed_data) // BATCH_LIMIT + 1):
+        batch = db.batch()
+        start = i * BATCH_LIMIT
+        end = start + BATCH_LIMIT
+
+        for student in pushed_data[start: end]:
+            dob = student.get("dateOfBirth")
+
+            if dob:
+                student["dateOfBirth"] = datetime.strptime(dob, "%d/%m/%Y")
+
+            dc = student["meta"].get("dateCreated")
+
+            if dc:
+                student["meta"]["dateCreated"] = datetime.strptime(
+                    dc, "%m/%d/%Y %H:%M:%S"
+                )
+
+            du = student["meta"].get("dateUpdated")
+
+            if du:
+                student["meta"]["dateUpdated"] = datetime.strptime(
+                    du, "%m/%d/%Y %H:%M:%S"
+                )
 
             # use update instead of set if data exists
-            col_ref.document().set(student)
+            batch.set(col_ref.document(), student)
+
+        batch.commit()
 
 
 def push_teachers_data():
@@ -57,6 +74,6 @@ def push_student_index_data():
 
 
 if __name__ == "__main__":
-    # push_student_data(3)
+    push_student_data(100)
     # push_teachers_data()
-    push_student_index_data()
+    # push_student_index_data()
