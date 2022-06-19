@@ -3,20 +3,20 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { useAuthContext } from "context";
 
-interface AuthGuardProps {
+interface UserGuardProps {
   redirect: string;
   guestOnly?: boolean;
 }
 
-const AuthGuard: VFC<AuthGuardProps> = ({ redirect, guestOnly }) => {
-  const { authorized } = useAuthContext();
+const UserGuard: VFC<UserGuardProps> = ({ redirect, guestOnly }) => {
+  const { authenticated } = useAuthContext();
   const location = useLocation();
 
   const nav = <Navigate to={redirect} state={{ from: location }} replace />;
   const outlet = <Outlet />;
-  const [authCase, noAuthCase] = guestOnly ? [nav, outlet] : [outlet, nav];
+  const [userCase, noUserCase] = guestOnly ? [nav, outlet] : [outlet, nav];
 
-  return authorized(location.pathname) ? authCase : noAuthCase;
+  return authenticated(location.pathname) ? userCase : noUserCase;
 };
 
-export default AuthGuard;
+export default UserGuard;

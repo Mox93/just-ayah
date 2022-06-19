@@ -1,6 +1,7 @@
 import { StrictMode, Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 
+import LoadingPopup from "components/LoadingPopup";
 import {
   AuthProvider,
   CourseProvider,
@@ -10,7 +11,6 @@ import {
   PopupProvider,
   TeacherProvider,
 } from "context";
-
 import "services/i18n";
 import "styles/index.scss";
 
@@ -23,14 +23,14 @@ function App() {
       components={[
         StrictMode,
         BrowserRouter,
+        [Suspense, { fallback: <LoadingPopup message="loading" /> }],
+        PopupProvider,
         AuthProvider,
         MetaProvider,
         TeacherProvider,
         CourseProvider,
         CustomerProvider,
         StudentProvider,
-        [Suspense, { fallback: "...is loading" }],
-        PopupProvider,
       ]}
     >
       <div className="App">
