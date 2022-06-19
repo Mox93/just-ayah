@@ -1,0 +1,7 @@
+@use "styles/abstracts/mixins" as *;
+
+.Unauthorized {
+  .title {
+    @include positioning();
+  }
+}
