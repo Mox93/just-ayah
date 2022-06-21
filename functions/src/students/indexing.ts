@@ -3,8 +3,11 @@ import * as functions from "firebase-functions";
 import { db, FieldValue } from "../utils";
 
 interface PhoneNumber {
+  code: string;
   number: string;
 }
+
+const parsePhoneNumber = ({ code, number }: PhoneNumber) => `${code}-${number}`;
 
 export const studentIndexing = functions.firestore
   .document("/students/{documentId}")
@@ -20,19 +23,22 @@ export const studentIndexing = functions.firestore
     const newData = change.after.data();
 
     const oldPhoneNumber = new Set<string>(
-      (oldData?.phoneNumber || []).map(({ number }: PhoneNumber) => number)
+      (oldData?.phoneNumber || []).map(parsePhoneNumber)
     );
     const newPhoneNumber = new Set<string>(
-      (newData?.phoneNumber || []).map(({ number }: PhoneNumber) => number)
+      (newData?.phoneNumber || []).map(parsePhoneNumber)
     );
 
     // Checks for an irrelevant update
     if (
-      oldData?.firstName === newData?.firstName &&
-      oldData?.middleName === newData?.middleName &&
-      oldData?.lastName === newData?.lastName &&
-      oldPhoneNumber.size === newPhoneNumber.size &&
-      Array.from(oldPhoneNumber)?.every((number) => newPhoneNumber.has(number))
+      newData?.awaitEnroll ||
+      (oldData?.firstName === newData?.firstName &&
+        oldData?.middleName === newData?.middleName &&
+        oldData?.lastName === newData?.lastName &&
+        oldPhoneNumber.size === newPhoneNumber.size &&
+        Array.from(oldPhoneNumber)?.every((number) =>
+          newPhoneNumber.has(number)
+        ))
     ) {
       return null;
     }
