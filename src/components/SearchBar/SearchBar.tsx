@@ -3,14 +3,14 @@ import { ChangeEventHandler, useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.svg";
-import { Input, MiniForm } from "components/Form";
+import { Input, MiniForm } from "components/Form"; // can't use formAtoms because of circular input
+import Highlight from "components/Highlight";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown, useGlobalT } from "hooks";
 import { Converter, GetKey } from "models";
 import { omit, pass } from "utils";
 import { before } from "utils/position";
 import { renderAttributes } from "utils/render";
-import Highlight from "components/Highlight";
 
 type SearchRenderMap = {
   value: string;
@@ -71,7 +71,7 @@ const SearchBar = <TIndex,>({
             />
           )
         : null,
-    [showResults, renderSections, drivenRef, results, getKey]
+    [showResults, renderSections, drivenRef, results, getKey, onSelect]
   );
 
   const onChange: ChangeEventHandler<HTMLInputElement> = useCallback(

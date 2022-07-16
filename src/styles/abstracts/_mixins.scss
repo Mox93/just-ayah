@@ -165,3 +165,12 @@ $desktopSize: 35.01rem;
   transition-duration: 100ms;
   transition-timing-function: ease-in-out;
 }
+
+@mixin circle($size, $color) {
+  min-width: $size;
+  min-height: $size;
+  width: $size;
+  height: $size;
+  background-color: $color;
+  border-radius: 50%;
+}

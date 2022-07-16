@@ -25,7 +25,6 @@ const FetchGuard: VFC<FetchGuardProps> = ({
   >("loading");
   const params = useParams();
   const location = useLocation();
-  const _loading = loading ?? <LoadingPopup message={glb("loading")} />;
 
   useEffect(() => {
     Promise.resolve(fetcher(params))
@@ -42,7 +41,7 @@ const FetchGuard: VFC<FetchGuardProps> = ({
 
   switch (fetchState) {
     case "loading":
-      return _loading;
+      return loading ?? <LoadingPopup message={glb("loading")} />;
     case "success":
       return <Outlet />;
     case "notFound":

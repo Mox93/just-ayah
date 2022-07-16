@@ -7,6 +7,13 @@
 
   @include positioning($position: sticky, $block: 0, $y: 0, $x: 0);
 
+  .logo {
+    width: 3rem;
+    height: 3rem;
+
+    @include positioning();
+  }
+
   .wrapper {
     height: var(--header-height);
     border-block-end: 1px solid var(--c-gray-200);

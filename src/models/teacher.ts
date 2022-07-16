@@ -1,4 +1,5 @@
-import { DateInDB } from "models/dateTime";
+import { Timestamp } from "firebase/firestore";
+
 import { Gender } from "./gender";
 import { PhoneNumberInfo } from "./phoneNumber";
 
@@ -11,8 +12,8 @@ interface Meta {
 }
 
 interface MetaInDB extends Omit<Meta, "dateCreated" | "dateUpdated"> {
-  dateCreated: DateInDB;
-  dateUpdated: DateInDB;
+  dateCreated: Timestamp;
+  dateUpdated: Timestamp;
 }
 
 export interface TeacherInfo {
@@ -50,6 +51,6 @@ export interface Teacher extends TeacherInfo {
 
 export interface TeacherInDB
   extends Omit<Teacher, "id" | "dateOfBirth" | "meta"> {
-  dateOfBirth: DateInDB;
+  dateOfBirth: Timestamp;
   meta: MetaInDB;
 }

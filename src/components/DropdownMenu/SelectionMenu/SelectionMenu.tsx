@@ -1,8 +1,7 @@
 import { isEqual } from "lodash";
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { Button, ButtonProps } from "components/Buttons";
-import { DropdownArrow } from "components/Icons";
+import { ButtonProps, DropdownButton } from "components/Buttons";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown } from "hooks";
 import { GetKey } from "models";
@@ -12,23 +11,23 @@ import {
   cn,
   FunctionOrChain,
   identity,
-  mergeCallbacks,
   mergeRefs,
   omit,
 } from "utils";
 
-interface DropdownMenuProps<TOption> extends Omit<ButtonProps, "children"> {
+interface SelectionMenuProps<TOption> extends Omit<ButtonProps, "children"> {
   options: TOption[];
   selected?: TOption;
   renderElement?: FunctionOrChain<TOption, ReactNode>;
   overflowDir?: OverflowDir;
   placeholder?: string;
+  noCheckmark?: boolean;
   getKey?: GetKey<TOption>;
   checkIsSelected?: (option: TOption, selected?: TOption) => boolean;
   setValue?: (option?: TOption) => void;
 }
 
-const DropdownMenu = <TOption,>(
+const SelectionMenu = <TOption,>(
   {
     className,
     dir,
@@ -36,19 +35,26 @@ const DropdownMenu = <TOption,>(
     options,
     selected,
     variant = "plain-text",
-    placeholder = ". . .",
+    size = "medium",
+    placeholder,
     keepFormat,
+    noCheckmark,
     onClick,
     setValue = omit,
     getKey = identity,
     checkIsSelected = isEqual,
     renderElement = identity,
     ...props
-  }: DropdownMenuProps<TOption>,
+  }: SelectionMenuProps<TOption>,
   ref: Ref<HTMLButtonElement>
 ) => {
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
-    useDropdown({ className: cn("DropdownMenu", className), dir, overflowDir });
+    useDropdown({
+      className: cn("SelectionMenu", className),
+      dir,
+      overflowDir,
+      driverAction: "toggle",
+    });
 
   const render = applyInOrder(
     (element) => (keepFormat ? element : capitalize(element)),
@@ -56,29 +62,31 @@ const DropdownMenu = <TOption,>(
   );
 
   return dropdownWrapper(
-    <Button
-      {...{ ...props, variant, keepFormat }}
-      className={cn("driver", { empty: selected === undefined })}
-      onClick={mergeCallbacks(onClick, () => dropdownAction("toggle"))}
+    <DropdownButton
+      {...{ ...props, variant, size, keepFormat, isOpen, dir }}
+      className={cn("driver", {
+        empty: selected === undefined && placeholder === undefined,
+      })}
+      onClick={onClick}
       ref={mergeRefs(ref, driverRef)}
     >
-      {selected ? render(selected) : placeholder}
-      <DropdownArrow isOpen={isOpen} />
-    </Button>,
+      {selected ? render(selected) : placeholder || ". . ."}
+    </DropdownButton>,
     () => (
       <Menu
+        {...{ variant, size, getKey, dir }}
         ref={drivenRef}
         items={options}
-        getKey={getKey}
         checkIsSelected={(item) => checkIsSelected(item, selected)}
         onSelect={(item) => {
           setValue(item);
           dropdownAction("close");
         }}
-        renderElement={(item) => render(item)}
+        renderElement={render}
+        withCheckMark={!noCheckmark}
       />
     )
   );
 };
 
-export default forwardRef(DropdownMenu);
+export default forwardRef(SelectionMenu);

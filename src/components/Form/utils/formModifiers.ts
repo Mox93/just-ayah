@@ -1,4 +1,4 @@
-import { isEmpty, mapValues } from "lodash";
+import { isPlainObject, mapValues } from "lodash";
 import {
   Children,
   createElement,
@@ -51,6 +51,8 @@ type SmartFormProps<TFieldValues> = Merge<
   {
     config?: UseFormProps<TFieldValues>;
     noErrorMessage?: boolean;
+    noResetOnSubmit?: boolean;
+    noDefaultValuesOnReset?: boolean;
     storageKey?: string;
     onSubmit?: SubmitHandler<TFieldValues>;
     onFail?: SubmitErrorHandler<TFieldValues>;
@@ -66,6 +68,8 @@ export const smartForm = <TFieldValues>(
       config,
       children,
       noErrorMessage,
+      noResetOnSubmit,
+      noDefaultValuesOnReset,
       storageKey,
       onSubmit = omit,
       onFail,
@@ -79,10 +83,11 @@ export const smartForm = <TFieldValues>(
         // }),
       });
 
-      useEffect(() => hook(formHook));
+      useEffect(() => hook(formHook), [hook, formHook]);
 
       const { watch, setValue, reset } = formHook;
 
+      // const clear = omit;
       const { clear } = useFormPersist(
         storageKey
           ? {
@@ -95,23 +100,29 @@ export const smartForm = <TFieldValues>(
 
       const { defaultValues } = config || {};
 
-      const handleReset = useCallback(() => {
-        const values = watch();
-        const resetValues = mapValues(values as any, () => null);
+      const handleReset = useCallback(
+        (resetAll?: boolean) => () => {
+          const values = watch();
+          const resetValues = mapValues(values as any, (value) =>
+            isPlainObject(value) ? {} : null
+          );
 
-        reset(
-          !isEmpty(defaultValues) || !isEmpty(resetValues)
-            ? ({ ...resetValues, ...defaultValues } as any)
-            : undefined
-        );
-        clear();
-      }, [defaultValues, reset, clear]);
+          const _defaultValues = resetAll ? {} : defaultValues;
+
+          reset({ ...resetValues, ..._defaultValues } as any);
+          clear();
+        },
+        [defaultValues, reset, clear, watch]
+      );
 
       return {
         ...props,
         children: handleFormChildren(children, { formHook, noErrorMessage }),
-        onSubmit: handleSubmit(mergeCallbacks(onSubmit) as any, onFail),
-        onReset: handleReset,
+        onSubmit: handleSubmit(
+          mergeCallbacks(onSubmit, handleReset(true)) as any,
+          onFail
+        ),
+        onReset: handleReset(noDefaultValuesOnReset),
         ...extraProps({ formHook }),
       };
     }

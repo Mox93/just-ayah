@@ -2,10 +2,11 @@ import { FunctionComponent } from "react";
 
 import { formAtoms } from "components/Form";
 import { useCustomerContext } from "context";
-import { useDirT, usePageT, usePersonalInfoT } from "hooks";
+import { usePersonalInfoT } from "hooks";
 import { CustomerInfo } from "models/customer";
 
-const { Form, Input, InputGroup, PhoneNumberInput } = formAtoms<CustomerInfo>();
+const { Form, Input, Textarea, InputGroup, PhoneNumberInput } =
+  formAtoms<CustomerInfo>();
 
 interface CustomerFormProps {
   onfulfilled?: (response: any) => void;
@@ -16,9 +17,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
   onfulfilled,
   onrejected,
 }) => {
-  const dirT = useDirT();
   const pi = usePersonalInfoT();
-  const cst = usePageT("customers");
 
   const { add } = useCustomerContext();
 
@@ -26,9 +25,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
     add(data, { onFulfilled: onfulfilled, onRejected: onrejected });
 
   return (
-    <Form className="Container" dir={dirT} onSubmit={onSubmit} resetProps={{}}>
-      <h2 className="header">{cst("formTitle")}</h2>
-
+    <Form className="ContainerForm" onSubmit={onSubmit} resetProps={{}}>
       <Input
         name="fullName"
         label={pi("fullName")}
@@ -50,6 +47,7 @@ const CustomerForm: FunctionComponent<CustomerFormProps> = ({
       </InputGroup>
 
       <Input name="facebook" label={pi("facebookLink")} type="url" />
+      <Textarea name="message" label={pi("leaveQuestion")} />
     </Form>
   );
 };

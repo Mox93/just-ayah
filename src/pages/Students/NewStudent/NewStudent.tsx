@@ -1,31 +1,70 @@
-import { FunctionComponent } from "react";
+import { deleteField } from "firebase/firestore";
+import { FunctionComponent, useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
+import Container from "components/Container";
 import LanguageSelector from "components/LanguageSelector";
+import { usePopupContext, useStudentContext } from "context";
+import { usePageT } from "hooks";
+import { defaultMeta, StudentInfo } from "models/student";
+
 import StudentForm from "../StudentForm";
-import { usePopupContext } from "context";
 
 interface NewStudentProps {}
 
 const NewStudent: FunctionComponent<NewStudentProps> = () => {
+  const stu = usePageT("students");
   const { showPopup } = usePopupContext();
+  const { id } = useParams();
+  const { state } = useLocation();
+  const [studentData, setStudentData] = useState<Partial<StudentInfo>>();
 
-  return (
-    <div className="NewStudent">
-      <img className="banner" src={justAyahBG} alt="" />
-      <LanguageSelector />
-      <StudentForm
-        onFulfilled={() =>
+  const { updateStudent } = useStudentContext();
+  const onSubmit = (data: StudentInfo) => {
+    updateStudent(
+      id!,
+      {
+        ...data,
+        ...{
+          openedAt: deleteField(),
+          awaitEnroll: deleteField(),
+          meta: defaultMeta(),
+        },
+      },
+      {
+        onFulfilled: () =>
           showPopup(
             <>
               <h1>Thank you for joining</h1>
               <a href="/">go back to the home page</a>
               <a href="/join">fill in a new form</a>
-            </>,
-            false
-          )
-        }
-      />
+            </>
+          ),
+      }
+    );
+  };
+
+  useEffect(() => {
+    const { data } = state as any;
+    setStudentData(data);
+  }, [id, state]);
+
+  return (
+    <div className="NewStudent">
+      <img className="banner" src={justAyahBG} alt="" />
+      <LanguageSelector />
+
+      <Container
+        variant="form"
+        header={<h2 className="title">{stu("formTitle")}</h2>}
+      >
+        <StudentForm
+          onSubmit={onSubmit}
+          formId={id}
+          defaultValues={studentData}
+        />
+      </Container>
     </div>
   );
 };

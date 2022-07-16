@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { Timestamp } from "firebase/firestore";
 
 import { formAtoms } from "components/Form";
 import { identity } from "utils";
 
-import { dateFromDB, DateInDB, shortDateRep } from "./dateTime";
+import { shortDateRep } from "./dateTime";
 
 const { Input, DateInput } = formAtoms();
 
@@ -25,7 +25,7 @@ const statusMap = {
       name: "postponed",
       type: "date",
       default: () => new Date(),
-      fromDB: dateFromDB,
+      fromDB: (date: Timestamp) => date.toDate(),
       convert: shortDateRep,
       field: (
         <DateInput
@@ -78,7 +78,7 @@ type CustomStatus = {
 };
 
 type CustomValues = {
-  date: { app: Date; db: DateInDB };
+  date: { app: Date; db: Timestamp };
   number: { app: number };
 };
 

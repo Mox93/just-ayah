@@ -38,7 +38,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
   //   default:
   //     return <PublicView />;
   // }
-  const { get } = useStudentContext();
+  const { getStudent } = useStudentContext();
 
   return (
     <Routes>
@@ -85,7 +85,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
         <Route path="reach-out" element={<NewCustomer />} />
         <Route
           path="enroll/:id"
-          element={<FetchGuard fetcher={({ id }: any) => get(id)} />}
+          element={<FetchGuard fetcher={({ id }: any) => getStudent(id)} />}
         >
           <Route index element={<NewStudent />}></Route>
         </Route>

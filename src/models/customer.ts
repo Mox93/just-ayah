@@ -1,7 +1,7 @@
+import { Timestamp } from "firebase/firestore";
 import { get, set } from "react-hook-form";
 
 import { Merge } from "models";
-import { dateFromDB, DateInDB } from "models/dateTime";
 
 import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
 
@@ -23,8 +23,8 @@ interface Meta {
 type MetaInDB = Merge<
   Meta,
   {
-    dateCreated: DateInDB;
-    dateUpdated: DateInDB;
+    dateCreated: Timestamp;
+    dateUpdated: Timestamp;
   }
 >;
 
@@ -32,6 +32,7 @@ export interface CustomerInfo {
   fullName: string;
   phoneNumber: PhoneNumberList;
   facebook?: string;
+  message?: string;
 }
 
 export interface Customer extends CustomerInfo {
@@ -57,8 +58,8 @@ export const customerFromDB = (
   meta: {
     ...defaultMeta(),
     ...meta,
-    ...(dateCreated && { dateCreated: dateFromDB(dateCreated) }),
-    ...(dateUpdated && { dateUpdated: dateFromDB(dateUpdated) }),
+    ...(dateCreated && { dateCreated: dateCreated.toDate() }),
+    ...(dateUpdated && { dateUpdated: dateUpdated.toDate() }),
   },
 });
 

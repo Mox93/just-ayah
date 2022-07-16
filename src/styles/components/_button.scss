@@ -127,16 +127,28 @@ $fillVariants: ("solid", "outline", "ghost", "text");
   padding: 1em 2em;
   font-weight: bold;
   border-radius: 0.375em;
+
+  &.iconButton {
+    padding-inline: 1em;
+  }
 }
 
 @mixin medium {
   padding: 0.5em 1em;
   border-radius: 0.25em;
+
+  &.iconButton {
+    padding-inline: 0.5em;
+  }
 }
 
 @mixin small {
   padding: 0.25em 0.5em;
   border-radius: 0.25em;
+
+  &.iconButton {
+    padding-inline: 0.25em;
+  }
 }
 
 @mixin buttonVariants {
@@ -200,21 +212,19 @@ $fillVariants: ("solid", "outline", "ghost", "text");
   }
 }
 
-@mixin statusButton($types...) {
+@mixin statusButton() {
   @each $type, $colorCodes in $statusColors {
-    @if index($types, $type) {
-      &.#{$type} {
-        @each $code, $color in $colorCodes {
-          &.#{$code} {
-            @include ghost($color);
-            @include small();
-          }
-        }
-
-        &.unknown {
-          @include ghost("gray");
+    &.#{$type} {
+      @each $code, $color in $colorCodes {
+        &.#{$code} {
+          @include ghost($color);
           @include small();
         }
+      }
+
+      &.unknown {
+        @include ghost("gray");
+        @include small();
       }
     }
   }

@@ -1,6 +1,9 @@
 import { FieldPath, OrderByDirection, WhereFilterOp } from "firebase/firestore";
 import { Ref } from "react";
+import { Path, PathValue } from "react-hook-form";
 import { Location } from "react-router-dom";
+
+import { Comment } from "./comment";
 
 export const UNKNOWN = "unknown";
 
@@ -24,6 +27,8 @@ export type UnionToIntersection<U> = (
   ? I
   : never;
 
+export type UpdateObject<Obj> = { [path in Path<Obj>]?: PathValue<Obj, path> };
+
 export type InnerProps<TProps, TElement = any> = Partial<TProps> & {
   ref?: Ref<TElement>;
 };
@@ -37,20 +42,24 @@ type RequestCallback = {
   onRejected?: (reason?: any) => void;
 };
 
-export type AddData<TData> = (data: TData, callback?: RequestCallback) => void;
+export type AddData<TData> = (data: TData, options?: RequestCallback) => void;
 
-export type FetchData = (options?: {
+export type LoadData = (options?: {
   filters?: [string, WhereFilterOp, any][];
   size?: number;
   sort?: { by: string | FieldPath; direction?: OrderByDirection };
-  callback?: RequestCallback;
+  options?: RequestCallback;
 }) => void;
 
 export type UpdateData<TData> = (
   id: string,
-  updates: Partial<TData>,
+  updates: UpdateObject<TData>,
   options?: RequestCallback & { applyLocally?: boolean }
 ) => void;
+
+export type GetData<TData> = (id: string) => Promise<TData | undefined>;
+
+export type AddComment = (id: string, comment: Comment) => void;
 
 /*********************************\
 |****** FUNCTION DEFINITION ******|

@@ -3,9 +3,9 @@ import { useEffect, useState, VFC } from "react";
 import { FieldPath, FieldPathValue } from "react-hook-form";
 
 import { Button } from "components/Buttons";
-import DropdownMenu from "components/DropdownMenu";
+import { SelectionMenu } from "components/DropdownMenu";
 import Ellipsis, { ellipsis } from "components/Ellipsis";
-import StatusSelector from "components/StatusSelector";
+import { StatusMenu } from "components/DropdownMenu";
 import Table, { FieldProps } from "components/Table";
 import {
   useCourseContext,
@@ -20,7 +20,7 @@ import { handleEgGov } from "models/governorate";
 import { getPhoneNumberByTag } from "models/phoneNumber";
 import { Student } from "models/student";
 import { getOccupation } from "models/work";
-import { cn } from "utils";
+import { cn, concat } from "utils";
 
 import StudentNotes from "../StudentNotes";
 
@@ -34,8 +34,8 @@ const StudentList: VFC<StudentListProps> = () => {
 
   const {
     data: { students },
-    fetch,
-    update,
+    loadStudents,
+    updateStudent,
   } = useStudentContext();
 
   const {
@@ -48,16 +48,19 @@ const StudentList: VFC<StudentListProps> = () => {
 
   const { showPopup } = usePopupContext();
 
-  // Notes
   const showNotesPopup = (studentId: string) => () =>
-    showPopup(<StudentNotes studentId={studentId} />);
+    showPopup(<StudentNotes id={studentId} />, true, true);
 
   const updateField =
     <TKey extends FieldPath<Student>>(name: TKey, id: string) =>
     (value?: FieldPathValue<Student, TKey>) =>
-      update(id, {
-        [name]: value || (deleteField() as any),
-      });
+      updateStudent(
+        id,
+        {
+          [name]: value || (deleteField() as any),
+        },
+        { applyLocally: true }
+      );
 
   const fields: FieldProps[] = [
     {
@@ -65,7 +68,7 @@ const StudentList: VFC<StudentListProps> = () => {
       header: pi("fullName"),
       className: "name",
       getValue: ({ firstName, middleName, lastName }: Student) =>
-        `${firstName} ${middleName} ${lastName}`,
+        concat(firstName, middleName, lastName),
     },
     {
       name: "status",
@@ -73,7 +76,7 @@ const StudentList: VFC<StudentListProps> = () => {
       className: "buttonCell",
       getValue: ({ id, meta: { progress } }: Student) => {
         return (
-          <StatusSelector
+          <StatusMenu
             variant="progress"
             status={progress}
             onChange={updateField("meta.progress", id)}
@@ -88,7 +91,7 @@ const StudentList: VFC<StudentListProps> = () => {
       className: "buttonCell",
       getValue: ({ id, meta: { subscription } }: Student) => {
         return (
-          <StatusSelector
+          <StatusMenu
             variant="subscription"
             status={subscription}
             onChange={updateField("meta.subscription", id)}
@@ -139,13 +142,13 @@ const StudentList: VFC<StudentListProps> = () => {
       name: "course",
       header: glb("course"),
       className: "buttonCell",
-      getValue: ({ id, course }: Student) => (
-        <DropdownMenu
+      getValue: ({ id, meta: { course } }: Student) => (
+        <SelectionMenu
           className="mutableValue"
           selected={course}
           options={courses}
           size="small"
-          setValue={updateField("course", id)}
+          setValue={updateField("meta.course", id)}
           renderElement={ellipsis()}
         />
       ),
@@ -154,13 +157,13 @@ const StudentList: VFC<StudentListProps> = () => {
       name: "teacher",
       header: glb("teacher"),
       className: "buttonCell",
-      getValue: ({ id, teacher }: Student) => (
-        <DropdownMenu
+      getValue: ({ id, meta: { teacher } }: Student) => (
+        <SelectionMenu
           className="mutableValue"
           selected={teacher}
           options={teacherList}
           size="small"
-          setValue={updateField("teacher", id)}
+          setValue={updateField("meta.teacher", id)}
           renderElement={ellipsis()}
         />
       ),
@@ -173,7 +176,7 @@ const StudentList: VFC<StudentListProps> = () => {
       name: "notes",
       header: glb("notes"),
       className: "buttonCell",
-      getValue: ({ id, notes: [lastNote, ..._] = [] }: Student) => (
+      getValue: ({ id, meta: { notes: [lastNote, ..._] = [] } }: Student) => (
         <Button
           variant="plain-text"
           size="small"
@@ -205,7 +208,7 @@ const StudentList: VFC<StudentListProps> = () => {
     });
 
   useEffect(() => {
-    if (process.env.REACT_APP_ENV === "production") fetch();
+    if (process.env.REACT_APP_ENV === "production") loadStudents();
   }, []);
 
   return (
@@ -231,7 +234,7 @@ const StudentList: VFC<StudentListProps> = () => {
           <Button
             className="loadMore"
             variant="gray-text"
-            onClick={() => fetch()}
+            onClick={() => loadStudents()}
           >
             {glb("loadMore")}
           </Button>

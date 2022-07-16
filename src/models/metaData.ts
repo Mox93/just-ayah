@@ -1,3 +1,5 @@
+import { getCountry } from "./country";
+
 interface ShortList {
   teachers?: string[];
   courses?: string[];
@@ -31,7 +33,11 @@ export const metaDataDocs: (keyof MetaData)[] = ["shortList", "studentIndex"];
 export const studentIndexFromDB = (
   studentIndex?: StudentIndexInDB
 ): StudentIndex =>
-  Object.entries(studentIndex || {}).map(([id, data]) => ({
+  Object.entries(studentIndex || {}).map(([id, { phoneNumber, ...data }]) => ({
     id,
+    phoneNumber: phoneNumber.map((value) => {
+      const [code, ...number] = value.split("-", 1);
+      return [getCountry(code as any)?.phone ?? code, ...number].join("");
+    }),
     ...data,
   }));

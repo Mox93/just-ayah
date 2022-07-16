@@ -22,40 +22,53 @@ import {
 } from "react";
 
 import { db } from "services/firebase";
-import {
-  Student,
-  StudentInfo,
-  StudentInDB,
-  studentFromDB,
-  studentFromInfo,
-} from "models/student";
-import { AddData, FetchData, UpdateData } from "models";
-import { StudentIndex } from "models/metaData";
-import { toNoteMap } from "models/note";
-import { omit } from "utils";
-
-import { useMetaContext } from "./Meta";
+import { Student, StudentInfo, studentConverter } from "models/student";
+import { AddComment, AddData, GetData, LoadData, UpdateData } from "models";
+import { toCommentMap } from "models/comment";
+import { applyUpdates, debug, omit } from "utils";
 
 const collectionRef = collection(db, "students");
+const studentRef = collectionRef.withConverter(studentConverter);
 
 interface StudentContext {
-  data: { students: Student[]; studentIndex: StudentIndex };
-  add: AddData<StudentInfo>;
-  fetch: FetchData;
-  update: UpdateData<Student>;
-  get: (id: string) => void;
+  data: { students: Student[] };
+  addStudent: AddData<StudentInfo>;
+  loadStudents: LoadData;
+  updateStudent: UpdateData<Student>;
+  getStudent: GetData<Student>;
+  generateLink: () => Promise<string>;
+  addNote: AddComment;
 }
 
 const initialState: StudentContext = {
-  data: { students: [], studentIndex: [] },
-  add: (data, { onFulfilled = omit, onRejected = console.log } = {}) => {
-    addDoc(collectionRef, studentFromInfo(data))
+  data: { students: [] },
+  addStudent: (
+    data,
+    { onFulfilled = debug("FULFILLED"), onRejected = debug("REJECTED") } = {}
+  ) => {
+    addDoc(studentRef, data)
       .then(onFulfilled, onRejected)
-      .catch(console.log);
+      .catch((error) => console.log("ERROR", error));
   },
-  fetch: omit,
-  update: omit,
-  get: omit,
+  loadStudents: omit,
+  updateStudent: omit,
+  getStudent: async (id: string) => {
+    const docRef = doc(studentRef, id);
+    const result = await getDoc(docRef);
+
+    return result.data();
+  },
+  generateLink: async () => {
+    const data = {
+      awaitEnroll: true,
+      openedAt: new Date(),
+    };
+
+    const result = await addDoc(collectionRef, data);
+
+    return `${window.location.protocol}//${window.location.host}/enroll/${result.id}`;
+  },
+  addNote: omit,
 };
 
 const studentContext = createContext(initialState);
@@ -67,67 +80,83 @@ export const StudentProvider: FunctionComponent<StudentProviderProps> = ({
 }) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
-  const {
-    data: { studentIndex },
-  } = useMetaContext();
 
-  const get = (id: string) => {
-    const docRef = doc(collectionRef, id);
-
-    getDoc(docRef).then((doc) => doc.exists() && console.log(doc.data()));
-  };
-
-  const fetch: FetchData = useCallback(
+  const loadStudents: LoadData = useCallback(
     ({
       filters = [],
       size = 20,
       sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
-      callback: {
-        onFulfilled: onfulfilled = omit,
-        onRejected: onrejected = console.log,
+      options: {
+        onFulfilled = debug("FULFILLED"),
+        onRejected = debug("REJECTED"),
       } = {},
     } = {}) => {
       const q = query(
-        collectionRef,
+        studentRef,
         ...filters.map((filter) => where(...filter)),
         limit(size),
         orderBy(sort.by, sort.direction),
         ...(lastDoc ? [startAfter(lastDoc)] : [])
       );
 
-      getDocs(q).then((querySnapshot) => {
-        setStudents((state) => {
-          const newState = [...state];
+      getDocs(q)
+        .then((querySnapshot) => {
+          setStudents((state) => {
+            const newState = [...state];
 
-          querySnapshot.docs.forEach((doc, i) => {
-            newState.push(studentFromDB(doc.id, doc.data() as StudentInDB));
+            querySnapshot.docs.forEach((doc, i) => {
+              newState.push(doc.data());
 
-            if (i === size - 1) {
-              setLastDoc(doc);
-            }
+              if (i + 1 === querySnapshot.size) {
+                setLastDoc(doc);
+              }
+            });
+
+            return newState;
           });
 
-          return newState;
-        });
-
-        onfulfilled(querySnapshot);
-      }, onrejected);
+          onFulfilled(querySnapshot);
+        }, onRejected)
+        .catch(debug("ERROR"));
     },
     [lastDoc]
   );
 
-  const update: UpdateData<Student> = useCallback(
-    (id, updates, { onFulfilled = omit, onRejected = console.log } = {}) => {
-      const { notes, ...rest } = updates;
+  const updateStudent: UpdateData<Student> = useCallback(
+    (
+      id,
+      updates,
+      {
+        onFulfilled = debug("FULFILLED"),
+        onRejected = debug("REJECTED"),
+        applyLocally,
+      } = {}
+    ) => {
+      // TODO we need to handle passing field paths like such "meta.course"
+
+      const { meta, "meta.notes": metaNotes, ...rest } = updates;
+      const { notes } = meta || {};
+
       const updatesDB = {
+        // : UpdateObject<Student> = {
         ...rest,
-        ...(notes && { notes: toNoteMap(notes) }),
+        ...(meta && {
+          meta: {
+            ...meta,
+            ...(notes && { notes: toCommentMap(notes) }),
+          },
+        }),
+        ...(metaNotes && { "meta.notes": toCommentMap(metaNotes) }),
+        "meta.dateUpdated": new Date(),
       };
 
-      updateDoc(doc(collectionRef, id), updatesDB).then(() => {
-        setStudents((state) =>
-          state.map((data) => (data.id === id ? { ...data, ...updates } : data))
-        );
+      updateDoc(doc(studentRef, id), updatesDB as any).then(() => {
+        applyLocally &&
+          setStudents((state) =>
+            state.map((data) =>
+              data.id === id ? applyUpdates(data, updates) : data
+            )
+          );
 
         onFulfilled();
       }, onRejected);
@@ -135,14 +164,34 @@ export const StudentProvider: FunctionComponent<StudentProviderProps> = ({
     []
   );
 
+  const addNote: AddComment = (id, { dateCreated, ...note }) => {
+    const path = `meta.notes.${dateCreated.getTime()}`;
+    updateStudent(id, { [path]: note } as any);
+
+    setStudents((state) =>
+      state.map((data) =>
+        data.id === id
+          ? {
+              ...data,
+              meta: {
+                ...data.meta,
+                notes: [{ ...note, dateCreated }, ...(data.meta.notes || [])],
+              },
+            }
+          : data
+      )
+    );
+    console.log({ [path]: note });
+  };
+
   return (
     <studentContext.Provider
       value={{
         ...initialState,
-        fetch,
-        update,
-        get,
-        data: { students, studentIndex },
+        loadStudents,
+        updateStudent,
+        addNote,
+        data: { students },
       }}
     >
       {children}

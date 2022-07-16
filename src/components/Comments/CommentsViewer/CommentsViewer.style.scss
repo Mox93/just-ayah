@@ -1,0 +1,28 @@
+@use "styles/abstracts/mixins" as *;
+
+.CommentsViewer {
+  max-width: 40rem;
+  min-width: 16rem;
+  width: 75vw;
+
+  .Form {
+    gap: var(--spacing-m);
+
+    .actions {
+      justify-content: start;
+    }
+  }
+
+  .list {
+    margin-block-start: var(--spacing-l);
+    border-block-start: 1px solid var(--c-gray-200);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .noComments {
+    margin-block: var(--spacing-l);
+    text-align: center;
+    color: var(--c-gray-400);
+  }
+}

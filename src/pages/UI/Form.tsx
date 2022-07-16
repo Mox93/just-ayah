@@ -55,85 +55,88 @@ const FormUI: VFC<TestFormProps> = () => {
 
   return (
     <main>
-      <Form
-        onSubmit={handleSubmit(onSubmit)}
-        onReset={() => reset()}
-        resetProps={{}}
-      >
-        <Input {...register("name")} label="name" />
-        <MenuInput
-          {...register("country")}
-          label="country"
-          {...useCountrySelector({
-            renderSections: ["emoji", "native"],
-            selectedCountry: watch("country") as any,
-          })}
-          setValue={(value) => setValue("country", value?.code!)}
-          searchable
-        />
-        <InputGroup>
+      <Container variant="form">
+        <Form
+          onSubmit={handleSubmit(onSubmit)}
+          onReset={() => reset()}
+          resetProps={{}}
+        >
+          <Input {...register("name")} label="name" />
           <MenuInput
-            {...register("phoneNumber.1.code")}
+            {...register("country")}
+            label="country"
             {...useCountrySelector({
-              renderSections: ["emoji", "code", "phone"],
+              renderSections: ["emoji", "native"],
               selectedCountry: watch("country") as any,
             })}
-            setValue={(value) => setValue("phoneNumber.1.code", value?.code!)}
+            setValue={(value) => setValue("country", value?.code!)}
+            searchable
           />
-          <Input {...register("phoneNumber.1.number")} />
-        </InputGroup>
+          <InputGroup>
+            <MenuInput
+              {...register("phoneNumber.1.code")}
+              {...useCountrySelector({
+                renderSections: ["emoji", "code", "phone"],
+                selectedCountry: watch("country") as any,
+              })}
+              setValue={(value) => setValue("phoneNumber.1.code", value?.code!)}
+            />
+            <Input {...register("phoneNumber.1.number")} />
+          </InputGroup>
 
-        <DateInput
-          innerProps={{ ...register("dateOfBirth") }}
-          label="date of birth"
-          yearsRange={{
-            start: now.getFullYear(),
-            end: now.getFullYear() - 150,
-          }}
-          setValue={(date) => setValue("dateOfBirth", fromDateInfo(date))}
-          // selected={toDateInfo(watch("dateOfBirth"))}
-        />
-        <PhoneNumberInput
-          label="phone number"
-          innerProps={{
-            code: {
-              ...register("phoneNumber.0.code"),
-              setValue: (value) => setValue("phoneNumber.0.code", value?.code!),
-            },
-            number: register("phoneNumber.0.number"),
-          }}
-          withTags
-        />
+          <DateInput
+            innerProps={{ ...register("dateOfBirth") }}
+            label="date of birth"
+            yearsRange={{
+              start: now.getFullYear(),
+              end: now.getFullYear() - 150,
+            }}
+            setValue={(date) => setValue("dateOfBirth", fromDateInfo(date))}
+            // selected={toDateInfo(watch("dateOfBirth"))}
+          />
+          <PhoneNumberInput
+            label="phone number"
+            innerProps={{
+              code: {
+                ...register("phoneNumber.0.code"),
+                setValue: (value) =>
+                  setValue("phoneNumber.0.code", value?.code!),
+              },
+              number: register("phoneNumber.0.number"),
+            }}
+            withTags
+          />
 
-        <SelectionInput
-          options={["option 1", "option 2", "option 3", "option 4"]}
-          label="options"
-          type="radio"
-          {...register("oneChoice")}
-        />
+          <SelectionInput
+            options={["option 1", "option 2", "option 3", "option 4"]}
+            label="options"
+            type="radio"
+            {...register("oneChoice")}
+          />
 
-        <SelectionInput
-          options={["a", "b", "c", "d"]}
-          label="letters"
-          type="checkbox"
-          {...register("multipleChoices")}
-        />
+          <SelectionInput
+            options={["a", "b", "c", "d"]}
+            label="letters"
+            type="checkbox"
+            {...register("multipleChoices")}
+          />
 
-        <SelectionInput
-          options={yesNo}
-          type="radio"
-          label="can you do this"
-          {...register("canDoThis")}
-        />
-      </Form>
+          <SelectionInput
+            options={yesNo}
+            type="radio"
+            label="can you do this"
+            {...register("canDoThis")}
+          />
+        </Form>
+      </Container>
 
-      <Container variant="card" className="Form">
+      <Container variant="form" className="Form">
         <MiniForm onSubmit={miniHS(onSubmit)}>
           <Input {...miniR("value", { required: true })} />
         </MiniForm>
       </Container>
 
-      <Container variant="card" className="Form">
+      <Container variant="form" className="Form">
         <form
           className="body"
           onSubmit={rawHS(console.log)}
@@ -175,6 +178,8 @@ const FormUI: VFC<TestFormProps> = () => {
               reset
             </button>
           </div>
+
+          <textarea {...register("country")} />
         </form>
       </Container>
     </main>

@@ -38,15 +38,15 @@ const useFormPersist = <TFieldValues>(
     timeout,
   } = config || {};
 
-  const watchedValues = watch();
-  const getStorage = () => storage || window.localStorage;
-  const clearStorage = () => storageKey && getStorage().removeItem(storageKey);
+  const watchedValues = storageKey && watch();
+  const _storage = storage || window.localStorage;
+  const clearStorage = () => storageKey && _storage.removeItem(storageKey);
 
   // Read from storage
   useEffect(() => {
     if (!storageKey) return;
 
-    const str = getStorage().getItem(storageKey);
+    const str = _storage.getItem(storageKey);
 
     if (str) {
       const { _timestamp = null, ...values } = JSON.parse(str);
@@ -87,7 +87,7 @@ const useFormPersist = <TFieldValues>(
     if (Object.keys(values).length) {
       if (timeout !== undefined) values._timestamp = Date.now();
 
-      getStorage().setItem(storageKey, JSON.stringify(values));
+      _storage.setItem(storageKey, JSON.stringify(values));
     }
   }, [watchedValues, timeout]);
 

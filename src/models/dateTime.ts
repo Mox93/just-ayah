@@ -1,7 +1,6 @@
-export interface DateInDB {
-  nanoseconds: number;
-  seconds: number;
-}
+import { Timestamp } from "firebase/firestore";
+
+export const DateTime = Timestamp;
 
 export interface DateInfo {
   day: number;
@@ -59,10 +58,6 @@ export const clampDate = ({
     ...(month && { month }),
     ...(year && { year }),
   };
-};
-
-export const dateFromDB = (date: DateInDB): Date => {
-  return new Date(date.seconds * 1000);
 };
 
 export const fromDateInfo = ({ day, month, year }: DateInfo) =>

@@ -32,6 +32,7 @@ import {
   phoneNumberMapper,
   timezoneMapper,
 } from "./mappers";
+import Textarea from "../Textarea";
 
 const autoCompleatInputMap = {
   //NOT USED
@@ -90,6 +91,7 @@ const formAtoms = <TFieldValues = any>() => {
 
     // Single Field Components
     Input: transformer(Input, formChild, processPropsMod, singleFieldMod),
+    Textarea: transformer(Textarea, formChild, processPropsMod, singleFieldMod),
     CountrySelectorInput: transformer(
       MenuInput as VFC<MenuInputProps<Country>>,
       formChild,

@@ -1,9 +1,10 @@
 import { VFC } from "react";
 
 import { Button } from "components/Buttons";
-import StatusSelector from "components/StatusSelector";
+import { StatusMenu } from "components/DropdownMenu";
 import { useDirT } from "hooks";
 import { mapStatusType, mapStatusVariant } from "models/status";
+import LoadingSpinner from "components/Icons/LoadingSpinner";
 
 interface MainProps {}
 
@@ -62,16 +63,14 @@ const MainUI: VFC<MainProps> = () => {
           <h3 style={sectionHeaderStyle}>{`${variant} Status Buttons`}</h3>
           <div style={rowStyle}>
             {mapStatusType(variant, (status) => (
-              <StatusSelector
-                key={status.type}
-                variant={variant}
-                status={status}
-              />
+              <StatusMenu key={status.type} variant={variant} status={status} />
             ))}
-            <StatusSelector variant={variant} />
+            <StatusMenu variant={variant} />
           </div>
         </div>
       ))}
+
+      <LoadingSpinner />
     </main>
   );
 };

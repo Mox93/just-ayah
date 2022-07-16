@@ -1,0 +1,43 @@
+@use "styles/abstracts/mixins" as *;
+
+.CommentItem {
+  width: 100%;
+  padding-block: var(--spacing-l);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+
+  & + & {
+    border-block-start: 1px solid var(--c-gray-200);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-m);
+
+    .userInfo {
+      max-width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--spacing-m);
+
+      .username {
+        font-weight: 600;
+      }
+
+      .divider {
+        @include circle(0.25rem, var(--c-secondary-400));
+      }
+
+      .timestamp {
+        color: var(--c-secondary-400);
+      }
+    }
+  }
+
+  .body {
+    color: var(--c-gray-500);
+  }
+}

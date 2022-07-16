@@ -1,7 +1,6 @@
 @use "styles/abstracts/mixins" as *;
 
 .FieldWrapper {
-  height: 2.5rem;
   width: 100%;
   padding: var(--spacing-m);
   display: flex;
@@ -14,6 +13,14 @@
       "invalid",
     )
   );
+
+  &.expandable {
+    min-height: 2.5rem;
+  }
+
+  &:not(.expandable) {
+    height: 2.5rem;
+  }
 
   &.contentFullWidth {
     padding-inline: 0;

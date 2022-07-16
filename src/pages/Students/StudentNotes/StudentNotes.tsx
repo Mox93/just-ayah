@@ -1,25 +1,34 @@
-import NotesViewer from "components/NotesViewer";
-import { useStudents } from "context/Students";
-import { Note } from "models/note";
+import { CommentsViewer } from "components/Comments";
+import { useStudentContext } from "context";
+import { useMessageT } from "hooks";
+import { Comment } from "models/comment";
 import { FunctionComponent, useEffect, useState } from "react";
 
 interface StudentNotesProps {
-  studentId: string;
+  id: string;
 }
 
-const StudentNotes: FunctionComponent<StudentNotesProps> = ({ studentId }) => {
-  const { data, updateStudent } = useStudents();
-  const [notes, setNotes] = useState<Note[]>();
-
-  const addNote = (note: Note) => {
-    updateStudent(studentId, { notes: [note, ...(notes || [])] });
-  };
+const StudentNotes: FunctionComponent<StudentNotesProps> = ({ id }) => {
+  const {
+    data: { students },
+    addNote,
+  } = useStudentContext();
+  const [notes, setNotes] = useState<Comment[]>();
+  const msg = useMessageT();
 
   useEffect(() => {
-    setNotes(data.find(({ id }) => id === studentId)?.notes);
-  }, [data, studentId]);
+    setNotes(
+      students.find(({ id: studentId }) => id === studentId)?.meta.notes
+    );
+  }, [students, id]);
 
-  return <NotesViewer notes={notes} onNoteAdded={(note) => addNote(note)} />;
+  return (
+    <CommentsViewer
+      comments={notes}
+      onCommentAdd={(note: Comment) => addNote(id, note)}
+      messageNoComments={msg("noNotes")}
+    />
+  );
 };
 
 export default StudentNotes;

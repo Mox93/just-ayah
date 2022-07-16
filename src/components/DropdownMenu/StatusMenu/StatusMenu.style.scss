@@ -1,7 +1,11 @@
 @use "styles/components/button" as *;
 @use "styles/abstracts/mixins" as *;
 
-.StatusButton {
+.StatusMenu {
+  & > .menu {
+    overflow: visible;
+  }
+
   .MiniForm {
     gap: var(--spacing-s);
   }
@@ -14,7 +18,9 @@
   }
 
   .statusMenu {
-    overflow: visible;
+    & > .body {
+      overflow: visible;
+    }
   }
 
   .driver,
@@ -23,11 +29,10 @@
 
     padding-inline-end: 2.5em !important;
 
-    @include statusButton("subscription", "progress");
+    @include statusButton();
 
     .DropdownArrow,
     .CheckMark {
-      --fill-color: var(--c-foreground);
       --spacing: calc(var(--icon-space) / 2);
 
       @include positioning($inline: var(--spacing), $inlineDir: "end");

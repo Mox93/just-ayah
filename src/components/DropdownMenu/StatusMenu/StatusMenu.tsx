@@ -8,13 +8,13 @@ import {
   useReducer,
 } from "react";
 
-import { Button } from "components/Buttons";
+import { Button, DropdownButton } from "components/Buttons";
 import Container from "components/Container";
-import { CheckMark, DropdownArrow } from "components/Icons";
+import { CheckMark } from "components/Icons";
 import { formAtoms } from "components/Form";
 import { DropdownAction, useDropdown, useGlobalT } from "hooks";
 import { UNKNOWN } from "models";
-import { cn, mergeCallbacks, mergeRefs, omit, capitalize } from "utils";
+import { cn, mergeRefs, omit, capitalize } from "utils";
 import {
   mapStatusType,
   Status,
@@ -72,7 +72,7 @@ const reduce = (
   }
 };
 
-interface StatusSelectorProps<TVariant extends StatusVariants> {
+interface StatusMenuProps<TVariant extends StatusVariants> {
   className?: string;
   variant: TVariant;
   status?: StatusTypes[TVariant];
@@ -80,7 +80,7 @@ interface StatusSelectorProps<TVariant extends StatusVariants> {
   onClick?: MouseEventHandler;
 }
 
-const StatusSelector = <TVariant extends StatusVariants>(
+const StatusMenu = <TVariant extends StatusVariants>(
   {
     className,
     variant,
@@ -88,13 +88,16 @@ const StatusSelector = <TVariant extends StatusVariants>(
     onClick,
     onChange = omit,
     ...props
-  }: StatusSelectorProps<TVariant>,
+  }: StatusMenuProps<TVariant>,
   ref: Ref<HTMLButtonElement>
 ) => {
   const glb = useGlobalT();
 
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
-    useDropdown({ className: cn("StatusButton", className) });
+    useDropdown({
+      className: cn("StatusMenu", className),
+      driverAction: "toggle",
+    });
 
   const [{ currentStatus, activeStatus }, dispatch] = useReducer(reduce, {
     variant,
@@ -111,17 +114,17 @@ const StatusSelector = <TVariant extends StatusVariants>(
   const commonProps = { ...props, variant: null, size: null };
 
   return dropdownWrapper(
-    <Button
+    <DropdownButton
       {...commonProps}
-      onClick={mergeCallbacks(onClick, () => dropdownAction("toggle"))}
+      onClick={onClick}
+      isOpen={isOpen}
       ref={mergeRefs(ref, driverRef)}
       className={cn("driver", variant, currentStatus.type)}
     >
       {mapStatusString(variant, currentStatus, {
         type: (t: string) => capitalize(glb(t)),
       }).join(" | ")}
-      <DropdownArrow isOpen={isOpen} />
-    </Button>,
+    </DropdownButton>,
     () => (
       <Container variant="menu" ref={drivenRef} className="statusMenu">
         {mapStatusType(variant, (statusOption: Status) => {
@@ -182,4 +185,4 @@ const StatusSelector = <TVariant extends StatusVariants>(
   );
 };
 
-export default forwardRef(StatusSelector);
+export default forwardRef(StatusMenu);

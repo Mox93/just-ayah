@@ -31,7 +31,8 @@
     "telegram": "Telegram",
     "call": "Call",
     "search": "search",
-    "loading": "loading"
+    "loading": "loading",
+    "cancel": "cancel"
   },
   "dateTime": {
     "day": "day",
@@ -102,7 +103,8 @@
     "quran": "have you memorized portions of the quran before?",
     "zoom": "are you able to use the conferencing app \"Zoom\"? as the sessions take place through it.",
     "status": "status",
-    "subscription": "subscription"
+    "subscription": "subscription",
+    "leaveQuestion": "if you have any questions or comments leave them here"
   },
   "pages": {
     "students": {
@@ -168,6 +170,8 @@
     "noWorkStatus": "please enter you work status",
     "onAnswer": "please answer this question",
     "noContactMethod": "please select at least one communication method",
-    "fieldRequired": "this field is required"
+    "fieldRequired": "this field is required",
+    "noComments": "no comments found to display",
+    "noNotes": "no notes found to display"
   }
 }

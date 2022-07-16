@@ -1,5 +1,7 @@
-import { isArray, isPlainObject } from "lodash";
+import { cloneDeep, get, isArray, isPlainObject, set } from "lodash";
 import { FieldPath } from "react-hook-form";
+
+import { UpdateObject } from "models/customTypes";
 
 interface PathsOptions<TFieldName> {
   parentKey?: TFieldName;
@@ -34,4 +36,17 @@ export const paths = <
   }
 
   return leafs;
+};
+
+export const applyUpdates = <T extends Object>(
+  obj: T,
+  updates: UpdateObject<T>
+): T => {
+  const result = cloneDeep(obj);
+
+  Object.keys(updates as any).forEach((path) =>
+    set(result, path, get(updates as any, path))
+  );
+
+  return result;
 };

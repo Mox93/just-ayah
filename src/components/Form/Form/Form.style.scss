@@ -1,39 +1,33 @@
 .Form {
-  max-width: 50rem;
-  min-width: 20rem;
-  margin-block: var(--spacing-xl);
+  display: grid;
+  gap: var(--spacing-xl);
 
-  .body {
-    display: grid;
-    gap: var(--spacing-xl);
+  & > .header {
+    max-width: 90%;
+    min-width: 50%;
+    padding-inline: var(--spacing-xl);
+    padding-block-end: var(--spacing-m);
+    margin-inline: auto;
+    border-block-end: 1px solid var(--c-gray-200);
+    text-align: center;
+    text-transform: capitalize;
+  }
 
-    & > .header {
-      max-width: 90%;
-      min-width: 50%;
-      padding-inline: var(--spacing-xl);
-      padding-block-end: var(--spacing-m);
-      margin-inline: auto;
-      border-block-end: 1px solid var(--c-gray-200);
-      text-align: center;
-      text-transform: capitalize;
+  .withErrors {
+    position: relative;
+
+    .ErrorMessage {
+      position: absolute;
+      width: 100%;
     }
+  }
 
-    .withErrors {
-      position: relative;
+  .actions {
+    justify-content: space-between;
+    gap: var(--spacing-l);
 
-      .ErrorMessage {
-        position: absolute;
-        width: 100%;
-      }
-    }
-
-    .actions {
-      justify-content: space-between;
-      gap: var(--spacing-l);
-
-      & > * {
-        flex: unset;
-      }
+    & > * {
+      flex: unset;
     }
   }
 }

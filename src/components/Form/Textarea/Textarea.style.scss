@@ -1,0 +1,47 @@
+.Textarea {
+  .FieldWrapper {
+    &,
+    &:not(.alwaysVisible) {
+      &:hover {
+        background-color: var(--c-shadow-100);
+      }
+    }
+  }
+
+  &[dir="ltr"] {
+    .field {
+      &::placeholder {
+        text-align: left;
+      }
+
+      &:placeholder-shown {
+        direction: ltr;
+      }
+    }
+  }
+
+  &[dir="rtl"] {
+    .field {
+      &::placeholder {
+        text-align: right;
+      }
+
+      &:placeholder-shown {
+        direction: rtl;
+      }
+    }
+  }
+
+  .field {
+    width: 100%;
+    max-width: 100%;
+    font-size: 1rem;
+    border: none;
+    background-color: transparent;
+    resize: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

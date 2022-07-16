@@ -18,6 +18,9 @@ export const pluck =
   (obj?: TObject) =>
     get(obj, path);
 
+export const debug = (prefix: string) => (output: any) =>
+  console.log(prefix, output);
+
 /****************************\
 |****** Function Chain ******|
 \****************************/

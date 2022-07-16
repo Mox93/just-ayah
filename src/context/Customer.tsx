@@ -26,13 +26,13 @@ import {
   customerFromDB,
   customerFromInfo,
 } from "models/customer";
-import { AddData, FetchData } from "models";
+import { AddData, LoadData } from "models";
 import { omit } from "utils";
 
 interface CustomerContext {
   data: { customers: Customer[] };
   add: AddData<CustomerInfo>;
-  fetch: FetchData;
+  fetch: LoadData;
 }
 
 const initialState: CustomerContext = {
@@ -61,12 +61,12 @@ export const CustomerProvider: FunctionComponent<CustomerProviderProps> = ({
     [collectionRef]
   );
 
-  const fetch: FetchData = useCallback(
+  const fetch: LoadData = useCallback(
     ({
       filters = [],
       size = 20,
       sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
-      callback: {
+      options: {
         onFulfilled: onfulfilled = omit,
         onRejected: onrejected = console.log,
       } = {},

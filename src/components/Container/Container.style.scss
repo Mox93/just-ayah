@@ -71,6 +71,23 @@
     max-width: 50rem;
     min-width: 20rem;
     margin-block: var(--spacing-xl);
+
+    & > .header {
+      display: flex;
+      padding-inline: var(--spacing-xl);
+      padding-block-start: var(--spacing-xl);
+
+      .title {
+        max-width: 90%;
+        min-width: 50%;
+        padding-inline: var(--spacing-xl);
+        padding-block-end: var(--spacing-m);
+        margin-inline: auto;
+        border-block-end: 1px solid var(--c-gray-200);
+        text-align: center;
+        text-transform: capitalize;
+      }
+    }
   }
 
   & > .header {

@@ -49,6 +49,6 @@ export const getOccupation = (
     ? status.doesWork
       ? status.job
       : status.reason !== "other"
-      ? pi(status.reason || UNKNOWN)
+      ? pi(status.reason)
       : status.explanation || pi(status.reason)
-    : pi(UNKNOWN);
+    : "";

@@ -2,16 +2,24 @@ import { FC, HTMLAttributes, ReactNode } from "react";
 
 import { cn } from "utils";
 
-interface EllipsisProps extends HTMLAttributes<HTMLParagraphElement> {}
+interface EllipsisProps extends HTMLAttributes<HTMLParagraphElement> {
+  component?: string | FC<any>;
+}
 
-const Ellipsis: FC<EllipsisProps> = ({ children, className, ...props }) =>
-  typeof children === "string" ? (
-    <p {...props} className={cn("Ellipsis", className)}>
+const Ellipsis: FC<EllipsisProps> = ({
+  children,
+  className,
+  component: Component = "p",
+  ...props
+}) => {
+  return typeof children === "string" ? (
+    <Component {...props} className={cn("Ellipsis", className)}>
       {children}
-    </p>
+    </Component>
   ) : (
     <>{children}</>
   );
+};
 
 export default Ellipsis;
 

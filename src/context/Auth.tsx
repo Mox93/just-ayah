@@ -2,8 +2,9 @@ import {
   getRedirectResult,
   GoogleAuthProvider,
   onAuthStateChanged,
+  ParsedToken,
   signInWithRedirect,
-  signOut as SignOutFB,
+  signOut as _SignOut,
   User,
 } from "firebase/auth";
 import {
@@ -18,8 +19,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { LocationState } from "models";
 import { auth } from "services/firebase";
 import { pass } from "utils";
+import { useGlobalT, useLanguage } from "hooks";
+import LoadingPopup from "components/LoadingPopup";
 
-const AUTH_SIGN_IN = "authSignIn";
+const ADMIN_SIGN_IN = "authSignIn";
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -27,7 +30,12 @@ interface AuthContext {
   user: User | null;
   signIn: () => void;
   signOut: () => void;
+  authenticated: (path?: string) => boolean;
   authorized: (path?: string) => boolean;
+}
+
+interface Claims extends ParsedToken {
+  roles?: Record<string, boolean>;
 }
 
 const initialState: AuthContext = {
@@ -37,9 +45,10 @@ const initialState: AuthContext = {
       .then(() => console.log("Signed in successfully"))
       .catch((error) => console.log("signInWithRedirect.ERROR", error)),
   signOut: () =>
-    SignOutFB(auth)
-      .then(() => console.log("Signed out successfully"))
-      .catch((error) => console.log("SignOutFB.ERROR", error)),
+    _SignOut(auth)
+      .then(() => window.location.reload())
+      .catch((error) => console.log("SignOut.ERROR", error)),
+  authenticated: pass(false),
   authorized: pass(false),
 };
 
@@ -52,31 +61,39 @@ interface AuthProviderProps {}
 export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
   children,
 }) => {
+  const glb = useGlobalT();
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
+  const [claims, setClaims] = useState<Claims>({});
   const { state } = useLocation();
   const navigate = useNavigate();
+  const [language] = useLanguage();
+  auth.languageCode = language;
 
+  useEffect(() => {
+    user?.getIdTokenResult().then((token) => setClaims(token.claims));
+  }, [user]);
+
+  const authenticated = () => !!user;
   const authorized = () => !!user;
+  // claims.roles?.admin;
 
   const signIn = () => {
     if (state) {
-      window.localStorage.setItem(AUTH_SIGN_IN, JSON.stringify(state));
+      window.localStorage.setItem(ADMIN_SIGN_IN, JSON.stringify(state));
     }
 
-    signInWithRedirect(auth, googleAuthProvider)
-      .then(() => {
-        console.log("Signed in successfully");
-      })
-      .catch((error) => console.log("signInWithRedirect.ERROR", error));
+    signInWithRedirect(auth, googleAuthProvider).catch((error) =>
+      console.log("signInWithRedirect.ERROR", error)
+    );
   };
 
   useEffect(() => {
     getRedirectResult(auth).then((result) => {
       if (!result) return;
 
-      const authSignIn = window.localStorage.getItem(AUTH_SIGN_IN);
-      window.localStorage.removeItem(AUTH_SIGN_IN);
+      const authSignIn = window.localStorage.getItem(ADMIN_SIGN_IN);
+      window.localStorage.removeItem(ADMIN_SIGN_IN);
 
       const { from } = (
         authSignIn ? JSON.parse(authSignIn) : {}
@@ -122,8 +139,10 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
   }, []);
 
   return (
-    <authContext.Provider value={{ ...initialState, user, authorized, signIn }}>
-      {ready ? children : "loading..."}
+    <authContext.Provider
+      value={{ ...initialState, user, authenticated, authorized, signIn }}
+    >
+      {ready ? children : <LoadingPopup message={glb("loading")} />}
     </authContext.Provider>
   );
 };

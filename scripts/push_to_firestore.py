@@ -7,8 +7,8 @@ from firebase_admin import credentials, firestore
 
 
 cred = credentials.Certificate(
-    # "data/just-ayah-prod-firebase-adminsdk-x3k7g-d36c4a7926.json"
-    "data/just-ayah-dev-firebase-adminsdk-dx8ut-fa933d1eab.json"
+    "data/just-ayah-prod-firebase-adminsdk-x3k7g-d36c4a7926.json"
+    # "data/just-ayah-dev-firebase-adminsdk-dx8ut-fa933d1eab.json"
 )
 firebase_admin.initialize_app(cred)
 db = firestore.client()
@@ -74,6 +74,6 @@ def push_student_index_data():
 
 
 if __name__ == "__main__":
-    push_student_data(100)
+    push_student_data()
     # push_teachers_data()
     # push_student_index_data()

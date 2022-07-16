@@ -24,13 +24,13 @@ function App() {
         StrictMode,
         BrowserRouter,
         [Suspense, { fallback: <LoadingPopup message="loading" /> }],
-        PopupProvider,
         AuthProvider,
         MetaProvider,
         TeacherProvider,
         CourseProvider,
         CustomerProvider,
         StudentProvider,
+        PopupProvider,
       ]}
     >
       <div className="App">

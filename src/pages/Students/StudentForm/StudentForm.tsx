@@ -2,8 +2,7 @@ import { isEqual } from "lodash";
 import { useState, VFC } from "react";
 
 import { formAtoms } from "components/Form";
-import { useStudentContext } from "context";
-import { useDirT, useGlobalT, usePageT, usePersonalInfoT } from "hooks";
+import { useGlobalT, usePersonalInfoT } from "hooks";
 import { genders } from "models/gender";
 import { StudentInfo } from "models/student";
 import { noWorkReasons, WorkStatusInfo } from "models/work";
@@ -22,33 +21,31 @@ const {
 } = formAtoms<StudentInfo>();
 
 interface StudentFormProps {
-  onFulfilled?: (response: any) => void;
-  onRejected?: (response: any) => void;
+  formId?: string;
+  defaultValues?: Partial<StudentInfo>;
+  onSubmit?: (data: StudentInfo) => void;
 }
 
-const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
-  const dirT = useDirT();
+const StudentForm: VFC<StudentFormProps> = ({
+  formId,
+  defaultValues,
+  onSubmit,
+}) => {
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
-  const stu = usePageT("students");
-
-  const { add } = useStudentContext();
 
   const [workStatus, setWorkStatus] = useState<WorkStatusInfo>({});
-
-  const onSubmit = (data: StudentInfo) => {
-    add(data, { onFulfilled, onRejected });
-  };
 
   const now = new Date();
 
   return (
     <Form
-      dir={dirT}
+      className="StudentForm"
       onSubmit={onSubmit}
       submitProps={{ children: glb("joinInitiative") }}
       resetProps={{}}
-      storageKey="studentForm"
+      storageKey={"studentForm" + (formId ? `/${formId}` : "")}
+      config={{ defaultValues }}
       hook={({ watch }) => {
         const value = watch("workStatus");
         const newValue = value && {
@@ -58,8 +55,6 @@ const StudentForm: VFC<StudentFormProps> = ({ onFulfilled, onRejected }) => {
         !isEqual(newValue, workStatus) && setWorkStatus(newValue);
       }}
     >
-      <h2 className="header">{stu("formTitle")}</h2>
-
       <InputGroup>
         <Input
           name="firstName"

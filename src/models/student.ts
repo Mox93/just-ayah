@@ -1,12 +1,17 @@
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+  Timestamp,
+} from "firebase/firestore";
 import { get, set } from "react-hook-form";
 
-import { Merge } from "models";
-import { dateFromDB, DateInDB } from "models/dateTime";
 import { fromYesNo } from "utils";
 
+import { Merge } from ".";
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
-import { Note, NoteMapInDB, noteListFromDB } from "./note";
+import { Comment, CommentMapInDB, commentListFromDB } from "./comment";
 import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
 import { getStatus, Progress, ProgressInDB, Subscription } from "./status";
 import { parseWorkStatus, WorkStatus } from "./work";
@@ -16,14 +21,18 @@ interface Meta {
   dateUpdated: Date;
   progress?: Progress;
   subscription?: Subscription;
+  notes?: Comment[];
+  course?: string;
+  teacher?: string;
 }
 
 type MetaInDB = Merge<
   Meta,
   {
-    dateCreated: DateInDB;
-    dateUpdated: DateInDB;
+    dateCreated: Timestamp;
+    dateUpdated: Timestamp;
     progress: ProgressInDB;
+    notes?: CommentMapInDB;
   }
 >;
 
@@ -49,54 +58,64 @@ export interface StudentInfo {
 export interface Student extends StudentInfo {
   id: string;
   meta: Meta;
-  notes?: Note[];
-  course?: string;
-  teacher?: string;
 }
 
 export type StudentInDB = Merge<
   StudentInfo,
   {
-    dateOfBirth: DateInDB;
+    dateOfBirth: Timestamp;
     meta: MetaInDB;
-    notes?: NoteMapInDB;
   }
 >;
 
-const defaultMeta = (): Meta => {
+export interface StudentEnroll extends Partial<Student> {
+  awaitEnroll: boolean;
+  openedAt: Date;
+}
+
+export type StudentEnrollInDB = Merge<
+  StudentEnroll,
+  {
+    openedAt: Timestamp;
+  }
+>;
+
+const isEnroll = (obj: any): obj is StudentEnroll => obj.awaitEnroll;
+
+export const defaultMeta = (): Meta => {
   const now = new Date();
   return { dateCreated: now, dateUpdated: now, progress: { type: "pending" } };
 };
 
-export const studentFromDB = (
+const studentFromDB = (
   id: string,
-  {
-    dateOfBirth,
-    notes,
-    meta: { dateCreated, dateUpdated, progress, subscription, ...meta },
-    ...data
-  }: StudentInDB
+  { dateOfBirth, meta, ...data }: StudentInDB
 ): Student => {
   const now = new Date();
+
+  const { dateCreated, dateUpdated, progress, subscription, notes, ..._meta } =
+    meta || {};
 
   return {
     ...data,
     id,
-    dateOfBirth: dateFromDB(dateOfBirth),
-    meta: {
-      ...meta,
-      dateCreated: dateCreated ? dateFromDB(dateCreated) : now,
-      dateUpdated: dateUpdated ? dateFromDB(dateUpdated) : now,
-      ...(progress && { progress: getStatus("progress", progress) }),
-      ...(subscription && {
-        subscription: getStatus("subscription", subscription),
-      }),
-    },
-    notes: notes && noteListFromDB(notes),
+    ...(dateOfBirth && { dateOfBirth: dateOfBirth.toDate() }),
+    meta: meta
+      ? {
+          ..._meta,
+          dateCreated: dateCreated ? dateCreated.toDate() : now,
+          dateUpdated: dateUpdated ? dateUpdated.toDate() : now,
+          ...(progress && { progress: getStatus("progress", progress) }),
+          ...(subscription && {
+            subscription: getStatus("subscription", subscription),
+          }),
+          ...(notes && { notes: commentListFromDB(notes) }),
+        }
+      : defaultMeta(),
   };
 };
 
-export const studentFromInfo = ({
+const studentFromInfo = ({
   phoneNumber,
   dateOfBirth,
   governorate,
@@ -125,4 +144,14 @@ export const studentFromInfo = ({
   }
 
   return processedData;
+};
+
+export const studentConverter = {
+  toFirestore: (data: any) => (isEnroll(data) ? data : studentFromInfo(data)),
+  fromFirestore: (
+    snapshot: QueryDocumentSnapshot<DocumentData>,
+    options: SnapshotOptions
+  ): Student => {
+    return studentFromDB(snapshot.id, snapshot.data(options) as StudentInDB);
+  },
 };
