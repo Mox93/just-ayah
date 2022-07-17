@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { VFC } from "react";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import LanguageSelector from "components/LanguageSelector";
@@ -10,7 +10,7 @@ import { usePageT } from "hooks";
 
 interface NewCustomerProps {}
 
-const NewCustomer: FunctionComponent<NewCustomerProps> = () => {
+const NewCustomer: VFC<NewCustomerProps> = () => {
   const { showPopup } = usePopupContext();
   const cst = usePageT("customers");
 

@@ -7,7 +7,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { createContext, FunctionComponent, useContext, useState } from "react";
+import { createContext, FC, useContext, useState } from "react";
 
 import { TeacherInfo, Teacher } from "models/teacher";
 import { db } from "services/firebase";
@@ -31,9 +31,7 @@ const teacherContext = createContext<TeacherContext>({
 
 interface TeacherProviderProps {}
 
-export const TeacherProvider: FunctionComponent<TeacherProviderProps> = ({
-  children,
-}) => {
+export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
   const {
     data: { shortList: { teachers: teacherList = [] } = {} },
   } = useMetaContext();

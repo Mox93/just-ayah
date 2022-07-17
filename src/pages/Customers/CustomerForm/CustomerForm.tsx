@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { VFC } from "react";
 
 import { formAtoms } from "components/Form";
 import { useCustomerContext } from "context";
@@ -13,10 +13,7 @@ interface CustomerFormProps {
   onrejected?: (response: any) => void;
 }
 
-const CustomerForm: FunctionComponent<CustomerFormProps> = ({
-  onfulfilled,
-  onrejected,
-}) => {
+const CustomerForm: VFC<CustomerFormProps> = ({ onfulfilled, onrejected }) => {
   const pi = usePersonalInfoT();
 
   const { add } = useCustomerContext();

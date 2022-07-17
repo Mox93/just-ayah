@@ -2,13 +2,13 @@ import { CommentsViewer } from "components/Comments";
 import { useStudentContext } from "context";
 import { useMessageT } from "hooks";
 import { Comment } from "models/comment";
-import { FunctionComponent, useEffect, useState } from "react";
+import { VFC, useEffect, useState } from "react";
 
 interface StudentNotesProps {
   id: string;
 }
 
-const StudentNotes: FunctionComponent<StudentNotesProps> = ({ id }) => {
+const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
   const {
     data: { students },
     addNote,

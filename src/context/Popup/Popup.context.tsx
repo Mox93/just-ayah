@@ -1,10 +1,4 @@
-import {
-  createContext,
-  FunctionComponent,
-  ReactNode,
-  useContext,
-  useState,
-} from "react";
+import { createContext, FC, ReactNode, useContext, useState } from "react";
 import { omit } from "utils";
 
 import Popup, { PopupProps } from "./Popup.component";
@@ -31,9 +25,7 @@ const popupContext = createContext<PopupContext>({
 
 interface PopupProviderProps {}
 
-export const PopupProvider: FunctionComponent<PopupProviderProps> = ({
-  children,
-}) => {
+export const PopupProvider: FC<PopupProviderProps> = ({ children }) => {
   const [props, setProps] = useState<PopupProps>({});
   const [isOpen, setIsOpen] = useState(false);
 

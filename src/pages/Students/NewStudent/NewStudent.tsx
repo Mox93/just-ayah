@@ -1,5 +1,5 @@
 import { deleteField } from "firebase/firestore";
-import { FunctionComponent, useEffect, useState } from "react";
+import { VFC, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
@@ -13,7 +13,7 @@ import StudentForm from "../StudentForm";
 
 interface NewStudentProps {}
 
-const NewStudent: FunctionComponent<NewStudentProps> = () => {
+const NewStudent: VFC<NewStudentProps> = () => {
   const stu = usePageT("students");
   const { showPopup } = usePopupContext();
   const { id } = useParams();

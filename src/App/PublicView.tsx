@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { VFC } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import NewCustomer from "pages/Customers/NewCustomer";
 import NewStudent from "pages/Students/NewStudent";
@@ -7,7 +7,7 @@ import MainUI from "pages/UI/Main";
 
 interface PublicViewProps {}
 
-const PublicView: FunctionComponent<PublicViewProps> = () => {
+const PublicView: VFC<PublicViewProps> = () => {
   return (
     <Routes>
       <Route path="/sign-up" element={<NewCustomer />} />

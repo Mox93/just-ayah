@@ -1,11 +1,11 @@
-import { FunctionComponent } from "react";
+import { VFC } from "react";
 
 import Table from "components/Table";
 import { omit } from "utils";
 
 interface TeachersProps {}
 
-const Teachers: FunctionComponent<TeachersProps> = () => {
+const Teachers: VFC<TeachersProps> = () => {
   return (
     <div>
       <main className="mainSection">

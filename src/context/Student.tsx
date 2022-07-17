@@ -13,13 +13,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import {
-  createContext,
-  FunctionComponent,
-  useCallback,
-  useContext,
-  useState,
-} from "react";
+import { createContext, FC, useCallback, useContext, useState } from "react";
 
 import { db } from "services/firebase";
 import { Student, StudentInfo, studentConverter } from "models/student";
@@ -75,9 +69,7 @@ const studentContext = createContext(initialState);
 
 interface StudentProviderProps {}
 
-export const StudentProvider: FunctionComponent<StudentProviderProps> = ({
-  children,
-}) => {
+export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
 

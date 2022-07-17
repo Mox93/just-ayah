@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { VFC } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import Admin from "pages/Admin";
@@ -10,7 +10,7 @@ import UserGuard from "./guard/UserGuard";
 
 interface AdminViewProps {}
 
-const AdminView: FunctionComponent<AdminViewProps> = () => {
+const AdminView: VFC<AdminViewProps> = () => {
   return (
     <Routes>
       <Route element={<UserGuard redirect="sign-in" />}>

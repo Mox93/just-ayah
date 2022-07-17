@@ -10,13 +10,7 @@ import {
   startAfter,
   where,
 } from "firebase/firestore";
-import {
-  createContext,
-  FunctionComponent,
-  useCallback,
-  useContext,
-  useState,
-} from "react";
+import { createContext, FC, useCallback, useContext, useState } from "react";
 
 import { db } from "services/firebase";
 import {
@@ -45,9 +39,7 @@ const customerContext = createContext(initialState);
 
 interface CustomerProviderProps {}
 
-export const CustomerProvider: FunctionComponent<CustomerProviderProps> = ({
-  children,
-}) => {
+export const CustomerProvider: FC<CustomerProviderProps> = ({ children }) => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
   const collectionRef = collection(db, "customers");

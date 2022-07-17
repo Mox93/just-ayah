@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { VFC } from "react";
 
 import { useLanguage } from "hooks";
 import { languages } from "models/language";
@@ -6,7 +6,7 @@ import { cn } from "utils";
 
 interface LanguageSelectorProps {}
 
-const LanguageSelector: FunctionComponent<LanguageSelectorProps> = () => {
+const LanguageSelector: VFC<LanguageSelectorProps> = () => {
   const [language, setLanguage] = useLanguage();
 
   return (

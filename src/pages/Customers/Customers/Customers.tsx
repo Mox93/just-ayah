@@ -1,9 +1,9 @@
-import { FunctionComponent } from "react";
+import { VFC } from "react";
 import { Outlet } from "react-router-dom";
 
 interface CustomersProps {}
 
-const Customers: FunctionComponent<CustomersProps> = () => {
+const Customers: VFC<CustomersProps> = () => {
   return (
     <div className="Customers">
       <Outlet />

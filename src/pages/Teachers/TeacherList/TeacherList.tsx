@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { VFC, useState } from "react";
 
 import Table, { FieldProps } from "components/Table";
 import { useTeacherContext } from "context";
@@ -8,7 +8,7 @@ import { historyRep } from "models/dateTime";
 
 interface StudentListProps {}
 
-const StudentList: FunctionComponent<StudentListProps> = () => {
+const StudentList: VFC<StudentListProps> = () => {
   const glb = useGlobalT();
   const stu = usePageT("students");
   const pi = usePersonalInfoT();

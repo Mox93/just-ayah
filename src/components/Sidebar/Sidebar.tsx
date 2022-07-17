@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { VFC } from "react";
 import { NavLink } from "react-router-dom";
 
 import { ReactComponent as HomeIcon } from "assets/icons/home-svgrepo-com.svg";
@@ -13,7 +13,7 @@ import { cn } from "utils";
 
 interface SidebarProps {}
 
-const Sidebar: FunctionComponent<SidebarProps> = () => {
+const Sidebar: VFC<SidebarProps> = () => {
   const dirT = useDirT();
   const glb = useGlobalT();
   const nav = useNavT();

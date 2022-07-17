@@ -1,8 +1,8 @@
-import { FunctionComponent } from "react";
+import { VFC } from "react";
 
 interface NewCourseProps {}
 
-const NewCourse: FunctionComponent<NewCourseProps> = () => {
+const NewCourse: VFC<NewCourseProps> = () => {
   return <h1>New Course</h1>;
 };
 

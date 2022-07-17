@@ -7,13 +7,7 @@ import {
   signOut as _SignOut,
   User,
 } from "firebase/auth";
-import {
-  createContext,
-  FunctionComponent,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, FC, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { LocationState } from "models";
@@ -58,9 +52,7 @@ export const useAuthContext = () => useContext(authContext);
 
 interface AuthProviderProps {}
 
-export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
-  children,
-}) => {
+export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const glb = useGlobalT();
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
