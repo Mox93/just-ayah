@@ -3,7 +3,7 @@ import { get } from "react-hook-form";
 
 import ErrorMessage from "components/Form/ErrorMessage";
 import { PhoneNumberInfo } from "models/phoneNumber";
-import { cn } from "utils";
+import { cn, identity } from "utils";
 import { createModifier } from "utils/transformer";
 
 import {
@@ -19,7 +19,7 @@ export const phoneNumberMapper = <TFieldValues>() =>
   createModifier<NamedChildProps<TFieldValues>>(
     ({
       formHook,
-      rules,
+      rules: { setValueAs, ...rules } = {},
       name,
       noErrorMessage,
       ...props
@@ -40,7 +40,7 @@ export const phoneNumberMapper = <TFieldValues>() =>
 
         return {
           code: {
-            ...register(codeName, rules),
+            ...register(codeName, { ...rules, setValueAs }),
             setValue: (value?: any) =>
               setValue(codeName, value?.code, {
                 shouldValidate: isSubmitted,
@@ -50,6 +50,8 @@ export const phoneNumberMapper = <TFieldValues>() =>
           },
           number: register(numberName, {
             ...rules,
+
+            setValueAs: (v: string) => (setValueAs || identity)(v?.trim()),
             pattern: {
               value: /^[0-9]{5,16}$/g,
               message: "wrongPhoneNumber",
@@ -67,7 +69,7 @@ export const phoneNumberMapper = <TFieldValues>() =>
             }),
           }),
         };
-      }, [name, rules, isSubmitted, register, setValue, watch]);
+      }, [name, rules, isSubmitted, register, setValue, watch, setValueAs]);
 
       const fieldWithError = fields.find((field) =>
         get(errors, `${name}.${field}`)

@@ -22,8 +22,9 @@ import {
   formChild,
   processProps,
   selector,
-  singleField,
+  registerField,
   smartForm,
+  trimWhitespace,
 } from "./formModifiers";
 import {
   countryMapper,
@@ -38,7 +39,7 @@ const selectionInput = {
     SelectionInput,
     formChild,
     processProps<StudentInfo>(),
-    singleField<StudentInfo>()
+    registerField<StudentInfo>()
   ),
 };
 
@@ -48,9 +49,10 @@ const selectionInput = {
  */
 
 const formAtoms = <TFieldValues = any>() => {
-  const singleFieldMod = singleField<TFieldValues>();
+  const registerFieldMod = registerField<TFieldValues>();
   const processPropsMod = processProps<TFieldValues>();
   const selectorMod = selector<TFieldValues>();
+  const trimWhitespaceMod = trimWhitespace<TFieldValues>();
 
   return {
     // Wrapper Components
@@ -70,15 +72,27 @@ const formAtoms = <TFieldValues = any>() => {
     InputGroup: transformer(InputGroup, formChild),
 
     // Single Field Components
-    Input: transformer(Input, formChild, processPropsMod, singleFieldMod),
-    Textarea: transformer(Textarea, formChild, processPropsMod, singleFieldMod),
+    Input: transformer(
+      Input,
+      formChild,
+      trimWhitespaceMod,
+      processPropsMod,
+      registerFieldMod
+    ),
+    Textarea: transformer(
+      Textarea,
+      formChild,
+      trimWhitespaceMod,
+      processPropsMod,
+      registerFieldMod
+    ),
     CountrySelectorInput: transformer(
       MenuInput as VFC<MenuInputProps<Country>>,
       formChild,
       processPropsMod,
       selectorMod,
       countryMapper,
-      singleFieldMod
+      registerFieldMod
     ),
     TimezoneSelectorInput: transformer(
       MenuInput as VFC<MenuInputProps<Timezone>>,
@@ -86,14 +100,14 @@ const formAtoms = <TFieldValues = any>() => {
       processPropsMod,
       selectorMod,
       timezoneMapper,
-      singleFieldMod
+      registerFieldMod
     ),
     GovernorateSelectorInput: transformer(
       GovernorateSelectorInput,
       formChild,
       processPropsMod,
       governorateMapper<TFieldValues>(),
-      singleFieldMod
+      registerFieldMod
     ),
     DateInput: transformer(
       DateInput,
@@ -103,7 +117,7 @@ const formAtoms = <TFieldValues = any>() => {
         toValue: fromDateInfo,
         toSelected: toDateInfo,
       }),
-      singleField<TFieldValues>((innerProps: any) => ({ innerProps }))
+      registerField<TFieldValues>((innerProps: any) => ({ innerProps }))
     ),
 
     // Nested Fields Components

@@ -278,6 +278,23 @@ export const processProps = <TFieldValues>({
     }
   );
 
+export const trimWhitespace = <TFieldValues>() =>
+  createModifier<NamedChildProps<TFieldValues> & { keepWhitespace?: boolean }>(
+    ({
+      keepWhitespace,
+      rules: { setValueAs = identity, ...rules } = {},
+      ...props
+    }) => {
+      return {
+        ...props,
+        rules: {
+          ...rules,
+          setValueAs: (v: string) => setValueAs(v?.trim()),
+        },
+      };
+    }
+  );
+
 export const selector = <TFieldValues>({
   toValue = identity,
   toSelected = identity,
@@ -313,7 +330,7 @@ export const selector = <TFieldValues>({
     }
   );
 
-export const singleField = <TFieldValues>(convert: Function = identity) =>
+export const registerField = <TFieldValues>(convert: Function = identity) =>
   createModifier<NamedChildProps<TFieldValues>>(
     ({
       formHook,
