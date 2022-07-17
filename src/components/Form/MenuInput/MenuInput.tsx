@@ -53,7 +53,7 @@ const MenuInput = <TOption,>(
       className: cn("MenuInput", className),
       dir,
       overflowDir,
-      driverAction: "open",
+      onClick: "open",
     });
 
   return dropdownWrapper(

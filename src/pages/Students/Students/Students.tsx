@@ -24,7 +24,7 @@ const Students: VFC<StudentsProps> = () => {
   } = useMetaContext();
 
   const { driverRef, drivenRef, dropdownAction, dropdownWrapper } = useDropdown(
-    { overflowDir: "start", driverAction: "toggle" }
+    { overflowDir: "start", onClick: "toggle" }
   );
   const { showPopup } = usePopupContext();
 

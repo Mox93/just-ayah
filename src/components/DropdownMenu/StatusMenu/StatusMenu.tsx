@@ -96,7 +96,7 @@ const StatusMenu = <TVariant extends StatusVariants>(
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
     useDropdown({
       className: cn("StatusMenu", className),
-      driverAction: "toggle",
+      onClick: "toggle",
     });
 
   const [{ currentStatus, activeStatus }, dispatch] = useReducer(reduce, {

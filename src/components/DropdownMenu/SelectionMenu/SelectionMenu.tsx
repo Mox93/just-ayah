@@ -53,7 +53,7 @@ const SelectionMenu = <TOption,>(
       className: cn("SelectionMenu", className),
       dir,
       overflowDir,
-      driverAction: "toggle",
+      onClick: "toggle",
     });
 
   const render = applyInOrder(

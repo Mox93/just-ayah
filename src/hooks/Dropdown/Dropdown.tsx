@@ -45,14 +45,14 @@ interface UseDropdownProps {
   className?: string;
   dir?: string;
   overflowDir?: OverflowDir;
-  driverAction?: "open" | "toggle";
+  onClick?: "open" | "toggle";
 }
 
 const useDropdown = ({
   className,
   dir,
   overflowDir,
-  driverAction,
+  onClick,
 }: UseDropdownProps = {}) => {
   const [{ isOpen }, dispatch] = useReducer(reduce, { isOpen: false });
 
@@ -99,15 +99,15 @@ const useDropdown = ({
   }, [isOpen]);
 
   useEffect(() => {
-    if (!driverAction) return;
+    if (!onClick) return;
 
     const driver = driverRef.current;
-    const handleDriverClick = () => dispatch(driverAction);
+    const handleDriverClick = () => dispatch(onClick);
 
     driver.addEventListener("click", handleDriverClick);
 
     return () => driver.removeEventListener("click", handleDriverClick);
-  }, [driverAction]);
+  }, [onClick]);
 
   const oDir = useOverflowDir(overflowDir, dir);
 

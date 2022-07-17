@@ -30,7 +30,7 @@ const DropdownArrow: VFC<DropdownArrowProps> = ({
 }) => {
   const dirT = useDirT();
 
-  const [{ action }, dispatch] = useReducer(reduce, { wasOpen: false });
+  const [{ action }, dispatch] = useReducer(reduce, { wasOpen: !!isOpen });
   useEffect(() => dispatch({ isOpen }), [isOpen]);
 
   return (
