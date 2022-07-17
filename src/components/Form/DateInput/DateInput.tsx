@@ -13,20 +13,23 @@ import { DateInfo, clampDate, toDateInfo } from "models/dateTime";
 import { cn, omit, range } from "utils";
 import { PositionalElement } from "utils/position";
 
-import OldAutoCompleatInput from "../MenuInput";
+import MenuInput from "../MenuInput";
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 
 type State = {
   date: Partial<DateInfo>;
   yearsRange?: { start?: number; end?: number };
+};
+type Action = {
+  type: "update" | "replace";
+  payload?: Partial<DateInfo>;
   setValue: (value: DateInfo) => void;
 };
-type Action = { type: "update" | "replace"; payload?: Partial<DateInfo> };
 
 const reduce = (
-  { date, setValue }: State,
-  { type, payload }: Action
+  { date }: State,
+  { type, payload, setValue }: Action
 ): State => {
   const newDate =
     type === "update"
@@ -38,7 +41,7 @@ const reduce = (
   if (newDate?.day && newDate?.month && newDate?.year)
     setValue(newDate as DateInfo);
 
-  return { setValue, date: newDate };
+  return { date: newDate };
 };
 
 interface DateInputProps extends HTMLAttributes<HTMLDivElement> {
@@ -71,7 +74,6 @@ const DateInput: FC<DateInputProps> = ({
 
   const [{ date }, dispatch] = useReducer(reduce, {
     date: selected || toDateInfo(innerProps?.value) || {},
-    setValue,
   });
 
   useEffect(() => {
@@ -80,12 +82,14 @@ const DateInput: FC<DateInputProps> = ({
       selected?.month !== date.month ||
       selected?.year !== date.year
     )
-      dispatch({ type: "replace", payload: selected });
+      dispatch({ type: "replace", payload: selected, setValue });
   }, [selected]);
 
   const update = useCallback(
-    (payload: Action["payload"]) => dispatch({ type: "update", payload }),
-    []
+    (key: keyof DateInfo) => (value?: number) =>
+      value &&
+      dispatch({ type: "update", payload: { [key]: value }, setValue }),
+    [setValue]
   );
 
   // TODO move these to a reducer init
@@ -110,25 +114,25 @@ const DateInput: FC<DateInputProps> = ({
 
       <input {...innerProps} hidden />
       <FieldWrapper isInvalid={isInvalid} addPartitions contentFullWidth>
-        <OldAutoCompleatInput
+        <MenuInput
           className="day"
           options={range(1, daysRange)}
           selected={date?.day}
-          setValue={(day) => update({ day })}
+          setValue={update("day")}
           placeholder={dts("day")}
         />
-        <OldAutoCompleatInput
+        <MenuInput
           className="month"
           options={range(1, 13)}
           selected={date?.month}
-          setValue={(month) => update({ month })}
+          setValue={update("month")}
           placeholder={dts("month")}
         />
-        <OldAutoCompleatInput
+        <MenuInput
           className="year"
           options={range(startYear, endYear)}
           selected={date?.year}
-          setValue={(year) => update({ year })}
+          setValue={update("year")}
           placeholder={dts("year")}
         />
       </FieldWrapper>

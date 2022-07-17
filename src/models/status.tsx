@@ -35,7 +35,18 @@ const statusMap = {
             start: new Date().getFullYear(),
             end: new Date().getFullYear() + 10,
           }}
-          rules={{ required: true }}
+          rules={{
+            required: true,
+            validate: (v) => {
+              const date = new Date(v);
+              const now = new Date();
+              now.setHours(0, 0, 0, 0);
+
+              console.log({ date, now });
+
+              return date.getTime() >= now.getTime();
+            },
+          }}
         />
       ),
     },
@@ -53,7 +64,11 @@ const statusMap = {
           name="partialPay"
           className="statusField"
           type="number"
-          rules={{ required: true, valueAsNumber: true }}
+          rules={{
+            required: true,
+            valueAsNumber: true,
+            validate: (v) => v > 0,
+          }}
         />
       ),
     },

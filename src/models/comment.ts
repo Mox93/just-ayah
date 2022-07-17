@@ -30,8 +30,6 @@ export const commentFromDB = (
 ): Comment => {
   const dateCreated = new Date(Number(timestamp));
 
-  console.log(timestamp, dateCreated);
-
   const dateUpdated = comment.dateUpdated && comment.dateUpdated.toDate();
   const result: Comment = { ...comment, dateCreated, dateUpdated };
 
