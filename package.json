@@ -37,7 +37,17 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "firebase deploy -P default",
+    "deploy:dev": "firebase deploy -P dev",
+    "hosting": "firebase deploy --only hosting -P default",
+    "hosting:dev": "firebase deploy --only hosting -P default",
+    "functions": "firebase deploy --only functions -P default",
+    "functions:dev": "firebase deploy --only functions -P dev",
+    "rules": "firebase deploy --only rules -P default",
+    "rules:dev": "firebase deploy --only rules -P dev",
+    "indexes": "firebase deploy --only indexes -P default",
+    "indexes:dev": "firebase deploy --only indexes -P dev"
   },
   "eslintConfig": {
     "extends": [
