@@ -1,7 +1,6 @@
 import { FC, VFC } from "react";
 
 import { Country } from "models/country";
-import { CustomerInfo } from "models/customer";
 import { fromDateInfo, toDateInfo } from "models/dateTime";
 import { StudentInfo } from "models/student";
 import { Timezone } from "models/timezone";
@@ -33,25 +32,6 @@ import {
   timezoneMapper,
 } from "./mappers";
 import Textarea from "../Textarea";
-
-const autoCompleatInputMap = {
-  //NOT USED
-  Customer: transformer(
-    MenuInput,
-    formChild,
-    processProps<CustomerInfo>(),
-    selector<CustomerInfo>(),
-    singleField<CustomerInfo>()
-  ),
-  //NOT USED
-  Student: transformer(
-    MenuInput,
-    formChild,
-    processProps<StudentInfo>(),
-    selector<StudentInfo>(),
-    singleField<StudentInfo>()
-  ),
-};
 
 const selectionInput = {
   Student: transformer(
@@ -135,7 +115,6 @@ const formAtoms = <TFieldValues = any>() => {
     ),
 
     // Generic Components
-    OldAutoCompleatInput: autoCompleatInputMap,
     SelectionInput: selectionInput,
   };
 };
