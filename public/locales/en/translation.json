@@ -27,39 +27,49 @@
     "noPay": "no payment",
     "submit": "submit",
     "clearForm": "clear form",
+    "clear": "clear",
     "whatsapp": "WhatsApp",
     "telegram": "Telegram",
     "call": "Call",
     "search": "search",
     "loading": "loading",
-    "cancel": "cancel"
+    "cancel": "cancel",
+    "time": "time",
+    "day": "day"
   },
   "dateTime": {
     "day": "day",
     "month": "month",
     "year": "year",
     "week": "week",
+    "hour": "hour",
+    "minute": "minute",
+    "period": "AM/PM",
+    "AM": "AM",
+    "PM": "PM",
     "symbols": {
       "day": "dd",
       "month": "mm",
-      "year": "yyyy"
+      "year": "yyyy",
+      "hour": "HH",
+      "minute": "MM"
     },
-    "weekDays": {
-      "Monday": "Monday",
-      "Tuesday": "Tuesday",
-      "Wednesday": "Wednesday",
-      "Thursday": "Thursday",
-      "Friday": "Friday",
-      "Saturday": "Saturday",
-      "Sunday": "Sunday",
+    "weekDay": {
+      "Mon": "Monday",
+      "Tue": "Tuesday",
+      "Wed": "Wednesday",
+      "Thu": "Thursday",
+      "Fri": "Friday",
+      "Sat": "Saturday",
+      "Sun": "Sunday",
       "short": {
-        "Monday": "Mon",
-        "Tuesday": "Tue",
-        "Wednesday": "Wed",
-        "Thursday": "Thu",
-        "Friday": "Fri",
-        "Saturday": "Sat",
-        "Sunday": "Sun"
+        "Mon": "Mon",
+        "Tue": "Tue",
+        "Wed": "Wed",
+        "Thu": "Thu",
+        "Fri": "Fri",
+        "Sat": "Sat",
+        "Sun": "Sun"
       }
     }
   },
