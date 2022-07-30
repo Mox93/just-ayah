@@ -15,7 +15,7 @@ import {
 
 const fields = ["code", "number", "tags"] as const;
 
-export const phoneNumberMapper = <TFieldValues>() =>
+const phoneNumberMapper = <TFieldValues>() =>
   createModifier<NamedChildProps<TFieldValues>>(
     ({
       formHook,
@@ -91,3 +91,5 @@ export const phoneNumberMapper = <TFieldValues>() =>
       };
     }
   );
+
+export default phoneNumberMapper;

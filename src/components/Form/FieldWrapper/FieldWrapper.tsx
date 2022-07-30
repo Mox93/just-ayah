@@ -3,11 +3,16 @@ import { Children, FC, ReactNode } from "react";
 import { useDirT } from "hooks";
 import { cn } from "utils";
 
-const injectPartitions = (children: ReactNode) => {
+type Partition = (ket: string | number) => ReactNode;
+
+const injectPartitions = (children: ReactNode, partition?: Partition) => {
   const newChildren: ReactNode[] = [];
 
   Children.forEach(children, (child, index) => {
-    if (index > 0) newChildren.push(<div className="partition" key={index} />);
+    if (index > 0)
+      newChildren.push(
+        partition ? partition(index) : <div className="partition" key={index} />
+      );
     newChildren.push(child);
   });
 
@@ -22,6 +27,7 @@ interface FieldWrapperProps {
   contentFullWidth?: boolean;
   alwaysVisible?: boolean;
   expandable?: boolean;
+  partition?: Partition;
 }
 
 const FieldWrapper: FC<FieldWrapperProps> = ({
@@ -33,6 +39,7 @@ const FieldWrapper: FC<FieldWrapperProps> = ({
   contentFullWidth,
   alwaysVisible,
   expandable,
+  partition,
 }) => {
   const dirT = useDirT();
 
@@ -45,7 +52,7 @@ const FieldWrapper: FC<FieldWrapperProps> = ({
       )}
       dir={dir || dirT}
     >
-      {addPartitions ? injectPartitions(children) : children}
+      {addPartitions ? injectPartitions(children, partition) : children}
     </div>
   );
 };

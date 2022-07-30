@@ -13,7 +13,9 @@ const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
     data: { students },
     addNote,
   } = useStudentContext();
-  const [notes, setNotes] = useState<Comment[]>();
+  const [notes, setNotes] = useState<Comment[] | undefined>(
+    () => students.find(({ id: studentId }) => id === studentId)?.meta.notes
+  );
   const msg = useMessageT();
 
   useEffect(() => {

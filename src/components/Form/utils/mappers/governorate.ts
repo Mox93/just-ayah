@@ -8,7 +8,7 @@ type GovernorateMapperProps<TFieldValues> = NamedChildProps<TFieldValues> & {
   countryField?: FieldPath<TFieldValues>;
 };
 
-export const governorateMapper = <TFieldValues>() =>
+const governorateMapper = <TFieldValues>() =>
   createModifier<GovernorateMapperProps<TFieldValues>>(
     ({
       formHook,
@@ -35,3 +35,5 @@ export const governorateMapper = <TFieldValues>() =>
       };
     }
   );
+
+export default governorateMapper;

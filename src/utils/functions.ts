@@ -19,7 +19,7 @@ export const pluck =
     get(obj, path);
 
 export const debug = (prefix: string) => (output: any) =>
-  console.log(prefix, output);
+  process.env.REACT_APP_ENV === "development" && console.log(prefix, output);
 
 /****************************\
 |****** Function Chain ******|

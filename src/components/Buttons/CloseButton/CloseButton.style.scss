@@ -1,7 +1,8 @@
 .CloseButton {
+  --fill-color: var(--c-gray-300);
+
   width: 2rem;
   height: 2rem;
-  background-color: var(--c-gray-100);
   border-radius: 50%;
   display: flex;
   justify-content: center;

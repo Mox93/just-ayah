@@ -1,16 +1,17 @@
 import { useTimezoneSelector } from "hooks";
 import { Timezone } from "models/timezone";
 import { omit } from "utils";
+import { PathsOrConverters } from "utils/render";
 import { createModifier } from "utils/transformer";
 
 interface TimezoneMapperProps {
-  renderSections?: (keyof Timezone)[];
+  renderSections?: PathsOrConverters<Timezone>;
   setValue?: (value: any) => void;
   selected?: any;
   searchable?: boolean;
 }
 
-export const timezoneMapper = createModifier<{
+const timezoneMapper = createModifier<{
   renderSections?: (keyof Timezone)[];
 }>(
   ({
@@ -29,3 +30,5 @@ export const timezoneMapper = createModifier<{
     }),
   })
 );
+
+export default timezoneMapper;

@@ -41,8 +41,6 @@ const CommentsViewer: VFC<CommentsViewerProps> = ({
       body: draft,
     };
 
-    console.log(comment);
-
     onCommentAdd(comment);
   };
 
@@ -50,7 +48,7 @@ const CommentsViewer: VFC<CommentsViewerProps> = ({
     <div className="CommentsViewer">
       <Form
         submitProps={{ children: glb("save") }}
-        resetProps={{ children: glb("cancel") }}
+        resetProps={{ children: glb("clear") }}
         onSubmit={addComment}
         storageKey={storageKey}
       >
