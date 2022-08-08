@@ -4,7 +4,6 @@ import {
   InputHTMLAttributes,
   ReactNode,
   useCallback,
-  useEffect,
   useReducer,
 } from "react";
 
@@ -75,15 +74,6 @@ const DateInput: FC<DateInputProps> = ({
   const [{ date }, dispatch] = useReducer(reduce, {
     date: selected || toDateInfo(innerProps?.value) || {},
   });
-
-  useEffect(() => {
-    if (
-      selected?.day !== date.day ||
-      selected?.month !== date.month ||
-      selected?.year !== date.year
-    )
-      dispatch({ type: "replace", payload: selected, setValue });
-  }, [selected]);
 
   const update = useCallback(
     (key: keyof DateInfo) => (value?: number) =>

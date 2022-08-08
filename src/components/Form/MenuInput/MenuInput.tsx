@@ -56,19 +56,21 @@ const MenuInput = <TOption,>(
       onClick: "open",
     });
 
+  const isSelected = !["", null, undefined].includes(selected as any);
+
   return dropdownWrapper(
     // TODO replace with Button
     <Input
       {...{ ...props, dir, ref }}
-      className={cn({ hidden: selected })} // TODO once filtering is implemented replace condition with `!isOpen && selected`
+      className={cn({ hidden: isSelected })} // TODO once filtering is implemented replace condition with `!isOpen && selected`
       readOnly // TODO remove once filtering is implemented
       labelRef={driverRef}
     >
-      {selected // TODO once filtering is implemented replace condition with `!isOpen && selected`
+      {isSelected // TODO once filtering is implemented replace condition with `!isOpen && selected`
         ? before(
             "input",
             <div className="selected">
-              {applyInOrder(renderElement)(selected)}
+              {applyInOrder(renderElement)(selected!)}
             </div>
           )
         : null}

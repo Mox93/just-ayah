@@ -3,13 +3,15 @@ import { Children, FC, ReactNode } from "react";
 import { useDirT } from "hooks";
 import { cn } from "utils";
 
+const EMPTY: any[] = [null, undefined, false];
+
 type Partition = (ket: string | number) => ReactNode;
 
 const injectPartitions = (children: ReactNode, partition?: Partition) => {
   const newChildren: ReactNode[] = [];
 
   Children.forEach(children, (child, index) => {
-    if (index > 0)
+    if (!EMPTY.includes(child) && index > 0)
       newChildren.push(
         partition ? partition(index) : <div className="partition" key={index} />
       );

@@ -11,7 +11,6 @@ import {
 import { Button, DropdownButton } from "components/Buttons";
 import Container from "components/Container";
 import { CheckMark } from "components/Icons";
-import { formAtoms } from "components/Form";
 import { DropdownAction, useDropdown, useGlobalT } from "hooks";
 import { UNKNOWN } from "models";
 import { cn, mergeRefs, omit, capitalize } from "utils";
@@ -23,8 +22,7 @@ import {
   StatusVariants,
   getCustomStatus,
 } from "models/status";
-
-const { MiniForm } = formAtoms();
+import StatusForm from "./StatusForm";
 
 type State = {
   variant: StatusVariants;
@@ -132,37 +130,27 @@ const StatusMenu = <TVariant extends StatusVariants>(
             (activeStatus?.type || currentStatus.type) === statusOption.type;
           const customStatus = getCustomStatus(variant, statusOption.type);
 
-          const onSubmit = (data: any) =>
-            dispatch({
-              type: "setValue",
-              payload: {
-                type: statusOption.type,
-                value: data[statusOption.type],
-              },
-            });
-
-          const onClick = () =>
-            dispatch({
-              type: customStatus ? "awaitValue" : "setType",
-              payload: statusOption,
-            });
-
           const wrapper = (statusButton: ReactElement) =>
             isSelected && customStatus ? (
               <div key={statusOption.type} className="customStatusWrapper">
                 {statusButton}
-                <MiniForm
-                  onSubmit={onSubmit}
-                  config={{
-                    defaultValues: {
-                      [statusOption.type]: statusOption.value,
-                      [currentStatus.type]: currentStatus.value,
-                    },
+                <StatusForm
+                  onSubmit={(data) =>
+                    dispatch({
+                      type: "setValue",
+                      payload: {
+                        type: statusOption.type,
+                        value: data[statusOption.type],
+                      },
+                    })
+                  }
+                  defaultValues={{
+                    [statusOption.type]: statusOption.value,
+                    [currentStatus.type]: currentStatus.value,
                   }}
-                  noErrorMessage
                 >
                   {customStatus?.field}
-                </MiniForm>
+                </StatusForm>
               </div>
             ) : (
               statusButton
@@ -173,7 +161,12 @@ const StatusMenu = <TVariant extends StatusVariants>(
               {...commonProps}
               key={statusOption.type}
               className={cn("option", variant, statusOption.type)}
-              onClick={onClick}
+              onClick={() =>
+                dispatch({
+                  type: customStatus ? "awaitValue" : "setType",
+                  payload: statusOption,
+                })
+              }
             >
               {capitalize(glb(statusOption.type))}
               {isSelected && <CheckMark />}

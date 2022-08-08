@@ -1,0 +1,16 @@
+.ScheduleForm {
+  max-width: 40rem;
+  min-width: 16rem;
+  width: 75vw;
+
+  .TimeInput {
+    flex: 2;
+  }
+
+  .fieldRow {
+    & > .action {
+      flex-grow: 0;
+      align-self: flex-end;
+    }
+  }
+}

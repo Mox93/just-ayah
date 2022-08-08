@@ -15,15 +15,17 @@ import { Comment, CommentMapInDB, commentListFromDB } from "./comment";
 import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
 import { getStatus, Progress, ProgressInDB, Subscription } from "./status";
 import { parseWorkStatus, WorkStatus } from "./work";
+import { Schedule } from "./schedule";
 
 interface Meta {
   dateCreated: Date;
-  dateUpdated: Date;
+  dateUpdated?: Date;
   progress?: Progress;
   subscription?: Subscription;
   notes?: Comment[];
   course?: string;
   teacher?: string;
+  schedule?: Schedule;
 }
 
 type MetaInDB = Merge<
@@ -84,7 +86,7 @@ const isEnroll = (obj: any): obj is StudentEnroll => obj.awaitEnroll;
 
 export const defaultMeta = (): Meta => {
   const now = new Date();
-  return { dateCreated: now, dateUpdated: now, progress: { type: "pending" } };
+  return { dateCreated: now, progress: { type: "pending" } };
 };
 
 const studentFromDB = (

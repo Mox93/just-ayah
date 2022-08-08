@@ -8,4 +8,5 @@ export type { MenuInputProps } from "./MenuInput";
 export { default as MiniForm } from "./MiniForm";
 export { default as PhoneNumberInput } from "./PhoneNumberInput";
 export { default as SelectionInput } from "./SelectionInput";
+export { default as TimeInput } from "./TimeInput";
 export { default as formAtoms } from "./utils/formAtoms";

@@ -13,16 +13,25 @@ import {
   useStudentContext,
   useTeacherContext,
 } from "context";
-import { useGlobalT, useGovT, usePageT, usePersonalInfoT } from "hooks";
+import {
+  useDateTimeT,
+  useGlobalT,
+  useGovT,
+  usePageT,
+  usePersonalInfoT,
+} from "hooks";
 import { getCountry } from "models/country";
 import { getAge, historyRep } from "models/dateTime";
 import { handleEgGov } from "models/governorate";
 import { getPhoneNumberByTag } from "models/phoneNumber";
+import { scheduleBrief } from "models/schedule";
 import { Student } from "models/student";
 import { getOccupation } from "models/work";
 import { cn, concat } from "utils";
 
 import StudentNotes from "../StudentNotes";
+import StudentSchedule from "../StudentSchedule";
+import { Warning } from "components/Icons";
 
 interface StudentListProps {}
 
@@ -31,6 +40,8 @@ const StudentList: VFC<StudentListProps> = () => {
   const gov = useGovT("egypt");
   const stu = usePageT("students");
   const pi = usePersonalInfoT();
+  const swd = useDateTimeT("weekDay.short");
+  const dt = useDateTimeT();
 
   const {
     data: { students },
@@ -48,8 +59,11 @@ const StudentList: VFC<StudentListProps> = () => {
 
   const { showPopup } = usePopupContext();
 
-  const showNotesPopup = (studentId: string) => () =>
-    showPopup(<StudentNotes id={studentId} />, true, true);
+  const showNotesPopup = (id: string) => () =>
+    showPopup(<StudentNotes id={id} />, true, true);
+
+  const showSchedulePopup = (id: string) => () =>
+    showPopup(<StudentSchedule id={id} />, true, true);
 
   const updateField =
     <TKey extends FieldPath<Student>>(name: TKey, id: string) =>
@@ -144,7 +158,6 @@ const StudentList: VFC<StudentListProps> = () => {
       className: "buttonCell",
       getValue: ({ id, meta: { course } }: Student) => (
         <SelectionMenu
-          className="mutableValue"
           selected={course}
           options={courses}
           size="small"
@@ -159,7 +172,6 @@ const StudentList: VFC<StudentListProps> = () => {
       className: "buttonCell",
       getValue: ({ id, meta: { teacher } }: Student) => (
         <SelectionMenu
-          className="mutableValue"
           selected={teacher}
           options={teacherList}
           size="small"
@@ -171,16 +183,32 @@ const StudentList: VFC<StudentListProps> = () => {
     {
       name: "schedule",
       header: glb("schedule"),
+      className: "buttonCell",
+      getValue: ({ id, meta: { schedule } }: Student) => {
+        const brief = scheduleBrief(schedule, swd, dt);
+
+        return (
+          <Button
+            variant="plain-text"
+            size="small"
+            onClick={showSchedulePopup(id)}
+          >
+            <Ellipsis className={cn({ empty: !brief })}>
+              {brief || ". . ."}
+            </Ellipsis>
+            {schedule?.notes && <Warning />}
+          </Button>
+        );
+      },
     },
     {
       name: "notes",
       header: glb("notes"),
       className: "buttonCell",
-      getValue: ({ id, meta: { notes: [lastNote, ..._] = [] } }: Student) => (
+      getValue: ({ id, meta: { notes: [lastNote] = [] } }: Student) => (
         <Button
           variant="plain-text"
           size="small"
-          className="mutableValue"
           onClick={showNotesPopup(id)}
           dir="auto"
         >

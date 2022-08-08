@@ -13,4 +13,8 @@
   background-position: center;
 
   @include floatingLanguageSelector();
+
+  .SignInButton {
+    gap: var(--spacing-l);
+  }
 }

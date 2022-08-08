@@ -1,32 +1,24 @@
-import { isPlainObject, mapValues } from "lodash";
 import {
   Children,
   createElement,
   InputHTMLAttributes,
   ReactElement,
   ReactNode,
-  useCallback,
-  useEffect,
 } from "react";
 import {
   FieldPath,
   get,
   RegisterOptions,
-  SubmitErrorHandler,
-  SubmitHandler,
-  useForm,
-  UseFormProps,
   UseFormRegisterReturn,
   UseFormReturn,
 } from "react-hook-form";
 
 import { Merge } from "models";
-import { cn, identity, mergeCallbacks, omit, pass } from "utils";
-import { createModifier, Modifier } from "utils/transformer";
+import { cn, identity, mergeCallbacks, pass } from "utils";
+import { createModifier, Transformer, transformer } from "utils/transformer";
 
 import ErrorMessage from "../ErrorMessage";
 import { FormProps } from "../Form";
-import useFormPersist from "./formPersist";
 
 /*************************\
 |***** From Modifier *****|
@@ -49,14 +41,8 @@ type GenerateExtraProps<TFieldValues, TProps = {}> = (
 type SmartFormProps<TFieldValues> = Merge<
   FormProps,
   {
-    config?: UseFormProps<TFieldValues>;
+    formHook: FormHook<TFieldValues>;
     noErrorMessage?: boolean;
-    noResetOnSubmit?: boolean;
-    noDefaultValuesOnReset?: boolean;
-    storageKey?: string;
-    onSubmit?: SubmitHandler<TFieldValues>;
-    onFail?: SubmitErrorHandler<TFieldValues>;
-    hook?: (formHook: FormHook<TFieldValues>) => void;
   }
 >;
 
@@ -65,64 +51,14 @@ export const smartForm = <TFieldValues>(
 ) =>
   createModifier<SmartFormProps<TFieldValues>>(
     ({
-      config,
+      formHook,
       children,
       noErrorMessage,
-      noResetOnSubmit,
-      noDefaultValuesOnReset,
-      storageKey,
-      onSubmit = omit,
-      onFail,
-      hook = omit,
       ...props
     }: SmartFormProps<TFieldValues>) => {
-      const { handleSubmit, ...formHook } = useForm<TFieldValues>({
-        ...config,
-        // ...(config?.shouldUnregister === undefined && {
-        //   shouldUnregister: true,
-        // }),
-      });
-
-      useEffect(() => hook(formHook), [hook, formHook]);
-
-      const { watch, setValue, reset } = formHook;
-
-      // const clear = omit;
-      const { clear } = useFormPersist(
-        storageKey
-          ? {
-              storageKey,
-              watch,
-              setValue,
-            }
-          : undefined
-      );
-
-      const { defaultValues } = config || {};
-
-      const handleReset = useCallback(
-        (resetAll?: boolean) => () => {
-          const values = watch();
-          const resetValues = mapValues(values as any, (value) =>
-            isPlainObject(value) ? {} : null
-          );
-
-          const _defaultValues = resetAll ? {} : defaultValues;
-
-          reset({ ...resetValues, ..._defaultValues } as any);
-          clear();
-        },
-        [defaultValues, reset, clear, watch]
-      );
-
       return {
         ...props,
         children: handleFormChildren(children, { formHook, noErrorMessage }),
-        onSubmit: handleSubmit(
-          mergeCallbacks(onSubmit, handleReset(true)) as any,
-          onFail
-        ),
-        onReset: handleReset(noDefaultValuesOnReset),
         ...extraProps({ formHook }),
       };
     }
@@ -137,9 +73,11 @@ type FormChild<Component = any> = Component & { formChild?: boolean };
 /**
  * Must be the first modifier for it to work, otherwise the modifiers that proceed will overwrite it
  */
-export const formChild: Modifier = (Component) => {
-  (Component as FormChild).formChild = true;
-  return Component;
+
+export const formChild: Transformer = (Component, ...modifiers) => {
+  const Child = transformer(Component, ...modifiers);
+  (Child as FormChild).formChild = true;
+  return Child;
 };
 
 /*********************************\

@@ -18,7 +18,12 @@ const SignIn: VFC<SignInProps> = () => {
   return (
     <div className="SignIn" style={{ backgroundImage: `url(${justAyahBG})` }}>
       <LanguageSelector />
-      <Button variant="secondary-outline" size="large" onClick={signIn}>
+      <Button
+        variant="secondary-outline"
+        size="large"
+        onClick={signIn}
+        className="SignInButton"
+      >
         <GoogleLogo className="GoogleLogo" />
         {capitalize(glb("googleSignIn"))}
       </Button>

@@ -1,7 +1,7 @@
 import { isEqual } from "lodash";
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { ButtonProps, DropdownButton } from "components/Buttons";
+import { Button, ButtonProps, DropdownButton } from "components/Buttons";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown } from "hooks";
 import { GetKey } from "models";
@@ -22,9 +22,10 @@ interface SelectionMenuProps<TOption> extends Omit<ButtonProps, "children"> {
   overflowDir?: OverflowDir;
   placeholder?: string;
   noCheckmark?: boolean;
+  noArrow?: boolean;
   getKey?: GetKey<TOption>;
   checkIsSelected?: (option: TOption, selected?: TOption) => boolean;
-  setValue?: (option?: TOption) => void;
+  setValue?: (option: TOption) => void;
 }
 
 const SelectionMenu = <TOption,>(
@@ -39,6 +40,7 @@ const SelectionMenu = <TOption,>(
     placeholder,
     keepFormat,
     noCheckmark,
+    noArrow,
     onClick,
     setValue = omit,
     getKey = identity,
@@ -61,9 +63,18 @@ const SelectionMenu = <TOption,>(
     renderElement
   );
 
+  const ButtonComponent = noArrow ? Button : DropdownButton;
+
   return dropdownWrapper(
-    <DropdownButton
-      {...{ ...props, variant, size, keepFormat, isOpen, dir }}
+    <ButtonComponent
+      {...{
+        ...props,
+        variant,
+        size,
+        keepFormat,
+        dir,
+        ...(noArrow ? {} : { isOpen }),
+      }}
       className={cn("driver", {
         empty: selected === undefined && placeholder === undefined,
       })}
@@ -71,7 +82,7 @@ const SelectionMenu = <TOption,>(
       ref={mergeRefs(ref, driverRef)}
     >
       {selected ? render(selected) : placeholder || ". . ."}
-    </DropdownButton>,
+    </ButtonComponent>,
     () => (
       <Menu
         {...{ variant, size, getKey, dir }}

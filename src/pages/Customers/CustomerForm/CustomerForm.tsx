@@ -2,7 +2,7 @@ import { VFC } from "react";
 
 import { formAtoms } from "components/Form";
 import { useCustomerContext } from "context";
-import { usePersonalInfoT } from "hooks";
+import { usePersonalInfoT, useSmartForm } from "hooks";
 import { CustomerInfo } from "models/customer";
 
 const { Form, Input, Textarea, InputGroup, PhoneNumberInput } =
@@ -18,11 +18,14 @@ const CustomerForm: VFC<CustomerFormProps> = ({ onfulfilled, onrejected }) => {
 
   const { add } = useCustomerContext();
 
-  const onSubmit = (data: CustomerInfo) =>
-    add(data, { onFulfilled: onfulfilled, onRejected: onrejected });
+  const formProps = useSmartForm({
+    onSubmit: (data: CustomerInfo) =>
+      add(data, { onFulfilled: onfulfilled, onRejected: onrejected }),
+    resetOnSubmit: true,
+  });
 
   return (
-    <Form className="ContainerForm" onSubmit={onSubmit} resetProps={{}}>
+    <Form className="ContainerForm" resetProps={{}} {...formProps}>
       <Input
         name="fullName"
         label={pi("fullName")}

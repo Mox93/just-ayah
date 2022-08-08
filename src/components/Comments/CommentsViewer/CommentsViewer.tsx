@@ -2,7 +2,7 @@ import { VFC } from "react";
 
 import { formAtoms } from "components/Form";
 import { useAuthContext } from "context";
-import { useGlobalT, useMessageT } from "hooks";
+import { useGlobalT, useMessageT, useSmartForm } from "hooks";
 import { Comment } from "models/comment";
 
 import CommentItem from "../CommentItem";
@@ -28,29 +28,32 @@ const CommentsViewer: VFC<CommentsViewerProps> = ({
   const msg = useMessageT();
   const { user } = useAuthContext();
 
-  const addComment = ({ draft }: CommentInfo) => {
-    const comment: Comment = {
-      dateCreated: new Date(),
-      ...(user?.email && {
-        createdBy: {
-          email: user.email,
-          ...(user.displayName && { username: user.displayName }),
-          ...(user.photoURL && { avatar: user.photoURL }),
-        },
-      }),
-      body: draft,
-    };
+  const formProps = useSmartForm({
+    onSubmit: ({ draft }: CommentInfo) => {
+      const comment: Comment = {
+        dateCreated: new Date(),
+        ...(user?.email && {
+          createdBy: {
+            email: user.email,
+            ...(user.displayName && { username: user.displayName }),
+            ...(user.photoURL && { avatar: user.photoURL }),
+          },
+        }),
+        body: draft,
+      };
 
-    onCommentAdd(comment);
-  };
+      onCommentAdd(comment);
+    },
+    storageKey,
+    resetOnSubmit: true,
+  });
 
   return (
     <div className="CommentsViewer">
       <Form
         submitProps={{ children: glb("save") }}
         resetProps={{ children: glb("clear") }}
-        onSubmit={addComment}
-        storageKey={storageKey}
+        {...formProps}
       >
         <Textarea name="draft" />
       </Form>

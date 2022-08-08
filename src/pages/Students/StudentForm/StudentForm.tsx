@@ -1,8 +1,7 @@
-import { isEqual } from "lodash";
-import { useState, VFC } from "react";
+import { VFC } from "react";
 
 import { formAtoms } from "components/Form";
-import { useGlobalT, usePersonalInfoT } from "hooks";
+import { useGlobalT, usePersonalInfoT, useSmartForm } from "hooks";
 import { genders } from "models/gender";
 import { StudentInfo } from "models/student";
 import { noWorkReasons, WorkStatusInfo } from "models/work";
@@ -34,26 +33,31 @@ const StudentForm: VFC<StudentFormProps> = ({
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
 
-  const [workStatus, setWorkStatus] = useState<WorkStatusInfo>({});
+  const formProps = useSmartForm<StudentInfo>({
+    onSubmit,
+    config: { defaultValues },
+    storageKey: "studentForm" + (formId ? `/${formId}` : ""),
+    resetOnSubmit: true,
+  });
+
+  const {
+    formHook: { watch },
+  } = formProps;
+
+  const value = watch("workStatus");
+  const workStatus: WorkStatusInfo | undefined = value && {
+    ...value,
+    doesWork: fromYesNo(value.doesWork),
+  };
 
   const now = new Date();
 
   return (
     <Form
       className="StudentForm"
-      onSubmit={onSubmit}
       submitProps={{ children: glb("joinInitiative") }}
       resetProps={{}}
-      storageKey={"studentForm" + (formId ? `/${formId}` : "")}
-      config={{ defaultValues }}
-      hook={({ watch }) => {
-        const value = watch("workStatus");
-        const newValue = value && {
-          ...value,
-          doesWork: fromYesNo(value.doesWork),
-        };
-        !isEqual(newValue, workStatus) && setWorkStatus(newValue);
-      }}
+      {...formProps}
     >
       <InputGroup>
         <Input
@@ -160,13 +164,13 @@ const StudentForm: VFC<StudentFormProps> = ({
           rules={{ required: "noWorkStatus" }}
         />
 
-        {workStatus.doesWork === true ? (
+        {workStatus?.doesWork === true ? (
           <Input
             name="workStatus.job"
             label={pi("occupation")}
             rules={{ required: "noWorkStatus", shouldUnregister: true }}
           />
-        ) : workStatus.doesWork === false ? (
+        ) : workStatus?.doesWork === false ? (
           <SelectionInput
             name="workStatus.reason"
             type="radio"
@@ -178,7 +182,7 @@ const StudentForm: VFC<StudentFormProps> = ({
         ) : null}
       </InputGroup>
 
-      {workStatus.reason === "other" && (
+      {workStatus?.reason === "other" && (
         <Input
           name="workStatus.explanation"
           label={pi("noWorkDetails")}

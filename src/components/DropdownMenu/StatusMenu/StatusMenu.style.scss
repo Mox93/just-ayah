@@ -25,13 +25,12 @@
 
   .driver,
   .option {
-    --icon-space: 2.5em;
+    --icon-space: 2em;
 
-    padding-inline-end: 2.5em !important;
+    padding-inline-end: var(--icon-space) !important;
 
     @include statusButton();
 
-    .DropdownArrow,
     .CheckMark {
       --spacing: calc(var(--icon-space) / 2);
 

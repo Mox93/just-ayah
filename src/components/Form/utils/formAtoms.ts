@@ -1,7 +1,7 @@
 import { FC, VFC } from "react";
 
 import { Country } from "models/country";
-import { fromDateInfo, toDateInfo } from "models/dateTime";
+import { fromDateInfo, toDateInfo, WeekDay, weekDays } from "models/dateTime";
 import { StudentInfo } from "models/student";
 import { Timezone } from "models/timezone";
 import { transformer } from "utils/transformer";
@@ -17,6 +17,7 @@ import {
   MiniForm,
   PhoneNumberInput,
   SelectionInput,
+  TimeInput,
 } from "../";
 import {
   formChild,
@@ -31,13 +32,13 @@ import {
   governorateMapper,
   phoneNumberMapper,
   timezoneMapper,
+  weekDayMapper,
 } from "./mappers";
 import Textarea from "../Textarea";
 
 const selectionInput = {
-  Student: transformer(
+  Student: formChild(
     SelectionInput,
-    formChild,
     processProps<StudentInfo>(),
     registerField<StudentInfo>()
   ),
@@ -69,49 +70,43 @@ const formAtoms = <TFieldValues = any>() => {
         })
       )
     ),
-    InputGroup: transformer(InputGroup, formChild),
+    InputGroup: formChild(InputGroup),
 
     // Single Field Components
-    Input: transformer(
+    Input: formChild(
       Input,
-      formChild,
       trimWhitespaceMod,
       processPropsMod,
       registerFieldMod
     ),
-    Textarea: transformer(
+    Textarea: formChild(
       Textarea,
-      formChild,
       trimWhitespaceMod,
       processPropsMod,
       registerFieldMod
     ),
-    CountrySelectorInput: transformer(
+    CountrySelectorInput: formChild(
       MenuInput as VFC<MenuInputProps<Country>>,
-      formChild,
       processPropsMod,
       selectorMod,
       countryMapper,
       registerFieldMod
     ),
-    TimezoneSelectorInput: transformer(
+    TimezoneSelectorInput: formChild(
       MenuInput as VFC<MenuInputProps<Timezone>>,
-      formChild,
       processPropsMod,
       selectorMod,
       timezoneMapper,
       registerFieldMod
     ),
-    GovernorateSelectorInput: transformer(
+    GovernorateSelectorInput: formChild(
       GovernorateSelectorInput,
-      formChild,
       processPropsMod,
       governorateMapper<TFieldValues>(),
       registerFieldMod
     ),
-    DateInput: transformer(
+    DateInput: formChild(
       DateInput,
-      formChild,
       processPropsMod,
       selector<TFieldValues>({
         toValue: fromDateInfo,
@@ -119,11 +114,23 @@ const formAtoms = <TFieldValues = any>() => {
       }),
       registerField<TFieldValues>((innerProps: any) => ({ innerProps }))
     ),
+    WeekDayInput: formChild(
+      MenuInput as VFC<MenuInputProps<WeekDay>>,
+      processPropsMod,
+      selector<TFieldValues>({ extraProps: () => ({ options: weekDays }) }),
+      weekDayMapper,
+      registerFieldMod
+    ),
+    TimeInput: formChild(
+      TimeInput,
+      processPropsMod,
+      selectorMod,
+      registerField<TFieldValues>((innerProps: any) => ({ innerProps }))
+    ),
 
     // Nested Fields Components
-    PhoneNumberInput: transformer(
+    PhoneNumberInput: formChild(
       PhoneNumberInput,
-      formChild,
       processPropsMod,
       phoneNumberMapper<TFieldValues>()
     ),

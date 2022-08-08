@@ -22,7 +22,7 @@
     &.buttonCell {
       padding-inline: var(--spacing-m);
 
-      .mutableValue {
+      & > .Button {
         width: 100%;
 
         .Ellipsis {

@@ -12,7 +12,7 @@ export const mergeRefs =
     });
   };
 
-export const mergeCallbacks = (...callbacks: (Function | undefined)[]) => {
+export const mergeCallbacks = (...callbacks: any[]) => {
   const validCallbacks = callbacks.filter(
     (callback) => typeof callback === "function"
   );

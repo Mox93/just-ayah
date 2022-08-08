@@ -1,7 +1,7 @@
 @use "styles/abstracts/mixins" as *;
 
 .DropdownButton {
-  --icon-space: 2.5em;
+  --icon-space: 2em;
 
   padding-inline-end: var(--icon-space) !important;
 

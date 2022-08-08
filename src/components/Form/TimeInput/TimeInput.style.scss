@@ -1,0 +1,20 @@
+.TimeInput {
+  .hour,
+  .minute {
+    width: 5rem;
+  }
+
+  .period {
+    width: 6rem;
+  }
+
+  .colon {
+    font-size: x-large;
+    color: var(--c-gray-300);
+  }
+
+  .item,
+  .selected {
+    justify-content: center;
+  }
+}

@@ -31,7 +31,7 @@ const sanitize: Modifier = (Component) =>
     createElement(Component, { ...props, ...(ref && { ref }) })
   );
 
-type Transformer = <TPropsIn, TExtraProps extends Array<{}>>(
+export type Transformer = <TPropsIn, TExtraProps extends Array<{}>>(
   Component: SimpleFC<TPropsIn>,
   ...modifiers: Modifiers<TExtraProps>
 ) => SimpleFC<TPropsIn & UnionToIntersection<TExtraProps[number]>, TPropsIn>;

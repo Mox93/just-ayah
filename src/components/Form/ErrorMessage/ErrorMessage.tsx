@@ -22,7 +22,7 @@ const ErrorMessage = <TFieldValues,>({
     <ErrorMessageComponent
       errors={errors}
       name={name as any}
-      message={msgT("fieldRequired")}
+      message="fieldRequired"
       render={({ message, messages }) =>
         messages ? (
           Object.entries(messages).map(

@@ -1,7 +1,7 @@
 @use "styles/abstracts/mixins" as *;
 
 .Menu {
-  --icon-space: 2.5em;
+  --icon-space: 2em;
 
   .item {
     &.withCheckMark {

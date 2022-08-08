@@ -1,6 +1,6 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { Button, ButtonSize, ButtonVariant } from "components/Buttons";
+import { Button, SizeVariant, ButtonVariant } from "components/Buttons";
 import Container from "components/Container";
 import { CheckMark } from "components/Icons";
 import { Converter, GetKey } from "models";
@@ -14,7 +14,7 @@ interface MenuProps<TItem> {
   withCheckMark?: boolean;
   renderElement?: FunctionOrChain<TItem, ReactNode>;
   variant?: ButtonVariant | null;
-  size?: ButtonSize | null;
+  size?: SizeVariant | null;
   checkIsSelected?: Converter<TItem, boolean>;
   getKey?: GetKey<TItem>;
   onSelect?: (item: TItem) => void;
