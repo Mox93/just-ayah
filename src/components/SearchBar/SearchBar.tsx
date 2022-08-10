@@ -1,16 +1,21 @@
 import { identity } from "lodash";
 import { ChangeEventHandler, useCallback, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
 
 import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.svg";
-import { Input, MiniForm } from "components/Form"; // can't use formAtoms because of circular input
+import { formAtoms } from "components/Form"; // can't use formAtoms because of circular input
 import Highlight from "components/Highlight";
 import Menu from "components/Menu";
-import { OverflowDir, useDropdown, useGlobalT } from "hooks";
+import { OverflowDir, useDropdown, useGlobalT, useSmartForm } from "hooks";
 import { Converter, GetKey } from "models";
 import { omit, pass } from "utils";
 import { before } from "utils/position";
 import { renderAttributes } from "utils/render";
+
+interface Search {
+  search: string;
+}
+
+const { Input, MiniForm } = formAtoms<Search>();
 
 type SearchRenderMap = {
   value: string;
@@ -39,16 +44,69 @@ const SearchBar = <TIndex,>({
   renderSections,
 }: SearchBarProps<TIndex> = {}) => {
   const glb = useGlobalT();
-  const { register, handleSubmit } = useForm<{ search: string }>();
   const [results, setResults] = useState<TIndex[]>();
   const { driverRef, drivenRef, dropdownAction, dropdownWrapper } = useDropdown(
     { overflowDir }
   );
+  const formProps = useSmartForm<Search>({
+    onSubmit: (data) => {
+      console.log(data);
+      onSubmit(results);
+    },
+  });
 
-  const resultsMenu = useMemo(
-    () =>
-      showResults
-        ? () => (
+  const onChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      const searchKey = e.target.value;
+
+      const searchResults = applySearch(searchKey);
+
+      dropdownAction(searchResults?.length ? "open" : "close");
+      setResults(searchResults);
+    },
+    [applySearch, dropdownAction]
+  );
+
+  const openMenu = useCallback(
+    () => results?.length && dropdownAction("open"),
+    [results, dropdownAction]
+  );
+
+  const searchField = useMemo(() => {
+    return (
+      <Input
+        className="searchField"
+        name="search"
+        rules={{ required: true, onChange }}
+        {...(showResults && { labelRef: driverRef })}
+        onClick={openMenu}
+        onFocus={openMenu}
+        autoComplete="off"
+        visibleBorder
+      >
+        {before("input", <SearchIcon className="icon" />)}
+      </Input>
+    );
+  }, [showResults, driverRef, onChange, openMenu]);
+
+  const searchBar = useMemo(() => {
+    return showButton ? (
+      <MiniForm
+        className="searchForm"
+        submitProps={{ children: glb("search"), variant: "primary-solid" }}
+        {...formProps}
+      >
+        {searchField}
+      </MiniForm>
+    ) : (
+      searchField
+    );
+  }, [showButton, searchField, glb, formProps]);
+
+  return (
+    <div className="SearchBar">
+      {showResults
+        ? dropdownWrapper(searchBar, () => (
             <Menu
               ref={drivenRef}
               items={results || []}
@@ -69,63 +127,8 @@ const SearchBar = <TIndex,>({
               })}
               onSelect={onSelect}
             />
-          )
-        : null,
-    [showResults, renderSections, drivenRef, results, getKey, onSelect]
-  );
-
-  const onChange: ChangeEventHandler<HTMLInputElement> = useCallback(
-    (e) => {
-      const searchKey = e.target.value;
-      const searchResults = searchKey ? applySearch(searchKey) : undefined;
-
-      dropdownAction(searchResults?.length ? "open" : "close");
-      setResults(searchResults);
-    },
-    [applySearch, dropdownAction]
-  );
-
-  const openMenu = useCallback(
-    () => results?.length && dropdownAction("open"),
-    [results, dropdownAction]
-  );
-
-  const searchField = useMemo(() => {
-    return (
-      <Input
-        className="searchField"
-        {...register("search", { required: true, onChange })}
-        {...(showResults && { labelRef: driverRef })}
-        onClick={openMenu}
-        onFocus={openMenu}
-        autoComplete="off"
-        visibleBorder
-      >
-        {before("input", <SearchIcon className="icon" />)}
-      </Input>
-    );
-  }, [showResults, driverRef, register, onChange, openMenu]);
-
-  const searchBar = useMemo(() => {
-    return showButton ? (
-      <MiniForm
-        className="searchForm"
-        submitProps={{ children: glb("search"), variant: "primary-solid" }}
-        onSubmit={handleSubmit((data) => {
-          console.log(data);
-          onSubmit(results);
-        })}
-      >
-        {searchField}
-      </MiniForm>
-    ) : (
-      searchField
-    );
-  }, [showButton, results, searchField, glb, handleSubmit, onSubmit]);
-
-  return (
-    <div className="SearchBar">
-      {showResults ? dropdownWrapper(searchBar, resultsMenu!) : searchBar}
+          ))
+        : searchBar}
     </div>
   );
 };

@@ -70,7 +70,7 @@ const FormUI: VFC<TestFormProps> = () => {
               selectedCountry: watch("country") as any,
             })}
             setValue={(value) => setValue("country", value?.code!)}
-            searchable
+            searchFields={["name", "native"]}
           />
           <InputGroup>
             <MenuInput

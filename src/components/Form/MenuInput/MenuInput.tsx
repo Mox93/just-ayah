@@ -1,15 +1,25 @@
 import { isEqual } from "lodash";
-import { forwardRef, ReactNode, Ref } from "react";
+import {
+  ChangeEventHandler,
+  forwardRef,
+  ReactNode,
+  Ref,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
+import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.svg";
 import { DropdownArrow } from "components/Icons";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown } from "hooks";
 import { GetKey, Merge } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, omit } from "utils";
 import { after, before } from "utils/position";
+import { substringMatch } from "utils/match";
 
 import Input, { InputProps } from "../Input";
-import SearchBar from "components/SearchBar";
+import { FieldPath } from "react-hook-form";
 
 export type MenuInputProps<TOption> = Merge<
   InputProps,
@@ -19,11 +29,11 @@ export type MenuInputProps<TOption> = Merge<
   }
 >;
 
-interface InternalMenuInputProps<TOption> extends MenuInputProps<TOption> {
+interface MenuInputPropsInternal<TOption> extends MenuInputProps<TOption> {
   options: TOption[];
   selected?: TOption;
-  searchable?: boolean;
   renderElement?: FunctionOrChain<TOption, ReactNode>;
+  searchFields?: FieldPath<TOption>[];
   getKey?: GetKey<TOption>;
 }
 
@@ -40,23 +50,43 @@ const MenuInput = <TOption,>(
     dir,
     overflowDir,
     selected,
-    searchable,
+    searchFields,
     getKey = identity,
     setValue = omit,
     renderElement = identity,
     ...props
-  }: InternalMenuInputProps<TOption>,
+  }: MenuInputPropsInternal<TOption>,
   ref: Ref<HTMLInputElement>
 ) => {
+  const [optionList, setOptionList] = useState(options);
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
     useDropdown({
       className: cn("MenuInput", className),
       dir,
       overflowDir,
-      onClick: "open",
+      onClick: "toggle",
     });
 
   const isSelected = !["", null, undefined].includes(selected as any);
+
+  const applyFilter: ChangeEventHandler<HTMLInputElement> | undefined = useMemo(
+    () =>
+      searchFields &&
+      ((e) => {
+        const results = substringMatch(options, {
+          fields: { type: "include", names: searchFields },
+        })(e.target.value);
+
+        setOptionList(() =>
+          results?.length ? results.map(({ value }) => value) : options
+        );
+      }),
+    [searchFields, options]
+  );
+
+  useEffect(() => {
+    isOpen || setOptionList(options);
+  }, [isOpen, options]);
 
   return dropdownWrapper(
     // TODO replace with Button
@@ -80,14 +110,26 @@ const MenuInput = <TOption,>(
       <Menu
         {...{ dir, getKey }}
         ref={drivenRef}
-        items={options}
+        items={optionList}
         checkIsSelected={(item) => isEqual(item, selected)}
         renderElement={renderElement}
         onSelect={(item) => {
           setValue(item);
           dropdownAction("close");
         }}
-        {...(searchable && { header: <SearchBar /> })} // TODO add props
+        {...(searchFields && {
+          header: (
+            <Input
+              className="searchField"
+              onChange={applyFilter}
+              autoComplete="off"
+              autoFocus
+              visibleBorder
+            >
+              {before("input", <SearchIcon className="icon" />)}
+            </Input>
+          ),
+        })}
         withCheckMark
       />
     )

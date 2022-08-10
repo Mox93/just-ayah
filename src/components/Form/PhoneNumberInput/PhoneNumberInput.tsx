@@ -63,11 +63,11 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
           placeholder="+00"
           {...codeProps}
           className={cn("countryCode", codeProps?.className)}
+          searchFields={["code", "phone", "name", "native"]}
           {...useCountrySelector({
             renderSections: ["emoji", "code", "phone"],
             selectedCountry: codeProps?.selected,
           })}
-          searchable
         />
 
         <Input
