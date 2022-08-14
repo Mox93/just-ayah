@@ -14,7 +14,7 @@ import {
   Students,
   StudentList,
   StudentProfile,
-  NewStudent,
+  StudentEnroll,
 } from "pages/Students";
 import NotFound from "pages/NotFound";
 import SignIn from "pages/SignIn";
@@ -87,7 +87,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
           path="enroll/:id"
           element={<FetchGuard fetcher={({ id }: any) => getStudent(id)} />}
         >
-          <Route index element={<NewStudent />}></Route>
+          <Route index element={<StudentEnroll />}></Route>
         </Route>
 
         <Route path="ui">

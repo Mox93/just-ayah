@@ -11,9 +11,7 @@ import { defaultMeta, StudentInfo } from "models/student";
 
 import StudentForm from "../StudentForm";
 
-interface NewStudentProps {}
-
-const NewStudent: VFC<NewStudentProps> = () => {
+const StudentEnroll: VFC = () => {
   const stu = usePageT("students");
   const { showPopup } = usePopupContext();
   const { id } = useParams();
@@ -51,7 +49,7 @@ const NewStudent: VFC<NewStudentProps> = () => {
   }, [id, state]);
 
   return (
-    <div className="NewStudent">
+    <div className="StudentEnroll">
       <img className="banner" src={justAyahBG} alt="" />
       <LanguageSelector />
 
@@ -69,4 +67,4 @@ const NewStudent: VFC<NewStudentProps> = () => {
   );
 };
 
-export default NewStudent;
+export default StudentEnroll;
