@@ -1,6 +1,6 @@
 import { useEffect, VFC } from "react";
 
-import LoadingSpinner from "components/Icons/LoadingSpinner";
+import { LoadingSpinner } from "components/Icons";
 import { usePopupContext } from "context";
 
 interface LoadingPopupProps {

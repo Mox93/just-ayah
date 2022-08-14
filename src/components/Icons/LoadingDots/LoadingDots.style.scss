@@ -1,0 +1,38 @@
+.LoadingDots {
+  --dot-size: 0.5rem;
+  --dot-color: var(--fill-color);
+
+  display: flex;
+  align-items: center;
+  gap: calc(var(--dot-size) / 2);
+
+  .dot1,
+  .dot2,
+  .dot3 {
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 100%;
+    background-color: var(--dot-color);
+    animation: load 1s infinite;
+  }
+
+  .dot2 {
+    animation-delay: 0.2s;
+  }
+
+  .dot3 {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes load {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}

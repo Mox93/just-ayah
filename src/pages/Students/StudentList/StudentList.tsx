@@ -2,6 +2,7 @@ import { deleteField } from "firebase/firestore";
 import { useEffect, useState, VFC } from "react";
 import { FieldPath, FieldPathValue } from "react-hook-form";
 
+import { ReactComponent as Info } from "assets/icons/info-svgrepo-com.svg";
 import { Button } from "components/Buttons";
 import { SelectionMenu } from "components/DropdownMenu";
 import Ellipsis, { ellipsis } from "components/Ellipsis";
@@ -31,7 +32,6 @@ import { cn, concat } from "utils";
 
 import StudentNotes from "../StudentNotes";
 import StudentSchedule from "../StudentSchedule";
-import { Warning } from "components/Icons";
 
 interface StudentListProps {}
 
@@ -196,7 +196,7 @@ const StudentList: VFC<StudentListProps> = () => {
             <Ellipsis className={cn({ empty: !brief })}>
               {brief || ". . ."}
             </Ellipsis>
-            {schedule?.notes && <Warning />}
+            {schedule?.notes && <Info className="infoIcon iconS" />}
           </Button>
         );
       },

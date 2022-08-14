@@ -2,6 +2,7 @@ import { ButtonHTMLAttributes, forwardRef, Ref, useRef } from "react";
 
 import { useDirT } from "hooks";
 import { cn, mergeCallbacks, mergeRefs, capitalize } from "utils";
+import { LoadingDots } from "components/Icons";
 
 type ColorVariant =
   | "primary"
@@ -37,6 +38,7 @@ const Button = (
     keepFormat,
     dir,
     iconButton,
+    disabled,
     onClick,
     ...props
   }: ButtonProps,
@@ -57,14 +59,16 @@ const Button = (
         "Button",
         variant,
         size,
-        { loading: isLoading, iconButton },
+        { isLoading, iconButton, noDisableStyle: isLoading },
         className
       )}
       onClick={mergeCallbacks(onClick, blur)}
+      disabled={isLoading || disabled}
     >
       {typeof children !== "string" || keepFormat
         ? children
         : capitalize(children)}
+      {isLoading && <LoadingDots className="loadingIndicator" />}
     </button>
   );
 };

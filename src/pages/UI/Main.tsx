@@ -1,10 +1,10 @@
-import { VFC } from "react";
+import { useState, VFC } from "react";
 
 import { Button } from "components/Buttons";
 import { StatusMenu } from "components/DropdownMenu";
 import { useDirT } from "hooks";
 import { mapStatusType, mapStatusVariant } from "models/status";
-import LoadingSpinner from "components/Icons/LoadingSpinner";
+import { LoadingSpinner } from "components/Icons";
 
 interface MainProps {}
 
@@ -20,7 +20,12 @@ const colorVariants = [
 const fillVariants = ["solid", "outline", "text", "ghost"];
 const sizes = ["large", "medium", "small"];
 
-const rowStyle = { display: "flex", gap: "1rem", marginBlockEnd: "2rem" };
+const rowStyle = {
+  display: "flex",
+  gap: "1rem",
+  marginBlockEnd: "2rem",
+  alignItems: "flex-end",
+};
 const sectionHeaderStyle: any = {
   textTransform: "capitalize",
   marginBlockEnd: "0.5rem",
@@ -28,6 +33,8 @@ const sectionHeaderStyle: any = {
 
 const MainUI: VFC<MainProps> = () => {
   const dirT = useDirT();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <main style={{ margin: "2rem 2rem 20rem" }} dir={dirT}>
@@ -70,7 +77,19 @@ const MainUI: VFC<MainProps> = () => {
         </div>
       ))}
 
-      <LoadingSpinner />
+      <div style={rowStyle}>
+        <LoadingSpinner />
+        <Button
+          onClick={() => {
+            setIsLoading(true);
+            setTimeout(() => setIsLoading(false), 5000);
+          }}
+          isLoading={isLoading}
+          disabled={isLoading}
+        >
+          Press to Load
+        </Button>
+      </div>
     </main>
   );
 };

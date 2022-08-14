@@ -54,10 +54,16 @@ export const smartForm = <TFieldValues>(
       formHook,
       children,
       noErrorMessage,
+      submitProps,
       ...props
     }: SmartFormProps<TFieldValues>) => {
+      const {
+        formState: { isSubmitting },
+      } = formHook;
+
       return {
         ...props,
+        submitProps: { isLoading: isSubmitting, ...submitProps },
         children: handleFormChildren(children, { formHook, noErrorMessage }),
         ...extraProps({ formHook }),
       };

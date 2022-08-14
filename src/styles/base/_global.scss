@@ -1,5 +1,35 @@
-svg.icon {
-  fill: var(--fill-color);
-  stroke: var(--stroke-color);
-  width: 1.5rem;
+svg {
+  --icon-size-s: 1rem;
+  --icon-size-m: 1.5rem;
+  --icon-size-l: 2rem;
+
+  &.icon {
+    fill: var(--fill-color);
+    stroke: var(--stroke-color);
+    width: var(--icon-size-m);
+  }
+
+  &.iconS {
+    width: var(--icon-size-s);
+  }
+
+  &.iconM {
+    width: var(--icon-size-m);
+  }
+
+  &.iconL {
+    width: var(--icon-size-l);
+  }
+
+  &.infoIcon {
+    fill: var(--c-info-300);
+  }
+
+  &.warningIcon {
+    fill: var(--c-warning-300);
+  }
+
+  &.dangerIcon {
+    fill: var(--c-danger-300);
+  }
 }

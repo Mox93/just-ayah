@@ -27,7 +27,7 @@ $fillVariants: ("solid", "outline", "ghost", "text");
     outline: none;
   }
 
-  &:disabled {
+  &:disabled:not(.noDisableStyle) {
     --c-foreground: var(--c-gray-200);
     --c-background: var(--c-gray-100);
   }
@@ -60,7 +60,7 @@ $fillVariants: ("solid", "outline", "ghost", "text");
     outline: none;
   }
 
-  &:disabled {
+  &:disabled:not(.noDisableStyle) {
     --c-foreground: var(--c-gray-200);
   }
 }
@@ -88,7 +88,7 @@ $fillVariants: ("solid", "outline", "ghost", "text");
     --c-background: var(--c-#{$color}-400);
   }
 
-  &:disabled {
+  &:disabled:not(.noDisableStyle) {
     --c-foreground: var(--c-gray-200);
   }
 }
@@ -117,7 +117,7 @@ $fillVariants: ("solid", "outline", "ghost", "text");
     --c-background: var(--c-#{$color}-300);
   }
 
-  &:disabled {
+  &:disabled:not(.noDisableStyle) {
     --c-foreground: var(--c-gray-200);
     --c-background: var(--c-shadow-100);
   }
@@ -194,7 +194,7 @@ $fillVariants: ("solid", "outline", "ghost", "text");
       --c-background: var(--c-gray-200);
     }
 
-    &:disabled {
+    &:disabled:not(.noDisableStyle) {
       --c-foreground: var(--c-gray-200);
     }
   }
