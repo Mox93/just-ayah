@@ -120,6 +120,7 @@ const MenuInput = <TOption,>(
         {...(searchFields && {
           header: (
             <Input
+              dir={dir}
               className="searchField"
               onChange={applyFilter}
               autoComplete="off"
