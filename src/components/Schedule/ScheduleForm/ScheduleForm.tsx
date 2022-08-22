@@ -8,6 +8,7 @@ import { formAtoms } from "components/Form";
 import { useDynamicList, useGlobalT, useSmartForm } from "hooks";
 import { Schedule } from "models/schedule";
 import { range } from "utils";
+import Container from "components/Container";
 
 const { Form, Textarea, TimeInput, WeekDayInput, InputGroup } =
   formAtoms<Schedule>();
@@ -38,53 +39,55 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
   });
 
   return (
-    <Form
+    <Container
+      variant="card"
       className="ScheduleForm"
-      submitProps={{ children: glb("save") }}
-      {...formProps}
+      header={<h2 className="title">{glb("schedule")}</h2>}
     >
-      {(items || [null]).map(({ id }, index) => (
-        <InputGroup key={id} className="fieldRow">
-          <SelectionMenu
-            options={range(1, items.length + 1)}
-            selected={index + 1}
-            className="action"
-            noArrow
-            setValue={(to) => moveItem(index, to - 1)}
-          />
-          <WeekDayInput
-            label={index > 0 ? undefined : glb("day")}
-            placeholder={glb("day")}
-            name={`entries.${index}.day` as const}
-            rules={{ required: items.length > 1 }}
-          />
-          <TimeInput
-            label={index > 0 ? undefined : glb("time")}
-            placeholder={glb("time")}
-            name={`entries.${index}.time` as const}
-            rules={{ required: items.length > 1 }}
-            minutesInterval={5}
-          />
-          <Button
-            iconButton
-            variant="primary-ghost"
-            className="action"
-            onClick={() => cloneItem(index)}
-          >
-            <PlusIcon className="icon" />
-          </Button>
-          <Button
-            iconButton
-            variant="danger-ghost"
-            className="action"
-            onClick={() => removeItem(index)}
-          >
-            <CrossIcon className="icon" />
-          </Button>
-        </InputGroup>
-      ))}
-      <Textarea name="notes" label={glb("notes")} />
-    </Form>
+      <Form submitProps={{ children: glb("save") }} {...formProps}>
+        {(items || [null]).map(({ id }, index) => (
+          <InputGroup key={id} className="fieldRow">
+            <SelectionMenu
+              options={range(1, items.length + 1)}
+              selected={index + 1}
+              className="action"
+              noArrow
+              setValue={(to) => moveItem(index, to - 1)}
+            />
+            <WeekDayInput
+              label={index > 0 ? undefined : glb("day")}
+              placeholder={glb("day")}
+              name={`entries.${index}.day` as const}
+              rules={{ required: items.length > 1 }}
+            />
+            <TimeInput
+              label={index > 0 ? undefined : glb("time")}
+              placeholder={glb("time")}
+              name={`entries.${index}.time` as const}
+              rules={{ required: items.length > 1 }}
+              minutesInterval={5}
+            />
+            <Button
+              iconButton
+              variant="primary-ghost"
+              className="action"
+              onClick={() => cloneItem(index)}
+            >
+              <PlusIcon className="icon" />
+            </Button>
+            <Button
+              iconButton
+              variant="danger-ghost"
+              className="action"
+              onClick={() => removeItem(index)}
+            >
+              <CrossIcon className="icon" />
+            </Button>
+          </InputGroup>
+        ))}
+        <Textarea name="notes" label={glb("notes")} />
+      </Form>
+    </Container>
   );
 };
 

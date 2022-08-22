@@ -1,5 +1,6 @@
 import { VFC } from "react";
 
+import Container from "components/Container";
 import { formAtoms } from "components/Form";
 import { useAuthContext } from "context";
 import { useGlobalT, useMessageT, useSmartForm } from "hooks";
@@ -15,6 +16,7 @@ interface CommentsViewerProps {
   comments?: Comment[];
   storageKey?: string;
   messageNoComments?: string;
+  header?: string;
   onCommentAdd: (comment: Comment) => void;
 }
 
@@ -22,6 +24,7 @@ const CommentsViewer: VFC<CommentsViewerProps> = ({
   comments,
   storageKey,
   messageNoComments,
+  header,
   onCommentAdd,
 }) => {
   const glb = useGlobalT();
@@ -49,7 +52,11 @@ const CommentsViewer: VFC<CommentsViewerProps> = ({
   });
 
   return (
-    <div className="CommentsViewer">
+    <Container
+      variant="card"
+      className="CommentsViewer"
+      header={<h2 className="title">{header || glb("comments")}</h2>}
+    >
       <Form
         submitProps={{ children: glb("save") }}
         resetProps={{ children: glb("clear") }}
@@ -66,7 +73,7 @@ const CommentsViewer: VFC<CommentsViewerProps> = ({
       ) : (
         <h4 className="noComments">{messageNoComments || msg("noComments")}</h4>
       )}
-    </div>
+    </Container>
   );
 };
 

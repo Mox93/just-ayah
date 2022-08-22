@@ -1,33 +1,51 @@
 @use "styles/abstracts/mixins" as *;
 
 .Popup {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 100;
 
   @include positioning($position: fixed, $inline: 0, $block: 0, $x: 0, $y: 0);
 
-  .background {
+  &,
+  & > .background,
+  & > .foreground {
     width: 100vw;
     height: 100vh;
-    background-color: var(--c-shadow-400);
   }
 
-  .foreground {
-    position: absolute;
-    background-color: var(--c-white);
-    min-width: 10rem;
-    max-height: calc(100vh - var(--spacing-l) * 2);
-    margin: var(--spacing-l);
+  & > .background {
+    background-color: var(--c-shadow-400);
+
+    @include positioning();
+  }
+
+  & > .foreground {
+    display: flex;
+    justify-content: center;
     overflow: auto;
 
-    & > .header {
-      display: flex;
-      justify-content: flex-end;
+    &.center {
+      align-items: center;
+    }
 
-      .CloseButton {
+    & > .body {
+      height: fit-content;
+      position: relative;
+
+      @include desktop {
+        margin: var(--spacing-xl);
+      }
+
+      & > .CloseButton {
         margin: var(--spacing-m);
+        z-index: 70;
+
+        @include positioning(
+          $inlineDir: end,
+          $inline: 0,
+          $block: 0,
+          $x: 0,
+          $y: 0
+        );
       }
     }
   }

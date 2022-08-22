@@ -22,6 +22,10 @@
     --spacing-#{$size}: #{$value};
   }
 
+  @each $size, $value in $width {
+    --width-#{$size}: #{$value};
+  }
+
   // Sidebar
   --closed-sidebar-width: 4rem;
   --opened-sidebar-width: 9rem;

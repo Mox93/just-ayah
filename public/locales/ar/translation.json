@@ -35,7 +35,9 @@
     "loading": "تحميل",
     "cancel": "الغاء",
     "time": "الوقت",
-    "day": "اليوم"
+    "day": "اليوم",
+    "generateLink": "انشاء رابط",
+    "comments": "التعليقات"
   },
   "dateTime": {
     "day": "يوم",

@@ -1,17 +1,16 @@
-import { FC, ReactNode, useEffect } from "react";
+import { FC, PropsWithChildren, useEffect } from "react";
 
 import { CloseButton } from "components/Buttons";
-import Container from "components/Container";
 import { useDirT } from "hooks";
 import { cn } from "utils";
 
-export interface PopupProps {
-  children?: ReactNode;
+export type PopupProps = PropsWithChildren<{
   dismissible?: boolean;
+  center?: boolean;
   close?: () => void;
-}
+}>;
 
-const Popup: FC<PopupProps> = ({ children, close, dismissible }) => {
+const Popup: FC<PopupProps> = ({ children, close, dismissible, center }) => {
   const dirT = useDirT();
 
   useEffect(() => {
@@ -23,7 +22,7 @@ const Popup: FC<PopupProps> = ({ children, close, dismissible }) => {
     close && document.addEventListener("keyup", handelEscape);
 
     return () => close && document.removeEventListener("keyup", handelEscape);
-  }, []);
+  }, [dismissible, close]);
 
   return (
     <div className="Popup" dir={dirT}>
@@ -31,13 +30,12 @@ const Popup: FC<PopupProps> = ({ children, close, dismissible }) => {
         className="background"
         onClick={() => dismissible && close && close()}
       />
-      <Container
-        variant="card"
-        className={cn({ closable: close }, "foreground")}
-        header={close && <CloseButton onClick={close} />}
-      >
-        {children}
-      </Container>
+      <div className={cn("foreground", { center })}>
+        <div className="body">
+          {children}
+          {close && <CloseButton onClick={close} />}
+        </div>
+      </div>
     </div>
   );
 };

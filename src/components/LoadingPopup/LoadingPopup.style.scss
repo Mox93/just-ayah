@@ -1,5 +1,7 @@
 .LoadingPopup {
-  display: flex;
-  gap: var(--spacing-l);
-  align-items: center;
+  & > .body {
+    display: flex;
+    gap: var(--spacing-l);
+    align-items: center;
+  }
 }

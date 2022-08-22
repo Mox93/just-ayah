@@ -1,6 +1,6 @@
 import { CommentsViewer } from "components/Comments";
 import { useStudentContext } from "context";
-import { useMessageT } from "hooks";
+import { useGlobalT, useMessageT } from "hooks";
 import { Comment } from "models/comment";
 import { VFC, useEffect, useState } from "react";
 
@@ -17,6 +17,7 @@ const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
     () => students.find(({ id: studentId }) => id === studentId)?.meta.notes
   );
   const msg = useMessageT();
+  const glb = useGlobalT();
 
   useEffect(() => {
     setNotes(
@@ -29,6 +30,7 @@ const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
       comments={notes}
       onCommentAdd={(note: Comment) => addNote(id, note)}
       messageNoComments={msg("noNotes")}
+      header={glb("notes")}
     />
   );
 };

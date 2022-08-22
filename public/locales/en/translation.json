@@ -35,7 +35,9 @@
     "loading": "loading",
     "cancel": "cancel",
     "time": "time",
-    "day": "day"
+    "day": "day",
+    "generateLink": "generate Link",
+    "comments": "comments"
   },
   "dateTime": {
     "day": "day",

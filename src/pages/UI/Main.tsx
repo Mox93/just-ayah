@@ -2,9 +2,10 @@ import { useState, VFC } from "react";
 
 import { Button } from "components/Buttons";
 import { StatusMenu } from "components/DropdownMenu";
+import { LoadingSpinner } from "components/Icons";
+import LoadingPopup from "components/LoadingPopup";
 import { useDirT } from "hooks";
 import { mapStatusType, mapStatusVariant } from "models/status";
-import { LoadingSpinner } from "components/Icons";
 
 interface MainProps {}
 
@@ -90,6 +91,8 @@ const MainUI: VFC<MainProps> = () => {
           Press to Load
         </Button>
       </div>
+
+      {isLoading && <LoadingPopup message="Loading" />}
     </main>
   );
 };

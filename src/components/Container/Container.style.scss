@@ -46,38 +46,24 @@
         padding: var(--spacing-xl);
       }
     }
-
-    & > .header {
-      background-color: var(--c-white);
-      z-index: 60;
-
-      @include positioning($position: sticky, $block: 0, $y: 0, $x: 0);
-    }
-
-    & > .footer {
-      background-color: var(--c-white);
-
-      @include positioning(
-        $position: sticky,
-        $blockDir: end,
-        $block: 0,
-        $y: 0,
-        $x: 0
-      );
-    }
   }
 
   &.form {
-    max-width: 50rem;
-    min-width: 20rem;
+    max-width: var(--width-m);
+    min-width: var(--width-xs);
     margin-block: var(--spacing-xl);
 
     & > .header {
       display: flex;
-      padding-inline: var(--spacing-xl);
-      padding-block-start: var(--spacing-xl);
+      padding-inline: var(--spacing-l);
+      padding-block-start: var(--spacing-l);
 
-      .title {
+      @include desktop {
+        padding-inline: var(--spacing-xl);
+        padding-block-start: var(--spacing-xl);
+      }
+
+      & > .title {
         max-width: 90%;
         min-width: 50%;
         padding-inline: var(--spacing-xl);
@@ -86,6 +72,15 @@
         border-block-end: 1px solid var(--c-gray-200);
         text-align: center;
         text-transform: capitalize;
+      }
+    }
+  }
+
+  &.card {
+    & > .header {
+      & > .title {
+        text-align: center;
+        padding: 1rem 3rem;
       }
     }
   }
