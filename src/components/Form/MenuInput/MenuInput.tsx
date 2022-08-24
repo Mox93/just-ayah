@@ -94,7 +94,7 @@ const MenuInput = <TOption,>(
       {...{ ...props, dir, ref }}
       className={cn({ hidden: isSelected })} // TODO once filtering is implemented replace condition with `!isOpen && selected`
       readOnly // TODO remove once filtering is implemented
-      labelRef={driverRef}
+      fieldRef={driverRef}
     >
       {isSelected // TODO once filtering is implemented replace condition with `!isOpen && selected`
         ? before(

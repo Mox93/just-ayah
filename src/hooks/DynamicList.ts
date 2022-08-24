@@ -1,6 +1,5 @@
-import { cloneDeep } from "lodash";
+import { cloneDeep, uniqueId } from "lodash";
 import { Reducer, useEffect, useReducer } from "react";
-import { newId } from "utils";
 
 type Items<T> = { id: string; item: T | null }[];
 
@@ -44,12 +43,12 @@ type Action<TItem> =
     ) &
       OnChange<TItem>;
 
-const emptyItems = () => [{ id: newId(), item: null }];
+const emptyItems = () => [{ id: uniqueId(), item: null }];
 
 const itemsInit = <TItem>(items?: TItem[]): State<TItem> => ({
   items:
     items?.map((item) => ({
-      id: newId(),
+      id: uniqueId(),
       item,
     })) || emptyItems(),
 });
@@ -66,7 +65,7 @@ const reduce = <TItem>(
       const next = idx + 1;
       newItems = [
         ...items.slice(0, next),
-        { id: newId(), item: data },
+        { id: uniqueId(), item: data },
         ...items.slice(next),
       ];
       break;
@@ -76,7 +75,7 @@ const reduce = <TItem>(
       const next1 = i + 1;
       newItems = [
         ...items.slice(0, next1),
-        { id: newId(), item: cloneDeep(newItems[i].item) },
+        { id: uniqueId(), item: cloneDeep(newItems[i].item) },
         ...items.slice(next1),
       ];
       break;

@@ -1,3 +1,4 @@
+import { uniqueId } from "lodash";
 import { forwardRef, InputHTMLAttributes, ReactNode, Ref } from "react";
 
 import { useDirT } from "hooks";
@@ -17,9 +18,10 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   isInvalid?: boolean;
   isRequired?: boolean;
   children?: PositionalElement<Location>;
-  labelRef?: Ref<HTMLLabelElement>;
+  fieldRef?: Ref<HTMLDivElement>;
   errorMessage?: ReactNode;
   visibleBorder?: boolean;
+  linkLabel?: boolean;
 }
 
 const Input = (
@@ -31,28 +33,40 @@ const Input = (
     required,
     isInvalid,
     isRequired,
+    linkLabel,
     children,
-    labelRef,
+    fieldRef,
     errorMessage,
     visibleBorder,
+    id,
+    name,
     ...props
   }: InputProps,
   ref: Ref<HTMLInputElement>
 ) => {
   const dirT = useDirT();
+  id = id || uniqueId(name ? `${name}-` : "input-");
 
   return (
-    <label className={cn("Input", className)} ref={labelRef} dir={dir || dirT}>
-      <FieldHeader {...{ label, required, isRequired, isInvalid }}>
+    <div className={cn("Input", className)} dir={dir || dirT}>
+      <FieldHeader
+        htmlFor={id}
+        linked={linkLabel}
+        {...{ label, required, isRequired, isInvalid }}
+      >
         {children}
       </FieldHeader>
 
       {before("field", children)}
-      <FieldWrapper {...{ isInvalid, dir }} alwaysVisible={visibleBorder}>
+      <FieldWrapper
+        {...{ isInvalid, dir }}
+        alwaysVisible={visibleBorder}
+        ref={fieldRef}
+      >
         {before("input", children)}
         <input
           {...props}
-          {...{ required, ref }}
+          {...{ required, ref, id, name }}
           dir="auto"
           placeholder={placeholder || label || " "}
           className="field"
@@ -61,7 +75,7 @@ const Input = (
       </FieldWrapper>
       {after("field", children)}
       {errorMessage}
-    </label>
+    </div>
   );
 };
 

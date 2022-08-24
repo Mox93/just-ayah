@@ -4,6 +4,7 @@ import {
   InputHTMLAttributes,
   ReactElement,
   ReactNode,
+  Ref,
 } from "react";
 import {
   FieldPath,
@@ -14,7 +15,7 @@ import {
 } from "react-hook-form";
 
 import { Merge } from "models";
-import { cn, identity, mergeCallbacks, pass } from "utils";
+import { cn, identity, mergeCallbacks, mergeRefs, pass } from "utils";
 import { createModifier, Transformer, transformer } from "utils/transformer";
 
 import ErrorMessage from "../ErrorMessage";
@@ -154,6 +155,7 @@ export interface NamedChildProps<
   name: TFieldName;
   rules?: RegisterOptions<TFieldValues, FieldPath<TFieldValues>>;
   noErrorMessage?: boolean;
+  ref?: Ref<HTMLInputElement>;
 }
 
 type WithExtraProps<
@@ -228,15 +230,15 @@ export const trimWhitespace = <TFieldValues>() =>
       keepWhitespace,
       rules: { setValueAs = identity, ...rules } = {},
       ...props
-    }) => {
-      return {
-        ...props,
-        rules: {
-          ...rules,
-          setValueAs: (v: string) => setValueAs(v?.trim()),
-        },
-      };
-    }
+    }) => ({
+      ...props,
+      rules: {
+        ...rules,
+        setValueAs: keepWhitespace
+          ? setValueAs
+          : (v: string) => setValueAs(v?.trim()),
+      },
+    })
   );
 
 export const selector = <TFieldValues>({
@@ -281,6 +283,7 @@ export const registerField = <TFieldValues>(convert: Function = identity) =>
       rules,
       name,
       noErrorMessage,
+      ref,
       ...props
     }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
       if (!formHook) return { ...props, name };
@@ -291,13 +294,14 @@ export const registerField = <TFieldValues>(convert: Function = identity) =>
       } = formHook;
       const errorMessage = get(errors, name);
       const { className } = props as DefaultInputProps;
+      const { ref: registerRef, ...rest } = register(name, rules);
 
       return {
         ...props,
         className: cn(className, "withErrors"),
         isInvalid: !!errorMessage,
         errorMessage: !noErrorMessage && ErrorMessage({ name, errors }),
-        ...convert(register(name, rules)),
+        ...convert({ ref: mergeRefs(registerRef, ref), ...rest }),
       };
     }
   );

@@ -102,11 +102,8 @@ const useDropdown = ({
     if (!onClick) return;
 
     const driver = driverRef.current;
-    const handleDriverClick = () => dispatch(onClick);
 
-    driver.addEventListener("click", handleDriverClick);
-
-    return () => driver.removeEventListener("click", handleDriverClick);
+    if (driver) driver.onclick = () => dispatch(onClick);
   }, [onClick]);
 
   const oDir = useOverflowDir(overflowDir, dir);

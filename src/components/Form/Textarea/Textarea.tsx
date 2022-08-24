@@ -1,4 +1,5 @@
-import autosize from "autosize";
+import autoSize from "autosize";
+import { uniqueId } from "lodash";
 import {
   forwardRef,
   ReactNode,
@@ -25,7 +26,7 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   isInvalid?: boolean;
   isRequired?: boolean;
   children?: PositionalElement<Location>;
-  labelRef?: Ref<HTMLLabelElement>;
+  fieldRef?: Ref<HTMLDivElement>;
   errorMessage?: ReactNode;
   visibleBorder?: boolean;
 }
@@ -40,27 +41,26 @@ const Textarea = (
     isInvalid,
     isRequired,
     children,
-    labelRef,
+    fieldRef,
     errorMessage,
     visibleBorder,
+    name,
+    id,
     ...props
   }: TextareaProps,
   ref: Ref<HTMLTextAreaElement>
 ) => {
   const dirT = useDirT();
-  const fieldRef = useRef(null);
+  const innerRef = useRef(null);
+  id = id || uniqueId(name ? `${name}-` : "textarea-");
 
   useEffect(() => {
-    fieldRef.current && autosize(fieldRef.current);
-  }, [fieldRef]);
+    innerRef.current && autoSize(innerRef.current);
+  }, [innerRef]);
 
   return (
-    <label
-      className={cn("Textarea", className)}
-      ref={labelRef}
-      dir={dir || dirT}
-    >
-      <FieldHeader {...{ label, required, isRequired, isInvalid }}>
+    <div className={cn("Textarea", className)} dir={dir || dirT}>
+      <FieldHeader htmlFor={id} {...{ label, required, isRequired, isInvalid }}>
         {children}
       </FieldHeader>
 
@@ -68,13 +68,14 @@ const Textarea = (
       <FieldWrapper
         {...{ isInvalid, dir }}
         alwaysVisible={visibleBorder}
+        ref={fieldRef}
         expandable
       >
         {before("textarea", children)}
         <textarea
           {...props}
-          required={required}
-          ref={mergeRefs(ref, fieldRef)}
+          {...{ name, required, id }}
+          ref={mergeRefs(ref, innerRef)}
           dir="auto"
           placeholder={placeholder || label || " "}
           className="field"
@@ -83,7 +84,7 @@ const Textarea = (
       </FieldWrapper>
       {after("field", children)}
       {errorMessage}
-    </label>
+    </div>
   );
 };
 

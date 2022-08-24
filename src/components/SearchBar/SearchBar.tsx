@@ -78,7 +78,7 @@ const SearchBar = <TIndex,>({
         className="searchField"
         name="search"
         rules={{ onChange }}
-        {...(showResults && { labelRef: driverRef })}
+        {...(showResults && { fieldRef: driverRef })}
         onClick={openMenu}
         onFocus={openMenu}
         autoComplete="off"

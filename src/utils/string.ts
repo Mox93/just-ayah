@@ -13,4 +13,4 @@ export const concat = (...values: string[]) =>
 
 export const twoDigits = (x: number) => (x > 9 ? `${x}` : `0${x}`);
 
-export const newId = (power = 10000) => `${Math.floor(Math.random() * power)}`;
+// export const newId = (power = 10000) => `${Math.floor(Math.random() * power)}`;

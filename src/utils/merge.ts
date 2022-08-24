@@ -1,7 +1,7 @@
 import { MutableRefObject, Ref } from "react";
 
 export const mergeRefs =
-  <T>(...refs: Ref<T>[]) =>
+  <T>(...refs: (Ref<T> | undefined)[]) =>
   (node: T) => {
     refs.forEach((ref) => {
       if (typeof ref === "function") {
