@@ -1,7 +1,7 @@
 import { cloneDeep, get, isArray, isPlainObject, set } from "lodash";
 import { FieldPath } from "react-hook-form";
 
-import { UpdateObject } from "models/customTypes";
+import { UpdateObject } from "models";
 
 interface PathsOptions<TFieldName> {
   parentKey?: TFieldName;

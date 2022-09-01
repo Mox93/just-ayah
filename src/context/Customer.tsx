@@ -20,13 +20,13 @@ import {
   customerFromDB,
   customerFromInfo,
 } from "models/customer";
-import { AddData, LoadData } from "models";
+import { AddData, FetchData } from "models";
 import { omit } from "utils";
 
 interface CustomerContext {
   data: { customers: Customer[] };
   add: AddData<CustomerInfo>;
-  fetch: LoadData;
+  fetch: FetchData;
 }
 
 const initialState: CustomerContext = {
@@ -53,7 +53,7 @@ export const CustomerProvider: FC<CustomerProviderProps> = ({ children }) => {
     [collectionRef]
   );
 
-  const fetch: LoadData = useCallback(
+  const fetch: FetchData = useCallback(
     ({
       filters = [],
       size = 20,

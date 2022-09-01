@@ -42,8 +42,6 @@ const statusMap = {
               const now = new Date();
               now.setHours(0, 0, 0, 0);
 
-              console.log({ date, now });
-
               return date.getTime() >= now.getTime();
             },
           }}

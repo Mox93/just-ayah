@@ -11,8 +11,7 @@ import { mergeCallbacks, omit } from "utils";
 
 import { useFormPersist } from ".";
 
-interface UseSmartFormProps<TFieldValues> {
-  config?: UseFormProps<TFieldValues>;
+interface UseSmartFormProps<TFieldValues> extends UseFormProps<TFieldValues> {
   storageKey?: string;
   resetOnSubmit?: boolean;
   resetToDefaultValues?: boolean;
@@ -21,12 +20,12 @@ interface UseSmartFormProps<TFieldValues> {
 }
 
 const useSmartForm = <TFieldValues>({
-  config = {},
   storageKey,
   resetOnSubmit,
   resetToDefaultValues,
   onSubmit = omit,
   onFail,
+  ...config
 }: UseSmartFormProps<TFieldValues> = {}) => {
   config = cloneDeep(config);
 

@@ -19,6 +19,7 @@
     "unknown": "مجهول",
     "pending": "انتظار",
     "active": "فعال",
+    "inactive": "غير فعال",
     "postponed": "تأجيل",
     "finished": "أتّم",
     "canceled": "توقف",
@@ -37,7 +38,13 @@
     "time": "الوقت",
     "day": "اليوم",
     "generateLink": "انشاء رابط",
-    "comments": "التعليقات"
+    "comments": "التعليقات",
+    "link": "الرابط",
+    "links": "روابط",
+    "form": "استمارة",
+    "friendlyName": "اسم تعريفي",
+    "status": "الحالة",
+    "subscription": "الاشتراك"
   },
   "dateTime": {
     "day": "يوم",
@@ -46,7 +53,7 @@
     "week": "اسبوع",
     "hour": "ساعة",
     "minute": "دقيقة",
-    "period": "ص/م",
+    "period": "فترة",
     "AM": "ص",
     "PM": "م",
     "symbols": {
@@ -114,8 +121,6 @@
     "noDetails": "التفاصيل",
     "quran": "هل سبق لك حفظ شئ من القرآن ؟",
     "zoom": "هل في امكانك استخدام تطبيق المحادثات \"Zoom\"؟ حيث أن اللقاءات تتم من خلاله.",
-    "status": "الحالة",
-    "subscription": "الاشتراك",
     "leaveQuestion": "اذا كان لديك اي استفسارات أو تعليقات اكتب لنا هنا"
   },
   "pages": {
@@ -128,8 +133,8 @@
       "counter_many": "تم تحديد {{count}} طالب",
       "counter_other": "تم تحديد {{count}} طالب",
       "formTitle": "بيانات الطالب",
-      "generateLink": "إنشاء رابط للطالب",
-      "fillForm": "تعبئة بيانات طالب"
+      "newStudents": "الطُلاب الجُديد",
+      "newEnroll": "اسم رابط تسجيل جديد"
     },
     "customers": {
       "formTitle": "تواصل معنا"

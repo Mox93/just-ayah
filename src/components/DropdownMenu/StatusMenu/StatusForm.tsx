@@ -17,7 +17,7 @@ const StatusForm: FC<StatusFormProps> = ({
 }) => {
   const formProps = useSmartForm({
     onSubmit,
-    config: { defaultValues },
+    defaultValues,
   });
 
   return (

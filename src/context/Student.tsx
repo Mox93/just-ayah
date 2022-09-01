@@ -17,7 +17,7 @@ import { createContext, FC, useCallback, useContext, useState } from "react";
 
 import { db } from "services/firebase";
 import { Student, StudentInfo, studentConverter } from "models/student";
-import { AddComment, AddData, GetData, LoadData, UpdateData } from "models";
+import { AddComment, AddData, GetData, FetchData, UpdateData } from "models";
 import { toCommentMap } from "models/comment";
 import { applyUpdates, debug, omit } from "utils";
 
@@ -25,42 +25,34 @@ const collectionRef = collection(db, "students");
 const studentRef = collectionRef.withConverter(studentConverter);
 
 interface StudentContext {
-  data: { students: Student[] };
+  students: Student[];
   addStudent: AddData<StudentInfo>;
-  loadStudents: LoadData;
+  fetchStudents: FetchData;
   updateStudent: UpdateData<Student>;
   getStudent: GetData<Student>;
-  generateLink: () => Promise<string>;
   addNote: AddComment;
 }
 
 const initialState: StudentContext = {
-  data: { students: [] },
+  students: [],
   addStudent: (
     data,
-    { onFulfilled = debug("FULFILLED"), onRejected = debug("REJECTED") } = {}
+    {
+      onFulfilled = debug((value) => console.log("FULFILLED", value)),
+      onRejected = debug((value) => console.log("REJECTED", value)),
+    } = {}
   ) => {
     addDoc(studentRef, data)
       .then(onFulfilled, onRejected)
       .catch((error) => console.log("ERROR", error));
   },
-  loadStudents: omit,
+  fetchStudents: omit,
   updateStudent: omit,
   getStudent: async (id: string) => {
     const docRef = doc(studentRef, id);
     const result = await getDoc(docRef);
 
     return result.data();
-  },
-  generateLink: async () => {
-    const data = {
-      awaitEnroll: true,
-      openedAt: new Date(),
-    };
-
-    const result = await addDoc(collectionRef, data);
-
-    return `${window.location.protocol}//${window.location.host}/enroll/${result.id}`;
   },
   addNote: omit,
 };
@@ -73,14 +65,14 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
 
-  const loadStudents: LoadData = useCallback(
+  const fetchStudents: FetchData = useCallback(
     ({
       filters = [],
       size = 20,
       sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
       options: {
-        onFulfilled = debug("FULFILLED"),
-        onRejected = debug("REJECTED"),
+        onFulfilled = debug((value) => console.log("FULFILLED", value)),
+        onRejected = debug((value) => console.log("REJECTED", value)),
       } = {},
     } = {}) => {
       const q = query(
@@ -109,7 +101,7 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
 
           onFulfilled(querySnapshot);
         }, onRejected)
-        .catch(debug("ERROR"));
+        .catch(debug((value) => console.log("ERROR", value)));
     },
     [lastDoc]
   );
@@ -119,8 +111,8 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
       id,
       updates,
       {
-        onFulfilled = debug("FULFILLED"),
-        onRejected = debug("REJECTED"),
+        onFulfilled = debug((value) => console.log("FULFILLED", value)),
+        onRejected = debug((value) => console.log("REJECTED", value)),
         applyLocally,
       } = {}
     ) => {
@@ -129,8 +121,7 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
       const { meta, "meta.notes": metaNotes, ...rest } = updates;
       const { notes } = meta || {};
 
-      const updatesDB = {
-        // : UpdateObject<Student> = {
+      const updatesDB: any = {
         ...rest,
         ...(meta && {
           meta: {
@@ -142,7 +133,7 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
         "meta.dateUpdated": new Date(),
       };
 
-      updateDoc(doc(studentRef, id), updatesDB as any).then(() => {
+      updateDoc(doc(studentRef, id), updatesDB).then(() => {
         applyLocally &&
           setStudents((state) =>
             state.map((data) =>
@@ -180,10 +171,10 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
     <studentContext.Provider
       value={{
         ...initialState,
-        loadStudents,
+        fetchStudents,
         updateStudent,
         addNote,
-        data: { students },
+        students,
       }}
     >
       {children}

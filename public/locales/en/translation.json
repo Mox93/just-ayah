@@ -19,6 +19,7 @@
     "unknown": "unknown",
     "pending": "pending",
     "active": "active",
+    "inactive": "inactive",
     "postponed": "postponed",
     "finished": "finished",
     "canceled": "canceled",
@@ -36,8 +37,14 @@
     "cancel": "cancel",
     "time": "time",
     "day": "day",
-    "generateLink": "generate Link",
-    "comments": "comments"
+    "generateLink": "generate link",
+    "comments": "comments",
+    "link": "link",
+    "links": "links",
+    "form": "form",
+    "friendlyName": "friendly name",
+    "status": "status",
+    "subscription": "subscription"
   },
   "dateTime": {
     "day": "day",
@@ -114,8 +121,6 @@
     "noDetails": "details",
     "quran": "have you memorized portions of the quran before?",
     "zoom": "are you able to use the conferencing app \"Zoom\"? as the sessions take place through it.",
-    "status": "status",
-    "subscription": "subscription",
     "leaveQuestion": "if you have any questions or comments leave them here"
   },
   "pages": {
@@ -124,8 +129,8 @@
       "counter_one": "1 student selected",
       "counter_other": "{{count}} students selected",
       "formTitle": "student information",
-      "generateLink": "generate student link",
-      "fillForm": "fill student form"
+      "newStudents": "new students",
+      "newEnroll": "new enroll link name"
     },
     "customers": {
       "formTitle": "reach out"

@@ -25,7 +25,6 @@ import {
 import StatusForm from "./StatusForm";
 
 type State = {
-  variant: StatusVariants;
   currentStatus: Status;
   activeStatus?: Status;
   onChange: Function;
@@ -37,10 +36,10 @@ type Action = {
 };
 
 const reduce = (
-  { variant, currentStatus, onChange, dropdownAction = omit }: State,
+  { currentStatus, onChange, dropdownAction = omit }: State,
   { type, payload }: Action
 ): State => {
-  const state = { variant, onChange, dropdownAction };
+  const state = { onChange, dropdownAction };
 
   switch (type) {
     /*********************\
@@ -98,7 +97,6 @@ const StatusMenu = <TVariant extends StatusVariants>(
     });
 
   const [{ currentStatus, activeStatus }, dispatch] = useReducer(reduce, {
-    variant,
     currentStatus: status || { type: UNKNOWN },
     onChange,
     dropdownAction,

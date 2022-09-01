@@ -8,10 +8,7 @@ interface StudentScheduleProps {
 }
 
 const StudentSchedule: VFC<StudentScheduleProps> = ({ id }) => {
-  const {
-    data: { students },
-    updateStudent,
-  } = useStudentContext();
+  const { students, updateStudent } = useStudentContext();
   const schedule = useMemo(
     () => students.find(({ id: studentId }) => id === studentId)?.meta.schedule,
     [students, id]

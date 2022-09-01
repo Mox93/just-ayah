@@ -1,0 +1,29 @@
+.EnrollLinks {
+  display: grid;
+  gap: var(--spacing-l);
+
+  .actions {
+    display: flex;
+    gap: var(--spacing-m);
+  }
+
+  .link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-s);
+
+    &:not(:hover) {
+      .copyLink {
+        display: none;
+      }
+    }
+  }
+
+  .active {
+    color: var(--c-gray-500);
+  }
+
+  .inactive {
+    color: var(--c-gray-300);
+  }
+}

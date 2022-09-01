@@ -4,6 +4,7 @@ import {
   InputHTMLAttributes,
   ReactNode,
   useCallback,
+  useEffect,
   useReducer,
 } from "react";
 
@@ -16,31 +17,26 @@ import MenuInput from "../MenuInput";
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 
-type State = {
-  date: Partial<DateInfo>;
-  yearsRange?: { start?: number; end?: number };
-};
+type State = Partial<DateInfo>;
 type Action = {
   type: "update" | "replace";
   payload?: Partial<DateInfo>;
   setValue: (value: DateInfo) => void;
 };
 
-const reduce = (
-  { date }: State,
-  { type, payload, setValue }: Action
-): State => {
-  const newDate =
+const reduce = (date: State, { type, payload, setValue }: Action): State => {
+  const newDate = clampDate(
     type === "update"
       ? { ...date, ...payload }
       : type === "replace"
       ? { ...payload }
-      : date;
+      : date
+  );
 
   if (newDate?.day && newDate?.month && newDate?.year)
     setValue(newDate as DateInfo);
 
-  return { date: newDate };
+  return newDate;
 };
 
 interface DateInputProps extends HTMLAttributes<HTMLDivElement> {
@@ -71,9 +67,19 @@ const DateInput: FC<DateInputProps> = ({
 }) => {
   const dts = useDateTimeT("symbols");
 
-  const [{ date }, dispatch] = useReducer(reduce, {
-    date: selected || toDateInfo(innerProps?.value) || {},
-  });
+  const [{ day, month, year }, dispatch] = useReducer(
+    reduce,
+    selected || toDateInfo(innerProps?.value) || {}
+  );
+
+  useEffect(() => {
+    if (
+      selected?.day !== day ||
+      selected?.month !== month ||
+      selected?.year !== year
+    )
+      dispatch({ type: "replace", payload: selected, setValue });
+  }, [selected]);
 
   const update = useCallback(
     (key: keyof DateInfo) => (value?: number) =>
@@ -89,12 +95,7 @@ const DateInput: FC<DateInputProps> = ({
     end: endYear = now.getFullYear() + 101,
   } = yearsRange;
 
-  const daysRange =
-    clampDate({
-      day: 31,
-      month: date?.month,
-      year: date?.year,
-    }).day! + 1;
+  const daysRange = clampDate({ day: 31, month, year }).day! + 1;
 
   return (
     <div {...props} className={cn("DateInput", className)}>
@@ -107,21 +108,21 @@ const DateInput: FC<DateInputProps> = ({
         <MenuInput
           className="day"
           options={range(1, daysRange)}
-          selected={date?.day}
+          selected={day}
           setValue={update("day")}
           placeholder={dts("day")}
         />
         <MenuInput
           className="month"
           options={range(1, 13)}
-          selected={date?.month}
+          selected={month}
           setValue={update("month")}
           placeholder={dts("month")}
         />
         <MenuInput
           className="year"
           options={range(startYear, endYear)}
-          selected={date?.year}
+          selected={year}
           setValue={update("year")}
           placeholder={dts("year")}
         />

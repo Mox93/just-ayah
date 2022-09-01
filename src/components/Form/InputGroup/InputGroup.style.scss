@@ -2,6 +2,7 @@
 
 .InputGroup {
   display: flex;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: var(--spacing-xl) var(--spacing-l);
 

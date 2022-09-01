@@ -10,7 +10,10 @@
 
   @include desktop() {
     --border-radius: 0.75rem;
-    box-shadow: 4px 4px 16px var(--c-shadow-200);
+
+    &:not(.flat) {
+      box-shadow: 4px 4px 16px var(--c-shadow-200);
+    }
   }
 
   &.menu {

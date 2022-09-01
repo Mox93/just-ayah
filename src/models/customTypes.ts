@@ -44,7 +44,7 @@ type RequestCallback = {
 
 export type AddData<TData> = (data: TData, options?: RequestCallback) => void;
 
-export type LoadData = (options?: {
+export type FetchData = (options?: {
   filters?: [string, WhereFilterOp, any][];
   size?: number;
   sort?: { by: string | FieldPath; direction?: OrderByDirection };

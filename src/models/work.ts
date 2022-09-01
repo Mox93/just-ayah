@@ -1,4 +1,3 @@
-import { UNKNOWN } from "models";
 import { identity } from "utils";
 import { fromYesNo } from "utils/yesNo";
 
@@ -27,12 +26,12 @@ export type WorkStatusInfo = {
 };
 
 export const parseWorkStatus = ({
-  doesWork: dw,
+  doesWork,
   job,
   reason,
   explanation,
 }: WorkStatusInfo): WorkStatus => {
-  const doesWork = fromYesNo(dw);
+  doesWork = fromYesNo(doesWork);
 
   return doesWork
     ? { doesWork, job: job! }

@@ -18,8 +18,8 @@ export const pluck =
   (obj?: TObject) =>
     get(obj, path);
 
-export const debug = (prefix: string) => (output: any) =>
-  process.env.REACT_APP_ENV === "development" && console.log(prefix, output);
+export const debug = (action: (value?: any) => void) => (value?: any) =>
+  process.env.REACT_APP_ENV === "development" && action(value);
 
 /****************************\
 |****** Function Chain ******|

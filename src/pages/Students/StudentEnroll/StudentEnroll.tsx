@@ -25,8 +25,7 @@ const StudentEnroll: VFC = () => {
       {
         ...data,
         ...{
-          openedAt: deleteField(),
-          awaitEnroll: deleteField(),
+          enroll: deleteField(),
           meta: defaultMeta(),
         },
       },

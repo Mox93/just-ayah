@@ -32,7 +32,7 @@ type MetaInDB = Merge<
   Meta,
   {
     dateCreated: Timestamp;
-    dateUpdated: Timestamp;
+    dateUpdated?: Timestamp;
     progress: ProgressInDB;
     notes?: CommentMapInDB;
   }
@@ -70,29 +70,20 @@ export type StudentInDB = Merge<
   }
 >;
 
-export interface StudentEnroll extends Partial<Student> {
-  awaitEnroll: boolean;
-  openedAt: Date;
-}
-
-export type StudentEnrollInDB = Merge<
-  StudentEnroll,
-  {
-    openedAt: Timestamp;
-  }
->;
-
-const isEnroll = (obj: any): obj is StudentEnroll => obj.awaitEnroll;
-
 export const defaultMeta = (): Meta => {
   const now = new Date();
   return { dateCreated: now, progress: { type: "pending" } };
 };
 
-const studentFromDB = (
-  id: string,
-  { dateOfBirth, meta, ...data }: StudentInDB
-): Student => {
+type StudentFromDB = {
+  (id: string, data: StudentInDB): Student;
+  (id: string, data: Partial<StudentInDB>): Partial<Student> & { id: string };
+};
+
+export const studentFromDB: StudentFromDB = (
+  id,
+  { dateOfBirth, meta, ...data }
+) => {
   const now = new Date();
 
   const { dateCreated, dateUpdated, progress, subscription, notes, ..._meta } =
@@ -102,19 +93,19 @@ const studentFromDB = (
     ...data,
     id,
     ...(dateOfBirth && { dateOfBirth: dateOfBirth.toDate() }),
-    meta: meta
-      ? {
-          ..._meta,
-          dateCreated: dateCreated ? dateCreated.toDate() : now,
-          dateUpdated: dateUpdated ? dateUpdated.toDate() : now,
-          ...(progress && { progress: getStatus("progress", progress) }),
-          ...(subscription && {
-            subscription: getStatus("subscription", subscription),
-          }),
-          ...(notes && { notes: commentListFromDB(notes) }),
-        }
-      : defaultMeta(),
-  };
+    ...(meta && {
+      meta: {
+        ..._meta,
+        dateCreated: dateCreated ? dateCreated.toDate() : now,
+        ...(dateUpdated && { dateUpdated: dateUpdated.toDate() }),
+        ...(progress && { progress: getStatus("progress", progress) }),
+        ...(subscription && {
+          subscription: getStatus("subscription", subscription),
+        }),
+        ...(notes && { notes: commentListFromDB(notes) }),
+      },
+    }),
+  } as any;
 };
 
 const studentFromInfo = ({
@@ -145,11 +136,13 @@ const studentFromInfo = ({
     if (value !== undefined) set(processedData, key, value);
   }
 
+  console.log(processedData);
+
   return processedData;
 };
 
 export const studentConverter = {
-  toFirestore: (data: any) => (isEnroll(data) ? data : studentFromInfo(data)),
+  toFirestore: (data: any) => studentFromInfo(data),
   fromFirestore: (
     snapshot: QueryDocumentSnapshot<DocumentData>,
     options: SnapshotOptions

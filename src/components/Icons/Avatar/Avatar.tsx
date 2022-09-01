@@ -7,14 +7,9 @@ interface AvatarProps {
 const Avatar: VFC<AvatarProps> = ({ url }) => {
   return (
     <div className="Avatar">
-      {url ? (
-        <img src={url} alt="avatar" />
-      ) : (
-        <>
-          <div className="body" />
-          <div className="head" />
-        </>
-      )}
+      <div className="body" />
+      <div className="head" />
+      {url && <img className="photo" src={url} alt="avatar" />}
     </div>
   );
 };

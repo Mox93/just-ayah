@@ -26,7 +26,7 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
 
       onSubmit({ ...(notes ? { notes } : {}), entries });
     },
-    config: { defaultValues },
+    defaultValues,
   });
 
   const {

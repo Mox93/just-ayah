@@ -9,10 +9,7 @@ interface StudentNotesProps {
 }
 
 const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
-  const {
-    data: { students },
-    addNote,
-  } = useStudentContext();
+  const { students, addNote } = useStudentContext();
   const [notes, setNotes] = useState<Comment[] | undefined>(
     () => students.find(({ id: studentId }) => id === studentId)?.meta.notes
   );

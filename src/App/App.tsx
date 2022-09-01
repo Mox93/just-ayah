@@ -10,6 +10,7 @@ import {
   StudentProvider,
   PopupProvider,
   TeacherProvider,
+  StudentEnrollProvider,
 } from "context";
 import "services/i18n";
 import "styles/index.scss";
@@ -30,6 +31,7 @@ function App() {
         CourseProvider,
         CustomerProvider,
         StudentProvider,
+        StudentEnrollProvider,
         PopupProvider,
       ]}
     >

@@ -9,6 +9,7 @@ interface ContainerProps {
   dir?: string;
   header?: ReactNode;
   footer?: ReactNode;
+  flat?: boolean;
 }
 
 const Container = (
@@ -19,6 +20,7 @@ const Container = (
     dir,
     header,
     footer,
+    flat,
   }: PropsWithChildren<ContainerProps>,
   ref: Ref<HTMLDivElement>
 ) => {
@@ -26,7 +28,11 @@ const Container = (
   const _dir = dir || dirT;
 
   return (
-    <div ref={ref} className={cn("Container", variant, className)} dir={_dir}>
+    <div
+      ref={ref}
+      className={cn("Container", variant, className, { flat })}
+      dir={_dir}
+    >
       {header && (
         <div className="header" dir={_dir}>
           {header}
