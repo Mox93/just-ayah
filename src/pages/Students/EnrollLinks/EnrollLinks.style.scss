@@ -10,7 +10,9 @@
   }
 
   .withAction {
-    height: 100%;
+    height: var(--row-height);
+    display: flex;
+    align-items: center;
     position: relative;
 
     &:hover {

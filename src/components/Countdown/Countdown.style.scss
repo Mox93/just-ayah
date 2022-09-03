@@ -1,4 +1,7 @@
 .Countdown {
+  white-space: nowrap;
+  text-align: center;
+
   &.active {
     color: var(--c-gray-500);
   }

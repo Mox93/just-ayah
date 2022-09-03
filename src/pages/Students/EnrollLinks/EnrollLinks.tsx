@@ -12,6 +12,7 @@ import { useGlobalT, useLoading } from "hooks";
 import { enrollLinkFromId } from "models/studentEnroll";
 
 import NewEnroll from "./NewEnroll";
+import Ellipsis from "components/Ellipsis";
 
 interface EnrollLinksProps {}
 
@@ -37,7 +38,6 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
       {
         name: "key",
         header: glb("friendlyName"),
-        className: "withAction",
         getValue: ({ id, enroll: { key } }) =>
           editing === id ? (
             <EditableCell
@@ -49,7 +49,7 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
               onCancel={() => setEditing(undefined)}
             />
           ) : (
-            <>
+            <div className="withAction">
               {key}
               <Button
                 className="action"
@@ -60,19 +60,18 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
               >
                 <EditIcon className="icon" />
               </Button>
-            </>
+            </div>
           ),
       },
       {
         name: "link",
         header: glb("link"),
-        className: "withAction",
         getValue: ({ id }) => {
           const link = enrollLinkFromId(id);
 
           return (
-            <>
-              {link}
+            <div className="withAction">
+              <Ellipsis>{link}</Ellipsis>
               <Button
                 className="action"
                 variant="primary-ghost"
@@ -82,7 +81,7 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
               >
                 <CopyIcon className="icon" />
               </Button>
-            </>
+            </div>
           );
         },
       },

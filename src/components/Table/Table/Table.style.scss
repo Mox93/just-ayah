@@ -2,6 +2,7 @@
 
 .Table {
   --cell-max-width: 15rem;
+  --row-height: 2.875rem;
 
   margin-inline: unset;
   overflow: auto;
@@ -86,7 +87,7 @@
   }
 
   tr {
-    height: 2.875rem;
+    height: var(--row-height);
     border-block-end: 1px solid var(--c-gray-200);
   }
 
