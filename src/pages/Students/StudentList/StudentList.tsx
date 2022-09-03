@@ -7,7 +7,7 @@ import { Button } from "components/Buttons";
 import { SelectionMenu } from "components/DropdownMenu";
 import Ellipsis, { ellipsis } from "components/Ellipsis";
 import { StatusMenu } from "components/DropdownMenu";
-import Table, { FieldProps } from "components/Table";
+import { FieldProps, Table } from "components/Table";
 import {
   useCourseContext,
   usePopupContext,

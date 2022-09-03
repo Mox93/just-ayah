@@ -1,6 +1,6 @@
 import { VFC, useState } from "react";
 
-import Table, { FieldProps } from "components/Table";
+import { FieldProps, Table } from "components/Table";
 import { useTeacherContext } from "context";
 import { useGlobalT, usePageT, usePersonalInfoT } from "hooks";
 import { Teacher } from "models/teacher";

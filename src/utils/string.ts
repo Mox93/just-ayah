@@ -11,6 +11,12 @@ export const toTitle = (value: string) =>
 export const concat = (...values: string[]) =>
   values.filter(identity).join(" ");
 
-export const twoDigits = (x: number) => (x > 9 ? `${x}` : `0${x}`);
+export const addZeros = (x = 0, length = 2) => {
+  const actualLength = `${x}`.length;
 
-// export const newId = (power = 10000) => `${Math.floor(Math.random() * power)}`;
+  return actualLength < length
+    ? `${Array(length - actualLength)
+        .fill("0")
+        .join()}${x}`
+    : `${x}`;
+};

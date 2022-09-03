@@ -1,6 +1,6 @@
-import { identity } from "./../utils/functions";
 import { Timestamp } from "firebase/firestore";
-import { range, twoDigits } from "utils";
+
+import { identity, range, addZeros } from "utils";
 
 export const DateTime = Timestamp;
 
@@ -14,6 +14,18 @@ export interface TimeInfo {
   hour: number;
   minute: number;
 }
+
+export const timeDeltaUnits = [
+  "year",
+  "month",
+  "day",
+  "hour",
+  "minute",
+] as const;
+
+export type TimeDeltaUnits = typeof timeDeltaUnits[number];
+
+export type TimeDelta = { [key in TimeDeltaUnits]+?: number };
 
 export interface TimeInfo12H {
   hour: number;
@@ -98,7 +110,7 @@ export const toDateInfo = (date?: any): DateInfo | undefined => {
 export const fromTimeInfo = (
   { hour, minute, period }: TimeInfo12H,
   t: (value: string) => string = identity
-) => `${twoDigits(hour)}:${twoDigits(minute)}${t(period)}`;
+) => `${addZeros(hour)}:${addZeros(minute)}${t(period)}`;
 
 export const to24H = ({ hour, minute, period }: TimeInfo12H): TimeInfo => ({
   hour:
@@ -115,3 +127,105 @@ export const to12H = ({ hour, minute }: TimeInfo): TimeInfo12H => ({
   minute,
   period: hour > 11 ? "PM" : "AM",
 });
+
+export const shiftDate = (
+  date: Date,
+  { year = 0, month = 0, day = 0, hour = 0, minute = 0 }: TimeDelta,
+  method: "forward" | "backward" = "forward"
+): Date => {
+  const newDate = new Date(date);
+  const apply =
+    method === "backward"
+      ? (a: number, b: number) => a - b
+      : (a: number, b: number) => a + b;
+
+  newDate.setFullYear(apply(newDate.getFullYear(), year));
+  newDate.setMonth(apply(newDate.getMonth(), month));
+  newDate.setDate(apply(newDate.getDate(), day));
+  newDate.setHours(apply(newDate.getHours(), hour));
+  newDate.setMinutes(apply(newDate.getMinutes(), minute));
+
+  return newDate;
+};
+
+const millisecondsPerUnit: {
+  [key in TimeDeltaUnits]: number;
+} = {
+  year: 3.154e10,
+  month: 2.628e9,
+  day: 8.64e7,
+  hour: 3.6e6,
+  minute: 60000,
+};
+
+interface GetTimeDelta {
+  (date1: Date, date2: Date, maxUnit?: "year"): Required<TimeDelta>;
+  (date1: Date, date2: Date, maxUnit?: "month"): Required<
+    Omit<TimeDelta, "year">
+  >;
+  (date1: Date, date2: Date, maxUnit?: "day"): Required<
+    Omit<TimeDelta, "year" | "month">
+  >;
+  (date1: Date, date2: Date, maxUnit?: "hour"): Required<
+    Omit<TimeDelta, "year" | "month" | "day">
+  >;
+  (date1: Date, date2: Date, maxUnit?: "minute"): Required<
+    Omit<TimeDelta, "year" | "month" | "day" | "hour">
+  >;
+  (date1: Date, date2: Date, maxUnit?: TimeDeltaUnits): TimeDelta;
+}
+
+export const getTimeDelta: GetTimeDelta = (date1, date2, maxUnit = "year") =>
+  msToTd(Math.abs(date1.getTime() - date2.getTime()), maxUnit) as any;
+
+export const msToTd = (
+  milliseconds: number,
+  maxUnit: TimeDeltaUnits = "year"
+): TimeDelta => {
+  const timeDelta: any = {};
+
+  const idx = timeDeltaUnits.indexOf(maxUnit);
+
+  for (let i = idx; i < timeDeltaUnits.length; i++) {
+    const unit = timeDeltaUnits[i];
+    const value = (unit === "minute" ? Math.round : Math.floor)(
+      milliseconds / millisecondsPerUnit[unit]
+    );
+    timeDelta[unit] = value;
+    milliseconds -= value * millisecondsPerUnit[unit];
+  }
+
+  return timeDelta;
+};
+
+export const tdToMs = (timeDelta: TimeDelta): number =>
+  Object.keys(timeDelta).reduce(
+    (prev, curr) =>
+      prev +
+      (timeDelta[curr as TimeDeltaUnits] as number) *
+        (millisecondsPerUnit[curr as TimeDeltaUnits] as number),
+    0
+  );
+
+export const applyTimeDelta = (
+  delta1: TimeDelta,
+  delta2: TimeDelta,
+  {
+    maxUnit = "year",
+    method = "add",
+  }: {
+    maxUnit?: TimeDeltaUnits;
+    method?: "add" | "subtract";
+  } = {}
+) =>
+  msToTd(
+    method === "subtract"
+      ? tdToMs(delta1) - tdToMs(delta2)
+      : tdToMs(delta1) + tdToMs(delta2),
+    maxUnit
+  );
+
+export const formatTimeDelta = (
+  timeDelta: TimeDelta,
+  maxUnit: TimeDeltaUnits
+): TimeDelta => msToTd(tdToMs(timeDelta), maxUnit);

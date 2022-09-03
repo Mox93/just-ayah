@@ -20,6 +20,7 @@
     "pending": "pending",
     "active": "active",
     "inactive": "inactive",
+    "expired": "expired",
     "postponed": "postponed",
     "finished": "finished",
     "canceled": "canceled",

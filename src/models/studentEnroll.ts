@@ -1,3 +1,4 @@
+import { shiftDate } from "./dateTime";
 import {
   DocumentData,
   QueryDocumentSnapshot,
@@ -57,9 +58,9 @@ export const studentEnrollFromInfo = ({
 
   return {
     enroll: {
-      key,
+      ...(key && { key }),
       awaiting: true,
-      expiresAt: new Date(now.getTime() + duration * 36e5),
+      expiresAt: shiftDate(now, { hour: duration }),
       dateCreated: now,
     },
   };

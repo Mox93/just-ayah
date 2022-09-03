@@ -10,7 +10,7 @@ import {
 
 import { useDateTimeT } from "hooks";
 import { DateInfo, clampDate, toDateInfo } from "models/dateTime";
-import { cn, omit, range } from "utils";
+import { addZeros, cn, omit, range } from "utils";
 import { PositionalElement } from "utils/position";
 
 import MenuInput from "../MenuInput";
@@ -111,6 +111,7 @@ const DateInput: FC<DateInputProps> = ({
           selected={day}
           setValue={update("day")}
           placeholder={dts("day")}
+          renderElement={(value) => addZeros(value, 2)}
         />
         <MenuInput
           className="month"
@@ -118,6 +119,7 @@ const DateInput: FC<DateInputProps> = ({
           selected={month}
           setValue={update("month")}
           placeholder={dts("month")}
+          renderElement={(value) => addZeros(value, 2)}
         />
         <MenuInput
           className="year"
@@ -125,6 +127,7 @@ const DateInput: FC<DateInputProps> = ({
           selected={year}
           setValue={update("year")}
           placeholder={dts("year")}
+          renderElement={(value) => addZeros(value, 4)}
         />
       </FieldWrapper>
       {errorMessage}

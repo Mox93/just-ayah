@@ -22,6 +22,7 @@ import {
 } from "models/studentEnroll";
 import { db } from "services/firebase";
 import { applyUpdates, debug, omit } from "utils";
+import { shiftDate } from "models/dateTime";
 
 const collectionRef = collection(db, "students");
 const enrollRef = collectionRef.withConverter(studentEnrollConverter);
@@ -30,7 +31,8 @@ interface StudentEnrollContext {
   enrolls: StudentEnroll[];
   addEnroll: (enroll?: EnrollInfo) => void;
   fetchEnrolls: FetchData;
-  refreshEnroll: (id: string) => void;
+  refreshEnroll: (id: string, duration?: number) => void;
+  updateEnrollKey: (id: string, key: string) => void;
   deleteEnroll: (id: string) => void;
 }
 
@@ -39,6 +41,7 @@ const initialState: StudentEnrollContext = {
   addEnroll: omit,
   fetchEnrolls: omit,
   refreshEnroll: omit,
+  updateEnrollKey: omit,
   deleteEnroll: omit,
 };
 
@@ -99,9 +102,23 @@ export const StudentEnrollProvider: FC<StudentEnrollProviderProps> = ({
     [lastDoc]
   );
 
-  const refreshEnroll = useCallback((id: string) => {
+  const refreshEnroll = useCallback((id: string, duration = 48) => {
     const now = new Date();
-    const updates: any = { openedAt: now };
+    const updates: any = {
+      "enroll.expiresAt": shiftDate(now, { hour: duration }),
+    };
+
+    updateDoc(doc(enrollRef, id), updates).then(() => {
+      setEnrolls((state) =>
+        state.map((data) =>
+          data.id === id ? applyUpdates(data, updates) : data
+        )
+      );
+    });
+  }, []);
+
+  const updateEnrollKey = useCallback((id: string, key: string) => {
+    const updates: any = { "enroll.key": key };
 
     updateDoc(doc(enrollRef, id), updates).then(() => {
       setEnrolls((state) =>
@@ -125,6 +142,7 @@ export const StudentEnrollProvider: FC<StudentEnrollProviderProps> = ({
         addEnroll,
         fetchEnrolls,
         refreshEnroll,
+        updateEnrollKey,
         deleteEnroll,
         enrolls,
       }}

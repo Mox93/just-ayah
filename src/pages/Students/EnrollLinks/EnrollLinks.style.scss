@@ -1,3 +1,5 @@
+@use "styles/abstracts/mixins" as *;
+
 .EnrollLinks {
   display: grid;
   gap: var(--spacing-l);
@@ -7,23 +9,21 @@
     gap: var(--spacing-m);
   }
 
-  .link {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-s);
+  .withAction {
+    height: 100%;
+    position: relative;
 
-    &:not(:hover) {
-      .copyLink {
-        display: none;
+    &:hover {
+      & > .action {
+        opacity: 1;
       }
     }
-  }
 
-  .active {
-    color: var(--c-gray-500);
-  }
+    & > .action {
+      opacity: 0;
+      transition: opacity 0.2s;
 
-  .inactive {
-    color: var(--c-gray-300);
+      @include positioning($inlineDir: end, $inline: 0, $x: 0);
+    }
   }
 }

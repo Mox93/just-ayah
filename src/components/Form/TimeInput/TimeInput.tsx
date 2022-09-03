@@ -16,7 +16,7 @@ import {
   to12H,
   to24H,
 } from "models/dateTime";
-import { cn, omit, twoDigits } from "utils";
+import { cn, omit, addZeros } from "utils";
 import { PositionalElement } from "utils/position";
 
 import MenuInput from "../MenuInput";
@@ -114,7 +114,7 @@ const TimeInput: FC<TimeInputProps> = ({
           selected={hour}
           setValue={update("hour")}
           placeholder={dts("hour")}
-          renderElement={twoDigits}
+          renderElement={addZeros}
         />
         <MenuInput
           dir="ltr"
@@ -123,7 +123,7 @@ const TimeInput: FC<TimeInputProps> = ({
           selected={minute}
           setValue={update("minute")}
           placeholder={dts("minute")}
-          renderElement={twoDigits}
+          renderElement={addZeros}
         />
         {!h24 && (
           <MenuInput

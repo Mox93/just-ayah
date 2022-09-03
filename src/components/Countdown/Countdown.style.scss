@@ -1,0 +1,9 @@
+.Countdown {
+  &.active {
+    color: var(--c-gray-500);
+  }
+
+  &.expired {
+    color: var(--c-gray-300);
+  }
+}
