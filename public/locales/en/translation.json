@@ -191,6 +191,7 @@
     "fieldRequired": "this field is required",
     "noComments": "no comments found to display",
     "noNotes": "no notes found to display",
+    "copied": "copied to clipboard",
     "student": {
       "enrollSuccess": "<0><0>Thank You</0> <1>for Joining!</1></0><1>We'll contact you soon.</1>",
       "enrollFail": "<0>Something Went Wrong!</0><1>Please try again later.</1>",

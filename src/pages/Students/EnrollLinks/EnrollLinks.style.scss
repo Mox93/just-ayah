@@ -15,6 +15,21 @@
     align-items: center;
     position: relative;
 
+    .headsUp {
+      background-color: var(--c-gray-300);
+      color: var(--c-white);
+      padding: var(--spacing-s) var(--spacing-m);
+      border-radius: var(--spacing-s);
+      opacity: 0;
+      transition: opacity 0.2s;
+
+      @include positioning();
+
+      &.active {
+        opacity: 1;
+      }
+    }
+
     &:hover {
       & > .action {
         opacity: 1;

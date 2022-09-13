@@ -8,16 +8,18 @@ import { Button } from "components/Buttons";
 import Countdown from "components/Countdown";
 import { EditableCell, FieldProps, Table } from "components/Table";
 import { useStudentEnrollContext } from "context";
-import { useGlobalT, useLoading } from "hooks";
+import { useGlobalT, useLoading, useMessageT } from "hooks";
 import { enrollLinkFromId } from "models/studentEnroll";
 
 import NewEnroll from "./NewEnroll";
 import Ellipsis from "components/Ellipsis";
+import { cn } from "utils";
 
 interface EnrollLinksProps {}
 
 const EnrollLinks: VFC<EnrollLinksProps> = () => {
   const glb = useGlobalT();
+  const msg = useMessageT();
 
   const {
     enrolls,
@@ -28,6 +30,18 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
   } = useStudentEnrollContext();
 
   const [editing, setEditing] = useState<string>();
+  const [copied, setCopied] = useState<string>();
+
+  console.log(copied);
+
+  useEffect(() => {
+    if (copied) {
+      setTimeout(
+        () => setCopied((state) => (state === copied ? undefined : state)),
+        1000
+      );
+    }
+  }, [copied]);
 
   useEffect(() => {
     if (!enrolls.length) fetchEnrolls();
@@ -72,12 +86,18 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
           return (
             <div className="withAction">
               <Ellipsis>{link}</Ellipsis>
+              <div className={cn("headsUp", { active: copied === id })}>
+                {msg("copied")}
+              </div>
               <Button
                 className="action"
                 variant="primary-ghost"
                 size="small"
                 iconButton
-                onClick={() => navigator.clipboard.writeText(link)}
+                onClick={() => {
+                  navigator.clipboard.writeText(link);
+                  setCopied(id);
+                }}
               >
                 <CopyIcon className="icon" />
               </Button>
@@ -123,7 +143,7 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
         fit: true,
       },
     ],
-    [editing]
+    [editing, copied]
   );
 
   const [loadEnrolls, isLoading] = useLoading((stopLoading) => {
