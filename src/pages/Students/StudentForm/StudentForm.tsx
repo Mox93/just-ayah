@@ -22,7 +22,7 @@ const {
 interface StudentFormProps {
   formId?: string;
   defaultValues?: Partial<StudentInfo>;
-  onSubmit?: (data: StudentInfo) => void;
+  onSubmit: (data: StudentInfo) => void;
 }
 
 const StudentForm: VFC<StudentFormProps> = ({

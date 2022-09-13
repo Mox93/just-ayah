@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   getTimeDelta,
@@ -12,16 +12,15 @@ const useCountdown = (
   delta: TimeDelta = { minute: 1 },
   maxUnit?: TimeDeltaUnits
 ): [TimeDelta, boolean] => {
-  const remainingTime = (): [TimeDelta, boolean] => {
+  const remainingTime = useCallback((): [TimeDelta, boolean] => {
     const now = new Date();
-    const remaining = getTimeDelta(expiresAt, now, maxUnit);
-    const isExpired = expiresAt <= now;
-
-    return [remaining, isExpired];
-  };
+    return [getTimeDelta(expiresAt, now, maxUnit), expiresAt <= now];
+  }, [expiresAt, maxUnit]);
 
   const [[countdown, isExpired], setCountdown] =
     useState<[TimeDelta, boolean]>(remainingTime);
+
+  useEffect(() => setCountdown(remainingTime), [remainingTime]);
 
   useEffect(() => {
     if (isExpired) return;

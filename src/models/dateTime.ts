@@ -191,7 +191,14 @@ export const msToTd = (
     const value = (unit === "minute" ? Math.round : Math.floor)(
       milliseconds / millisecondsPerUnit[unit]
     );
-    timeDelta[unit] = value;
+
+    if (unit === "minute" && value === 60) {
+      timeDelta["hour"] = (timeDelta["hour"] || 0) + 1;
+      timeDelta[unit] = 0;
+    } else {
+      timeDelta[unit] = value;
+    }
+
     milliseconds -= value * millisecondsPerUnit[unit];
   }
 

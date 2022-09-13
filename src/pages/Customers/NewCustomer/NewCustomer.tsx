@@ -12,7 +12,7 @@ interface NewCustomerProps {}
 
 const NewCustomer: VFC<NewCustomerProps> = () => {
   const { showPopup } = usePopupContext();
-  const cst = usePageT("customers");
+  const cst = usePageT("customer");
 
   return (
     <div className="NewCustomer">

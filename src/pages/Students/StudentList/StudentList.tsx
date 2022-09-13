@@ -39,7 +39,7 @@ interface StudentListProps {}
 const StudentList: VFC<StudentListProps> = () => {
   const glb = useGlobalT();
   const gov = useGovT("egypt");
-  const stu = usePageT("students");
+  const stu = usePageT("student");
   const pi = usePersonalInfoT();
   const swd = useDateTimeT("weekDay.short");
   const dt = useDateTimeT();

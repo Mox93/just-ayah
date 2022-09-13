@@ -21,7 +21,7 @@ const AdminView: VFC<AdminViewProps> = () => {
           </Route>
           <Route path="students" element={<Students />}>
             <Route path=":id" element={<StudentProfile />} />
-            <Route path="new" element={<StudentForm />} />
+            {/* <Route path="new" element={<StudentForm />} /> */}
           </Route>
           <Route path="teachers" element={<Teachers />}>
             <Route path=":id" element={<TeacherProfile />} />

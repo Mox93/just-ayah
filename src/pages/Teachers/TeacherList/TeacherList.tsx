@@ -10,7 +10,7 @@ interface StudentListProps {}
 
 const StudentList: VFC<StudentListProps> = () => {
   const glb = useGlobalT();
-  const stu = usePageT("students");
+  const stu = usePageT("student");
   const pi = usePersonalInfoT();
 
   const {

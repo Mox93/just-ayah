@@ -1,46 +1,69 @@
 import { deleteField } from "firebase/firestore";
-import { VFC, useEffect, useState } from "react";
+import { VFC, useEffect, useState, useCallback } from "react";
+import { Trans } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import Container from "components/Container";
+import FlashMessage from "components/FlashMessage";
 import LanguageSelector from "components/LanguageSelector";
 import { usePopupContext, useStudentContext } from "context";
-import { usePageT } from "hooks";
+import { useMessageT, usePageT } from "hooks";
 import { defaultMeta, StudentInfo } from "models/student";
 
 import StudentForm from "../StudentForm";
 
 const StudentEnroll: VFC = () => {
-  const stu = usePageT("students");
+  const stu = usePageT("student");
+  const msg = useMessageT("student");
   const { showPopup } = usePopupContext();
   const { id } = useParams();
   const { state } = useLocation();
   const [studentData, setStudentData] = useState<Partial<StudentInfo>>();
 
   const { updateStudent } = useStudentContext();
-  const onSubmit = (data: StudentInfo) => {
-    updateStudent(
-      id!,
-      {
-        ...data,
-        ...{
-          enroll: deleteField(),
+  const onSubmit = useCallback(
+    (data: StudentInfo) => {
+      updateStudent(
+        id!,
+        {
+          ...data,
           meta: defaultMeta(),
+          ...{ enroll: deleteField() },
         },
-      },
-      {
-        onFulfilled: () =>
-          showPopup(
-            <>
-              <h1>Thank you for joining</h1>
-              <a href="/">go back to the home page</a>
-              <a href="/join">fill in a new form</a>
-            </>
-          ),
-      }
-    );
-  };
+        {
+          onFulfilled: () =>
+            showPopup(
+              <FlashMessage state="success">
+                <Trans t={msg} i18nKey="enrollSuccess">
+                  <h1>
+                    <span className="accent">Thank You</span>
+                    <span className="light">for Joining!</span>
+                  </h1>
+                  <p>We'll contact you soon</p>
+                </Trans>
+              </FlashMessage>,
+              { center: true }
+            ),
+          onRejected: (reason) =>
+            showPopup(
+              <FlashMessage state="error">
+                <Trans t={msg} i18nKey="enrollFail">
+                  <h2 className="accent">Something Went Wrong!</h2>
+                  <p>Please try again later.</p>
+                </Trans>
+
+                <div className="code">
+                  <code>{JSON.stringify(reason, null, 2)}</code>
+                </div>
+              </FlashMessage>,
+              { center: true }
+            ),
+        }
+      );
+    },
+    [id]
+  );
 
   useEffect(() => {
     const { data } = state as any;

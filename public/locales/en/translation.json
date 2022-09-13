@@ -125,7 +125,7 @@
     "leaveQuestion": "if you have any questions or comments leave them here"
   },
   "pages": {
-    "students": {
+    "student": {
       "title": "students",
       "counter_one": "1 student selected",
       "counter_other": "{{count}} students selected",
@@ -133,10 +133,10 @@
       "newStudents": "new students",
       "newEnroll": "new enroll link name"
     },
-    "customers": {
+    "customer": {
       "formTitle": "reach out"
     },
-    "teachers": {
+    "teacher": {
       "active": "teachers",
       "archived": "archive"
     }
@@ -190,6 +190,12 @@
     "noContactMethod": "please select at least one communication method",
     "fieldRequired": "this field is required",
     "noComments": "no comments found to display",
-    "noNotes": "no notes found to display"
+    "noNotes": "no notes found to display",
+    "student": {
+      "enrollSuccess": "<0><0>Thank You</0> <1>for Joining!</1></0><1>We'll contact you soon.</1>",
+      "enrollFail": "<0>Something Went Wrong!</0><1>Please try again later.</1>",
+      "addSuccess": "<0><0>A New Student was Added</0> <1>Successfully!</1></0>",
+      "addFail": "<0>Something Went Wrong!</0><1>Please try again later.</1>"
+    }
   }
 }

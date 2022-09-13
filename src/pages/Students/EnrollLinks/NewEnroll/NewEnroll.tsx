@@ -12,7 +12,7 @@ interface NewEnrollProps {}
 
 const NewEnroll: VFC<NewEnrollProps> = () => {
   const glb = useGlobalT();
-  const stu = usePageT("students");
+  const stu = usePageT("student");
 
   const { addEnroll } = useStudentEnrollContext();
 

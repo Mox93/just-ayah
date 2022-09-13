@@ -16,7 +16,7 @@ import NewStudent from "../NewStudent";
 interface StudentsProps {}
 
 const Students: VFC<StudentsProps> = () => {
-  const stu = usePageT("students");
+  const stu = usePageT("student");
   const { getStudent } = useStudentContext();
   const {
     data: { studentIndex },
@@ -60,7 +60,6 @@ const Students: VFC<StudentsProps> = () => {
           onClick={() =>
             showPopup(<NewStudent />, {
               closable: true,
-              dismissible: true,
             })
           }
         >

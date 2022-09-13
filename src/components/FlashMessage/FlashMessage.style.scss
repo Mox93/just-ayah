@@ -1,0 +1,51 @@
+@use "styles/abstracts/mixins" as *;
+
+.FlashMessage {
+  --hero-size: 10rem;
+
+  width: 100vw;
+  max-width: 30rem;
+  text-align: center;
+
+  .light {
+    font-weight: 300;
+  }
+
+  &.success {
+    .accent {
+      color: var(--c-success-300);
+    }
+  }
+
+  &.error {
+    .accent {
+      color: var(--c-danger-300);
+    }
+  }
+
+  .header {
+    height: calc(var(--hero-size) * 0.7);
+    position: relative;
+
+    .hero {
+      width: var(--hero-size);
+      border-radius: 50%;
+      box-shadow: 4px 4px 16px var(--c-shadow-200);
+
+      @include positioning($blockDir: end, $block: 0, $y: 0);
+    }
+  }
+
+  p {
+    margin-block-start: var(--spacing-l);
+    color: var(--c-gray-400);
+  }
+
+  .code {
+    text-align: left;
+    border: 1px solid var(--c-gray-200);
+    border-radius: 0.25rem;
+    margin-block-start: var(--spacing-l);
+    padding: var(--spacing-m);
+  }
+}
