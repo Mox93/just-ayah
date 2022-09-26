@@ -19,7 +19,7 @@ interface MatchResult<TFieldValues> {
 }
 
 interface SubstringMatchOptions<TFieldName> {
-  fields?: { type: "include" | "exclude"; names: TFieldName[] };
+  filter?: ["take" | "leave", TFieldName[]];
   substringMinLength?: number;
 }
 
@@ -45,7 +45,7 @@ export const substringMatch =
     TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
   >(
     indexData: TFieldValues[],
-    { fields, substringMinLength = 1 }: SubstringMatchOptions<TFieldName> = {}
+    { filter, substringMinLength = 1 }: SubstringMatchOptions<TFieldName> = {}
   ) =>
   (searchKey: string) => {
     const results: MatchResult<TFieldValues>[] = [];
@@ -71,13 +71,16 @@ export const substringMatch =
       "g"
     );
 
+    const [filterType, fields] = filter || [];
+
     indexData.forEach((obj) => {
       const allFields: TFieldName[] = paths(obj, { includeAll: true });
-      const IncludedFields = fields
-        ? fields.type === "include"
-          ? fields.names
-          : allFields.filter((v) => !fields.names.includes(v))
-        : allFields;
+      const IncludedFields =
+        filterType === "take"
+          ? filter!
+          : filterType === "leave"
+          ? allFields.filter((v) => !fields?.includes(v))
+          : allFields;
 
       const matches: MatchRecord<TFieldValues> = {};
       let bestScore = 0;
@@ -86,7 +89,7 @@ export const substringMatch =
         const fieldValue = get(obj, field);
         const matchedSubstring =
           typeof fieldValue === "string"
-            ? fieldValue.toLowerCase().match(parts)
+            ? (fieldValue as string).toLowerCase().match(parts)
             : null;
 
         if (!matchedSubstring) return;

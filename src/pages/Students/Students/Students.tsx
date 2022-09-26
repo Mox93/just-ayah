@@ -27,7 +27,7 @@ const Students: VFC<StudentsProps> = () => {
   const applySearch = useMemo(
     () =>
       substringMatch(studentIndex, {
-        fields: { type: "exclude", names: ["id"] },
+        filter: ["leave", ["id"]],
       }),
     [studentIndex]
   );

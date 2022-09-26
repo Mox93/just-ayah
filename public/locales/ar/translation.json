@@ -45,7 +45,8 @@
     "form": "الاستمارة",
     "friendlyName": "اسم تعريفي",
     "status": "الحالة",
-    "subscription": "الاشتراك"
+    "subscription": "الاشتراك",
+    "justAyah": "ولو آية"
   },
   "dateTime": {
     "day": "يوم",
@@ -141,10 +142,10 @@
       "formTitle": "تواصل معنا"
     },
     "teacher": {
-      "active": "المعلمون",
-      "archived": "اﻷرشيف"
+      "title": "المُعلمون"
     }
   },
+
   "governorate": {
     "egypt": {
       "Alexandria": "الاسكندرية",

@@ -22,6 +22,11 @@ type SearchRenderMap = {
   matches?: string[];
 };
 
+export type RenderSections<TIndex> = Converter<
+  TIndex,
+  SearchRenderMap | SearchRenderMap[]
+>[];
+
 interface SearchBarProps<TIndex> {
   showButton?: boolean;
   showResults?: boolean;
@@ -30,7 +35,7 @@ interface SearchBarProps<TIndex> {
   onSubmit?: (results?: TIndex[]) => void;
   onSelect?: (result: TIndex) => void;
   getKey?: GetKey<TIndex>;
-  renderSections?: Converter<TIndex, SearchRenderMap | SearchRenderMap[]>[];
+  renderSections?: RenderSections<TIndex>;
 }
 
 const SearchBar = <TIndex,>({

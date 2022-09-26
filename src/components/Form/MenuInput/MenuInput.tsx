@@ -74,7 +74,7 @@ const MenuInput = <TOption,>(
       searchFields &&
       ((e) => {
         const results = substringMatch(options, {
-          fields: { type: "include", names: searchFields },
+          filter: ["take", searchFields],
         })(e.target.value);
 
         setOptionList(() =>

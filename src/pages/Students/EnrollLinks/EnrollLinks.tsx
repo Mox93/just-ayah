@@ -32,8 +32,6 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
   const [editing, setEditing] = useState<string>();
   const [copied, setCopied] = useState<string>();
 
-  console.log(copied);
-
   useEffect(() => {
     if (copied) {
       setTimeout(

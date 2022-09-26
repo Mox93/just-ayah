@@ -65,7 +65,7 @@ const StudentList: VFC<StudentListProps> = () => {
     });
 
   return (
-    <>
+    <div className="StudentList">
       {selected.size > 0 && (
         <div className="selectionCounter">
           {stu("counter", { count: selected.size })}
@@ -84,7 +84,7 @@ const StudentList: VFC<StudentListProps> = () => {
           )
         }
       />
-    </>
+    </div>
   );
 };
 

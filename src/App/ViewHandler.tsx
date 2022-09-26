@@ -23,6 +23,7 @@ import MainUI from "pages/UI/Main";
 import FormUI from "pages/UI/Form";
 
 import { UserGuard, FetchGuard, AuthGuard } from "./guard";
+import Unauthorized from "pages/Unauthorized";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
@@ -85,7 +86,12 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
         <Route path="reach-out" element={<NewCustomer />} />
         <Route
           path="enroll/:id"
-          element={<FetchGuard fetcher={({ id }: any) => getStudent(id)} />}
+          element={
+            <FetchGuard
+              fetcher={({ id }: any) => getStudent(id)}
+              failed={<Unauthorized />}
+            />
+          }
         >
           <Route index element={<StudentEnroll />}></Route>
         </Route>

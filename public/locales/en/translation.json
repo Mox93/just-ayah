@@ -45,7 +45,8 @@
     "form": "form",
     "friendlyName": "friendly name",
     "status": "status",
-    "subscription": "subscription"
+    "subscription": "subscription",
+    "justAyah": "Just Ayah"
   },
   "dateTime": {
     "day": "day",
@@ -137,8 +138,7 @@
       "formTitle": "reach out"
     },
     "teacher": {
-      "active": "teachers",
-      "archived": "archive"
+      "title": "teachers"
     }
   },
   "governorate": {

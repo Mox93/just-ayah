@@ -14,7 +14,6 @@ import StudentForm from "../StudentForm";
 interface Tab {
   head: string;
   body: ReactNode;
-  config?: Record<string, any>;
 }
 
 interface NewStudentProps {}
