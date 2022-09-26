@@ -10,29 +10,31 @@ interface StudentSearchFields {
   phoneNumber: string[];
 }
 
-interface StudentIndexInDB {
+interface PersonIndexInDB {
   [id: string]: StudentSearchFields;
 }
 
-export type StudentIndex = (StudentSearchFields & {
+export type PersonIndex = (StudentSearchFields & {
   id: string;
 })[];
 
 export interface MetaDataInDB {
   shortList?: ShortList;
-  studentIndex?: StudentIndexInDB;
+  studentIndex?: PersonIndexInDB;
+  teacherIndex?: PersonIndexInDB;
 }
 
 export interface MetaData {
   shortList: ShortList;
-  studentIndex: StudentIndex;
+  studentIndex: PersonIndex;
+  teacherIndex: PersonIndex;
 }
 
 export const metaDataDocs: (keyof MetaData)[] = ["shortList", "studentIndex"];
 
-export const studentIndexFromDB = (
-  studentIndex?: StudentIndexInDB
-): StudentIndex =>
+export const personIndexFromDB = (
+  studentIndex?: PersonIndexInDB
+): PersonIndex =>
   Object.entries(studentIndex || {}).map(([id, { phoneNumber, ...data }]) => ({
     id,
     phoneNumber: phoneNumber.map((value) => {

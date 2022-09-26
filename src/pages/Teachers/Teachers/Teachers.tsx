@@ -20,17 +20,17 @@ const Teachers: VFC<TeachersProps> = () => {
 
   const {} = useTeacherContext();
   const {
-    data: { studentIndex },
+    data: { teacherIndex },
   } = useMetaContext();
 
   const { showPopup } = usePopupContext();
 
   const applySearch = useMemo(
     () =>
-      substringMatch(studentIndex, {
+      substringMatch(teacherIndex, {
         filter: ["leave", ["id"]],
       }),
-    [studentIndex]
+    [teacherIndex]
   );
 
   return (

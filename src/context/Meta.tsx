@@ -11,7 +11,7 @@ import {
   MetaData,
   metaDataDocs,
   MetaDataInDB,
-  studentIndexFromDB,
+  personIndexFromDB,
 } from "models/metaData";
 import { db } from "services/firebase";
 
@@ -27,6 +27,7 @@ const initialState: MetaContext = {
   data: {
     shortList: {},
     studentIndex: [],
+    teacherIndex: [],
   },
 };
 
@@ -75,13 +76,14 @@ type Action = { type: "populate"; payload: MetaDataInDB };
 const reducer = (state: State, { type, payload }: Action): State => {
   switch (type) {
     case "populate":
-      const { shortList = {}, studentIndex = {} } = payload;
+      const { shortList = {}, studentIndex = {}, teacherIndex = {} } = payload;
       return {
         ...state,
         context: {
           data: {
             shortList,
-            studentIndex: studentIndexFromDB(studentIndex),
+            studentIndex: personIndexFromDB(studentIndex),
+            teacherIndex: personIndexFromDB(teacherIndex),
           },
         },
       };
