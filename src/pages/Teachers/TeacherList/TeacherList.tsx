@@ -1,8 +1,9 @@
-import { VFC, useState } from "react";
+import { VFC, useState, useEffect } from "react";
 
+import { Button } from "components/Buttons";
 import { FieldProps, Table } from "components/Table";
 import { useTeacherContext } from "context";
-import { useGlobalT, usePageT, usePersonalInfoT } from "hooks";
+import { useGlobalT, useLoading, usePageT, usePersonalInfoT } from "hooks";
 import { Teacher } from "models/teacher";
 import { historyRep } from "models/dateTime";
 
@@ -15,6 +16,7 @@ const StudentList: VFC<StudentListProps> = () => {
 
   const {
     data: { teachers },
+    fetchTeachers,
   } = useTeacherContext();
 
   const fields: FieldProps[] = [
@@ -64,8 +66,18 @@ const StudentList: VFC<StudentListProps> = () => {
       }
     });
 
+  const [loadTeachers, isLoading] = useLoading((stopLoading) => {
+    fetchTeachers({
+      options: { onFulfilled: stopLoading, onRejected: stopLoading },
+    });
+  });
+
+  useEffect(() => {
+    if (process.env.REACT_APP_ENV === "production") loadTeachers();
+  }, []);
+
   return (
-    <div className="StudentList">
+    <div className="TeacherList">
       {selected.size > 0 && (
         <div className="selectionCounter">
           {stu("counter", { count: selected.size })}
@@ -82,6 +94,16 @@ const StudentList: VFC<StudentListProps> = () => {
           setSelected(
             checked ? new Set(teachers.map(({ id }) => id)) : new Set()
           )
+        }
+        footer={
+          <Button
+            className="loadMore"
+            variant="gray-text"
+            onClick={loadTeachers}
+            isLoading={isLoading}
+          >
+            {glb("loadMore")}
+          </Button>
         }
       />
     </div>

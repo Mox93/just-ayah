@@ -2,30 +2,38 @@ import {
   addDoc,
   collection,
   doc,
+  DocumentData,
   getDocs,
+  limit,
+  orderBy,
+  OrderByDirection,
   query,
+  startAfter,
   updateDoc,
   where,
 } from "firebase/firestore";
-import { createContext, FC, useContext, useState } from "react";
+import { createContext, FC, useCallback, useContext, useState } from "react";
 
+import { FetchData } from "models";
 import { TeacherInfo, Teacher } from "models/teacher";
 import { db } from "services/firebase";
-import { omit } from "utils";
+import { debug, omit } from "utils";
 
 import { useMetaContext } from ".";
+
+const teachersRef = collection(db, "teachers");
 
 interface TeacherContext {
   data: { teachers: Teacher[]; teacherList: string[] };
   add: (data: TeacherInfo) => void;
-  fetch: (state?: string) => void;
+  fetchTeachers: FetchData;
   archive: (id: string) => void;
 }
 
 const teacherContext = createContext<TeacherContext>({
   data: { teachers: [], teacherList: [] },
   add: omit,
-  fetch: omit,
+  fetchTeachers: omit,
   archive: omit,
 });
 
@@ -37,23 +45,52 @@ export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
   } = useMetaContext();
 
   const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const teachersRef = collection(db, "teachers");
+  const [lastDoc, setLastDoc] = useState<DocumentData>();
 
   const add = (data: TeacherInfo) => {
     addDoc(teachersRef, data);
   };
 
-  const fetch = async (state: string = "active") => {
-    const q = query(teachersRef, where("meta.status", "==", state));
-    const querySnapshot = await getDocs(q);
-    const newData: Teacher[] = [];
+  const fetchTeachers: FetchData = useCallback(
+    ({
+      filters = [],
+      size = 20,
+      sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
+      options: {
+        onFulfilled = debug((value) => console.log("FULFILLED", value)),
+        onRejected = debug((value) => console.log("REJECTED", value)),
+      } = {},
+    } = {}) => {
+      const q = query(
+        teachersRef,
+        ...filters.map((filter) => where(...filter)),
+        limit(size),
+        orderBy(sort.by, sort.direction),
+        ...(lastDoc ? [startAfter(lastDoc)] : [])
+      );
 
-    // querySnapshot.docs.forEach(
-    //   (doc) => (newData[doc.id] = { ...(doc.data() as TeacherInfo) })
-    // );
+      getDocs(q)
+        .then((querySnapshot) => {
+          setTeachers((state) => {
+            const newState = [...state];
 
-    setTeachers(newData);
-  };
+            querySnapshot.docs.forEach((doc, i) => {
+              newState.push(doc.data() as Teacher);
+
+              if (i + 1 === querySnapshot.size) {
+                setLastDoc(doc);
+              }
+            });
+
+            return newState;
+          });
+
+          onFulfilled(querySnapshot);
+        }, onRejected)
+        .catch(debug((value) => console.log("ERROR", value)));
+    },
+    [lastDoc]
+  );
 
   const archive = (id: string) => {
     updateDoc(doc(teachersRef, id), { state: "archived" });
@@ -61,7 +98,7 @@ export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
 
   return (
     <teacherContext.Provider
-      value={{ add, fetch, archive, data: { teachers, teacherList } }}
+      value={{ add, fetchTeachers, archive, data: { teachers, teacherList } }}
     >
       {children}
     </teacherContext.Provider>

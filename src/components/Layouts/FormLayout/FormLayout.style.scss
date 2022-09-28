@@ -1,6 +1,6 @@
 @use "styles/abstracts/mixins" as *;
 
-.NewCustomer {
+.FormLayout {
   @include banner();
   @include floatingLanguageSelector();
 }

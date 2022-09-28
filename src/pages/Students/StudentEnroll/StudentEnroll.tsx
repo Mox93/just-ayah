@@ -3,10 +3,9 @@ import { VFC, useEffect, useState, useCallback } from "react";
 import { Trans } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
-import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import Container from "components/Container";
 import FlashMessage from "components/FlashMessage";
-import LanguageSelector from "components/LanguageSelector";
+import { FormLayout } from "components/Layouts";
 import { usePopupContext, useStudentContext } from "context";
 import { useMessageT, usePageT } from "hooks";
 import { defaultMeta, StudentInfo } from "models/student";
@@ -71,10 +70,7 @@ const StudentEnroll: VFC = () => {
   }, [id, state]);
 
   return (
-    <div className="StudentEnroll">
-      <img className="banner" src={justAyahBG} alt="" />
-      <LanguageSelector />
-
+    <FormLayout name="StudentEnroll" title={stu("formTitle")}>
       <Container
         variant="form"
         header={<h2 className="title">{stu("formTitle")}</h2>}
@@ -85,7 +81,7 @@ const StudentEnroll: VFC = () => {
           defaultValues={studentData}
         />
       </Container>
-    </div>
+    </FormLayout>
   );
 };
 

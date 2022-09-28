@@ -1,6 +1,0 @@
-@use "styles/abstracts/mixins" as *;
-
-.StudentEnroll {
-  @include banner();
-  @include floatingLanguageSelector();
-}

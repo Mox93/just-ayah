@@ -1,23 +1,20 @@
 import { VFC } from "react";
 
-import justAyahBG from "assets/img/just-ayah-banner.jpg";
-import LanguageSelector from "components/LanguageSelector";
+import Container from "components/Container";
+import { FormLayout } from "components/Layouts";
+import { usePopupContext } from "context";
+import { usePageT } from "hooks";
 
 import CustomerForm from "../CustomerForm";
-import { usePopupContext } from "context";
-import Container from "components/Container";
-import { usePageT } from "hooks";
 
 interface NewCustomerProps {}
 
 const NewCustomer: VFC<NewCustomerProps> = () => {
-  const { showPopup } = usePopupContext();
   const cst = usePageT("customer");
+  const { showPopup } = usePopupContext();
 
   return (
-    <div className="NewCustomer">
-      <img className="banner" src={justAyahBG} alt="" />
-      <LanguageSelector />
+    <FormLayout name="NewCustomer" title={cst("formTitle")}>
       <Container
         variant="form"
         header={<h2 className="title">{cst("formTitle")}</h2>}
@@ -35,7 +32,7 @@ const NewCustomer: VFC<NewCustomerProps> = () => {
           }
         />
       </Container>
-    </div>
+    </FormLayout>
   );
 };
 
