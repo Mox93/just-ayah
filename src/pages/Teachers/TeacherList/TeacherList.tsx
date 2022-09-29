@@ -6,6 +6,7 @@ import { useTeacherContext } from "context";
 import { useGlobalT, useLoading, usePageT, usePersonalInfoT } from "hooks";
 import { Teacher } from "models/teacher";
 import { historyRep } from "models/dateTime";
+import { getPhoneNumberByTag } from "models/phoneNumber";
 
 interface StudentListProps {}
 
@@ -14,10 +15,7 @@ const StudentList: VFC<StudentListProps> = () => {
   const stu = usePageT("student");
   const pi = usePersonalInfoT();
 
-  const {
-    data: { teachers },
-    fetchTeachers,
-  } = useTeacherContext();
+  const { teachers, fetchTeachers } = useTeacherContext();
 
   const fields: FieldProps[] = [
     {
@@ -29,7 +27,8 @@ const StudentList: VFC<StudentListProps> = () => {
     {
       name: "phoneNumber",
       header: pi("phoneNumber"),
-      getValue: (data: Teacher) => data.phoneNumber.number,
+      getValue: ({ phoneNumber }) =>
+        getPhoneNumberByTag(phoneNumber, "whatsapp"),
       fit: true,
     },
     {

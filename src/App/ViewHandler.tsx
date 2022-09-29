@@ -1,7 +1,7 @@
 import { VFC } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import { useStudentContext } from "context";
+import { useStudentContext, useTeacherContext } from "context";
 import Admin from "pages/Admin";
 import { CourseList, CourseProfile, Courses } from "pages/Courses";
 import {
@@ -24,6 +24,8 @@ import FormUI from "pages/UI/Form";
 
 import { UserGuard, FetchGuard, AuthGuard } from "./guard";
 import Unauthorized from "pages/Unauthorized";
+import { Student } from "models/student";
+import { Teacher } from "models/teacher";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
@@ -40,6 +42,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
   //     return <PublicView />;
   // }
   const { getStudent } = useStudentContext();
+  const { getTeacher } = useTeacherContext();
 
   return (
     <Routes>
@@ -88,12 +91,24 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
           path="enroll/:id"
           element={
             <FetchGuard
-              fetcher={({ id }: any) => getStudent(id)}
+              fetcher={({ id }: Student) => getStudent(id)}
               failed={<Unauthorized />}
             />
           }
         >
-          <Route index element={<StudentEnroll />}></Route>
+          <Route index element={<StudentEnroll />} />
+        </Route>
+
+        <Route
+          path="teachers/new/:id"
+          element={
+            <FetchGuard
+              fetcher={({ id }: Teacher) => getTeacher(id)}
+              failed={<Unauthorized />}
+            />
+          }
+        >
+          <Route index />
         </Route>
 
         <Route path="ui">

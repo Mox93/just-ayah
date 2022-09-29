@@ -10,9 +10,9 @@ import { StatusMenu } from "components/DropdownMenu";
 import { FieldProps, Table } from "components/Table";
 import {
   useCourseContext,
+  useMetaContext,
   usePopupContext,
   useStudentContext,
-  useTeacherContext,
 } from "context";
 import {
   useDateTimeT,
@@ -51,8 +51,8 @@ const StudentList: VFC<StudentListProps> = () => {
   } = useCourseContext();
 
   const {
-    data: { teacherList },
-  } = useTeacherContext();
+    shortList: { teachers = [] },
+  } = useMetaContext();
 
   const { showPopup } = usePopupContext();
 
@@ -119,9 +119,8 @@ const StudentList: VFC<StudentListProps> = () => {
         name: "phoneNumber",
         header: pi("phoneNumber"),
         className: "phoneNumber",
-        getValue: (
-          { phoneNumber, phoneNumbers }: any // TODO update field name in fireStore
-        ) => getPhoneNumberByTag(phoneNumber || phoneNumbers, "whatsapp"),
+        getValue: ({ phoneNumber }) =>
+          getPhoneNumberByTag(phoneNumber, "whatsapp"),
         fit: true,
       },
       {
@@ -174,7 +173,7 @@ const StudentList: VFC<StudentListProps> = () => {
         getValue: ({ id, meta: { teacher } }: Student) => (
           <SelectionMenu
             selected={teacher}
-            options={teacherList}
+            options={teachers}
             size="small"
             setValue={updateField("meta.teacher", id)}
             renderElement={ellipsis()}
@@ -227,7 +226,7 @@ const StudentList: VFC<StudentListProps> = () => {
         fit: true,
       },
     ],
-    [teacherList, courses]
+    [teachers, courses]
   );
 
   const [selected, setSelected] = useState<Set<string>>(new Set());

@@ -15,9 +15,7 @@ const courseContext = createContext(initialState);
 interface CourseProviderProps {}
 
 export const CourseProvider: FC<CourseProviderProps> = ({ children }) => {
-  const {
-    data: { shortList: { courses = [] } = {} },
-  } = useMetaContext();
+  const { shortList: { courses = [] } = {} } = useMetaContext();
 
   return (
     <courseContext.Provider value={{ data: { courses } }}>

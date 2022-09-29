@@ -5,7 +5,7 @@ import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
 import { Button } from "components/Buttons";
 import { MainLayout } from "components/Layouts";
 import SearchBar from "components/SearchBar";
-import { useMetaContext, usePopupContext, useTeacherContext } from "context";
+import { useMetaContext, usePopupContext } from "context";
 import { usePageT } from "hooks";
 import { pluck } from "utils";
 import { substringMatch } from "utils/match";
@@ -17,11 +17,7 @@ interface TeachersProps {}
 const Teachers: VFC<TeachersProps> = () => {
   const tch = usePageT("teacher");
 
-  const {} = useTeacherContext();
-  const {
-    data: { teacherIndex },
-  } = useMetaContext();
-
+  const { teacherIndex } = useMetaContext();
   const { showPopup } = usePopupContext();
 
   const applySearch = useMemo(
@@ -40,7 +36,7 @@ const Teachers: VFC<TeachersProps> = () => {
         <>
           <SearchBar
             onChange={applySearch}
-            onSelect={({ value: { id } }) => console.log(id)}
+            onSelect={({ value: { id } }) => console.log(id)} // TODO Redirect to profile page
             getKey={pluck("value.id")}
             showButton
             showResults

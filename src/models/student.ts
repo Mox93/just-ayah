@@ -136,8 +136,6 @@ const studentFromInfo = ({
     if (value !== undefined) set(processedData, key, value);
   }
 
-  console.log(processedData);
-
   return processedData;
 };
 

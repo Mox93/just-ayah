@@ -3,6 +3,7 @@ import {
   collection,
   doc,
   DocumentData,
+  getDoc,
   getDocs,
   limit,
   orderBy,
@@ -14,42 +15,52 @@ import {
 } from "firebase/firestore";
 import { createContext, FC, useCallback, useContext, useState } from "react";
 
-import { FetchData } from "models";
-import { TeacherInfo, Teacher } from "models/teacher";
+import { FetchData, GetData, UpdateData } from "models";
+import { TeacherInfo, Teacher, teacherConverter } from "models/teacher";
 import { db } from "services/firebase";
-import { debug, omit } from "utils";
+import { applyUpdates, debug, omit } from "utils";
 
-import { useMetaContext } from ".";
-
-const teachersRef = collection(db, "teachers");
+const collectionRef = collection(db, "teachers");
+const teacherRef = collectionRef.withConverter(teacherConverter);
 
 interface TeacherContext {
-  data: { teachers: Teacher[]; teacherList: string[] };
-  add: (data: TeacherInfo) => void;
+  teachers: Teacher[];
+  addTeacher: (data: TeacherInfo) => void;
   fetchTeachers: FetchData;
-  archive: (id: string) => void;
+  getTeacher: GetData<Teacher>;
+  updateTeacher: UpdateData<Teacher>;
 }
 
-const teacherContext = createContext<TeacherContext>({
-  data: { teachers: [], teacherList: [] },
-  add: omit,
+const initialState: TeacherContext = {
+  teachers: [],
+  addTeacher: (
+    data,
+    {
+      onFulfilled = debug((value) => console.log("FULFILLED", value)),
+      onRejected = debug((value) => console.log("REJECTED", value)),
+    } = {}
+  ) => {
+    addDoc(teacherRef, data)
+      .then(onFulfilled, onRejected)
+      .catch((error) => console.log("ERROR", error));
+  },
   fetchTeachers: omit,
-  archive: omit,
-});
+  getTeacher: async (id: string) => {
+    const docRef = doc(teacherRef, id);
+    const result = await getDoc(docRef);
+
+    return result.data();
+  },
+  updateTeacher: omit,
+};
+
+const teacherContext = createContext<TeacherContext>(initialState);
 
 interface TeacherProviderProps {}
 
 export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
-  const {
-    data: { shortList: { teachers: teacherList = [] } = {} },
-  } = useMetaContext();
-
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
-
-  const add = (data: TeacherInfo) => {
-    addDoc(teachersRef, data);
-  };
 
   const fetchTeachers: FetchData = useCallback(
     ({
@@ -62,7 +73,7 @@ export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
       } = {},
     } = {}) => {
       const q = query(
-        teachersRef,
+        teacherRef,
         ...filters.map((filter) => where(...filter)),
         limit(size),
         orderBy(sort.by, sort.direction),
@@ -92,13 +103,42 @@ export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
     [lastDoc]
   );
 
-  const archive = (id: string) => {
-    updateDoc(doc(teachersRef, id), { state: "archived" });
-  };
+  const updateTeacher: UpdateData<Teacher> = useCallback(
+    (
+      id,
+      updates,
+      {
+        onFulfilled = debug((value) => console.log("FULFILLED", value)),
+        onRejected = debug((value) => console.log("REJECTED", value)),
+        applyLocally,
+      } = {}
+    ) => {
+      // TODO we need to handle passing field paths like such "meta.course"
+
+      const updatesDB: any = { ...updates, "meta.dateUpdated": new Date() };
+
+      updateDoc(doc(teacherRef, id), updatesDB).then(() => {
+        applyLocally &&
+          setTeachers((state) =>
+            state.map((data) =>
+              data.id === id ? applyUpdates(data, updates) : data
+            )
+          );
+
+        onFulfilled();
+      }, onRejected);
+    },
+    []
+  );
 
   return (
     <teacherContext.Provider
-      value={{ add, fetchTeachers, archive, data: { teachers, teacherList } }}
+      value={{
+        ...initialState,
+        teachers,
+        fetchTeachers,
+        updateTeacher,
+      }}
     >
       {children}
     </teacherContext.Provider>

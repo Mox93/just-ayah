@@ -19,16 +19,12 @@ import { useAuthContext } from ".";
 
 const collectionRef = collection(db, "meta");
 
-interface MetaContext {
-  data: MetaData;
-}
+interface MetaContext extends MetaData {}
 
 const initialState: MetaContext = {
-  data: {
-    shortList: {},
-    studentIndex: [],
-    teacherIndex: [],
-  },
+  shortList: {},
+  studentIndex: [],
+  teacherIndex: [],
 };
 
 const metaContext = createContext(initialState);
@@ -80,11 +76,9 @@ const reducer = (state: State, { type, payload }: Action): State => {
       return {
         ...state,
         context: {
-          data: {
-            shortList,
-            studentIndex: personIndexFromDB(studentIndex),
-            teacherIndex: personIndexFromDB(teacherIndex),
-          },
+          shortList,
+          studentIndex: personIndexFromDB(studentIndex),
+          teacherIndex: personIndexFromDB(teacherIndex),
         },
       };
     default:
