@@ -1,10 +1,9 @@
 import { VFC } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import Admin from "pages/Admin";
+import { Admin, SignIn } from "pages/Admin";
 import { Courses, NewCourse, CourseProfile } from "pages/Courses";
-import SignIn from "pages/SignIn";
-import { Students, StudentProfile, StudentForm } from "pages/Students";
+import { Students, StudentProfile, StudentEnroll } from "pages/Students";
 import { NewTeacher, TeacherProfile, Teachers } from "pages/Teachers";
 import UserGuard from "./guard/UserGuard";
 
@@ -21,7 +20,7 @@ const AdminView: VFC<AdminViewProps> = () => {
           </Route>
           <Route path="students" element={<Students />}>
             <Route path=":id" element={<StudentProfile />} />
-            {/* <Route path="new" element={<StudentForm />} /> */}
+            <Route path="new" element={<StudentEnroll />} />
           </Route>
           <Route path="teachers" element={<Teachers />}>
             <Route path=":id" element={<TeacherProfile />} />

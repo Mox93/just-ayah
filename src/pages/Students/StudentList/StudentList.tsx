@@ -29,7 +29,7 @@ import { getPhoneNumberByTag } from "models/phoneNumber";
 import { scheduleBrief } from "models/schedule";
 import { Student } from "models/student";
 import { getOccupation } from "models/work";
-import { cn, concat } from "utils";
+import { cn, concat, prodOnly } from "utils";
 
 import StudentNotes from "../StudentNotes";
 import StudentSchedule from "../StudentSchedule";
@@ -245,7 +245,7 @@ const StudentList: VFC<StudentListProps> = () => {
   });
 
   useEffect(() => {
-    if (process.env.REACT_APP_ENV === "production") loadStudents();
+    prodOnly(loadStudents)();
   }, []);
 
   return (

@@ -5,25 +5,21 @@ import ErrorIcon from "assets/icons/cancel-svgrepo-com.svg";
 import Container from "components/Container";
 import { cn } from "utils";
 
-interface FlashMessageProps {
+interface FlashCardProps {
   state?: "success" | "error";
   className?: string;
 }
 
-const FlashMessage: FC<FlashMessageProps> = ({
-  className,
-  state,
-  children,
-}) => {
+const FlashCard: FC<FlashCardProps> = ({ className, state, children }) => {
   return (
     <Container
       variant="card"
-      className={cn("FlashMessage", className, state)}
+      className={cn("FlashCard", className, state)}
       header={
         state && (
           <img
             src={state === "success" ? SuccessIcon : ErrorIcon}
-            alt="hero"
+            alt={state}
             className="hero"
           />
         )
@@ -34,4 +30,4 @@ const FlashMessage: FC<FlashMessageProps> = ({
   );
 };
 
-export default FlashMessage;
+export default FlashCard;

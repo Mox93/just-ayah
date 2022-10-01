@@ -4,7 +4,7 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import LoadingPopup from "components/LoadingPopup";
 import { useGlobalT } from "hooks";
 import NotFound from "pages/NotFound";
-import { pass } from "utils";
+import { devOnly, pass } from "utils";
 
 interface FetchGuardProps {
   fetcher?: Function;
@@ -31,10 +31,10 @@ const FetchGuard: VFC<FetchGuardProps> = ({
       .then((data: any) => {
         location.state = { ...(location.search as any), data };
         setFetchState(data ? "success" : "notFound");
-        // console.log("Fetch Succeeded", data);
+        devOnly(() => console.log("Fetch Succeeded", data));
       })
       .catch((error) => {
-        // console.log("Fetch Failed", error);
+        devOnly(() => console.log("Fetch Failed", error));
         setFetchState("failed");
       });
   }, []);

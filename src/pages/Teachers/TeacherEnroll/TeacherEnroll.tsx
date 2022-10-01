@@ -5,23 +5,25 @@ import { useLocation, useParams } from "react-router-dom";
 import Container from "components/Container";
 import { EnrolledMessage, ErrorMessage } from "components/FlashMessages";
 import { FormLayout } from "components/Layouts";
-import { usePopupContext, useStudentContext } from "context";
+import { usePopupContext, useTeacherContext } from "context";
 import { usePageT } from "hooks";
-import { defaultMeta, StudentInfo } from "models/student";
+import { defaultMeta, TeacherInfo } from "models/teacher";
 
-import StudentForm from "../StudentForm";
+import TeacherForm from "../TeacherForm";
 
-const StudentEnroll: VFC = () => {
-  const stu = usePageT("student");
+interface TeacherEnrollProps {}
+
+const TeacherEnroll: VFC<TeacherEnrollProps> = () => {
+  const tch = usePageT("teacher");
   const { showPopup } = usePopupContext();
   const { id } = useParams();
   const { state } = useLocation();
-  const [studentData, setStudentData] = useState<Partial<StudentInfo>>();
+  const [teacherData, setTeacherData] = useState<Partial<TeacherInfo>>();
 
-  const { updateStudent } = useStudentContext();
+  const { updateTeacher } = useTeacherContext();
   const onSubmit = useCallback(
-    (data: StudentInfo) => {
-      updateStudent(
+    (data: TeacherInfo) => {
+      updateTeacher(
         id!,
         {
           ...data,
@@ -43,23 +45,23 @@ const StudentEnroll: VFC = () => {
 
   useEffect(() => {
     const { data } = state as any;
-    setStudentData(data);
+    setTeacherData(data);
   }, [id, state]);
 
   return (
-    <FormLayout name="StudentEnroll" title={stu("formTitle")}>
+    <FormLayout name="TeacherEnroll" title={tch("formTitle")}>
       <Container
         variant="form"
-        header={<h2 className="title">{stu("formTitle")}</h2>}
+        header={<h2 className="title">{tch("formTitle")}</h2>}
       >
-        <StudentForm
+        <TeacherForm
           onSubmit={onSubmit}
           formId={id}
-          defaultValues={studentData}
+          defaultValues={teacherData}
         />
       </Container>
     </FormLayout>
   );
 };
 
-export default StudentEnroll;
+export default TeacherEnroll;

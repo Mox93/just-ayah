@@ -2,7 +2,7 @@ import { ReactNode, useMemo, useState, VFC } from "react";
 import { Trans } from "react-i18next";
 
 import Container from "components/Container";
-import FlashMessage from "components/FlashMessage";
+import { FlashCard } from "components/FlashMessages";
 import { usePopupContext, useStudentContext } from "context";
 import { useGlobalT, useMessageT, usePageT } from "hooks";
 import { StudentInfo } from "models/student";
@@ -42,19 +42,19 @@ const NewStudent: VFC<NewStudentProps> = () => {
               addStudent(data, {
                 onFulfilled: () =>
                   showPopup(
-                    <FlashMessage state="success">
+                    <FlashCard state="success">
                       <Trans t={msg} i18nKey="addSuccess">
                         <h1>
                           <span className="light">A New Student was Added</span>
                           <span className="accent">Successfully!</span>
                         </h1>
                       </Trans>
-                    </FlashMessage>,
+                    </FlashCard>,
                     { center: true, closable: true }
                   ),
                 onRejected: (reason) =>
                   showPopup(
-                    <FlashMessage state="error">
+                    <FlashCard state="error">
                       <Trans t={msg} i18nKey="addFail">
                         <h2 className="accent">Something Went Wrong!</h2>
                         <p>Please try again later.</p>
@@ -63,7 +63,7 @@ const NewStudent: VFC<NewStudentProps> = () => {
                       <div className="code">
                         <code>{JSON.stringify(reason, null, 2)}</code>
                       </div>
-                    </FlashMessage>,
+                    </FlashCard>,
                     { center: true, closable: true }
                   ),
               });

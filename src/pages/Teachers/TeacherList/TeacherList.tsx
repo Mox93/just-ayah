@@ -7,12 +7,13 @@ import { useGlobalT, useLoading, usePageT, usePersonalInfoT } from "hooks";
 import { Teacher } from "models/teacher";
 import { historyRep } from "models/dateTime";
 import { getPhoneNumberByTag } from "models/phoneNumber";
+import { prodOnly } from "utils";
 
-interface StudentListProps {}
+interface TeacherListProps {}
 
-const StudentList: VFC<StudentListProps> = () => {
+const TeacherList: VFC<TeacherListProps> = () => {
   const glb = useGlobalT();
-  const stu = usePageT("student");
+  const tch = usePageT("teacher");
   const pi = usePersonalInfoT();
 
   const { teachers, fetchTeachers } = useTeacherContext();
@@ -72,14 +73,14 @@ const StudentList: VFC<StudentListProps> = () => {
   });
 
   useEffect(() => {
-    if (process.env.REACT_APP_ENV === "production") loadTeachers();
+    prodOnly(loadTeachers)();
   }, []);
 
   return (
     <div className="TeacherList">
       {selected.size > 0 && (
         <div className="selectionCounter">
-          {stu("counter", { count: selected.size })}
+          {tch("counter", { count: selected.size })}
         </div>
       )}
       <Table
@@ -109,4 +110,4 @@ const StudentList: VFC<StudentListProps> = () => {
   );
 };
 
-export default StudentList;
+export default TeacherList;

@@ -80,4 +80,4 @@ export const studentEnrollConverter = {
 };
 
 export const enrollLinkFromId = (id: string) =>
-  `${window.location.protocol}//${window.location.host}/enroll/${id}`;
+  `${window.location.protocol}//${window.location.host}/students/new/${id}`;

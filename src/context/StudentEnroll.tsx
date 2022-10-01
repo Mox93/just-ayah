@@ -21,7 +21,7 @@ import {
   studentEnrollFromInfo,
 } from "models/studentEnroll";
 import { db } from "services/firebase";
-import { applyUpdates, debug, omit } from "utils";
+import { applyUpdates, devOnly, omit } from "utils";
 import { shiftDate } from "models/dateTime";
 
 const collectionRef = collection(db, "students");
@@ -68,8 +68,8 @@ export const StudentEnrollProvider: FC<StudentEnrollProviderProps> = ({
     ({
       size = 20,
       options: {
-        onFulfilled = debug((value) => console.log("FULFILLED", value)),
-        onRejected = debug((value) => console.log("REJECTED", value)),
+        onFulfilled = devOnly((value) => console.log("FULFILLED", value)),
+        onRejected = devOnly((value) => console.log("REJECTED", value)),
       } = {},
     } = {}) => {
       const q = query(
@@ -97,7 +97,7 @@ export const StudentEnrollProvider: FC<StudentEnrollProviderProps> = ({
 
           onFulfilled(querySnapshot);
         }, onRejected)
-        .catch(debug((value) => console.log("ERROR", value)));
+        .catch(devOnly((value) => console.log("ERROR", value)));
     },
     [lastDoc]
   );

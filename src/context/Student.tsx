@@ -19,7 +19,7 @@ import { db } from "services/firebase";
 import { Student, StudentInfo, studentConverter } from "models/student";
 import { AddComment, AddData, GetData, FetchData, UpdateData } from "models";
 import { toCommentMap } from "models/comment";
-import { applyUpdates, debug, omit } from "utils";
+import { applyUpdates, devOnly, omit } from "utils";
 
 const collectionRef = collection(db, "students");
 const studentRef = collectionRef.withConverter(studentConverter);
@@ -38,8 +38,8 @@ const initialState: StudentContext = {
   addStudent: (
     data,
     {
-      onFulfilled = debug((value) => console.log("FULFILLED", value)),
-      onRejected = debug((value) => console.log("REJECTED", value)),
+      onFulfilled = devOnly((value) => console.log("FULFILLED", value)),
+      onRejected = devOnly((value) => console.log("REJECTED", value)),
     } = {}
   ) => {
     addDoc(studentRef, data)
@@ -71,8 +71,8 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
       size = 20,
       sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
       options: {
-        onFulfilled = debug((value) => console.log("FULFILLED", value)),
-        onRejected = debug((value) => console.log("REJECTED", value)),
+        onFulfilled = devOnly((value) => console.log("FULFILLED", value)),
+        onRejected = devOnly((value) => console.log("REJECTED", value)),
       } = {},
     } = {}) => {
       const q = query(
@@ -101,7 +101,7 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
 
           onFulfilled(querySnapshot);
         }, onRejected)
-        .catch(debug((value) => console.log("ERROR", value)));
+        .catch(devOnly((value) => console.log("ERROR", value)));
     },
     [lastDoc]
   );
@@ -111,8 +111,8 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
       id,
       updates,
       {
-        onFulfilled = debug((value) => console.log("FULFILLED", value)),
-        onRejected = debug((value) => console.log("REJECTED", value)),
+        onFulfilled = devOnly((value) => console.log("FULFILLED", value)),
+        onRejected = devOnly((value) => console.log("REJECTED", value)),
         applyLocally,
       } = {}
     ) => {

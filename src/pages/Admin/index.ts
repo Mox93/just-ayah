@@ -1,4 +1,4 @@
-import "./Admin.style.scss";
-
 export * from "./Admin";
-export { default } from "./Admin";
+export { default as Admin } from "./Admin";
+export * from "./SignIn";
+export { default as SignIn } from "./SignIn";

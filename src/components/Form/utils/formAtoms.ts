@@ -1,3 +1,4 @@
+import { TeacherInfo } from "models/teacher";
 import { FC, VFC } from "react";
 
 import { Country } from "models/country";
@@ -41,6 +42,11 @@ const selectionInput = {
     SelectionInput,
     processProps<StudentInfo>(),
     registerField<StudentInfo>()
+  ),
+  Teacher: formChild(
+    SelectionInput,
+    processProps<TeacherInfo>(),
+    registerField<TeacherInfo>()
   ),
 };
 

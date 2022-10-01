@@ -2,7 +2,7 @@ import { VFC } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useStudentContext, useTeacherContext } from "context";
-import Admin from "pages/Admin";
+import { Admin, SignIn } from "pages/Admin";
 import { CourseList, CourseProfile, Courses } from "pages/Courses";
 import {
   CustomerList,
@@ -17,7 +17,6 @@ import {
   StudentEnroll,
 } from "pages/Students";
 import NotFound from "pages/NotFound";
-import SignIn from "pages/SignIn";
 import { TeacherList, TeacherProfile, Teachers } from "pages/Teachers";
 import MainUI from "pages/UI/Main";
 import FormUI from "pages/UI/Form";
@@ -26,6 +25,7 @@ import { UserGuard, FetchGuard, AuthGuard } from "./guard";
 import Unauthorized from "pages/Unauthorized";
 import { Student } from "models/student";
 import { Teacher } from "models/teacher";
+import TeacherEnroll from "pages/Teachers/TeacherEnroll";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
@@ -87,31 +87,36 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
         </Route>
 
         <Route path="reach-out" element={<NewCustomer />} />
-        <Route
-          path="enroll/:id"
-          element={
-            <FetchGuard
-              fetcher={({ id }: Student) => getStudent(id)}
-              failed={<Unauthorized />}
-            />
-          }
-        >
-          <Route index element={<StudentEnroll />} />
+
+        <Route path="students">
+          <Route
+            path="new/:id"
+            element={
+              <FetchGuard
+                fetcher={({ id }: Student) => getStudent(id)}
+                failed={<Unauthorized />}
+              />
+            }
+          >
+            <Route index element={<StudentEnroll />} />
+          </Route>
         </Route>
 
-        <Route
-          path="teachers/new/:id"
-          element={
-            <FetchGuard
-              fetcher={({ id }: Teacher) => getTeacher(id)}
-              failed={<Unauthorized />}
-            />
-          }
-        >
-          <Route index />
+        <Route path="teachers">
+          <Route
+            path="new/:id"
+            element={
+              <FetchGuard
+                fetcher={({ id }: Teacher) => getTeacher(id)}
+                failed={<Unauthorized />}
+              />
+            }
+          >
+            <Route index element={<TeacherEnroll />} />
+          </Route>
         </Route>
 
-        <Route path="ui">
+        <Route path="ui" element={<FetchGuard fetcher={() => {}} />}>
           <Route index element={<MainUI />} />
           <Route path="form" element={<FormUI />} />
         </Route>
