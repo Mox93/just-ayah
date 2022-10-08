@@ -15,7 +15,7 @@ import {
 } from "firebase/firestore";
 import { createContext, FC, useCallback, useContext, useState } from "react";
 
-import { FetchData, GetData, UpdateData } from "models";
+import { AddData, FetchData, GetData, UpdateData } from "models";
 import { TeacherInfo, Teacher, teacherConverter } from "models/teacher";
 import { db } from "services/firebase";
 import { applyUpdates, devOnly, omit } from "utils";
@@ -25,7 +25,7 @@ const teacherRef = collectionRef.withConverter(teacherConverter);
 
 interface TeacherContext {
   teachers: Teacher[];
-  addTeacher: (data: TeacherInfo) => void;
+  addTeacher: AddData<TeacherInfo>;
   fetchTeachers: FetchData;
   getTeacher: GetData<Teacher>;
   updateTeacher: UpdateData<Teacher>;

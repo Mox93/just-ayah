@@ -26,6 +26,7 @@ import Unauthorized from "pages/Unauthorized";
 import { Student } from "models/student";
 import { Teacher } from "models/teacher";
 import TeacherEnroll from "pages/Teachers/TeacherEnroll";
+import { devOnly, pass } from "utils";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
@@ -46,87 +47,85 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
 
   return (
     <Routes>
-      <Route path="/">
-        {/* Admin */}
-        <Route element={<UserGuard redirect="/sign-in" />}>
-          <Route path="admin" element={<Admin />}>
-            <Route element={<AuthGuard />}>
-              {/* Home */}
-              <Route index />
+      {/* Admin */}
+      <Route element={<UserGuard redirect="/sign-in" />}>
+        <Route path="admin" element={<Admin />}>
+          <Route element={<AuthGuard />}>
+            {/* Home */}
+            <Route index />
 
-              {/* Courses */}
-              <Route path="courses" element={<Courses />}>
-                <Route index element={<CourseList />} />
-                <Route path=":id" element={<CourseProfile />} />
-              </Route>
+            {/* Courses */}
+            <Route path="courses" element={<Courses />}>
+              <Route index element={<CourseList />} />
+              <Route path=":id" element={<CourseProfile />} />
+            </Route>
 
-              {/* Leads */}
-              <Route path="leads" element={<Customers />}>
-                <Route index element={<CustomerList />} />
-                <Route path=":id" element={<CustomerProfile />} />
-              </Route>
+            {/* Leads */}
+            <Route path="leads" element={<Customers />}>
+              <Route index element={<CustomerList />} />
+              <Route path=":id" element={<CustomerProfile />} />
+            </Route>
 
-              {/* Students */}
-              <Route path="students" element={<Students />}>
-                <Route index element={<StudentList />} />
-                <Route path=":id" element={<StudentProfile />} />
-              </Route>
+            {/* Students */}
+            <Route path="students" element={<Students />}>
+              <Route index element={<StudentList />} />
+              <Route path=":id" element={<StudentProfile />} />
+            </Route>
 
-              {/* Teachers */}
-              <Route path="teachers" element={<Teachers />}>
-                <Route index element={<TeacherList />} />
-                <Route path=":id" element={<TeacherProfile />} />
-              </Route>
+            {/* Teachers */}
+            <Route path="teachers" element={<Teachers />}>
+              <Route index element={<TeacherList />} />
+              <Route path=":id" element={<TeacherProfile />} />
             </Route>
           </Route>
         </Route>
-
-        {/* Public */}
-        <Route element={<UserGuard redirect="/admin" guestOnly />}>
-          <Route path="sign-in" element={<SignIn />} />
-        </Route>
-
-        <Route path="reach-out" element={<NewCustomer />} />
-
-        <Route path="students">
-          <Route
-            path="new/:id"
-            element={
-              <FetchGuard
-                fetcher={({ id }: Student) => getStudent(id)}
-                failed={<Unauthorized />}
-              />
-            }
-          >
-            <Route index element={<StudentEnroll />} />
-          </Route>
-        </Route>
-
-        <Route path="teachers">
-          <Route
-            path="new/:id"
-            element={
-              <FetchGuard
-                fetcher={({ id }: Teacher) => getTeacher(id)}
-                failed={<Unauthorized />}
-              />
-            }
-          >
-            <Route index element={<TeacherEnroll />} />
-          </Route>
-        </Route>
-
-        <Route path="ui" element={<FetchGuard fetcher={() => {}} />}>
-          <Route index element={<MainUI />} />
-          <Route path="form" element={<FormUI />} />
-        </Route>
-
-        <Route element={<UserGuard redirect="/reach-out" />}>
-          <Route index element={<Navigate replace to={"admin"} />} />
-        </Route>
-
-        <Route path="*" element={<NotFound />} />
       </Route>
+
+      {/* Public */}
+      <Route element={<UserGuard redirect="/admin" guestOnly />}>
+        <Route path="sign-in" element={<SignIn />} />
+      </Route>
+
+      <Route path="reach-out" element={<NewCustomer />} />
+
+      <Route path="students">
+        <Route
+          path="new/:id"
+          element={
+            <FetchGuard
+              fetcher={({ id }: Student) => getStudent(id)}
+              failed={<Unauthorized />}
+            />
+          }
+        >
+          <Route index element={<StudentEnroll />} />
+        </Route>
+      </Route>
+
+      <Route path="teachers">
+        <Route
+          path="new/:id"
+          element={
+            <FetchGuard
+              fetcher={({ id }: Teacher) => getTeacher(id)}
+              failed={<Unauthorized />}
+            />
+          }
+        >
+          <Route index element={<TeacherEnroll />} />
+        </Route>
+      </Route>
+
+      <Route path="ui" element={<FetchGuard fetcher={devOnly(pass(true))} />}>
+        <Route index element={<MainUI />} />
+        <Route path="form" element={<FormUI />} />
+      </Route>
+
+      <Route element={<UserGuard redirect="/reach-out" />}>
+        <Route index element={<Navigate replace to={"admin"} />} />
+      </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

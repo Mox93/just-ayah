@@ -7,5 +7,7 @@ export { default as useFormPersist } from "./FormPersist";
 export { default as useHeader } from "./Header";
 export { default as useLoading } from "./Loading";
 export { default as useSmartForm } from "./SmartForm";
+export * from "./Tabs";
+export { default as useTabs } from "./Tabs";
 export { default as useTimezoneSelector } from "./TimezoneSelector";
 export * from "./Translation";

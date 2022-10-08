@@ -6,7 +6,7 @@ import {
 } from "firebase/firestore";
 import { get, set } from "react-hook-form";
 
-import { Merge } from "./customTypes";
+import { DBConverter, Merge } from ".";
 import { Gender } from "./gender";
 import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
 
@@ -25,7 +25,7 @@ type MetaInDB = Merge<
 
 export interface TeacherInfo {
   firstName: string;
-  middleName?: string;
+  middleName: string;
   lastName: string;
   gender: Gender;
   phoneNumber: PhoneNumberList;
@@ -46,12 +46,10 @@ export const defaultMeta = (): Meta => {
   return { dateCreated: now };
 };
 
-type TeachersFromDB = {
-  (id: string, data: TeacherInDB): Teacher;
-  (id: string, data: Partial<TeacherInDB>): Partial<Teacher> & { id: string };
-};
-
-const teacherFromDB: TeachersFromDB = (id, { meta, ...data }) => {
+export const teacherFromDB: DBConverter<TeacherInDB, Teacher> = (
+  id,
+  { meta, ...data }
+) => {
   const now = new Date();
 
   const { dateCreated, dateUpdated, ..._meta } = meta || {};
@@ -74,7 +72,6 @@ const teacherFromInfo = ({
   email,
   nationalID,
   address,
-  middleName,
   ...data
 }: TeacherInfo) => {
   const processedData: Omit<Teacher, "id"> = {
@@ -83,7 +80,7 @@ const teacherFromInfo = ({
     meta: defaultMeta(),
   };
 
-  const optionalData = { email, nationalID, address, middleName };
+  const optionalData = { email, nationalID, address };
 
   for (let key in optionalData) {
     const value = get(optionalData, key);
