@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import { auth } from "../utils";
+import { auth } from "../lib";
 
 export const setUserRoles = functions.https.onCall(
   async ({ id, roles }, context) => {

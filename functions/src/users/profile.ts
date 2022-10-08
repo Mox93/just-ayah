@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { db } from "../utils";
+import { db } from "../lib";
 
 export const createUserProfile = functions.auth.user().onCreate((user) => {
   return db.collection("users").doc(user.uid).set({
