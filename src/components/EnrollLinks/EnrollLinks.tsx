@@ -17,9 +17,13 @@ import NewEnroll from "./NewEnroll";
 
 interface EnrollLinksProps<TUser> {
   enrollContext: EnrollContext<TUser>;
+  linkKey: string;
 }
 
-const EnrollLinks = <TUser,>({ enrollContext }: EnrollLinksProps<TUser>) => {
+const EnrollLinks = <TUser,>({
+  enrollContext,
+  linkKey,
+}: EnrollLinksProps<TUser>) => {
   const glb = useGlobalT();
   const msg = useMessageT();
 
@@ -81,7 +85,7 @@ const EnrollLinks = <TUser,>({ enrollContext }: EnrollLinksProps<TUser>) => {
         name: "link",
         header: glb("link"),
         getValue: ({ id }) => {
-          const link = enrollLinkFromId(id, "students");
+          const link = enrollLinkFromId(id, linkKey);
 
           return (
             <div className="withAction">

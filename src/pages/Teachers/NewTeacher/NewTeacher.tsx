@@ -28,7 +28,9 @@ const NewTeacher: VFC<NewTeacherProps> = () => {
     () => [
       {
         key: "links",
-        body: () => <EnrollLinks enrollContext={enrollContext} />,
+        body: () => (
+          <EnrollLinks enrollContext={enrollContext} linkKey="teachers" />
+        ),
       },
       {
         key: "form",
