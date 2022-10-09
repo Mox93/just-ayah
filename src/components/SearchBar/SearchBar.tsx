@@ -77,8 +77,8 @@ const SearchBar = <TIndex,>({
     [results, dropdownAction]
   );
 
-  const searchField = useMemo(() => {
-    return (
+  const searchField = useMemo(
+    () => (
       <Input
         className="searchField"
         name="search"
@@ -91,22 +91,25 @@ const SearchBar = <TIndex,>({
       >
         {before("input", <SearchIcon className="icon" />)}
       </Input>
-    );
-  }, [showResults, driverRef, onChange, openMenu]);
+    ),
+    [showResults, driverRef, onChange, openMenu]
+  );
 
-  const searchBar = useMemo(() => {
-    return showButton ? (
-      <MiniForm
-        className="searchForm"
-        submitProps={{ children: glb("search"), variant: "primary-solid" }}
-        {...formProps}
-      >
-        {searchField}
-      </MiniForm>
-    ) : (
-      searchField
-    );
-  }, [showButton, searchField, glb, formProps]);
+  const searchBar = useMemo(
+    () =>
+      showButton ? (
+        <MiniForm
+          className="searchForm"
+          submitProps={{ children: glb("search"), variant: "primary-solid" }}
+          {...formProps}
+        >
+          {searchField}
+        </MiniForm>
+      ) : (
+        searchField
+      ),
+    [showButton, searchField, glb, formProps]
+  );
 
   return (
     <div className="SearchBar">

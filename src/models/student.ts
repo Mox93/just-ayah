@@ -8,7 +8,7 @@ import { get, set } from "react-hook-form";
 
 import { fromYesNo } from "utils";
 
-import { Merge } from ".";
+import { DBConverter, Merge } from ".";
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
 import { Comment, CommentMapInDB, commentListFromDB } from "./comment";
@@ -75,12 +75,7 @@ export const defaultMeta = (): Meta => {
   return { dateCreated: now, progress: { type: "pending" } };
 };
 
-type StudentFromDB = {
-  (id: string, data: StudentInDB): Student;
-  (id: string, data: Partial<StudentInDB>): Partial<Student> & { id: string };
-};
-
-export const studentFromDB: StudentFromDB = (
+export const studentFromDB: DBConverter<StudentInDB, Student> = (
   id,
   { dateOfBirth, meta, ...data }
 ) => {

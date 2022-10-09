@@ -11,54 +11,44 @@ import {
   startAfter,
   updateDoc,
 } from "firebase/firestore";
-import { createContext, FC, useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 
-import { FetchData } from "models";
-import {
-  studentEnrollConverter,
-  EnrollInfo,
-  StudentEnroll,
-  studentEnrollFromInfo,
-} from "models/studentEnroll";
-import { db } from "services/firebase";
-import { applyUpdates, devOnly, omit } from "utils";
+import { DBConverter, FetchData } from "models";
 import { shiftDate } from "models/dateTime";
+import {
+  userEnrollConverter,
+  EnrollInfo,
+  UserEnroll,
+  userEnrollFromInfo,
+} from "models/enroll";
+import { db } from "services/firebase";
+import { applyUpdates, devOnly } from "utils";
+import { initialState } from "./models";
 
-const collectionRef = collection(db, "students");
-const enrollRef = collectionRef.withConverter(studentEnrollConverter);
-
-interface StudentEnrollContext {
-  enrolls: StudentEnroll[];
-  addEnroll: (enroll?: EnrollInfo) => void;
-  fetchEnrolls: FetchData;
-  refreshEnroll: (id: string, duration?: number) => void;
-  updateEnrollKey: (id: string, key: string) => void;
-  deleteEnroll: (id: string) => void;
+interface UseEnrollProps<TUserInDB, TUser> {
+  collectionName: string;
+  converterFromDB: DBConverter<TUserInDB, TUser>;
 }
 
-const initialState: StudentEnrollContext = {
-  enrolls: [],
-  addEnroll: omit,
-  fetchEnrolls: omit,
-  refreshEnroll: omit,
-  updateEnrollKey: omit,
-  deleteEnroll: omit,
-};
+export const useEnroll = <TUserInDB, TUser>({
+  collectionName,
+  converterFromDB,
+}: UseEnrollProps<TUserInDB, TUser>) => {
+  const collectionRef = collection(db, collectionName);
+  const enrollRef = collectionRef.withConverter(
+    userEnrollConverter(converterFromDB)
+  );
 
-const studentEnrollContext = createContext(initialState);
-
-interface StudentEnrollProviderProps {}
-
-export const StudentEnrollProvider: FC<StudentEnrollProviderProps> = ({
-  children,
-}) => {
-  const [enrolls, setEnrolls] = useState<StudentEnroll[]>([]);
+  const [enrolls, setEnrolls] = useState<UserEnroll<TUser>[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
 
   const addEnroll = (enroll?: EnrollInfo) => {
     addDoc(enrollRef, enroll as any).then((doc) => {
       setEnrolls((state) => [
-        { id: doc.id, ...studentEnrollFromInfo(enroll) },
+        {
+          id: doc.id,
+          ...userEnrollFromInfo<TUser>(enroll),
+        } as UserEnroll<TUser>,
         ...state,
       ]);
     });
@@ -135,21 +125,13 @@ export const StudentEnrollProvider: FC<StudentEnrollProviderProps> = ({
     );
   }, []);
 
-  return (
-    <studentEnrollContext.Provider
-      value={{
-        ...initialState,
-        addEnroll,
-        fetchEnrolls,
-        refreshEnroll,
-        updateEnrollKey,
-        deleteEnroll,
-        enrolls,
-      }}
-    >
-      {children}
-    </studentEnrollContext.Provider>
-  );
+  return {
+    ...initialState,
+    addEnroll,
+    fetchEnrolls,
+    refreshEnroll,
+    updateEnrollKey,
+    deleteEnroll,
+    enrolls,
+  };
 };
-
-export const useStudentEnrollContext = () => useContext(studentEnrollContext);

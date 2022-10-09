@@ -47,7 +47,11 @@ const TeacherForm: VFC<TeacherFormProps> = ({
           label={pi("firstName")}
           rules={{ required: "noFirstName" }}
         />
-        <Input name="middleName" label={pi("middleName")} />
+        <Input
+          name="middleName"
+          label={pi("middleName")}
+          rules={{ required: "noMiddleName" }}
+        />
         <Input
           name="lastName"
           label={pi("lastName")}

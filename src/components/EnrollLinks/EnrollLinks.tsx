@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, VFC } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ReactComponent as CrossIcon } from "assets/icons/close-svgrepo-com.svg";
 import { ReactComponent as CopyIcon } from "assets/icons/copy-svgrepo-com.svg";
@@ -6,18 +6,24 @@ import { ReactComponent as EditIcon } from "assets/icons/edit-svgrepo-com.svg";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh-svgrepo-com.svg";
 import { Button } from "components/Buttons";
 import Countdown from "components/Countdown";
-import { EditableCell, FieldProps, Table } from "components/Table";
-import { useStudentEnrollContext } from "context";
-import { useGlobalT, useLoading, useMessageT } from "hooks";
-import { enrollLinkFromId } from "models/studentEnroll";
-
-import NewEnroll from "./NewEnroll";
 import Ellipsis from "components/Ellipsis";
+import { EditableCell, FieldProps, Table } from "components/Table";
+import { EnrollContext } from "context/Enroll";
+import { useGlobalT, useLoading, useMessageT } from "hooks";
+import { enrollLinkFromId } from "models/enroll";
 import { cn } from "utils";
 
-interface EnrollLinksProps {}
+import NewEnroll from "./NewEnroll";
 
-const EnrollLinks: VFC<EnrollLinksProps> = () => {
+interface EnrollLinksProps<TUser> {
+  enrollContext: EnrollContext<TUser>;
+  linkKey: string;
+}
+
+const EnrollLinks = <TUser,>({
+  enrollContext,
+  linkKey,
+}: EnrollLinksProps<TUser>) => {
   const glb = useGlobalT();
   const msg = useMessageT();
 
@@ -27,7 +33,7 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
     refreshEnroll,
     updateEnrollKey,
     deleteEnroll,
-  } = useStudentEnrollContext();
+  } = enrollContext;
 
   const [editing, setEditing] = useState<string>();
   const [copied, setCopied] = useState<string>();
@@ -79,7 +85,7 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
         name: "link",
         header: glb("link"),
         getValue: ({ id }) => {
-          const link = enrollLinkFromId(id);
+          const link = enrollLinkFromId(id, linkKey);
 
           return (
             <div className="withAction">
@@ -152,7 +158,7 @@ const EnrollLinks: VFC<EnrollLinksProps> = () => {
 
   return (
     <div className="EnrollLinks">
-      <NewEnroll />
+      <NewEnroll enrollContext={enrollContext} />
       <Table
         fields={fields}
         data={enrolls}

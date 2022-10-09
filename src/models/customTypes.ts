@@ -67,6 +67,10 @@ export type AddComment = (id: string, comment: Comment) => void;
 
 export type Converter<TInput, TOutput> = (obj: TInput) => TOutput;
 export type GetKey<TInput> = Converter<TInput, string | number>;
+export type DBConverter<DataFrom, DataTo> = {
+  (id: string, data: DataFrom): DataTo & { id: string };
+  (id: string, data: Partial<DataFrom>): Partial<DataTo> & { id: string };
+};
 
 /***********************************\
 |****** REDECLARE FORWARD-REF ******|

@@ -1,20 +1,19 @@
-import { VFC } from "react";
-
 import { formAtoms } from "components/Form";
-import { useStudentEnrollContext } from "context";
 import { useGlobalT, usePageT, useSmartForm } from "hooks";
-import { EnrollInfo } from "models/studentEnroll";
-import { get, set } from "react-hook-form";
+import { EnrollInfo } from "models/enroll";
+import { EnrollContext } from "context";
 
 const { MiniForm, Input } = formAtoms<EnrollInfo>();
 
-interface NewEnrollProps {}
+interface NewEnrollProps<TUser> {
+  enrollContext: EnrollContext<TUser>;
+}
 
-const NewEnroll: VFC<NewEnrollProps> = () => {
+const NewEnroll = <TUser,>({ enrollContext }: NewEnrollProps<TUser>) => {
   const glb = useGlobalT();
   const stu = usePageT("student");
 
-  const { addEnroll } = useStudentEnrollContext();
+  const { addEnroll } = enrollContext;
 
   const formProps = useSmartForm<EnrollInfo>({
     onSubmit: (data) => addEnroll(data),

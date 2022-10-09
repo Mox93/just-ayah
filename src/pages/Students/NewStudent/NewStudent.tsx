@@ -1,20 +1,17 @@
-import { ReactNode, useMemo, useState, VFC } from "react";
+import { useMemo, VFC } from "react";
 import { Trans } from "react-i18next";
 
 import Container from "components/Container";
-import { FlashCard } from "components/FlashMessages";
-import { usePopupContext, useStudentContext } from "context";
-import { useGlobalT, useMessageT, usePageT } from "hooks";
-import { StudentInfo } from "models/student";
-import { cn } from "utils";
+import EnrollLinks from "components/EnrollLinks";
+import { ErrorMessage, FlashCard } from "components/FlashMessages";
+import {
+  usePopupContext,
+  useStudentContext,
+  useStudentEnrollContext,
+} from "context";
+import { Tabs, useGlobalT, useMessageT, usePageT, useTabs } from "hooks";
 
-import EnrollLinks from "../EnrollLinks";
 import StudentForm from "../StudentForm";
-
-interface Tab {
-  head: string;
-  body: ReactNode;
-}
 
 interface NewStudentProps {}
 
@@ -23,22 +20,23 @@ const NewStudent: VFC<NewStudentProps> = () => {
   const stu = usePageT("student");
   const msg = useMessageT("student");
 
-  const [selectedTab, setSelectedTab] = useState("links");
-
   const { showPopup } = usePopupContext();
   const { addStudent } = useStudentContext();
+  const enrollContext = useStudentEnrollContext();
 
-  const tabs: Tab[] = useMemo(
+  const tabs = useMemo<Tabs>(
     () => [
       {
-        head: "links",
-        body: <EnrollLinks />,
+        key: "links",
+        body: () => (
+          <EnrollLinks enrollContext={enrollContext} linkKey="students" />
+        ),
       },
       {
-        head: "form",
-        body: (
+        key: "form",
+        body: () => (
           <StudentForm
-            onSubmit={(data: StudentInfo) => {
+            onSubmit={(data) => {
               addStudent(data, {
                 onFulfilled: () =>
                   showPopup(
@@ -53,27 +51,20 @@ const NewStudent: VFC<NewStudentProps> = () => {
                     { center: true, closable: true }
                   ),
                 onRejected: (reason) =>
-                  showPopup(
-                    <FlashCard state="error">
-                      <Trans t={msg} i18nKey="addFail">
-                        <h2 className="accent">Something Went Wrong!</h2>
-                        <p>Please try again later.</p>
-                      </Trans>
-
-                      <div className="code">
-                        <code>{JSON.stringify(reason, null, 2)}</code>
-                      </div>
-                    </FlashCard>,
-                    { center: true, closable: true }
-                  ),
+                  showPopup(<ErrorMessage error={reason} />, {
+                    center: true,
+                    closable: true,
+                  }),
               });
             }}
           />
         ),
       },
     ],
-    []
+    [enrollContext]
   );
+
+  const [tabsHeader, tabsBody] = useTabs({ tabs, renderHeader: glb });
 
   return (
     <Container
@@ -82,23 +73,11 @@ const NewStudent: VFC<NewStudentProps> = () => {
       header={
         <>
           <h2 className="title">{stu("newStudents")}</h2>
-          <div className="tabs">
-            {tabs.map((tab) => (
-              <button
-                key={tab.head}
-                className={cn("tabButton", {
-                  selected: tab.head === selectedTab,
-                })}
-                onClick={() => setSelectedTab(tab.head)}
-              >
-                {glb(tab.head)}
-              </button>
-            ))}
-          </div>
+          {tabsHeader}
         </>
       }
     >
-      {tabs.find((tab) => tab.head === selectedTab)?.body}
+      {tabsBody}
     </Container>
   );
 };

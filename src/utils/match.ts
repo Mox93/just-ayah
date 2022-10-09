@@ -77,7 +77,7 @@ export const substringMatch =
       const allFields: TFieldName[] = paths(obj, { includeAll: true });
       const IncludedFields =
         filterType === "take"
-          ? filter!
+          ? fields!
           : filterType === "leave"
           ? allFields.filter((v) => !fields?.includes(v))
           : allFields;

@@ -11,6 +11,7 @@ import {
   PopupProvider,
   TeacherProvider,
   StudentEnrollProvider,
+  TeacherEnrollProvider,
 } from "context";
 import "services/i18n";
 import "styles/index.scss";
@@ -32,12 +33,11 @@ function App() {
         CustomerProvider,
         StudentProvider,
         StudentEnrollProvider,
+        TeacherEnrollProvider,
         PopupProvider,
       ]}
     >
-      <div className="App">
-        <ViewHandler />
-      </div>
+      <ViewHandler />
     </Composer>
   );
 }
