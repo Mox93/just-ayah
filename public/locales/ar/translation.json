@@ -144,7 +144,13 @@
     "teacher": {
       "title": "المُعلمون",
       "formTitle": "بيانات المُعلم",
-      "newTeachers": "المُعلمون الجُديد"
+      "newTeachers": "المُعلمون الجُديد",
+      "counter_zero": "لا يوجد مُعلمون مختارين",
+      "counter_one": "تم تحديد مُعلم",
+      "counter_two": "تم تحديد مُعلمان",
+      "counter_few": "تم تحديد {{count}} مُعلمون",
+      "counter_many": "تم تحديد {{count}} مُعلمون",
+      "counter_other": "تم تحديد {{count}} مُعلمون"
     }
   },
 

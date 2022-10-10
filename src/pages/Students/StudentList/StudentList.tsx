@@ -76,20 +76,20 @@ const StudentList: VFC<StudentListProps> = () => {
         { applyLocally: true }
       );
 
-  const fields: FieldProps[] = useMemo(
+  const fields = useMemo<FieldProps<Student>[]>(
     () => [
       {
         name: "name",
         header: pi("fullName"),
         className: "name",
-        getValue: ({ firstName, middleName, lastName }: Student) =>
+        getValue: ({ firstName, middleName, lastName }) =>
           concat(firstName, middleName, lastName),
       },
       {
         name: "status",
         header: glb("status"),
         className: "buttonCell",
-        getValue: ({ id, meta: { progress } }: Student) => {
+        getValue: ({ id, meta: { progress } }) => {
           return (
             <StatusMenu
               variant="progress"
@@ -104,7 +104,7 @@ const StudentList: VFC<StudentListProps> = () => {
         name: "subscription",
         header: glb("subscription"),
         className: "buttonCell",
-        getValue: ({ id, meta: { subscription } }: Student) => {
+        getValue: ({ id, meta: { subscription } }) => {
           return (
             <StatusMenu
               variant="subscription"
@@ -126,7 +126,7 @@ const StudentList: VFC<StudentListProps> = () => {
       {
         name: "age",
         header: pi("age"),
-        getValue: ({ dateOfBirth }: Student) => getAge(dateOfBirth),
+        getValue: ({ dateOfBirth }) => getAge(dateOfBirth),
         fit: true,
       },
       {
@@ -136,17 +136,17 @@ const StudentList: VFC<StudentListProps> = () => {
       {
         name: "occupation",
         header: pi("occupation"),
-        getValue: ({ workStatus }: Student) => getOccupation(workStatus, pi),
+        getValue: ({ workStatus }) => getOccupation(workStatus, pi),
       },
       {
         name: "nationality",
         header: pi("nationality"),
-        getValue: ({ country }: Student) => getCountry(country)?.native,
+        getValue: ({ country }) => getCountry(country)?.native,
       },
       {
         name: "residence",
         header: pi("residence"),
-        getValue: ({ country, governorate }: Student) => {
+        getValue: ({ country, governorate }) => {
           const parts = [getCountry(country)?.native];
           if (governorate) parts.push(handleEgGov(governorate, gov));
           return parts.join(" - ");
@@ -156,7 +156,7 @@ const StudentList: VFC<StudentListProps> = () => {
         name: "course",
         header: glb("course"),
         className: "buttonCell",
-        getValue: ({ id, meta: { course } }: Student) => (
+        getValue: ({ id, meta: { course } }) => (
           <SelectionMenu
             selected={course}
             options={courses}
@@ -170,7 +170,7 @@ const StudentList: VFC<StudentListProps> = () => {
         name: "teacher",
         header: glb("teacher"),
         className: "buttonCell",
-        getValue: ({ id, meta: { teacher } }: Student) => (
+        getValue: ({ id, meta: { teacher } }) => (
           <SelectionMenu
             selected={teacher}
             options={teachers}
@@ -184,7 +184,7 @@ const StudentList: VFC<StudentListProps> = () => {
         name: "schedule",
         header: glb("schedule"),
         className: "buttonCell",
-        getValue: ({ id, meta: { schedule } }: Student) => {
+        getValue: ({ id, meta: { schedule } }) => {
           const brief = scheduleBrief(schedule, swd, dt);
 
           return (
@@ -205,7 +205,7 @@ const StudentList: VFC<StudentListProps> = () => {
         name: "notes",
         header: glb("notes"),
         className: "buttonCell",
-        getValue: ({ id, meta: { notes: [lastNote] = [] } }: Student) => (
+        getValue: ({ id, meta: { notes: [lastNote] = [] } }) => (
           <Button
             variant="plain-text"
             size="small"
@@ -221,8 +221,7 @@ const StudentList: VFC<StudentListProps> = () => {
       {
         name: "dateCreated",
         header: glb("dateCreated"),
-        getValue: ({ meta: { dateCreated } }: Student) =>
-          historyRep(dateCreated),
+        getValue: ({ meta: { dateCreated } }) => historyRep(dateCreated),
         fit: true,
       },
     ],
@@ -245,7 +244,9 @@ const StudentList: VFC<StudentListProps> = () => {
   });
 
   useEffect(() => {
-    prodOnly(loadStudents)();
+    prodOnly(() => {
+      if (!students.length) loadStudents();
+    })();
   }, []);
 
   return (
@@ -266,7 +267,7 @@ const StudentList: VFC<StudentListProps> = () => {
             checked ? new Set(students.map(({ id }) => id)) : new Set()
           )
         }
-        extraProps={(data: Student) => ({ gender: data.gender })}
+        extraProps={({ gender }) => ({ gender })}
         footer={
           <Button
             className="loadMore"

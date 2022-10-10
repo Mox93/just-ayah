@@ -1,4 +1,4 @@
-import { VFC, useState, useEffect } from "react";
+import { VFC, useState, useEffect, useMemo } from "react";
 
 import { Button } from "components/Buttons";
 import { FieldProps, Table } from "components/Table";
@@ -7,7 +7,7 @@ import { useGlobalT, useLoading, usePageT, usePersonalInfoT } from "hooks";
 import { Teacher } from "models/teacher";
 import { historyRep } from "models/dateTime";
 import { getPhoneNumberByTag } from "models/phoneNumber";
-import { prodOnly } from "utils";
+import { concat, prodOnly } from "utils";
 
 interface TeacherListProps {}
 
@@ -18,35 +18,32 @@ const TeacherList: VFC<TeacherListProps> = () => {
 
   const { teachers, fetchTeachers } = useTeacherContext();
 
-  const fields: FieldProps[] = [
-    {
-      name: "name",
-      header: pi("fullName"),
-      getValue: (data: Teacher) =>
-        `${data.firstName} ${data.middleName} ${data.lastName}`,
-    },
-    {
-      name: "phoneNumber",
-      header: pi("phoneNumber"),
-      getValue: ({ phoneNumber }) =>
-        getPhoneNumberByTag(phoneNumber, "whatsapp"),
-      fit: true,
-    },
-    {
-      name: "gender",
-      header: pi("gender"),
-      getValue: (data: Teacher) => (
-        <div className={`color-coded ${data.gender}`}></div>
-      ),
-      fit: true,
-    },
-    {
-      name: "dateCreated",
-      header: glb("dateCreated"),
-      getValue: (data: Teacher) => historyRep(data.meta.dateCreated),
-      fit: true,
-    },
-  ];
+  const fields = useMemo<FieldProps<Teacher>[]>(
+    () => [
+      {
+        name: "name",
+        header: pi("fullName"),
+        className: "name",
+        getValue: ({ firstName, middleName, lastName }) =>
+          concat(firstName, middleName, lastName),
+      },
+      {
+        name: "phoneNumber",
+        header: pi("phoneNumber"),
+        className: "phoneNumber",
+        getValue: ({ phoneNumber }) =>
+          getPhoneNumberByTag(phoneNumber, "whatsapp"),
+        fit: true,
+      },
+      {
+        name: "dateCreated",
+        header: glb("dateCreated"),
+        getValue: ({ meta: { dateCreated } }) => historyRep(dateCreated),
+        fit: true,
+      },
+    ],
+    []
+  );
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const handleSelect = (id: string) =>
@@ -73,7 +70,9 @@ const TeacherList: VFC<TeacherListProps> = () => {
   });
 
   useEffect(() => {
-    prodOnly(loadTeachers)();
+    prodOnly(() => {
+      if (!teachers.length) loadTeachers();
+    })();
   }, []);
 
   return (
@@ -95,6 +94,7 @@ const TeacherList: VFC<TeacherListProps> = () => {
             checked ? new Set(teachers.map(({ id }) => id)) : new Set()
           )
         }
+        extraProps={({ gender }) => ({ gender })}
         footer={
           <Button
             className="loadMore"

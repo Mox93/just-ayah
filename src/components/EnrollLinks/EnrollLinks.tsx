@@ -10,7 +10,7 @@ import Ellipsis from "components/Ellipsis";
 import { EditableCell, FieldProps, Table } from "components/Table";
 import { EnrollContext } from "context/Enroll";
 import { useGlobalT, useLoading, useMessageT } from "hooks";
-import { enrollLinkFromId } from "models/enroll";
+import { enrollLinkFromId, UserEnroll } from "models/enroll";
 import { cn } from "utils";
 
 import NewEnroll from "./NewEnroll";
@@ -51,7 +51,7 @@ const EnrollLinks = <TUser,>({
     if (!enrolls.length) fetchEnrolls();
   }, [fetchEnrolls]);
 
-  const fields: FieldProps[] = useMemo(
+  const fields = useMemo<FieldProps<UserEnroll<TUser>>[]>(
     () => [
       {
         name: "key",

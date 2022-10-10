@@ -139,8 +139,10 @@
     },
     "teacher": {
       "title": "teachers",
-      "formTitle": "بيانات المُعلم",
-      "newTeachers": "new teachers"
+      "formTitle": "teacher information",
+      "newTeachers": "new teachers",
+      "counter_one": "1 teacher selected",
+      "counter_other": "{{count}} teachers selected"
     }
   },
   "governorate": {

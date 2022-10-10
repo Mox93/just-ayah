@@ -1,3 +1,5 @@
+@use "styles/abstracts/mixins" as *;
+
 .TeacherList {
   height: var(--body-height);
   max-height: var(--body-height);
@@ -8,5 +10,19 @@
 
   .Table {
     flex-grow: 1;
+  }
+
+  td {
+    &.phoneNumber {
+      direction: ltr;
+    }
+
+    &.name {
+      text-transform: capitalize;
+    }
+  }
+
+  tr {
+    @include genderColorCoding();
   }
 }

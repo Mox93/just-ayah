@@ -84,7 +84,7 @@ const teacherFromInfo = ({
 
   for (let key in optionalData) {
     const value = get(optionalData, key);
-    if (value !== undefined) set(processedData, key, value);
+    if (value) set(processedData, key, value);
   }
 
   return processedData;

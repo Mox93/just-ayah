@@ -1,3 +1,5 @@
+@use "styles/abstracts/mixins" as *;
+
 .StudentList {
   height: var(--body-height);
   max-height: var(--body-height);
@@ -38,12 +40,6 @@
   }
 
   tr {
-    &[gender="male"] {
-      background-color: var(--c-male);
-    }
-
-    &[gender="female"] {
-      background-color: var(--c-female);
-    }
+    @include genderColorCoding();
   }
 }

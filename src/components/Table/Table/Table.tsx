@@ -1,33 +1,34 @@
-import { ReactNode, VFC } from "react";
+import { get } from "lodash";
+import { ReactNode } from "react";
 
 import Container from "components/Container";
 import { cn, omit, pass } from "utils";
 import { useDirT } from "hooks";
 
-export interface FieldProps {
+export interface FieldProps<T> {
   name: string;
   header: ReactNode;
   size?: string;
   fit?: boolean;
   className?: string;
-  getValue?: (data: any, index: number) => ReactNode;
+  getValue?: (data: T, index: number) => ReactNode;
 }
 
-interface TableProps {
+interface TableProps<T> {
   className?: string;
   dir?: string;
-  fields: FieldProps[];
-  data: { id: string; [key: string]: any }[];
+  fields: FieldProps<T>[];
+  data: (T & { id: string })[];
   selected?: Set<string>;
   footer?: ReactNode;
   noCheckbox?: boolean;
   flat?: boolean;
   toggleSelect?: (checked: boolean, id: string) => void;
   toggleSelectAll?: (checked: boolean) => void;
-  extraProps?: (data: any, index: number) => Record<string, any>;
+  extraProps?: (data: T, index: number) => Record<string, any>;
 }
 
-const Table: VFC<TableProps> = ({
+const Table = <T,>({
   className,
   dir,
   fields,
@@ -39,7 +40,7 @@ const Table: VFC<TableProps> = ({
   toggleSelect = omit,
   toggleSelectAll = omit,
   extraProps = pass({}),
-}) => {
+}: TableProps<T>) => {
   const dirT = useDirT();
 
   return (
@@ -105,7 +106,7 @@ const Table: VFC<TableProps> = ({
                   className={cn({ fit, clip: !fit }, className)}
                   key={`${row.id}.${name}`}
                 >
-                  {getValue ? getValue(row, index) : row[name]}
+                  {getValue ? getValue(row, index) : get(row, name)}
                 </td>
               ))}
             </tr>

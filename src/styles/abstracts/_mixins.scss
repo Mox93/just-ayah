@@ -174,3 +174,13 @@ $desktopSize: 35.01rem;
   background-color: $color;
   border-radius: 50%;
 }
+
+@mixin genderColorCoding {
+  &[gender="male"] {
+    background-color: var(--c-male);
+  }
+
+  &[gender="female"] {
+    background-color: var(--c-female);
+  }
+}
