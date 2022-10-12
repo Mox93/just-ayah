@@ -42,7 +42,7 @@ const TeacherList: VFC<TeacherListProps> = () => {
         fit: true,
       },
     ],
-    []
+    [pi, glb]
   );
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
