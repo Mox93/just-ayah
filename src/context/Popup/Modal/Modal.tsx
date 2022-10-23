@@ -1,16 +1,16 @@
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, useEffect } from "react";
 
 import { CloseButton } from "components/Buttons";
 import { useDirT } from "hooks";
 import { cn } from "utils";
 
-export type PopupProps = PropsWithChildren<{
+export type ModalProps = {
   dismissible?: boolean;
   center?: boolean;
   close?: () => void;
-}>;
+};
 
-const Popup: FC<PopupProps> = ({ children, close, dismissible, center }) => {
+const Modal: FC<ModalProps> = ({ children, close, dismissible, center }) => {
   const dirT = useDirT();
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const Popup: FC<PopupProps> = ({ children, close, dismissible, center }) => {
   }, [dismissible, close]);
 
   return (
-    <div className="Popup" dir={dirT}>
+    <div className="Modal" dir={dirT}>
       <div
         className="background"
         onClick={() => dismissible && close && close()}
@@ -40,4 +40,4 @@ const Popup: FC<PopupProps> = ({ children, close, dismissible, center }) => {
   );
 };
 
-export default Popup;
+export default Modal;

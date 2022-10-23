@@ -20,7 +20,7 @@ const NewStudent: VFC<NewStudentProps> = () => {
   const stu = usePageT("student");
   const msg = useMessageT("student");
 
-  const { showPopup } = usePopupContext();
+  const { openModal } = usePopupContext();
   const { addStudent } = useStudentContext();
   const enrollContext = useStudentEnrollContext();
 
@@ -39,7 +39,7 @@ const NewStudent: VFC<NewStudentProps> = () => {
             onSubmit={(data) => {
               addStudent(data, {
                 onFulfilled: () =>
-                  showPopup(
+                  openModal(
                     <FlashCard state="success">
                       <Trans t={msg} i18nKey="addSuccess">
                         <h1>
@@ -51,7 +51,7 @@ const NewStudent: VFC<NewStudentProps> = () => {
                     { center: true, closable: true }
                   ),
                 onRejected: (reason) =>
-                  showPopup(<ErrorMessage error={reason} />, {
+                  openModal(<ErrorMessage error={reason} />, {
                     center: true,
                     closable: true,
                   }),

@@ -1,6 +1,7 @@
+import { HTMLAttributes, VFC } from "react";
+
 import { ReactComponent as Cross } from "assets/icons/close-svgrepo-com.svg";
 import { useDirT } from "hooks";
-import { HTMLAttributes, VFC } from "react";
 import { cn } from "utils";
 
 interface CloseButtonProps extends HTMLAttributes<HTMLButtonElement> {}

@@ -7,7 +7,7 @@ import Highlight from "components/Highlight";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown, useGlobalT, useSmartForm } from "hooks";
 import { Converter, GetKey } from "models";
-import { omit, pass } from "utils";
+import { pass } from "utils";
 import { before } from "utils/position";
 import { renderAttributes } from "utils/render";
 
@@ -43,7 +43,7 @@ const SearchBar = <TIndex,>({
   showResults,
   overflowDir,
   onChange: applySearch = pass([]),
-  onSubmit = omit,
+  onSubmit,
   onSelect,
   getKey = identity,
   renderSections,
@@ -56,7 +56,7 @@ const SearchBar = <TIndex,>({
   const formProps = useSmartForm<Search>({
     onSubmit: (data) => {
       console.log(data);
-      onSubmit(results);
+      onSubmit?.(results);
     },
   });
 

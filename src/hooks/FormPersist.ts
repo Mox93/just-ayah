@@ -2,7 +2,7 @@ import { cloneDeep, get, unset } from "lodash";
 import { useEffect } from "react";
 import { FieldPath, UseFormSetValue, UseFormWatch } from "react-hook-form";
 
-import { omit, pass, paths } from "utils";
+import { pass, paths } from "utils";
 
 interface FormPersistConfig<
   TFieldValues,
@@ -27,7 +27,7 @@ const useFormPersist = <TFieldValues>(
   const {
     storageKey,
     watch = pass({}),
-    setValue = omit,
+    setValue,
     storage,
     exclude = [],
     onDataRestored,
@@ -63,7 +63,7 @@ const useFormPersist = <TFieldValues>(
       paths(values).forEach((path) => {
         const value = get(values, path);
 
-        setValue(path as FieldPath<TFieldValues>, value, {
+        setValue?.(path as FieldPath<TFieldValues>, value, {
           shouldValidate: validate,
           shouldDirty: dirty,
           shouldTouch: touch,

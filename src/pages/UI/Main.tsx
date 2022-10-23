@@ -6,6 +6,7 @@ import { LoadingSpinner } from "components/Icons";
 import LoadingPopup from "components/LoadingPopup";
 import { useDirT } from "hooks";
 import { mapStatusType, mapStatusVariant } from "models/status";
+import Toast from "context/Popup/Toast";
 
 interface MainProps {}
 
@@ -21,12 +22,22 @@ const colorVariants = [
 const fillVariants = ["solid", "outline", "text", "ghost"];
 const sizes = ["large", "medium", "small"];
 
+const toastVariants = ["success", "info", "warning", "danger"] as const;
+
 const rowStyle = {
   display: "flex",
   gap: "1rem",
   marginBlockEnd: "2rem",
   alignItems: "flex-end",
 };
+
+const colStyle = {
+  display: "grid",
+  gap: "1rem",
+  marginBlockEnd: "2rem",
+  alignItems: "flex-start",
+};
+
 const sectionHeaderStyle: any = {
   textTransform: "capitalize",
   marginBlockEnd: "0.5rem",
@@ -90,6 +101,16 @@ const MainUI: VFC<MainProps> = () => {
         >
           Press to Load
         </Button>
+      </div>
+
+      <div style={colStyle}>
+        {toastVariants.map((variant) => (
+          <Toast
+            key={variant}
+            message={`This is a ${variant} message!\nMore details...`}
+            variant={variant}
+          />
+        ))}
       </div>
 
       {isLoading && <LoadingPopup message="Loading" />}

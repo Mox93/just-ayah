@@ -2,7 +2,6 @@ import { FieldPath } from "react-hook-form";
 
 import { useCountrySelector } from "hooks";
 import { Country } from "models/country";
-import { omit } from "utils/functions";
 import { PathsOrConverters } from "utils/render";
 import { createModifier } from "utils/transformer";
 
@@ -19,14 +18,14 @@ interface CountryMapperPropsInternal extends CountryMapperProps {
 const countryMapper = createModifier<CountryMapperProps>(
   ({
     renderSections,
-    setValue = omit,
+    setValue,
     selected,
     searchFields = ["name", "native"],
     ...props
   }: CountryMapperPropsInternal) => ({
     ...props,
     searchFields,
-    setValue: (value: any) => setValue(value?.code),
+    setValue: (value: any) => setValue?.(value?.code),
     ...useCountrySelector({
       renderSections,
       selectedCountry: selected,

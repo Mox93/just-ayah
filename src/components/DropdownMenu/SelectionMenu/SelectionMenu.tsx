@@ -12,7 +12,6 @@ import {
   FunctionOrChain,
   identity,
   mergeRefs,
-  omit,
 } from "utils";
 
 interface SelectionMenuProps<TOption> extends Omit<ButtonProps, "children"> {
@@ -42,7 +41,7 @@ const SelectionMenu = <TOption,>(
     noCheckmark,
     noArrow,
     onClick,
-    setValue = omit,
+    setValue,
     getKey = identity,
     checkIsSelected = isEqual,
     renderElement = identity,
@@ -90,7 +89,7 @@ const SelectionMenu = <TOption,>(
         items={options}
         checkIsSelected={(item) => checkIsSelected(item, selected)}
         onSelect={(item) => {
-          setValue(item);
+          setValue?.(item);
           dropdownAction("close");
         }}
         renderElement={render}

@@ -33,7 +33,7 @@ const metaContext = createContext(initialState);
 interface MetaProviderProps {}
 
 export const MetaProvider: FC<MetaProviderProps> = ({ children }) => {
-  const [{ context }, dispatch] = useReducer(reducer, {
+  const [{ context }, dispatch] = useReducer(reduce, {
     context: initialState,
   });
 
@@ -70,7 +70,7 @@ type State = { context: MetaContext };
 
 type Action = { type: "populate"; payload: MetaDataInDB };
 
-const reducer = (state: State, { type, payload }: Action): State => {
+const reduce = (state: State, { type, payload }: Action): State => {
   switch (type) {
     case "populate":
       const { shortList = {}, studentIndex = {}, teacherIndex = {} } = payload;

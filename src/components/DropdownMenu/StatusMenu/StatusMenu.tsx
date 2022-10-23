@@ -13,7 +13,7 @@ import Container from "components/Container";
 import { CheckMark } from "components/Icons";
 import { DropdownAction, useDropdown, useGlobalT } from "hooks";
 import { UNKNOWN } from "models";
-import { cn, mergeRefs, omit, capitalize } from "utils";
+import { cn, mergeRefs, capitalize } from "utils";
 import {
   mapStatusType,
   Status,
@@ -27,7 +27,7 @@ import StatusForm from "./StatusForm";
 type State = {
   currentStatus: Status;
   activeStatus?: Status;
-  onChange: Function;
+  onChange?: Function;
   dropdownAction?: Dispatch<DropdownAction>;
 };
 type Action = {
@@ -36,7 +36,7 @@ type Action = {
 };
 
 const reduce = (
-  { currentStatus, onChange, dropdownAction = omit }: State,
+  { currentStatus, onChange, dropdownAction }: State,
   { type, payload }: Action
 ): State => {
   const state = { onChange, dropdownAction };
@@ -46,12 +46,12 @@ const reduce = (
     |*** simple status ***|
     \*********************/
     case "setType":
-      dropdownAction("close");
+      dropdownAction?.("close");
       switch (payload.type) {
         case currentStatus.type:
           return { ...state, currentStatus };
         default:
-          onChange(payload);
+          onChange?.(payload);
           return { ...state, currentStatus: payload };
       }
 
@@ -61,8 +61,8 @@ const reduce = (
     case "awaitValue":
       return { ...state, currentStatus, activeStatus: payload };
     case "setValue":
-      dropdownAction("close");
-      onChange(payload);
+      dropdownAction?.("close");
+      onChange?.(payload);
       return { ...state, currentStatus: payload };
     default:
       return { ...state, currentStatus };
@@ -83,7 +83,7 @@ const StatusMenu = <TVariant extends StatusVariants>(
     variant,
     status,
     onClick,
-    onChange = omit,
+    onChange,
     ...props
   }: StatusMenuProps<TVariant>,
   ref: Ref<HTMLButtonElement>

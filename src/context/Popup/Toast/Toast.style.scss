@@ -1,0 +1,71 @@
+@use "styles/abstracts/mixins" as *;
+
+.Toast {
+  max-width: var(--width-m);
+  min-width: var(--width-xs);
+  width: calc(100vw - 1rem);
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  background-color: var(--toast-bg-color);
+  padding: var(--spacing-s) 2.65rem;
+  position: relative;
+
+  @include withBorder($borderColor: var(--toast-fg-color));
+
+  &.floating {
+    z-index: 1000;
+
+    @include positioning($position: fixed, $block: 0.5rem, $y: 0);
+  }
+
+  &.success {
+    --toast-text-color: var(--c-success-400);
+    --toast-fg-color: var(--c-success-300);
+    --toast-bg-color: var(--c-success-100);
+  }
+
+  &.info {
+    --toast-text-color: var(--c-info-400);
+    --toast-fg-color: var(--c-info-300);
+    --toast-bg-color: var(--c-info-100);
+  }
+
+  &.warning {
+    --toast-text-color: var(--c-warning-400);
+    --toast-fg-color: var(--c-warning-300);
+    --toast-bg-color: var(--c-warning-100);
+  }
+
+  &.danger {
+    --toast-text-color: var(--c-danger-400);
+    --toast-fg-color: var(--c-danger-300);
+    --toast-bg-color: var(--c-danger-100);
+  }
+
+  .toastIcon {
+    width: var(--icon-size-l);
+    height: var(--icon-size-l);
+    fill: var(--toast-fg-color);
+
+    @include positioning($inline: 1.4rem, $block: 1.4rem);
+  }
+
+  .message {
+    border-inline-start: 1px solid var(--toast-fg-color);
+    padding-inline-start: 0.4rem;
+    padding-block: var(--spacing-s);
+    color: var(--toast-text-color);
+  }
+
+  .CloseButton {
+    --fill-color: var(--toast-fg-color);
+
+    @include positioning($inlineDir: end, $inline: 1.4rem, $block: 1.4rem);
+
+    &:hover {
+      --fill-color: var(--toast-bg-color);
+      --bg-color: var(--toast-fg-color);
+    }
+  }
+}

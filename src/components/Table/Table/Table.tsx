@@ -2,7 +2,7 @@ import { get } from "lodash";
 import { ReactNode } from "react";
 
 import Container from "components/Container";
-import { cn, omit, pass } from "utils";
+import { cn, pass } from "utils";
 import { useDirT } from "hooks";
 
 export interface FieldProps<T> {
@@ -37,8 +37,8 @@ const Table = <T,>({
   footer,
   noCheckbox,
   flat,
-  toggleSelect = omit,
-  toggleSelectAll = omit,
+  toggleSelect,
+  toggleSelectAll,
   extraProps = pass({}),
 }: TableProps<T>) => {
   const dirT = useDirT();
@@ -54,7 +54,7 @@ const Table = <T,>({
                   type="checkbox"
                   name="selectAll"
                   id={"all"}
-                  onChange={(e) => toggleSelectAll(e.target.checked)}
+                  onChange={(e) => toggleSelectAll?.(e.target.checked)}
                   checked={data.length > 0 && selected?.size === data.length}
                 />
               </th>
@@ -73,7 +73,7 @@ const Table = <T,>({
                     name="selectItem"
                     id={row.id}
                     checked={selected?.has(row.id)}
-                    onChange={(e) => toggleSelect(e.target.checked, row.id)}
+                    onChange={(e) => toggleSelect?.(e.target.checked, row.id)}
                   />
                 </td>
               )}

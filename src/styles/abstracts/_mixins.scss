@@ -20,8 +20,8 @@ $desktopSize: 35.01rem;
 
 @mixin positioning(
   $position: absolute,
-  $blockDir: "start",
-  $inlineDir: "start",
+  $blockDir: start,
+  $inlineDir: start,
   $x: -50%,
   $y: -50%,
   $inline: 50%,
@@ -33,13 +33,13 @@ $desktopSize: 35.01rem;
   position: $position;
   transform: translate(var(--x-displacement), var(--y-displacement));
 
-  @if $blockDir == "start" {
+  @if $blockDir == start {
     top: $block;
-  } @else if $blockDir == "end" {
+  } @else if $blockDir == end {
     bottom: $block;
   }
 
-  @if $inlineDir == "start" {
+  @if $inlineDir == start {
     &[dir="ltr"],
     &:not([dir]) {
       left: $inline;
@@ -50,7 +50,7 @@ $desktopSize: 35.01rem;
 
       right: $inline;
     }
-  } @else if $inlineDir == "end" {
+  } @else if $inlineDir == end {
     &[dir="ltr"],
     &:not([dir]) {
       --x-displacement: calc(#{$x} * -1);

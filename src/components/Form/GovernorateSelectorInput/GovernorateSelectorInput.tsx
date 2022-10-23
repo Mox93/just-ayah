@@ -3,7 +3,6 @@ import { forwardRef, Ref, useEffect } from "react";
 import { useGovT } from "hooks";
 import { CountryCode } from "models/country";
 import { egStrip, egGovernorate, EG_PREFIX } from "models/governorate";
-import { omit } from "utils";
 
 import MenuInput, { MenuInputProps } from "../MenuInput";
 import Input from "../Input";
@@ -14,12 +13,7 @@ interface GovernorateSelectorInputProps extends MenuInputProps<string> {
 }
 
 const GovernorateSelectorInput = (
-  {
-    country,
-    selected,
-    setValue = omit,
-    ...props
-  }: GovernorateSelectorInputProps,
+  { country, selected, setValue, ...props }: GovernorateSelectorInputProps,
   ref: Ref<HTMLInputElement>
 ) => {
   const gov = useGovT("egypt");
@@ -29,7 +23,7 @@ const GovernorateSelectorInput = (
       (country === "EG" && !selected?.startsWith(EG_PREFIX)) ||
       (country !== "EG" && selected?.startsWith(EG_PREFIX))
     )
-      setValue();
+      setValue?.();
   }, [country, selected]);
 
   return country === "EG" ? (

@@ -10,7 +10,7 @@ import {
 
 import { useDateTimeT } from "hooks";
 import { DateInfo, clampDate, toDateInfo } from "models/dateTime";
-import { addZeros, cn, omit, range } from "utils";
+import { addZeros, cn, range } from "utils";
 import { PositionalElement } from "utils/position";
 
 import MenuInput from "../MenuInput";
@@ -21,7 +21,7 @@ type State = Partial<DateInfo>;
 type Action = {
   type: "update" | "replace";
   payload?: Partial<DateInfo>;
-  setValue: (value: DateInfo) => void;
+  setValue?: (value: DateInfo) => void;
 };
 
 const reduce = (date: State, { type, payload, setValue }: Action): State => {
@@ -34,7 +34,7 @@ const reduce = (date: State, { type, payload, setValue }: Action): State => {
   );
 
   if (newDate?.day && newDate?.month && newDate?.year)
-    setValue(newDate as DateInfo);
+    setValue?.(newDate as DateInfo);
 
   return newDate;
 };
@@ -62,7 +62,7 @@ const DateInput: FC<DateInputProps> = ({
   yearsRange = {},
   innerProps,
   selected,
-  setValue = omit,
+  setValue,
   ...props
 }) => {
   const dts = useDateTimeT("symbols");

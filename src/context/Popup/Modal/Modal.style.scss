@@ -1,6 +1,6 @@
 @use "styles/abstracts/mixins" as *;
 
-.Popup {
+.Modal {
   z-index: 100;
 
   @include positioning($position: fixed, $inline: 0, $block: 0, $x: 0, $y: 0);

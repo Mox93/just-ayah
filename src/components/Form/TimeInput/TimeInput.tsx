@@ -16,7 +16,7 @@ import {
   to12H,
   to24H,
 } from "models/dateTime";
-import { cn, omit, addZeros } from "utils";
+import { cn, addZeros } from "utils";
 import { PositionalElement } from "utils/position";
 
 import MenuInput from "../MenuInput";
@@ -30,7 +30,7 @@ type State = Partial<TimeInfo12H>;
 type Action = {
   type: "update" | "replace";
   payload: State;
-  setValue: (value: TimeInfo) => void;
+  setValue?: (value: TimeInfo) => void;
 };
 
 const reduce = (state: State, { type, payload, setValue }: Action): State => {
@@ -41,7 +41,7 @@ const reduce = (state: State, { type, payload, setValue }: Action): State => {
       ? { ...payload }
       : state;
 
-  if (isTimeInfo(newTime)) setValue(to24H(newTime));
+  if (isTimeInfo(newTime)) setValue?.(to24H(newTime));
 
   return newTime;
 };
@@ -71,7 +71,7 @@ const TimeInput: FC<TimeInputProps> = ({
   selected,
   h24,
   minutesInterval,
-  setValue = omit,
+  setValue,
   ...props
 }) => {
   const dts = useDateTimeT("symbols");

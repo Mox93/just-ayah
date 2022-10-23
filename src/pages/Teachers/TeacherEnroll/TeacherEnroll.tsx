@@ -15,7 +15,7 @@ interface TeacherEnrollProps {}
 
 const TeacherEnroll: VFC<TeacherEnrollProps> = () => {
   const tch = usePageT("teacher");
-  const { showPopup } = usePopupContext();
+  const { openModal } = usePopupContext();
   const { id } = useParams();
   const { state } = useLocation();
   const [teacherData, setTeacherData] = useState<Partial<TeacherInfo>>();
@@ -31,9 +31,9 @@ const TeacherEnroll: VFC<TeacherEnrollProps> = () => {
           ...{ enroll: deleteField() },
         },
         {
-          onFulfilled: () => showPopup(<EnrolledMessage />, { center: true }),
+          onFulfilled: () => openModal(<EnrolledMessage />, { center: true }),
           onRejected: (reason) =>
-            showPopup(<ErrorMessage error={reason} />, {
+            openModal(<ErrorMessage error={reason} />, {
               center: true,
               closable: true,
             }),

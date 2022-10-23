@@ -54,13 +54,13 @@ const StudentList: VFC<StudentListProps> = () => {
     shortList: { teachers = [] },
   } = useMetaContext();
 
-  const { showPopup } = usePopupContext();
+  const { openModal } = usePopupContext();
 
   const showNotesPopup = (id: string) => () =>
-    showPopup(<StudentNotes id={id} />, { closable: true, dismissible: true });
+    openModal(<StudentNotes id={id} />, { closable: true, dismissible: true });
 
   const showSchedulePopup = (id: string) => () =>
-    showPopup(<StudentSchedule id={id} />, {
+    openModal(<StudentSchedule id={id} />, {
       closable: true,
       dismissible: true,
     });

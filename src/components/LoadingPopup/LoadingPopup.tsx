@@ -9,10 +9,10 @@ interface LoadingPopupProps {
 }
 
 const LoadingPopup: VFC<LoadingPopupProps> = ({ message }) => {
-  const { showPopup, closePopup } = usePopupContext();
+  const { openModal, closeModal } = usePopupContext();
 
   useEffect(() => {
-    showPopup(
+    openModal(
       <Container variant="card" className="LoadingPopup">
         {message}
         <LoadingSpinner />
@@ -20,7 +20,7 @@ const LoadingPopup: VFC<LoadingPopupProps> = ({ message }) => {
       { center: true }
     );
 
-    return closePopup;
+    return closeModal;
   }, []);
 
   return null;

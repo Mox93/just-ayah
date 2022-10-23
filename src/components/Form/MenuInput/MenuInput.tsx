@@ -14,7 +14,7 @@ import { DropdownArrow } from "components/Icons";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown } from "hooks";
 import { GetKey, Merge } from "models";
-import { applyInOrder, cn, FunctionOrChain, identity, omit } from "utils";
+import { applyInOrder, cn, FunctionOrChain, identity } from "utils";
 import { after, before } from "utils/position";
 import { substringMatch } from "utils/match";
 
@@ -52,7 +52,7 @@ const MenuInput = <TOption,>(
     selected,
     searchFields,
     getKey = identity,
-    setValue = omit,
+    setValue,
     renderElement = identity,
     ...props
   }: MenuInputPropsInternal<TOption>,
@@ -114,7 +114,7 @@ const MenuInput = <TOption,>(
         checkIsSelected={(item) => isEqual(item, selected)}
         renderElement={renderElement}
         onSelect={(item) => {
-          setValue(item);
+          setValue?.(item);
           dropdownAction("close");
         }}
         {...(searchFields && {

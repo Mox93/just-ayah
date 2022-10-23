@@ -7,7 +7,7 @@ import {
   UseFormProps,
 } from "react-hook-form";
 
-import { mergeCallbacks, omit } from "utils";
+import { mergeCallbacks } from "utils";
 
 import { useFormPersist } from ".";
 
@@ -23,7 +23,7 @@ const useSmartForm = <TFieldValues>({
   storageKey,
   resetOnSubmit,
   resetToDefaultValues,
-  onSubmit = omit,
+  onSubmit,
   onFail,
   ...config
 }: UseSmartFormProps<TFieldValues> = {}) => {

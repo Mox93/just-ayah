@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import Logo from "assets/icons/logo.svg";
+import { useDirT } from "hooks";
 import { cn, toTitle } from "utils";
 
 interface HeaderProps {
@@ -9,8 +10,10 @@ interface HeaderProps {
 }
 
 const Header: FC<HeaderProps> = ({ className, title, children }) => {
+  const dirT = useDirT();
+
   return (
-    <div className={cn("Header", className)}>
+    <div className={cn("Header", className)} dir={dirT}>
       <div className="wrapper">
         {title && <h2 className="title followSidebar">{toTitle(title)}</h2>}
         {children && <div className="actions">{children}</div>}

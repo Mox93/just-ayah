@@ -13,7 +13,7 @@ import StudentForm from "../StudentForm";
 
 const StudentEnroll: VFC = () => {
   const stu = usePageT("student");
-  const { showPopup } = usePopupContext();
+  const { openModal } = usePopupContext();
   const { id } = useParams();
   const { state } = useLocation();
   const [studentData, setStudentData] = useState<Partial<StudentInfo>>();
@@ -29,9 +29,9 @@ const StudentEnroll: VFC = () => {
           ...{ enroll: deleteField() },
         },
         {
-          onFulfilled: () => showPopup(<EnrolledMessage />, { center: true }),
+          onFulfilled: () => openModal(<EnrolledMessage />, { center: true }),
           onRejected: (reason) =>
-            showPopup(<ErrorMessage error={reason} />, {
+            openModal(<ErrorMessage error={reason} />, {
               center: true,
               closable: true,
             }),

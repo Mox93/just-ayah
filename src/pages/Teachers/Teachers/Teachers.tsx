@@ -18,7 +18,7 @@ const Teachers: VFC<TeachersProps> = () => {
   const tch = usePageT("teacher");
 
   const { teacherIndex } = useMetaContext();
-  const { showPopup } = usePopupContext();
+  const { openModal } = usePopupContext();
 
   const applySearch = useMemo(
     () =>
@@ -57,7 +57,7 @@ const Teachers: VFC<TeachersProps> = () => {
             variant="primary-outline"
             iconButton
             onClick={() =>
-              showPopup(<NewTeacher />, {
+              openModal(<NewTeacher />, {
                 closable: true,
               })
             }

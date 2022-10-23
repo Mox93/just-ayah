@@ -11,7 +11,7 @@ interface NewCustomerProps {}
 
 const NewCustomer: VFC<NewCustomerProps> = () => {
   const cst = usePageT("customer");
-  const { showPopup } = usePopupContext();
+  const { openModal } = usePopupContext();
 
   return (
     <FormLayout name="NewCustomer" title={cst("formTitle")}>
@@ -21,7 +21,7 @@ const NewCustomer: VFC<NewCustomerProps> = () => {
       >
         <CustomerForm
           onfulfilled={() =>
-            showPopup(
+            openModal(
               <>
                 <h1>Thank you for signing up</h1>
                 <p>We will contact you soon</p>

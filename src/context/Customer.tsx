@@ -21,7 +21,7 @@ import {
   customerFromInfo,
 } from "models/customer";
 import { AddData, FetchData } from "models";
-import { omit } from "utils";
+import { devOnly, omit } from "utils";
 
 interface CustomerContext {
   data: { customers: Customer[] };
@@ -45,7 +45,7 @@ export const CustomerProvider: FC<CustomerProviderProps> = ({ children }) => {
   const collectionRef = collection(db, "customers");
 
   const add: AddData<CustomerInfo> = useCallback(
-    (data, { onFulfilled = omit, onRejected = console.log } = {}) => {
+    (data, { onFulfilled, onRejected = console.log } = {}) => {
       addDoc(collectionRef, customerFromInfo(data))
         .then(onFulfilled, onRejected)
         .catch(console.log);
@@ -59,8 +59,8 @@ export const CustomerProvider: FC<CustomerProviderProps> = ({ children }) => {
       size = 20,
       sort = { by: "meta.dateCreated", direction: "desc" as OrderByDirection },
       options: {
-        onFulfilled: onfulfilled = omit,
-        onRejected: onrejected = console.log,
+        onFulfilled = devOnly((value) => console.log("FULFILLED", value)),
+        onRejected = devOnly((value) => console.log("REJECTED", value)),
       } = {},
     } = {}) => {
       const q = query(
@@ -86,8 +86,8 @@ export const CustomerProvider: FC<CustomerProviderProps> = ({ children }) => {
           return newState;
         });
 
-        onfulfilled(querySnapshot);
-      }, onrejected);
+        onFulfilled(querySnapshot);
+      }, onRejected);
     },
     [collectionRef, lastDoc]
   );

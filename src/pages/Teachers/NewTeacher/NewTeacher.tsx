@@ -20,7 +20,7 @@ const NewTeacher: VFC<NewTeacherProps> = () => {
   const tch = usePageT("teacher");
   const msg = useMessageT("teacher");
 
-  const { showPopup } = usePopupContext();
+  const { openModal } = usePopupContext();
   const { addTeacher } = useTeacherContext();
   const enrollContext = useTeacherEnrollContext();
 
@@ -39,7 +39,7 @@ const NewTeacher: VFC<NewTeacherProps> = () => {
             onSubmit={(data) => {
               addTeacher(data, {
                 onFulfilled: () =>
-                  showPopup(
+                  openModal(
                     <FlashCard state="success">
                       <Trans t={msg} i18nKey="addSuccess">
                         <h1>
@@ -51,7 +51,7 @@ const NewTeacher: VFC<NewTeacherProps> = () => {
                     { center: true, closable: true }
                   ),
                 onRejected: (reason) =>
-                  showPopup(<ErrorMessage error={reason} />, {
+                  openModal(<ErrorMessage error={reason} />, {
                     center: true,
                     closable: true,
                   }),
