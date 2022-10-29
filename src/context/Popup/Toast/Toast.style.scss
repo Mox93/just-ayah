@@ -10,6 +10,7 @@
   background-color: var(--toast-bg-color);
   padding: var(--spacing-s) 2.65rem;
   position: relative;
+  box-shadow: 2px 2px 3px 1px var(--c-shadow-200);
 
   @include withBorder($borderColor: var(--toast-fg-color));
 
