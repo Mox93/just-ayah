@@ -12,6 +12,13 @@
   color: var(--c-black);
 }
 
+b,
+b::before,
+b::after {
+  font-weight: 700;
+  color: inherit;
+}
+
 h1,
 h2,
 h3,

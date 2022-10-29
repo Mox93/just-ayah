@@ -34,12 +34,14 @@ interface PopupContext {
   openModal: OpenModal;
   closeModal: () => void;
   openToast: OpenToast;
+  closeToast: () => void;
 }
 
 const popupContext = createContext<PopupContext>({
   openModal: omit,
   closeModal: omit,
   openToast: omit,
+  closeToast: omit,
 });
 
 interface PopupProviderProps {}
@@ -84,7 +86,9 @@ export const PopupProvider: FC<PopupProviderProps> = ({ children }) => {
   );
 
   return (
-    <popupContext.Provider value={{ openModal, closeModal, openToast }}>
+    <popupContext.Provider
+      value={{ openModal, closeModal, openToast, closeToast }}
+    >
       {children}
       {popup.isOpen && <Modal {...popup.props} />}
       {toast.isOpen && <Toast {...toast.props} />}

@@ -1,16 +1,13 @@
-import { FC, ReactNode } from "react";
-
-type Component = FC<any> | [FC<any>, Object];
+import { FC } from "react";
 
 interface ComposerProps {
-  components: Component[];
-  children?: ReactNode;
+  components: (FC<any> | [FC<any>, Object])[];
 }
 
 const Composer: FC<ComposerProps> = ({ components, children }) => {
   return (
     <>
-      {components.reduceRight((child: ReactNode, parent: Component) => {
+      {components.reduceRight((child, parent) => {
         const [Comp, props] = parent instanceof Array ? parent : [parent, {}];
         return <Comp {...props}>{child}</Comp>;
       }, children)}

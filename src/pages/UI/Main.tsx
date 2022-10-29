@@ -107,7 +107,12 @@ const MainUI: VFC<MainProps> = () => {
         {toastVariants.map((variant) => (
           <Toast
             key={variant}
-            message={`This is a ${variant} message!\nMore details...`}
+            message={
+              <>
+                This is a <b>{variant}</b>
+                {" message!\nMore details..."}
+              </>
+            }
             variant={variant}
           />
         ))}

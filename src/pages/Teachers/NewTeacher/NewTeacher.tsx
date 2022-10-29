@@ -3,7 +3,6 @@ import { Trans } from "react-i18next";
 
 import Container from "components/Container";
 import EnrollLinks from "components/EnrollLinks";
-import { ErrorMessage, FlashCard } from "components/FlashMessages";
 import {
   usePopupContext,
   useTeacherContext,
@@ -18,9 +17,9 @@ interface NewTeacherProps {}
 const NewTeacher: VFC<NewTeacherProps> = () => {
   const glb = useGlobalT();
   const tch = usePageT("teacher");
-  const msg = useMessageT("teacher");
+  const msg = useMessageT("toast");
 
-  const { openModal } = usePopupContext();
+  const { openToast } = usePopupContext();
   const { addTeacher } = useTeacherContext();
   const enrollContext = useTeacherEnrollContext();
 
@@ -39,29 +38,31 @@ const NewTeacher: VFC<NewTeacherProps> = () => {
             onSubmit={(data) => {
               addTeacher(data, {
                 onFulfilled: () =>
-                  openModal(
-                    <FlashCard state="success">
-                      <Trans t={msg} i18nKey="addSuccess">
-                        <h1>
-                          <span className="light">A New Teacher was Added</span>
-                          <span className="accent">Successfully!</span>
-                        </h1>
-                      </Trans>
-                    </FlashCard>,
-                    { center: true, closable: true }
+                  openToast(
+                    <Trans t={msg} i18nKey="newTeacher">
+                      <b>Success:</b> a new teacher was added!
+                    </Trans>,
+                    { variant: "success" }
                   ),
                 onRejected: (reason) =>
-                  openModal(<ErrorMessage error={reason} />, {
-                    center: true,
-                    closable: true,
-                  }),
+                  openToast(
+                    <>
+                      <Trans t={msg} i18nKey="error">
+                        <b>Error:</b> something went wrong!
+                      </Trans>
+                      {`\n${reason}`}
+                    </>,
+                    {
+                      variant: "danger",
+                    }
+                  ),
               });
             }}
           />
         ),
       },
     ],
-    [enrollContext]
+    [enrollContext, msg]
   );
 
   const [tabsHeader, tabsBody] = useTabs({ tabs, renderHeader: glb });

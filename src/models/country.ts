@@ -12,4 +12,4 @@ export const countryList = Object.keys(countries)
 export type Country = typeof countryList[number];
 
 export const getCountry = (code?: CountryCode): Country | undefined =>
-  code && { ...countries[code], code };
+  code && countries[code] && { ...countries[code], code };

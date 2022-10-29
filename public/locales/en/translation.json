@@ -200,11 +200,10 @@
       "joined": "<0><0>Thank You</0> <1>for Joining!</1></0><1>We'll contact you soon.</1>",
       "error": "<0>Something Went Wrong!</0><1>Please try again later.</1>"
     },
-    "student": {
-      "addSuccess": "<0><0>A New Student was Added</0> <1>Successfully!</1></0>"
-    },
-    "teacher": {
-      "addSuccess": "<0><0>A New Teacher was Added</0> <1>Successfully!</1></0>"
+    "toast": {
+      "error": "<0>Error:</0> something went wrong!",
+      "newStudent": "<0>Success:</0> a new student was added!",
+      "newTeacher": "<0>Success:</0> a new teacher was added!"
     }
   }
 }
