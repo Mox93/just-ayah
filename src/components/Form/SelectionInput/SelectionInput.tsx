@@ -5,8 +5,9 @@ import { applyInOrder, capitalize, cn, FunctionOrChain, identity } from "utils";
 
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
-import { InputProps } from "../Input";
+import { InputProps, Location } from "../Input";
 import { Converter, GetKey } from "models";
+import { filterByPosition } from "utils/position";
 
 export interface SelectionInputProps<TOption>
   extends Omit<InputProps, "value" | "id"> {
@@ -17,6 +18,8 @@ export interface SelectionInputProps<TOption>
   getKey?: GetKey<TOption>;
   getValue?: Converter<TOption, string>;
 }
+
+const { before, after } = filterByPosition<Location>();
 
 const SelectionInput = <TOption,>(
   {
@@ -46,6 +49,7 @@ const SelectionInput = <TOption,>(
         {children}
       </FieldHeader>
 
+      {before("field", children)}
       <FieldWrapper addPartitions {...{ isInvalid, dir }}>
         {options.map((option) => {
           const key = getKey(option);
@@ -67,6 +71,7 @@ const SelectionInput = <TOption,>(
           );
         })}
       </FieldWrapper>
+      {after("field", children)}
       {errorMessage}
     </div>
   );

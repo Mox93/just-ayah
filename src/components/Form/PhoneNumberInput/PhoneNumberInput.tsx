@@ -3,12 +3,12 @@ import { FC, HTMLAttributes, ReactNode } from "react";
 import { ReactComponent as CallIcon } from "assets/icons/call-svgrepo-com.svg";
 import { ReactComponent as WhatsAppIcon } from "assets/icons/whatsapp-svgrepo-com.svg";
 import { ReactComponent as TelegramIcon } from "assets/icons/telegram-svgrepo-com.svg";
-import { useCountrySelector, useGlobalT } from "hooks";
+import { useCountrySelector, useGlobalT, useMessageT } from "hooks";
 import { InnerProps } from "models";
 import { Country, CountryCode } from "models/country";
 import { phoneNumberTags, PhoneNumberTags } from "models/phoneNumber";
 import { cn } from "utils";
-import { PositionalElement } from "utils/position";
+import { after, PositionalElement } from "utils/position";
 
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
@@ -44,6 +44,7 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
   ...props
 }) => {
   const glb = useGlobalT();
+  const msg = useMessageT();
 
   return (
     <div {...props} className={cn("PhoneNumberInput", className)}>
@@ -93,7 +94,15 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
           )}
           {...tagsProps}
           className={cn("contactOptions", tagsProps?.className)}
-        />
+        >
+          {after(
+            "field",
+            <span>
+              {"* "}
+              {msg("selectAvailable")}
+            </span>
+          )}
+        </SelectionInput>
       )}
       {errorMessage}
     </div>

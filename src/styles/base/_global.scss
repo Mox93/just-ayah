@@ -33,3 +33,9 @@ svg {
     fill: var(--c-danger-300);
   }
 }
+
+[position^="before-"],
+[position^="after-"] {
+  color: var(--c-gray-300);
+  font-size: 0.875rem;
+}

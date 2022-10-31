@@ -9,7 +9,7 @@ import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 
 const locations = ["header", "field", "input"] as const;
-type Location = typeof locations[number];
+export type Location = typeof locations[number];
 
 const { before, after } = filterByPosition<Location>();
 
