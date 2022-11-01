@@ -1,9 +1,12 @@
 .FieldHeader {
-  margin-block-end: var(--spacing-m);
   display: flex;
   align-items: center;
 
   .label {
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+
     &.invalid {
       color: var(--c-danger-300);
     }

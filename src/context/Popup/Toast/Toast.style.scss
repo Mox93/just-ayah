@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   background-color: var(--toast-bg-color);
-  padding: var(--spacing-s) 2.65rem;
+  padding: var(--spacing-s) 2.66rem;
   position: relative;
   box-shadow: 2px 2px 3px 1px var(--c-shadow-200);
 
@@ -49,7 +49,7 @@
     height: var(--icon-size-l);
     fill: var(--toast-fg-color);
 
-    @include positioning($inline: 1.4rem, $block: 1.4rem);
+    @include positioning($inline: 1.33rem, $block: 1.33rem);
   }
 
   .message {
@@ -62,7 +62,7 @@
   .CloseButton {
     --fill-color: var(--toast-fg-color);
 
-    @include positioning($inlineDir: end, $inline: 1.4rem, $block: 1.4rem);
+    @include positioning($inlineDir: end, $inline: 1.33rem, $block: 1.33rem);
 
     &:hover {
       --fill-color: var(--toast-bg-color);

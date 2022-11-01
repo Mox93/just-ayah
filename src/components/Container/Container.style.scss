@@ -79,7 +79,7 @@
     }
   }
 
-  &.card {
+  &:not(.form) {
     & > .header {
       & > .title {
         text-align: center;

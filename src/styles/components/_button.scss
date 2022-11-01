@@ -1,7 +1,5 @@
 @use "../abstracts/colors" as *;
 
-$fillVariants: ("solid", "outline", "ghost", "text");
-
 @mixin solid($color) {
   --c-foreground: var(--c-white);
   --c-background: var(--c-#{$color}-300);
@@ -123,6 +121,33 @@ $fillVariants: ("solid", "outline", "ghost", "text");
   }
 }
 
+@mixin plainText {
+  --c-foreground: var(--c-black);
+  --c-background: transparent;
+
+  color: var(--c-foreground);
+  background-color: var(--c-background);
+
+  &:focus:enabled {
+    outline-offset: -2px;
+    outline: 2px solid var(--c-gray-100);
+  }
+
+  &:hover:enabled {
+    --c-background: var(--c-gray-100);
+
+    outline: none;
+  }
+
+  &:active:enabled {
+    --c-background: var(--c-gray-200);
+  }
+
+  &:disabled:not(.noDisableStyle) {
+    --c-foreground: var(--c-gray-200);
+  }
+}
+
 @mixin large {
   padding: 1em 2em;
   font-weight: bold;
@@ -152,51 +177,26 @@ $fillVariants: ("solid", "outline", "ghost", "text");
 }
 
 @mixin buttonVariants {
-  @each $fill in $fillVariants {
-    @each $color, $_ in $colors {
-      &.#{$color}-solid {
-        @include solid($color);
-      }
+  @each $color, $_ in $colors {
+    &.#{$color}-solid {
+      @include solid($color);
+    }
 
-      &.#{$color}-outline {
-        @include outline($color);
-      }
+    &.#{$color}-outline {
+      @include outline($color);
+    }
 
-      &.#{$color}-text {
-        @include text($color);
-      }
+    &.#{$color}-text {
+      @include text($color);
+    }
 
-      &.#{$color}-ghost {
-        @include ghost($color);
-      }
+    &.#{$color}-ghost {
+      @include ghost($color);
     }
   }
 
   &.plain-text {
-    --c-foreground: var(--c-black);
-    --c-background: transparent;
-
-    color: var(--c-foreground);
-    background-color: var(--c-background);
-
-    &:focus:enabled {
-      outline-offset: -2px;
-      outline: 2px solid var(--c-gray-100);
-    }
-
-    &:hover:enabled {
-      --c-background: var(--c-gray-100);
-
-      outline: none;
-    }
-
-    &:active:enabled {
-      --c-background: var(--c-gray-200);
-    }
-
-    &:disabled:not(.noDisableStyle) {
-      --c-foreground: var(--c-gray-200);
-    }
+    @include plainText();
   }
 
   &.large {
