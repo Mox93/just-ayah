@@ -450,6 +450,11 @@ def convert_student_data():
         json.dump(students, json_file, ensure_ascii=False)
 
 
+def save_json(path: str, data: dict):
+    with open(path, "w", encoding="utf8") as json_file:
+        json.dump(data, json_file, ensure_ascii=False)
+
+
 def convert_student_data_old():
     global remaining_active_students, remaining_active
 
@@ -536,14 +541,9 @@ def convert_student_data_old():
     print(f"found {len(students)} out of {len(active)}")
     print(f"remaining {len(remaining_students)} out of {i}")
 
-    with open("data/student_data.json", "w", encoding="utf8") as json_file:
-        json.dump(students, json_file, ensure_ascii=False)
-
-    with open("data/remaining_student_data.json", "w", encoding="utf8") as json_file:
-        json.dump(remaining_students, json_file, ensure_ascii=False)
-
-    with open("data/remaining_active_student_data.json", "w", encoding="utf8") as json_file:
-        json.dump(remaining_active, json_file, ensure_ascii=False)
+    save_json("data/student_data.json", students)
+    save_json("data/remaining_student_data.json", remaining_students)
+    save_json("data/remaining_active_student_data.json", remaining_active)
 
     with open("data/remaining_active_student_data.csv", "w", encoding="utf8") as csv_file:
         writer = csv.DictWriter(csv_file, remaining_active_students[0].keys())
@@ -558,8 +558,7 @@ def convert_teacher_data():
 
     pprint(data)
 
-    with open("data/teacher.json", "w") as json_file:
-        json.dump(data, json_file, ensure_ascii=False)
+    save_json("data/teacher.json", data)
 
 
 if __name__ == "__main__":
