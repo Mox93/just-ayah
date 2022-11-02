@@ -1,6 +1,7 @@
 import { cloneDeep, isPlainObject, mapValues } from "lodash";
 import { useCallback } from "react";
 import {
+  FieldValues,
   SubmitErrorHandler,
   SubmitHandler,
   useForm,
@@ -11,7 +12,8 @@ import { mergeCallbacks } from "utils";
 
 import { useFormPersist } from ".";
 
-interface UseSmartFormProps<TFieldValues> extends UseFormProps<TFieldValues> {
+interface UseSmartFormProps<TFieldValues extends FieldValues>
+  extends UseFormProps<TFieldValues> {
   storageKey?: string;
   resetOnSubmit?: boolean;
   resetToDefaultValues?: boolean;
@@ -19,7 +21,7 @@ interface UseSmartFormProps<TFieldValues> extends UseFormProps<TFieldValues> {
   onFail?: SubmitErrorHandler<TFieldValues>;
 }
 
-const useSmartForm = <TFieldValues>({
+const useSmartForm = <TFieldValues extends FieldValues>({
   storageKey,
   resetOnSubmit,
   resetToDefaultValues,

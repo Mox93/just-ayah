@@ -1,5 +1,5 @@
 import { get, isEmpty, set } from "lodash";
-import { FieldPath } from "react-hook-form";
+import { Path } from "react-hook-form";
 
 import { identity } from "utils";
 
@@ -7,7 +7,7 @@ import { paths } from "./object";
 
 type MatchRecord<
   TFieldValues,
-  TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TFieldName extends Path<TFieldValues> = Path<TFieldValues>
 > = {
   [key in TFieldName]+?: { substrings: string[]; score: number };
 };
@@ -40,10 +40,7 @@ const getUniqueSubstrings = (
 };
 
 export const substringMatch =
-  <
-    TFieldValues,
-    TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-  >(
+  <TFieldValues, TFieldName extends Path<TFieldValues> = Path<TFieldValues>>(
     indexData: TFieldValues[],
     { filter, substringMinLength = 1 }: SubstringMatchOptions<TFieldName> = {}
   ) =>

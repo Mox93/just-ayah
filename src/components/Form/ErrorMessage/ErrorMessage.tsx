@@ -1,11 +1,11 @@
 import { ErrorMessage as ErrorMessageComponent } from "@hookform/error-message";
-import { FieldErrors, FieldPath } from "react-hook-form";
+import { FieldErrors, Path } from "react-hook-form";
 
 import { useDirT, useMessageT } from "hooks";
 
 interface ErrorMessageProps<
   TFieldValues,
-  TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TFieldName extends Path<TFieldValues> = Path<TFieldValues>
 > {
   name: TFieldName;
   errors?: FieldErrors<TFieldValues>;

@@ -1,5 +1,5 @@
 import { get } from "lodash";
-import { FieldPath } from "react-hook-form";
+import { Path } from "react-hook-form";
 
 export const identity = (value: any) => value;
 export const omit = () => {};
@@ -14,7 +14,7 @@ export const pass: Pass =
     typeof funcOrValue === "function" ? funcOrValue(...args) : funcOrValue;
 
 export const pluck =
-  <TObject>(path: FieldPath<TObject>) =>
+  <TObject>(path: Path<TObject>) =>
   (obj?: TObject) =>
     get(obj, path);
 

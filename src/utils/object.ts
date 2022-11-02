@@ -1,5 +1,5 @@
 import { cloneDeep, get, isArray, isPlainObject, set } from "lodash";
-import { FieldPath } from "react-hook-form";
+import { Path } from "react-hook-form";
 
 import { UpdateObject } from "models";
 
@@ -10,7 +10,7 @@ interface PathsOptions<TFieldName> {
 
 export const paths = <
   TFieldValues,
-  TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TFieldName extends Path<TFieldValues> = Path<TFieldValues>
 >(
   obj: TFieldValues,
   { parentKey, includeAll }: PathsOptions<TFieldName> = {}
@@ -25,7 +25,7 @@ export const paths = <
     parentKey && leafs.push(parentKey);
     // console.log("array of primitive types", obj);
   } else if (isArray(obj) || isPlainObject(obj)) {
-    Object.entries(obj).forEach(([key, subObj]) => {
+    Object.entries(obj as Object).forEach(([key, subObj]) => {
       paths(subObj, {
         parentKey: parentKey ? `${parentKey}.${key}` : key,
         includeAll,

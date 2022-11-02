@@ -1,9 +1,9 @@
 import { get, isArray } from "lodash";
 import { ReactNode } from "react";
-import { FieldPath } from "react-hook-form";
+import { Path } from "react-hook-form";
 
 export type PathsOrConverters<TObject, TOutput = any> = (
-  | FieldPath<TObject>
+  | Path<TObject>
   | ((obj: TObject) => TOutput | TOutput[])
 )[];
 

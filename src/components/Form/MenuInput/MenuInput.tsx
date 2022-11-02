@@ -19,7 +19,7 @@ import { after, before } from "utils/position";
 import { substringMatch } from "utils/match";
 
 import Input, { InputProps } from "../Input";
-import { FieldPath } from "react-hook-form";
+import { Path } from "react-hook-form";
 
 export type MenuInputProps<TOption> = Merge<
   InputProps,
@@ -33,7 +33,7 @@ interface MenuInputPropsInternal<TOption> extends MenuInputProps<TOption> {
   options: TOption[];
   selected?: TOption;
   renderElement?: FunctionOrChain<TOption, ReactNode>;
-  searchFields?: FieldPath<TOption>[];
+  searchFields?: Path<TOption>[];
   getKey?: GetKey<TOption>;
 }
 

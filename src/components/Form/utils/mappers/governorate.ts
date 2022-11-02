@@ -1,14 +1,15 @@
-import { FieldPath } from "react-hook-form";
+import { FieldPath, FieldValues } from "react-hook-form";
 
 import { createModifier } from "utils/transformer";
 
 import { NamedChildProps, WithFormHook } from "../formModifiers";
 
-type GovernorateMapperProps<TFieldValues> = NamedChildProps<TFieldValues> & {
-  countryField?: FieldPath<TFieldValues>;
-};
+type GovernorateMapperProps<TFieldValues extends FieldValues> =
+  NamedChildProps<TFieldValues> & {
+    countryField?: FieldPath<TFieldValues>;
+  };
 
-const governorateMapper = <TFieldValues>() =>
+const governorateMapper = <TFieldValues extends FieldValues>() =>
   createModifier<GovernorateMapperProps<TFieldValues>>(
     ({
       formHook,
