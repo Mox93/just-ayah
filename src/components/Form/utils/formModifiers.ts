@@ -14,7 +14,7 @@ import {
   UseFormReturn,
 } from "react-hook-form";
 
-import { Merge } from "models";
+import { Converter, Merge } from "models";
 import { cn, identity, mergeCallbacks, mergeRefs, pass } from "utils";
 import { createModifier, Transformer, transformer } from "utils/transformer";
 
@@ -59,7 +59,7 @@ export const smartForm = <TFieldValues>(
       ...props
     }: SmartFormProps<TFieldValues>) => {
       const {
-        formState: { isSubmitting },
+        formState: { isSubmitting }, // TODO this is not working need to use Loading hook
       } = formHook;
 
       return {
@@ -181,9 +181,12 @@ type SelectorHandlers<TFieldValues> = WithExtraProps<
  * TODO:
  *  - In case of no formHook maybe we still want to parse the rules
  */
-export const processProps = <TFieldValues>({
-  extraProps = pass({}),
-}: WithExtraProps<TFieldValues> = {}) =>
+export const processProps = <TFieldValues>(
+  convert: Converter<
+    ProcessedProps<DefaultInputProps, TFieldValues>,
+    ProcessedProps<DefaultInputProps, TFieldValues>
+  > = identity
+) =>
   createModifier<NamedChildProps<TFieldValues>>(
     ({
       formHook,
@@ -220,7 +223,7 @@ export const processProps = <TFieldValues>({
       if (value !== undefined && processedRules.value === undefined)
         processedRules.value = value as any;
 
-      return { ...processedProps, ...extraProps({ name, formHook }) };
+      return convert(processedProps);
     }
   );
 
@@ -286,7 +289,7 @@ export const registerField = <TFieldValues>(convert: Function = identity) =>
       ref,
       ...props
     }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
-      if (!formHook) return { ...props, name };
+      if (!formHook) return { ...props, name, ref };
 
       const {
         register,
@@ -300,7 +303,9 @@ export const registerField = <TFieldValues>(convert: Function = identity) =>
         ...props,
         className: cn(className, "withErrors"),
         isInvalid: !!errorMessage,
-        errorMessage: !noErrorMessage && ErrorMessage({ name, errors }),
+        ...(noErrorMessage
+          ? {}
+          : { errorMessage: ErrorMessage({ name, errors }) }),
         ...convert({ ref: mergeRefs(registerRef, ref), ...rest }),
       };
     }

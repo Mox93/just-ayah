@@ -12,8 +12,7 @@ import {
   MiniForm,
   MenuInput,
 } from "components/Form";
-import { useCountrySelector } from "hooks";
-import { CountryCode } from "models/country";
+import { CountryCode, countrySelectorProps } from "models/country";
 import { PhoneNumberInfo } from "models/phoneNumber";
 import { fromDateInfo } from "models/dateTime";
 import { yesNo } from "utils";
@@ -65,20 +64,17 @@ const FormUI: VFC<TestFormProps> = () => {
           <MenuInput
             {...register("country")}
             label="country"
-            {...useCountrySelector({
-              renderSections: ["emoji", "native"],
-              selectedCountry: watch("country") as any,
-            })}
+            {...countrySelectorProps(["emoji", "native"], watch("country"))}
             setValue={(value) => setValue("country", value?.code!)}
             searchFields={["name", "native"]}
           />
           <InputGroup>
             <MenuInput
               {...register("phoneNumber.1.code")}
-              {...useCountrySelector({
-                renderSections: ["emoji", "code", "phone"],
-                selectedCountry: watch("country") as any,
-              })}
+              {...countrySelectorProps(
+                ["emoji", "code", "phone"],
+                watch("country")
+              )}
               setValue={(value) => setValue("phoneNumber.1.code", value?.code!)}
             />
             <Input {...register("phoneNumber.1.number")} />

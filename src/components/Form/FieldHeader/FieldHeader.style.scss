@@ -12,8 +12,9 @@
     }
 
     &.required::after {
-      content: " *";
+      content: "*";
       color: var(--c-danger-300);
+      margin-inline-start: 0.5ch;
     }
   }
 }

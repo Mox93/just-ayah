@@ -1,7 +1,6 @@
 import { FieldPath } from "react-hook-form";
 
-import { useCountrySelector } from "hooks";
-import { Country } from "models/country";
+import { Country, countrySelectorProps } from "models/country";
 import { PathsOrConverters } from "utils/render";
 import { createModifier } from "utils/transformer";
 
@@ -26,10 +25,7 @@ const countryMapper = createModifier<CountryMapperProps>(
     ...props,
     searchFields,
     setValue: (value: any) => setValue?.(value?.code),
-    ...useCountrySelector({
-      renderSections,
-      selectedCountry: selected,
-    }),
+    ...countrySelectorProps(renderSections, selected),
   })
 );
 

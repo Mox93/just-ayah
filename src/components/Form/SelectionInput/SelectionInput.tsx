@@ -30,7 +30,6 @@ const SelectionInput = <TOption,>(
     options,
     children,
     name,
-    type,
     dir,
     errorMessage,
     keepFormat,
@@ -59,7 +58,7 @@ const SelectionInput = <TOption,>(
           return (
             <div className="option" key={key}>
               <input
-                {...{ ...props, ref, name, type, id }}
+                {...{ ...props, ref, name, id }}
                 value={getValue(option)}
               />
               <label htmlFor={id}>

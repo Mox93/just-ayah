@@ -3,9 +3,9 @@ import { FC, HTMLAttributes, ReactNode } from "react";
 import { ReactComponent as CallIcon } from "assets/icons/call-svgrepo-com.svg";
 import { ReactComponent as WhatsAppIcon } from "assets/icons/whatsapp-svgrepo-com.svg";
 import { ReactComponent as TelegramIcon } from "assets/icons/telegram-svgrepo-com.svg";
-import { useCountrySelector, useGlobalT, useMessageT } from "hooks";
+import { useGlobalT, useMessageT } from "hooks";
 import { InnerProps } from "models";
-import { Country, CountryCode } from "models/country";
+import { Country, CountryCode, countrySelectorProps } from "models/country";
 import { phoneNumberTags, PhoneNumberTags } from "models/phoneNumber";
 import { cn } from "utils";
 import { after, PositionalElement } from "utils/position";
@@ -65,10 +65,10 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
           {...codeProps}
           className={cn("countryCode", codeProps?.className)}
           searchFields={["code", "phone", "name", "native"]}
-          {...useCountrySelector({
-            renderSections: ["emoji", "code", "phone"],
-            selectedCountry: codeProps?.selected,
-          })}
+          {...countrySelectorProps(
+            ["emoji", "code", "phone"],
+            codeProps?.selected
+          )}
         />
 
         <Input
@@ -95,13 +95,7 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
           {...tagsProps}
           className={cn("contactOptions", tagsProps?.className)}
         >
-          {after(
-            "field",
-            <span>
-              {"* "}
-              {msg("selectAvailable")}
-            </span>
-          )}
+          {after("field", <span>{`* ${msg("selectAvailable")}`}</span>)}
         </SelectionInput>
       )}
       {errorMessage}

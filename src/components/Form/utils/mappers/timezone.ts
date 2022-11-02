@@ -1,7 +1,6 @@
 import { FieldPath } from "react-hook-form";
 
-import { useTimezoneSelector } from "hooks";
-import { Timezone } from "models/timezone";
+import { Timezone, timezoneSelectorProps } from "models/timezone";
 import { PathsOrConverters } from "utils/render";
 import { createModifier } from "utils/transformer";
 
@@ -26,10 +25,7 @@ const timezoneMapper = createModifier<TimezoneMapperProps>(
     ...props,
     searchFields,
     setValue: (value: any) => _setValue?.(value?.tzCode),
-    ...useTimezoneSelector({
-      renderSections,
-      selectedTimezone: selected,
-    }),
+    ...timezoneSelectorProps(renderSections, selected),
   })
 );
 

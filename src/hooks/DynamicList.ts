@@ -1,5 +1,5 @@
 import { cloneDeep, uniqueId } from "lodash";
-import { Reducer, useEffect, useReducer } from "react";
+import { Reducer, useEffect, useMemo, useReducer } from "react";
 
 type Items<T> = { id: string; item: T | null }[];
 
@@ -135,30 +135,28 @@ const useDynamicList = <TItem>({
     dispatch({ type: "update", payload: items });
   }, [items]);
 
-  const addItem = (index: number, data?: TItem) => {
-    dispatch({ type: "add", payload: { index, data }, onChange });
-  };
-  const cloneItem = (index: number) => {
-    dispatch({ type: "clone", payload: { index }, onChange });
-  };
-  const removeItem = (index: number) => {
-    dispatch({ type: "remove", payload: { index }, onChange });
-  };
-  const moveItem = (from: number, to: number) => {
-    dispatch({ type: "move", payload: { from, to }, onChange });
-  };
-  const swapItem = (from: number, to: number) => {
-    dispatch({ type: "swap", payload: { from, to }, onChange });
-  };
+  const actions = useMemo(
+    () => ({
+      addItem: (index: number, data?: TItem) => {
+        dispatch({ type: "add", payload: { index, data }, onChange });
+      },
+      cloneItem: (index: number) => {
+        dispatch({ type: "clone", payload: { index }, onChange });
+      },
+      removeItem: (index: number) => {
+        dispatch({ type: "remove", payload: { index }, onChange });
+      },
+      moveItem: (from: number, to: number) => {
+        dispatch({ type: "move", payload: { from, to }, onChange });
+      },
+      swapItem: (from: number, to: number) => {
+        dispatch({ type: "swap", payload: { from, to }, onChange });
+      },
+    }),
+    [onChange]
+  );
 
-  return {
-    items: newItems,
-    addItem,
-    cloneItem,
-    removeItem,
-    moveItem,
-    swapItem,
-  };
+  return { items: newItems, ...actions };
 };
 
 export default useDynamicList;

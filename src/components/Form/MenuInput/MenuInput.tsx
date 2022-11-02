@@ -85,6 +85,7 @@ const MenuInput = <TOption,>(
   );
 
   useEffect(() => {
+    // reset options on close so the next time we don't get the previous search result
     isOpen || setOptionList(options);
   }, [isOpen, options]);
 
