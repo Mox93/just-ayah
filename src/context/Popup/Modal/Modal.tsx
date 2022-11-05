@@ -7,7 +7,7 @@ import { cn } from "utils";
 export type ModalProps = {
   dismissible?: boolean;
   center?: boolean;
-  close?: () => void;
+  close?: VoidFunction;
 };
 
 const Modal: FC<ModalProps> = ({ children, close, dismissible, center }) => {

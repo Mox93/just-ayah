@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import { useGlobalT } from "./Translation";
 
 interface HeaderHookProps {

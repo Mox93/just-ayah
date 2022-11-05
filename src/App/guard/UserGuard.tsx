@@ -13,8 +13,9 @@ const UserGuard: VFC<UserGuardProps> = ({ redirect, guestOnly }) => {
   const location = useLocation();
 
   const nav = <Navigate to={redirect} state={{ from: location }} replace />;
-  const outlet = <Outlet />;
-  const [userCase, noUserCase] = guestOnly ? [nav, outlet] : [outlet, nav];
+  const [userCase, noUserCase] = guestOnly
+    ? [nav, <Outlet />]
+    : [<Outlet />, nav];
 
   return authenticated(location.pathname) ? userCase : noUserCase;
 };

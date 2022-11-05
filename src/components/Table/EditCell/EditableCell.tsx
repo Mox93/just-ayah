@@ -9,7 +9,7 @@ const { MiniForm, Input } = formAtoms<{ value: string }>();
 interface EditableCellProps {
   value?: string;
   onSubmit?: (value: string) => void;
-  onCancel?: () => void;
+  onCancel?: VoidFunction;
 }
 
 const EditableCell: VFC<EditableCellProps> = ({

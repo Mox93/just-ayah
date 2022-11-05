@@ -1,7 +1,7 @@
-import { cloneDeep, get, isArray, isPlainObject, set } from "lodash";
-import { Path } from "react-hook-form";
+import { cloneDeep, get, isArray, isPlainObject, set, unset } from "lodash";
+import { FieldValues, Path } from "react-hook-form";
 
-import { UpdateObject } from "models";
+import { Filter, UpdateObject } from "models";
 
 interface PathsOptions<TFieldName> {
   parentKey?: TFieldName;
@@ -38,7 +38,7 @@ export const paths = <
   return leafs;
 };
 
-export const applyUpdates = <T extends Object>(
+export const applyUpdates = <T extends FieldValues>(
   obj: T,
   updates: UpdateObject<T>
 ): T => {
@@ -47,6 +47,30 @@ export const applyUpdates = <T extends Object>(
   Object.keys(updates as any).forEach((path) =>
     set(result, path, get(updates as any, path))
   );
+
+  return result;
+};
+
+export const applyFilter = <
+  T extends FieldValues,
+  TFieldName extends Path<T> = Path<T>
+>(
+  obj: T,
+  filter: Filter<TFieldName>
+): Partial<T> => {
+  let result: Partial<T> = {};
+
+  const { type, fields } = filter;
+
+  if (type === "include") {
+    fields.forEach((path) => set(result, path, get(obj, path)));
+  } else {
+    result = cloneDeep(obj);
+
+    if (type === "exclude") {
+      fields.forEach((path) => unset(result, path));
+    }
+  }
 
   return result;
 };

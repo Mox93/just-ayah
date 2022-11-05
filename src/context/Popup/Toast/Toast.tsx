@@ -21,7 +21,7 @@ export interface ToastProps {
   message: string | ReactElement;
   variant?: ToastVariant;
   floating?: boolean;
-  close?: () => void;
+  close?: VoidFunction;
 }
 
 const Toast: VFC<ToastProps> = ({

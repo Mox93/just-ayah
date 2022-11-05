@@ -32,9 +32,9 @@ type OpenToast = (
 
 interface PopupContext {
   openModal: OpenModal;
-  closeModal: () => void;
+  closeModal: VoidFunction;
   openToast: OpenToast;
-  closeToast: () => void;
+  closeToast: VoidFunction;
 }
 
 const popupContext = createContext<PopupContext>({

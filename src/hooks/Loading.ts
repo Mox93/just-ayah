@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-type Action = (stopLoading: () => void) => void;
-type UseLoadingResult = [() => void, boolean];
+type Action = (stopLoading: VoidFunction) => void;
+type UseLoadingResult = [VoidFunction, boolean];
 
 const useLoading = (action: Action): UseLoadingResult => {
   const [isLoading, setIsLoading] = useState(false);

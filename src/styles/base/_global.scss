@@ -34,8 +34,8 @@ svg {
   }
 }
 
-[position^="before-"],
-[position^="after-"] {
+[position="before-field"],
+[position="after-field"] {
   color: var(--c-gray-300);
   font-size: 0.875rem;
 }

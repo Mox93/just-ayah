@@ -23,8 +23,6 @@ import FormUI from "pages/UI/Form";
 
 import { UserGuard, FetchGuard, AuthGuard } from "./guard";
 import Unauthorized from "pages/Unauthorized";
-import { Student } from "models/student";
-import { Teacher } from "models/teacher";
 import TeacherEnroll from "pages/Teachers/TeacherEnroll";
 import { devOnly, pass } from "utils";
 // import AdminView from "./AdminView";
@@ -93,7 +91,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
           path="new/:id"
           element={
             <FetchGuard
-              fetcher={({ id }: Student) => getStudent(id)}
+              fetcher={({ id }: { id: string }) => getStudent(id)}
               failed={<Unauthorized />}
             />
           }
@@ -107,7 +105,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
           path="new/:id"
           element={
             <FetchGuard
-              fetcher={({ id }: Teacher) => getTeacher(id)}
+              fetcher={({ id }: { id: string }) => getTeacher(id)}
               failed={<Unauthorized />}
             />
           }
