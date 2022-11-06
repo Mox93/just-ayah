@@ -7,23 +7,31 @@ import {
   signOut as _SignOut,
   User,
 } from "firebase/auth";
-import { createContext, FC, useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  createContext,
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { Location, useLocation, useNavigate } from "react-router-dom";
 
-import { LocationState } from "models";
 import { auth } from "services/firebase";
 import { pass } from "utils";
-import { useGlobalT, useLanguage } from "hooks";
+import { useGlobalT, useLanguage, useLocalStorage } from "hooks";
 import LoadingPopup from "components/LoadingPopup";
-
-const ADMIN_SIGN_IN = "authSignIn";
 
 const googleAuthProvider = new GoogleAuthProvider();
 
+export interface LocationState {
+  from?: Location;
+}
+
 interface AuthContext {
   user: User | null;
-  signIn: () => void;
-  signOut: () => void;
+  signIn: VoidFunction;
+  signOut: VoidFunction;
   authenticated: (path?: string) => boolean;
   authorized: (path?: string) => boolean;
 }
@@ -66,30 +74,26 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     user?.getIdTokenResult().then((token) => setClaims(token.claims));
   }, [user]);
 
-  const authenticated = () => !!user;
-  const authorized = () => !!user;
+  const authenticated = useCallback(() => !!user, [user]);
+  const authorized = useCallback(() => !!user, [user]);
   // claims.roles?.admin;
 
-  const signIn = () => {
-    if (state) {
-      window.localStorage.setItem(ADMIN_SIGN_IN, JSON.stringify(state));
-    }
+  const signInSession = useLocalStorage<LocationState>("signInSession");
+
+  const signIn = useCallback(() => {
+    if (state) signInSession.set(state as LocationState);
 
     signInWithRedirect(auth, googleAuthProvider).catch((error) =>
       console.log("signInWithRedirect.ERROR", error)
     );
-  };
+  }, [signInSession, state]);
 
   useEffect(() => {
     getRedirectResult(auth).then((result) => {
       if (!result) return;
 
-      const authSignIn = window.localStorage.getItem(ADMIN_SIGN_IN);
-      window.localStorage.removeItem(ADMIN_SIGN_IN);
-
-      const { from } = (
-        authSignIn ? JSON.parse(authSignIn) : {}
-      ) as LocationState;
+      const { from } = signInSession.data ?? {};
+      signInSession.delete();
 
       if (from) navigate(from);
     });
@@ -128,7 +132,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       },
       (error) => console.log("onAuthStateChanged.ERROR", error)
     );
-  }, []);
+  }, [navigate, signInSession]);
 
   return (
     <authContext.Provider

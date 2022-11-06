@@ -47,7 +47,7 @@ const CommentsViewer: VFC<CommentsViewerProps> = ({
 
       onCommentAdd(comment);
     },
-    storageKey,
+    ...(storageKey && { storage: { key: storageKey } }),
     resetOnSubmit: true,
   });
 

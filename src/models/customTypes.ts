@@ -1,15 +1,10 @@
 import { FieldPath, OrderByDirection, WhereFilterOp } from "firebase/firestore";
 import { Ref } from "react";
 import { Path, PathValue } from "react-hook-form";
-import { Location } from "react-router-dom";
 
 import { Comment } from "./comment";
 
 export const UNKNOWN = "unknown";
-
-export interface LocationState {
-  from?: Location;
-}
 
 /***************************\
 |****** UTILITY TYPES ******|
@@ -32,6 +27,11 @@ export type UpdateObject<Obj> = { [path in Path<Obj>]?: PathValue<Obj, path> };
 export type InnerProps<TProps, TElement = any> = Partial<TProps> & {
   ref?: Ref<TElement>;
 };
+
+export interface Filter<TFieldName> {
+  type: "include" | "exclude";
+  fields: [TFieldName, ...TFieldName[]];
+}
 
 /**********************************\
 |****** SERVER REQUEST TYPES ******|
@@ -71,6 +71,24 @@ export type DBConverter<DataFrom, DataTo> = {
   (id: string, data: DataFrom): DataTo & { id: string };
   (id: string, data: Partial<DataFrom>): Partial<DataTo> & { id: string };
 };
+
+/*********************************\
+|****** JSON COMPATIBLE TYPES ******|
+\*********************************/
+
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JSONObject
+  | JSONArray;
+
+export interface JSONObject {
+  [x: string]: JSONValue;
+}
+
+export type JSONArray = Array<JSONValue>;
 
 /***********************************\
 |****** REDECLARE FORWARD-REF ******|

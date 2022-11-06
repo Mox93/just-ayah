@@ -30,7 +30,7 @@ const TeacherForm: VFC<TeacherFormProps> = ({
   const formProps = useSmartForm<TeacherInfo>({
     onSubmit,
     defaultValues,
-    storageKey: "teacherForm" + (formId ? `/${formId}` : ""),
+    storage: { key: "teacherForm" + (formId ? `/${formId}` : "") },
     resetOnSubmit: true,
   });
 

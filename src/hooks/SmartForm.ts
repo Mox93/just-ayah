@@ -1,5 +1,5 @@
 import { cloneDeep, isPlainObject, mapValues } from "lodash";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import {
   FieldValues,
   SubmitErrorHandler,
@@ -8,13 +8,17 @@ import {
   UseFormProps,
 } from "react-hook-form";
 
-import { mergeCallbacks } from "utils";
+import { applyUpdates, mergeCallbacks } from "utils";
 
-import { useFormPersist } from ".";
+import { LocalStorageOptions, useLocalStorage } from ".";
+
+interface Storage<TData> extends LocalStorageOptions<TData> {
+  key: string;
+}
 
 interface UseSmartFormProps<TFieldValues extends FieldValues>
   extends UseFormProps<TFieldValues> {
-  storageKey?: string;
+  storage?: Storage<TFieldValues>;
   resetOnSubmit?: boolean;
   resetToDefaultValues?: boolean;
   onSubmit?: SubmitHandler<TFieldValues>;
@@ -22,45 +26,53 @@ interface UseSmartFormProps<TFieldValues extends FieldValues>
 }
 
 const useSmartForm = <TFieldValues extends FieldValues>({
-  storageKey,
+  storage,
   resetOnSubmit,
   resetToDefaultValues,
   onSubmit,
   onFail,
   ...config
 }: UseSmartFormProps<TFieldValues> = {}) => {
+  const { key, ...options } = storage || {};
+  const formSession = useLocalStorage<TFieldValues>(key, options);
+
   config = cloneDeep(config);
 
-  const { handleSubmit, ...formHook } = useForm<TFieldValues>(config);
+  const { handleSubmit, ...formHook } = useForm<TFieldValues>({
+    ...config,
+    // TODO replace values from defaultValues with non empty values from formSession
+    defaultValues: applyUpdates(
+      config.defaultValues || {},
+      formSession?.data || {}
+    ) as any,
+  });
 
-  const { watch, setValue, reset } = formHook;
+  const { watch, reset } = formHook;
 
-  // const clear = omit;
-  const { clear } = useFormPersist(
-    storageKey
-      ? {
-          storageKey,
-          watch,
-          setValue,
-        }
-      : undefined
-  );
+  useEffect(() => {
+    //TODO filter out empty fields
+    const subscription = watch((data, { name }) =>
+      formSession?.set(data as any)
+    );
+    return subscription.unsubscribe;
+  }, [formSession, watch]);
 
   const { defaultValues } = config;
 
   const handleReset = useCallback(
-    (useDefaultValue?: boolean) => () => {
+    (keepDefaultValue?: boolean) => () => {
       const values = watch();
       const resetValues = mapValues(values as any, (value) =>
         isPlainObject(value) ? {} : null
       );
 
-      const _defaultValues = useDefaultValue ? defaultValues : {};
-
-      reset({ ...resetValues, ..._defaultValues } as any);
-      clear();
+      reset({
+        ...resetValues,
+        ...(keepDefaultValue ? defaultValues : {}),
+      } as any);
+      formSession?.delete();
     },
-    [defaultValues, reset, clear, watch]
+    [defaultValues, reset, formSession, watch]
   );
 
   return {
