@@ -16,6 +16,7 @@ const {
   InputGroup,
   PhoneNumberInput,
   SelectionInput: { Student: SelectionInput },
+  TermsOfService,
   TimezoneSelectorInput,
 } = formAtoms<StudentInfo>();
 
@@ -38,6 +39,7 @@ const StudentForm: VFC<StudentFormProps> = ({
     defaultValues,
     storage: {
       key: "studentForm" + (formId ? `/${formId}` : ""),
+      filter: { type: "exclude", fields: ["termsOfService"] },
     },
     resetOnSubmit: true,
   });
@@ -208,6 +210,10 @@ const StudentForm: VFC<StudentFormProps> = ({
         options={yesNo}
         renderElement={glb}
         rules={{ required: "noAnswer" }}
+      />
+      <TermsOfService
+        name="termsOfService"
+        url="https://drive.google.com/file/d/1uXAUeNnZAVRCSq8u7Xv1lZXBX-fmLR-k/preview"
       />
     </Form>
   );

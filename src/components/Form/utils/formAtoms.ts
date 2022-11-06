@@ -1,9 +1,10 @@
-import { TeacherInfo } from "models/teacher";
+import { FieldValues } from "react-hook-form";
 import { FC, VFC } from "react";
 
 import { Country } from "models/country";
 import { fromDateInfo, toDateInfo, WeekDay, weekDays } from "models/dateTime";
 import { StudentInfo } from "models/student";
+import { TeacherInfo } from "models/teacher";
 import { Timezone } from "models/timezone";
 import { transformer } from "utils/transformer";
 
@@ -18,6 +19,8 @@ import {
   MiniForm,
   PhoneNumberInput,
   SelectionInput,
+  TermsOfService,
+  Textarea,
   TimeInput,
 } from "../";
 import {
@@ -35,7 +38,6 @@ import {
   timezoneMapper,
   weekDayMapper,
 } from "./mappers";
-import Textarea from "../Textarea";
 
 const selectionInput = {
   Student: formChild(
@@ -55,7 +57,7 @@ const selectionInput = {
  *  - Investigate the possibility of using overload to pass a namespace and get back the correct type
  */
 
-const formAtoms = <TFieldValues = any>() => {
+const formAtoms = <TFieldValues extends FieldValues>() => {
   const registerFieldMod = registerField<TFieldValues>();
   const processPropsMod = processProps<TFieldValues>();
   const selectorMod = selector<TFieldValues>();
@@ -132,6 +134,21 @@ const formAtoms = <TFieldValues = any>() => {
       processPropsMod,
       selectorMod,
       registerField<TFieldValues>((innerProps: any) => ({ innerProps }))
+    ),
+    TermsOfService: formChild(
+      TermsOfService,
+      processProps<TFieldValues>(
+        ({ isRequired, rules: { required, ...rules } = {}, ...props }) => {
+          const { name, formHook: { setValue } = {} } = props;
+          return {
+            ...props,
+            rules: { required: required || true, ...rules },
+            noErrorMessage: true,
+            onAccept: (url: string) => setValue?.(name as any, url as any),
+          };
+        }
+      ),
+      registerFieldMod
     ),
 
     // Nested Fields Components

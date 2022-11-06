@@ -46,7 +46,8 @@
     "friendlyName": "friendly name",
     "status": "status",
     "subscription": "subscription",
-    "justAyah": "Just Ayah"
+    "justAyah": "Just Ayah",
+    "acceptTermsOfService": "accept terms of service"
   },
   "dateTime": {
     "day": "day",
@@ -191,12 +192,13 @@
     "noGender": "please select you gender",
     "noWorkStatus": "please enter you work status",
     "onAnswer": "please answer this question",
-    "noContactMethod": "please select at least one communication method",
+    "noContactMethod": "please select available communication methods",
     "fieldRequired": "this field is required",
     "noComments": "no comments found to display",
     "noNotes": "no notes found to display",
     "copied": "copied to clipboard",
     "selectAvailable": "select all available contact methods for this number",
+    "termsOfService": "I've read and accepted the terms of service",
     "flash": {
       "joined": "<0><0>Thank You</0> <1>for Joining!</1></0><1>We'll contact you soon.</1>",
       "error": "<0>Something Went Wrong!</0><1>Please try again later.</1>"

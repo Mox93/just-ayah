@@ -47,7 +47,7 @@ export interface StudentInfo {
   nationality: CountryCode;
   country: CountryCode;
   governorate?: string;
-  timezone: string;
+  timezone?: string;
   phoneNumber: PhoneNumberList;
   email?: string;
   facebook?: string;
@@ -55,6 +55,7 @@ export interface StudentInfo {
   workStatus: WorkStatus;
   Quran: boolean;
   Zoom: boolean;
+  termsOfService?: string;
 }
 
 export interface Student extends StudentInfo {
@@ -103,12 +104,13 @@ export const studentFromDB: DBConverter<StudentInDB, Student> = (
   } as any;
 };
 
-const studentFromInfo = ({
+export const studentFromInfo = ({
   phoneNumber,
   dateOfBirth,
   governorate,
   email,
   facebook,
+  timezone,
   workStatus,
   Quran,
   Zoom,
@@ -124,12 +126,11 @@ const studentFromInfo = ({
     meta: defaultMeta(),
   };
 
-  const optionalData = { governorate, email, facebook };
+  const optionalData = { governorate, email, facebook, timezone };
 
-  for (let key in optionalData) {
-    const value = get(optionalData, key);
-    if (value !== undefined) set(processedData, key, value);
-  }
+  Object.entries(optionalData).forEach(([key, value]) => {
+    [undefined, null, ""].includes(value) || set(processedData, key, value);
+  });
 
   return processedData;
 };
