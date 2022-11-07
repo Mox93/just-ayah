@@ -20,6 +20,7 @@ import NotFound from "pages/NotFound";
 import { TeacherList, TeacherProfile, Teachers } from "pages/Teachers";
 import MainUI from "pages/UI/Main";
 import FormUI from "pages/UI/Form";
+import SandboxUI from "pages/UI/Sandbox";
 
 import { UserGuard, FetchGuard, AuthGuard } from "./guard";
 import Unauthorized from "pages/Unauthorized";
@@ -117,6 +118,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
       <Route path="ui" element={<FetchGuard fetcher={devOnly(pass(true))} />}>
         <Route index element={<MainUI />} />
         <Route path="form" element={<FormUI />} />
+        <Route path="sandbox" element={<SandboxUI />} />
       </Route>
 
       <Route element={<UserGuard redirect="/reach-out" />}>
