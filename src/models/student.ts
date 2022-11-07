@@ -4,18 +4,18 @@ import {
   SnapshotOptions,
   Timestamp,
 } from "firebase/firestore";
-import { get, set } from "react-hook-form";
+import { set } from "lodash";
 
 import { fromYesNo } from "utils";
 
 import { DBConverter, Merge } from ".";
+import { Comment, CommentMapInDB, commentListFromDB } from "./comment";
 import { CountryCode } from "./country";
 import { Gender } from "./gender";
-import { Comment, CommentMapInDB, commentListFromDB } from "./comment";
 import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
 import { getStatus, Progress, ProgressInDB, Subscription } from "./status";
-import { parseWorkStatus, WorkStatus } from "./work";
 import { Schedule } from "./schedule";
+import { parseWorkStatus, WorkStatus } from "./work";
 
 interface Meta {
   dateCreated: Date;

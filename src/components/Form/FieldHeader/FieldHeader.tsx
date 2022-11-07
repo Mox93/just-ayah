@@ -13,7 +13,6 @@ interface FieldHeaderProps {
   isRequired?: boolean;
   required?: boolean;
   children?: PositionalElement<string>;
-  linked?: boolean;
 }
 
 const { before, after } = filterByPosition<Location>();
@@ -25,17 +24,11 @@ const FieldHeader: FC<FieldHeaderProps> = ({
   isInvalid,
   isRequired,
   children,
-  linked,
 }) => {
   const dirT = useDirT();
 
   return label ? (
-    <label
-      className="FieldHeader"
-      dir={dirT}
-      htmlFor={htmlFor}
-      onClick={(e) => linked || e.preventDefault()}
-    >
+    <label className="FieldHeader" dir={dirT} htmlFor={htmlFor}>
       {before("header", children as PositionalElement<Location>)}
       <h4
         className={cn(

@@ -21,7 +21,6 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   fieldRef?: Ref<HTMLDivElement>;
   errorMessage?: ReactNode;
   visibleBorder?: boolean;
-  linkLabel?: boolean;
 }
 
 const Input = (
@@ -33,7 +32,6 @@ const Input = (
     required,
     isInvalid,
     isRequired,
-    linkLabel,
     children,
     fieldRef,
     errorMessage,
@@ -49,11 +47,7 @@ const Input = (
 
   return (
     <div className={cn("Input", className)} dir={dir || dirT}>
-      <FieldHeader
-        htmlFor={id}
-        linked={linkLabel}
-        {...{ label, required, isRequired, isInvalid }}
-      >
+      <FieldHeader htmlFor={id} {...{ label, required, isRequired, isInvalid }}>
         {children}
       </FieldHeader>
 
