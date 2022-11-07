@@ -2,35 +2,50 @@ svg {
   --icon-size-s: 1rem;
   --icon-size-m: 1.5rem;
   --icon-size-l: 2rem;
+  --icon-size-w: var(--icon-size);
+  --icon-size-h: var(--icon-size);
 
-  &.icon {
+  width: var(--icon-size-w);
+  height: var(--icon-size-h);
+
+  &.icon,
+  &.iconS,
+  &.iconM,
+  &.iconL {
     fill: var(--fill-color);
     stroke: var(--stroke-color);
-    width: var(--icon-size-m);
+  }
+
+  &.icon {
+    --icon-size: var(--icon-size-m);
   }
 
   &.iconS {
-    width: var(--icon-size-s);
-  }
-
-  &.iconM {
-    width: var(--icon-size-m);
+    --icon-size: var(--icon-size-s);
   }
 
   &.iconL {
-    width: var(--icon-size-l);
+    --icon-size: var(--icon-size-l);
   }
 
   &.infoIcon {
-    fill: var(--c-info-300);
+    --fill-color: var(--c-info-300);
+    --stroke-color: var(--c-info-300);
+  }
+
+  &.successIcon {
+    --fill-color: var(--c-success-300);
+    --stroke-color: var(--c-success-300);
   }
 
   &.warningIcon {
-    fill: var(--c-warning-300);
+    --fill-color: var(--c-warning-300);
+    --stroke-color: var(--c-warning-300);
   }
 
   &.dangerIcon {
-    fill: var(--c-danger-300);
+    --fill-color: var(--c-danger-300);
+    --stroke-color: var(--c-danger-300);
   }
 }
 

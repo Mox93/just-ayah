@@ -35,7 +35,7 @@ const Toast: VFC<ToastProps> = ({
 
   return (
     <div className={cn("Toast", variant, { floating })} dir={dirT}>
-      {<Icon className="toastIcon" {...{ dir: dirT }} />}
+      {<Icon className="toastIcon iconL" {...{ dir: dirT }} />}
       <p className="message">{message}</p>
       <CloseButton onClick={close} />
     </div>

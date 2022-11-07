@@ -1,6 +1,8 @@
 @use "styles/abstracts/mixins" as *;
 
 .Toast {
+  --fill-color: var(--toast-fg-color);
+
   max-width: var(--width-m);
   min-width: var(--width-xs);
   width: calc(100vw - 1rem);
@@ -45,10 +47,6 @@
   }
 
   .toastIcon {
-    width: var(--icon-size-l);
-    height: var(--icon-size-l);
-    fill: var(--toast-fg-color);
-
     @include positioning($inline: 1.33rem, $block: 1.33rem);
   }
 
