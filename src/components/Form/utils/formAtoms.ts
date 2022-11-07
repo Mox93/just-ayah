@@ -15,7 +15,6 @@ import {
   Input,
   InputGroup,
   MenuInput,
-  MenuInputProps,
   MiniForm,
   PhoneNumberInput,
   SelectionInput,
@@ -23,6 +22,7 @@ import {
   Textarea,
   TimeInput,
 } from "../";
+import { MenuInputProps } from "../MenuInput";
 import {
   formChild,
   processProps,
