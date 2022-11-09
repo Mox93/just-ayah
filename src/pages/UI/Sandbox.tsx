@@ -1,8 +1,7 @@
 import { VFC } from "react";
 
 const SandboxUI: VFC = () => {
-   return <>
-   </>
-}
+  return <></>;
+};
 
 export default SandboxUI;

@@ -11,6 +11,7 @@ import {
 import { omit } from "utils";
 
 import Modal, { ModalProps } from "./Modal";
+import Network from "./Network";
 import Toast, { ToastProps, ToastVariant } from "./Toast";
 
 type OpenModal = (
@@ -92,6 +93,7 @@ export const PopupProvider: FC<PopupProviderProps> = ({ children }) => {
       {children}
       {popup.isOpen && <Modal {...popup.props} />}
       {toast.isOpen && <Toast {...toast.props} />}
+      <Network />
     </popupContext.Provider>
   );
 };

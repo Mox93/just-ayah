@@ -9,6 +9,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition-property: transform;
+  transition-delay: var(--duration);
 
   .icon {
     &.opening {
@@ -20,14 +22,10 @@
     }
 
     &.isOpen {
-      transition-property: transform;
-      transition-delay: var(--duration);
       transform: rotate(0);
     }
 
     &:not(.isOpen) {
-      transition-property: transform;
-      transition-delay: var(--duration);
       transform: rotate(180deg);
     }
 
