@@ -1,5 +1,6 @@
 import { identity } from "utils";
-import { fromYesNo } from "utils/yesNo";
+
+import { BooleanLike, booleanToString, toBoolean } from "./boolean";
 
 export const noWorkReasons = [
   "student",
@@ -19,7 +20,7 @@ export type WorkStatus =
   | { doesWork: false; reason: "other"; explanation: string };
 
 export type WorkStatusInfo = {
-  doesWork?: boolean;
+  doesWork?: BooleanLike;
   job?: string;
   reason?: NoWorkReason;
   explanation?: string;
@@ -31,7 +32,7 @@ export const parseWorkStatus = ({
   reason,
   explanation,
 }: WorkStatusInfo): WorkStatus => {
-  doesWork = fromYesNo(doesWork);
+  doesWork = toBoolean(doesWork!);
 
   return doesWork
     ? { doesWork, job: job! }
@@ -39,6 +40,14 @@ export const parseWorkStatus = ({
     ? { doesWork: doesWork!, reason: reason! }
     : { doesWork: doesWork!, reason: reason!, explanation: explanation! };
 };
+
+export const workStatusToInfo = ({
+  doesWork,
+  ...rest
+}: WorkStatus): WorkStatusInfo => ({
+  doesWork: booleanToString(doesWork),
+  ...rest,
+});
 
 export const getOccupation = (
   status?: WorkStatus,

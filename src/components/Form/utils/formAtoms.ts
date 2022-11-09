@@ -26,7 +26,7 @@ import { MenuInputProps } from "../MenuInput";
 import {
   formChild,
   processProps,
-  selector,
+  menu,
   registerField,
   smartForm,
   trimWhitespace,
@@ -60,7 +60,7 @@ const selectionInput = {
 const formAtoms = <TFieldValues extends FieldValues>() => {
   const registerFieldMod = registerField<TFieldValues>();
   const processPropsMod = processProps<TFieldValues>();
-  const selectorMod = selector<TFieldValues>();
+  const menuMod = menu<TFieldValues>();
   const trimWhitespaceMod = trimWhitespace<TFieldValues>();
 
   return {
@@ -96,14 +96,14 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
     CountrySelectorInput: formChild(
       MenuInput as VFC<MenuInputProps<Country>>,
       processPropsMod,
-      selectorMod,
+      menuMod,
       countryMapper,
       registerFieldMod
     ),
     TimezoneSelectorInput: formChild(
       MenuInput as VFC<MenuInputProps<Timezone>>,
       processPropsMod,
-      selectorMod,
+      menuMod,
       timezoneMapper,
       registerFieldMod
     ),
@@ -116,7 +116,7 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
     DateInput: formChild(
       DateInput,
       processPropsMod,
-      selector<TFieldValues>({
+      menu<TFieldValues>({
         toValue: fromDateInfo,
         toSelected: toDateInfo,
       }),
@@ -125,14 +125,14 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
     WeekDayInput: formChild(
       MenuInput as VFC<MenuInputProps<WeekDay>>,
       processPropsMod,
-      selector<TFieldValues>({ extraProps: () => ({ options: weekDays }) }),
+      menu<TFieldValues>({ extraProps: () => ({ options: weekDays }) }),
       weekDayMapper,
       registerFieldMod
     ),
     TimeInput: formChild(
       TimeInput,
       processPropsMod,
-      selectorMod,
+      menuMod,
       registerField<TFieldValues>((innerProps: any) => ({ innerProps }))
     ),
     TermsOfService: formChild(

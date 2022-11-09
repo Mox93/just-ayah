@@ -42,7 +42,7 @@ const initialState: StudentContext = {
       onRejected = devOnly((value) => console.log("REJECTED", value)),
     } = {}
   ) => {
-    addDoc(studentRef, data)
+    addDoc(studentRef, data as any)
       .then(onFulfilled, onRejected)
       .catch((error) => console.log("ERROR", error));
   },

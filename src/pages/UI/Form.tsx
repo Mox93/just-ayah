@@ -12,10 +12,10 @@ import {
   MiniForm,
   MenuInput,
 } from "components/Form";
+import { booleanSelectorProps } from "models/boolean";
 import { CountryCode, countrySelectorProps } from "models/country";
-import { PhoneNumberInfo } from "models/phoneNumber";
 import { fromDateInfo } from "models/dateTime";
-import { yesNo } from "utils";
+import { PhoneNumberInfo } from "models/phoneNumber";
 
 interface TestData {
   name: string;
@@ -118,10 +118,9 @@ const FormUI: VFC<TestFormProps> = () => {
           />
 
           <SelectionInput
-            options={yesNo}
-            type="radio"
             label="can you do this"
             {...register("canDoThis")}
+            {...booleanSelectorProps()}
           />
         </Form>
       </Container>

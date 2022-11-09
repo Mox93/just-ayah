@@ -181,10 +181,6 @@ type SelectorHandlers<TFieldValues extends FieldValues> = WithExtraProps<
   }
 >;
 
-/**
- * TODO:
- *  - In case of no formHook maybe we still want to parse the rules
- */
 export const processProps = <TFieldValues extends FieldValues>(
   convert: Converter<
     ProcessedProps<DefaultInputProps, TFieldValues>,
@@ -198,7 +194,7 @@ export const processProps = <TFieldValues extends FieldValues>(
       name,
       ...props
     }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
-      if (!formHook) return { ...props, name };
+      if (!formHook) return { ...props, name, rules };
 
       const { onChange, onBlur, value, required, ...rest } =
         props as DefaultInputProps;
@@ -248,7 +244,7 @@ export const trimWhitespace = <TFieldValues extends FieldValues>() =>
     })
   );
 
-export const selector = <TFieldValues extends FieldValues>({
+export const menu = <TFieldValues extends FieldValues>({
   toValue = identity,
   toSelected = identity,
   extraProps = pass({}),

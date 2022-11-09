@@ -2,10 +2,10 @@ import { VFC } from "react";
 
 import { formAtoms } from "components/Form";
 import { useGlobalT, usePersonalInfoT, useSmartForm } from "hooks";
+import { toBoolean, booleanSelectorProps } from "models/boolean";
 import { genders } from "models/gender";
-import { StudentInfo } from "models/student";
+import { Student, StudentInfo, toStudentInfo } from "models/student";
 import { noWorkReasons, WorkStatusInfo } from "models/work";
-import { fromYesNo, yesNo } from "utils";
 
 const {
   CountrySelectorInput,
@@ -22,7 +22,7 @@ const {
 
 interface StudentFormProps {
   formId?: string;
-  defaultValues?: Partial<StudentInfo>;
+  defaultValues?: Partial<Student>;
   onSubmit: (data: StudentInfo) => void;
 }
 
@@ -36,7 +36,7 @@ const StudentForm: VFC<StudentFormProps> = ({
 
   const formProps = useSmartForm<StudentInfo>({
     onSubmit,
-    defaultValues,
+    ...(defaultValues && { defaultValues: toStudentInfo(defaultValues) }),
     storage: {
       key: "studentForm" + (formId ? `/${formId}` : ""),
       filter: { type: "exclude", fields: ["termsOfService"] },
@@ -51,10 +51,12 @@ const StudentForm: VFC<StudentFormProps> = ({
   const value = watch("workStatus");
   const workStatus: WorkStatusInfo | undefined = value && {
     ...value,
-    doesWork: fromYesNo(value.doesWork),
+    doesWork: toBoolean(value.doesWork),
   };
 
   const now = new Date();
+
+  const yesNoProps = booleanSelectorProps(glb, "yes", "no");
 
   return (
     <Form
@@ -161,11 +163,9 @@ const StudentForm: VFC<StudentFormProps> = ({
       <InputGroup>
         <SelectionInput
           name="workStatus.doesWork"
-          type="radio"
           label={pi("doesWork")}
-          options={yesNo}
-          renderElement={glb}
           rules={{ required: "noWorkStatus" }}
+          {...yesNoProps}
         />
 
         {workStatus?.doesWork === true ? (
@@ -196,20 +196,16 @@ const StudentForm: VFC<StudentFormProps> = ({
 
       <SelectionInput
         name="Quran"
-        type="radio"
         label={pi("quran")}
-        options={yesNo}
-        renderElement={glb}
         rules={{ required: "noAnswer" }}
+        {...yesNoProps}
       />
 
       <SelectionInput
         name="Zoom"
-        type="radio"
         label={pi("zoom")}
-        options={yesNo}
-        renderElement={glb}
         rules={{ required: "noAnswer" }}
+        {...yesNoProps}
       />
       <TermsOfService
         name="termsOfService"
