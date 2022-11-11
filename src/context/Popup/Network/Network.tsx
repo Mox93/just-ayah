@@ -1,9 +1,10 @@
-import { useEffect, useState, VFC } from "react";
+import { useEffect, useRef, useState, VFC } from "react";
 
 import { ReactComponent as Online } from "assets/icons/wifi-svgrepo-com.svg";
 import { ReactComponent as Offline } from "assets/icons/wifi-off-svgrepo-com.svg";
 import { useDirT, useMessageT, useNetwork } from "hooks";
 import { cn } from "utils";
+import { time } from "console";
 
 export interface NetworkProps {}
 
@@ -12,16 +13,17 @@ const Network: VFC<NetworkProps> = () => {
   const msg = useMessageT();
   const dirT = useDirT();
   const [isVisiable, setIsVisiable] = useState(!isOnline);
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
+  const timeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    console.log({ isOnline, isVisiable });
-
     if (isOnline) {
-      setTimeoutId(setTimeout(() => setIsVisiable(false), 3e3));
+      timeout.current = setTimeout(() => setIsVisiable(false), 3e3);
     } else {
-      if (timeoutId) clearTimeout(timeoutId);
-      setIsVisiable(true);
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+        timeout.current = null;
+        setIsVisiable(true);
+      }
     }
   }, [isOnline]);
 
