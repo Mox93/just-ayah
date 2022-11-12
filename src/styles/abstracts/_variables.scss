@@ -32,7 +32,7 @@
   --sidebar-delta: calc(
     var(--opened-sidebar-width) - var(--closed-sidebar-width)
   );
-  --sidebar-offset: 0;
+  --sidebar-offset: 0px;
 
   // Page
   --page-min-height: 40rem;

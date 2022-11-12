@@ -6,6 +6,7 @@ export { default as useHeader } from "./Header";
 export { default as useLoading } from "./Loading";
 export * from "./LocalStorage";
 export { default as useLocalStorage } from "./LocalStorage";
+export { default as useNetwork } from "./Network";
 export { default as useSmartForm } from "./SmartForm";
 export * from "./Tabs";
 export { default as useTabs } from "./Tabs";

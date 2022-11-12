@@ -199,6 +199,8 @@
     "copied": "copied to clipboard",
     "selectAvailable": "select all available contact methods for this number",
     "termsOfService": "I've read and accepted the terms of service",
+    "online": "Network connection is back",
+    "offline": "Network connection is lost",
     "flash": {
       "joined": "<0><0>Thank You</0> <1>for Joining!</1></0><1>We'll contact you soon.</1>",
       "error": "<0>Something Went Wrong!</0><1>Please try again later.</1>"
