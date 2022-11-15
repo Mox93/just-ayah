@@ -1,4 +1,3 @@
-from cmath import log
 import csv
 from itertools import count
 import json
@@ -391,6 +390,11 @@ def fill_missing_timestamps(table: list[dict]):
             idx = []
 
 
+def save_json(path: str, data: dict | list):
+    with open(path, "w", encoding="utf8") as json_file:
+        json.dump(data, json_file, ensure_ascii=False)
+
+
 def convert_student_data():
     students = []
 
@@ -418,7 +422,7 @@ def convert_student_data():
             # RESIDENCY
             student.update(parse_residency(data))
 
-            # PHOENE NUMBERS
+            # PHONE NUMBERS
             student.update(parse_phone_numbers(data))
 
             # EMAIL
@@ -446,13 +450,7 @@ def convert_student_data():
 
     print(f"size = {len(students)}, {m = }, {f = }")
 
-    with open("data/student_data.json", "w", encoding="utf8") as json_file:
-        json.dump(students, json_file, ensure_ascii=False)
-
-
-def save_json(path: str, data: dict):
-    with open(path, "w", encoding="utf8") as json_file:
-        json.dump(data, json_file, ensure_ascii=False)
+    save_json("data/student_data.json", students)
 
 
 def convert_student_data_old():
