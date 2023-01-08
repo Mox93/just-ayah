@@ -1,5 +1,3 @@
-import { DBConverter } from "./customTypes";
-import { shiftDate } from "./dateTime";
 import {
   DocumentData,
   QueryDocumentSnapshot,
@@ -7,8 +5,8 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-import { Merge } from ".";
-// import { Student, studentFromDB, StudentInDB } from "./student";
+import { DBConverter, Merge } from "..";
+import { shiftDate } from "./dateTime";
 
 export interface EnrollInfo {
   key?: string;

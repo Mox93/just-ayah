@@ -14,13 +14,13 @@ import {
 import { useCallback, useState } from "react";
 
 import { DBConverter, FetchData } from "models";
-import { shiftDate } from "models/dateTime";
 import {
   userEnrollConverter,
   EnrollInfo,
   UserEnroll,
   userEnrollFromInfo,
-} from "models/enroll";
+  shiftDate,
+} from "models/blocks";
 import { db } from "services/firebase";
 import { applyUpdates, devOnly } from "utils";
 import { initialState } from "./models";

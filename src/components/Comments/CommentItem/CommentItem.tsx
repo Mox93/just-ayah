@@ -1,10 +1,9 @@
 import { VFC } from "react";
 
-import { Comment } from "models/comment";
-import { useDirT } from "hooks";
-import Avatar from "components/Icons/Avatar";
-import { historyRep } from "models/dateTime";
 import Ellipsis from "components/Ellipsis";
+import Avatar from "components/Icons/Avatar";
+import { useDirT } from "hooks";
+import { Comment, historyRep } from "models/blocks";
 
 interface CommentItemProps {
   data: Comment;

@@ -6,7 +6,7 @@ import { Button } from "components/Buttons";
 import { SelectionMenu } from "components/DropdownMenu";
 import { formAtoms } from "components/Form";
 import { useDynamicList, useGlobalT, useSmartForm } from "hooks";
-import { Schedule } from "models/schedule";
+import { Schedule } from "models/blocks";
 import { range } from "utils";
 import Container from "components/Container";
 

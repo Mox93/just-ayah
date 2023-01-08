@@ -3,7 +3,7 @@ import { get, set } from "react-hook-form";
 
 import { Merge } from "models";
 
-import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
+import { filterPhoneNumberList, PhoneNumberList } from "./blocks";
 
 const statuses = [
   "registered",

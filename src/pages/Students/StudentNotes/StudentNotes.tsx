@@ -1,7 +1,7 @@
 import { CommentsViewer } from "components/Comments";
 import { useStudentContext } from "context";
 import { useGlobalT, useMessageT } from "hooks";
-import { Comment } from "models/comment";
+import { Comment } from "models/blocks";
 import { VFC, useEffect, useState } from "react";
 
 interface StudentNotesProps {

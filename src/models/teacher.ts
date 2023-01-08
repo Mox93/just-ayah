@@ -7,8 +7,7 @@ import {
 import { get, set } from "react-hook-form";
 
 import { DBConverter, Merge } from ".";
-import { Gender } from "./gender";
-import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
+import { filterPhoneNumberList, Gender, PhoneNumberList } from "./blocks";
 
 interface Meta {
   dateCreated: Date;

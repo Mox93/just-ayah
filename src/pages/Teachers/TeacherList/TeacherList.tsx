@@ -5,9 +5,8 @@ import { FieldProps, Table } from "components/Table";
 import { useTeacherContext } from "context";
 import { useGlobalT, useLoading, usePageT, usePersonalInfoT } from "hooks";
 import { Teacher } from "models/teacher";
-import { historyRep } from "models/dateTime";
-import { getPhoneNumberByTag } from "models/phoneNumber";
 import { concat, prodOnly } from "utils";
+import { getPhoneNumberByTag, historyRep } from "models/blocks";
 
 interface TeacherListProps {}
 

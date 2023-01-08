@@ -1,6 +1,6 @@
 import { FieldPath } from "react-hook-form";
 
-import { Country, countrySelectorProps } from "models/country";
+import { Country, countrySelectorProps } from "models/blocks";
 import { PathsOrConverters } from "utils/render";
 import { createModifier } from "utils/transformer";
 

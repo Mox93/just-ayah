@@ -1,5 +1,5 @@
 import { FetchData } from "models";
-import { EnrollInfo, UserEnroll } from "models/enroll";
+import { EnrollInfo, UserEnroll } from "models/blocks";
 import { omit } from "utils";
 
 export interface EnrollContext<TUser> {

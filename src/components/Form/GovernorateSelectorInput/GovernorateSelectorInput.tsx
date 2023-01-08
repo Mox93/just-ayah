@@ -1,11 +1,10 @@
 import { forwardRef, Ref, useEffect } from "react";
 
 import { useGovT } from "hooks";
-import { CountryCode } from "models/country";
-import { egStrip, egGovernorate, EG_PREFIX } from "models/governorate";
+import { CountryCode, egGovernorate, egStrip, EG_PREFIX } from "models/blocks";
 
-import MenuInput, { MenuInputProps } from "../MenuInput";
 import Input from "../Input";
+import MenuInput, { MenuInputProps } from "../MenuInput";
 
 interface GovernorateSelectorInputProps extends MenuInputProps<string> {
   country?: CountryCode;

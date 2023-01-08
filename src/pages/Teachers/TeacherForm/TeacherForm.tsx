@@ -2,7 +2,7 @@ import { VFC } from "react";
 
 import { formAtoms } from "components/Form";
 import { useGlobalT, usePersonalInfoT, useSmartForm } from "hooks";
-import { genders } from "models/gender";
+import { genders } from "models/blocks";
 import { TeacherInfo } from "models/teacher";
 
 const {

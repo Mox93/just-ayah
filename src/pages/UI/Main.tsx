@@ -5,7 +5,7 @@ import { StatusMenu } from "components/DropdownMenu";
 import { LoadingSpinner } from "components/Icons";
 import LoadingPopup from "components/LoadingPopup";
 import { useDirT } from "hooks";
-import { mapStatusType, mapStatusVariant } from "models/status";
+import { mapStatusType, mapStatusVariant } from "models/blocks";
 import Toast from "context/Popup/Toast";
 
 interface MainProps {}

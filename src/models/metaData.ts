@@ -1,4 +1,4 @@
-import { getCountry } from "./country";
+import { getCountry } from "./blocks";
 
 interface ShortList {
   teachers?: string[];

@@ -2,10 +2,14 @@ import { VFC } from "react";
 
 import { formAtoms } from "components/Form";
 import { useGlobalT, usePersonalInfoT, useSmartForm } from "hooks";
-import { toBoolean, booleanSelectorProps } from "models/boolean";
-import { genders } from "models/gender";
+import {
+  booleanSelectorProps,
+  genders,
+  noWorkReasons,
+  toBoolean,
+  WorkStatusInfo,
+} from "models/blocks";
 import { Student, StudentInfo, toStudentInfo } from "models/student";
-import { noWorkReasons, WorkStatusInfo } from "models/work";
 
 const {
   CountrySelectorInput,

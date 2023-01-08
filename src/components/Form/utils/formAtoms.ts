@@ -1,11 +1,16 @@
 import { FieldValues } from "react-hook-form";
 import { FC, VFC } from "react";
 
-import { Country } from "models/country";
-import { fromDateInfo, toDateInfo, WeekDay, weekDays } from "models/dateTime";
+import {
+  Country,
+  fromDateInfo,
+  Timezone,
+  toDateInfo,
+  WeekDay,
+  weekDays,
+} from "models/blocks";
 import { StudentInfo } from "models/student";
 import { TeacherInfo } from "models/teacher";
-import { Timezone } from "models/timezone";
 import { transformer } from "utils/transformer";
 
 import {

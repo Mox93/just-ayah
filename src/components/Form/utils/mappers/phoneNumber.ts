@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { get } from "react-hook-form";
 
 import ErrorMessage from "components/Form/ErrorMessage";
-import { PhoneNumberInfo } from "models/phoneNumber";
+import { PhoneNumberInfo } from "models/blocks";
 import { cn, identity } from "utils";
 import { createModifier } from "utils/transformer";
 

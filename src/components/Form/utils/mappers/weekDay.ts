@@ -1,5 +1,5 @@
 import { useDateTimeT } from "hooks";
-import { WeekDay, weekDays } from "models/dateTime";
+import { WeekDay, weekDays } from "models/blocks";
 import { PathsOrConverters } from "utils/render";
 import { createModifier } from "utils/transformer";
 

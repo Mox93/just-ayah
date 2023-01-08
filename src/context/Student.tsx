@@ -16,9 +16,9 @@ import {
 import { createContext, FC, useCallback, useContext, useState } from "react";
 
 import { db } from "services/firebase";
-import { Student, StudentInfo, studentConverter } from "models/student";
 import { AddComment, AddData, GetData, FetchData, UpdateData } from "models";
-import { toCommentMap } from "models/comment";
+import { toCommentMap } from "models/blocks";
+import { Student, StudentInfo, studentConverter } from "models/student";
 import { applyUpdates, devOnly, omit } from "utils";
 
 const collectionRef = collection(db, "students");

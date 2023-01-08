@@ -1,7 +1,7 @@
 import { formAtoms } from "components/Form";
-import { useGlobalT, usePageT, useSmartForm } from "hooks";
-import { EnrollInfo } from "models/enroll";
 import { EnrollContext } from "context";
+import { useGlobalT, usePageT, useSmartForm } from "hooks";
+import { EnrollInfo } from "models/blocks";
 
 const { MiniForm, Input } = formAtoms<EnrollInfo>();
 

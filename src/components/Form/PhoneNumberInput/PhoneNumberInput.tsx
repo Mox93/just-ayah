@@ -5,8 +5,13 @@ import { ReactComponent as WhatsAppIcon } from "assets/icons/whatsapp-svgrepo-co
 import { ReactComponent as TelegramIcon } from "assets/icons/telegram-svgrepo-com.svg";
 import { useGlobalT, useMessageT } from "hooks";
 import { InnerProps } from "models";
-import { Country, CountryCode, countrySelectorProps } from "models/country";
-import { phoneNumberTags, PhoneNumberTags } from "models/phoneNumber";
+import {
+  Country,
+  CountryCode,
+  countrySelectorProps,
+  phoneNumberTags,
+  PhoneNumberTags,
+} from "models/blocks";
 import { cn } from "utils";
 import { after, PositionalElement } from "utils/position";
 

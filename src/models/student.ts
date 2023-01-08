@@ -7,19 +7,27 @@ import {
 import { set } from "lodash";
 
 import { DBConverter, Merge } from ".";
-import { BooleanLike, booleanToString, toBoolean } from "./boolean";
-import { Comment, CommentMapInDB, commentListFromDB } from "./comment";
-import { CountryCode } from "./country";
-import { Gender } from "./gender";
-import { filterPhoneNumberList, PhoneNumberList } from "./phoneNumber";
-import { getStatus, Progress, ProgressInDB, Subscription } from "./status";
-import { Schedule } from "./schedule";
 import {
-  parseWorkStatus,
-  WorkStatus,
+  Comment,
+  CommentMapInDB,
+  commentListFromDB,
+  CountryCode,
+  Gender,
+  Progress,
+  Subscription,
+  Schedule,
+  ProgressInDB,
+  PhoneNumberList,
   WorkStatusInfo,
+  WorkStatus,
+  getStatus,
+  filterPhoneNumberList,
+  parseWorkStatus,
   workStatusToInfo,
-} from "./work";
+  BooleanLike,
+  toBoolean,
+  booleanToString,
+} from "./blocks";
 
 interface Meta {
   dateCreated: Date;

@@ -22,13 +22,16 @@ import {
   usePageT,
   usePersonalInfoT,
 } from "hooks";
-import { getCountry } from "models/country";
-import { getAge, historyRep } from "models/dateTime";
-import { handleEgGov } from "models/governorate";
-import { getPhoneNumberByTag } from "models/phoneNumber";
-import { scheduleBrief } from "models/schedule";
+import {
+  getAge,
+  getCountry,
+  getOccupation,
+  getPhoneNumberByTag,
+  handleEgGov,
+  historyRep,
+  scheduleBrief,
+} from "models/blocks";
 import { Student } from "models/student";
-import { getOccupation } from "models/work";
 import { cn, concat, prodOnly } from "utils";
 
 import StudentNotes from "../StudentNotes";

@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import {
-  getTimeDelta,
-  tdToMs,
-  TimeDelta,
-  TimeDeltaUnits,
-} from "models/dateTime";
+import { getTimeDelta, tdToMs, TimeDelta, TimeDeltaUnits } from "models/blocks";
 
 const useCountdown = (
   expiresAt: Date,

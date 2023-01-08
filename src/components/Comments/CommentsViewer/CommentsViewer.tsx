@@ -4,7 +4,7 @@ import Container from "components/Container";
 import { formAtoms } from "components/Form";
 import { useAuthContext } from "context";
 import { useGlobalT, useMessageT, useSmartForm } from "hooks";
-import { Comment } from "models/comment";
+import { Comment } from "models/blocks";
 
 import CommentItem from "../CommentItem";
 
