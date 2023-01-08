@@ -5,21 +5,21 @@ import { FormLayout } from "components/Layouts";
 import { usePopupContext } from "context";
 import { usePageT } from "hooks";
 
-import CustomerForm from "../CustomerForm";
+import LeadForm from "../LeadForm";
 
-interface NewCustomerProps {}
+interface NewLeadProps {}
 
-const NewCustomer: VFC<NewCustomerProps> = () => {
-  const cst = usePageT("customer");
+const NewLead: VFC<NewLeadProps> = () => {
+  const cst = usePageT("lead");
   const { openModal } = usePopupContext();
 
   return (
-    <FormLayout name="NewCustomer" title={cst("formTitle")}>
+    <FormLayout name="NewLead" title={cst("formTitle")}>
       <Container
         variant="form"
         header={<h2 className="title">{cst("formTitle")}</h2>}
       >
-        <CustomerForm
+        <LeadForm
           onfulfilled={() =>
             openModal(
               <>
@@ -36,4 +36,4 @@ const NewCustomer: VFC<NewCustomerProps> = () => {
   );
 };
 
-export default NewCustomer;
+export default NewLead;

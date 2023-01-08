@@ -5,7 +5,7 @@ import LoadingPopup from "components/LoadingPopup";
 import {
   AuthProvider,
   CourseProvider,
-  CustomerProvider,
+  LeadProvider,
   MetaProvider,
   StudentProvider,
   PopupProvider,
@@ -30,7 +30,7 @@ function App() {
         MetaProvider,
         TeacherProvider,
         CourseProvider,
-        CustomerProvider,
+        LeadProvider,
         StudentProvider,
         StudentEnrollProvider,
         TeacherEnrollProvider,

@@ -4,12 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useStudentContext, useTeacherContext } from "context";
 import { Admin, SignIn } from "pages/Admin";
 import { CourseList, CourseProfile, Courses } from "pages/Courses";
-import {
-  CustomerList,
-  CustomerProfile,
-  Customers,
-  NewCustomer,
-} from "pages/Customers";
+import { LeadList, LeadProfile, Leads, NewLead } from "pages/Leads";
 import {
   Students,
   StudentList,
@@ -60,9 +55,9 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
             </Route>
 
             {/* Leads */}
-            <Route path="leads" element={<Customers />}>
-              <Route index element={<CustomerList />} />
-              <Route path=":id" element={<CustomerProfile />} />
+            <Route path="leads" element={<Leads />}>
+              <Route index element={<LeadList />} />
+              <Route path=":id" element={<LeadProfile />} />
             </Route>
 
             {/* Students */}
@@ -85,7 +80,7 @@ const ViewHandler: VFC<ViewHandlerProps> = () => {
         <Route path="sign-in" element={<SignIn />} />
       </Route>
 
-      <Route path="reach-out" element={<NewCustomer />} />
+      <Route path="reach-out" element={<NewLead />} />
 
       <Route path="students">
         <Route

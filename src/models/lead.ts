@@ -28,19 +28,19 @@ type MetaInDB = Merge<
   }
 >;
 
-export interface CustomerInfo {
+export interface LeadInfo {
   fullName: string;
   phoneNumber: PhoneNumberList;
   facebook?: string;
   message?: string;
 }
 
-export interface Customer extends CustomerInfo {
+export interface Lead extends LeadInfo {
   id: string;
   meta: Meta;
 }
 
-export interface CustomerInDB extends CustomerInfo {
+export interface LeadInDB extends LeadInfo {
   meta: MetaInDB;
 }
 
@@ -49,10 +49,10 @@ const defaultMeta = (): Meta => {
   return { dateCreated: now, dateUpdated: now, status: "registered" };
 };
 
-export const customerFromDB = (
+export const leadFromDB = (
   id: string,
-  { meta: { dateCreated, dateUpdated, ...meta }, ...data }: CustomerInDB
-): Customer => ({
+  { meta: { dateCreated, dateUpdated, ...meta }, ...data }: LeadInDB
+): Lead => ({
   ...data,
   id,
   meta: {
@@ -63,12 +63,8 @@ export const customerFromDB = (
   },
 });
 
-export const customerFromInfo = ({
-  fullName,
-  phoneNumber,
-  ...data
-}: CustomerInfo) => {
-  const processedData: Omit<Customer, "id"> = {
+export const leadFromInfo = ({ fullName, phoneNumber, ...data }: LeadInfo) => {
+  const processedData: Omit<Lead, "id"> = {
     fullName,
     phoneNumber: filterPhoneNumberList(phoneNumber),
     meta: defaultMeta(),

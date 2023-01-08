@@ -1,25 +1,25 @@
 import { VFC } from "react";
 
 import { formAtoms } from "components/Form";
-import { useCustomerContext } from "context";
+import { useLeadContext } from "context";
 import { usePersonalInfoT, useSmartForm } from "hooks";
-import { CustomerInfo } from "models/customer";
+import { LeadInfo } from "models/lead";
 
 const { Form, Input, Textarea, InputGroup, PhoneNumberInput } =
-  formAtoms<CustomerInfo>();
+  formAtoms<LeadInfo>();
 
-interface CustomerFormProps {
+interface LeadFormProps {
   onfulfilled?: (response: any) => void;
   onrejected?: (response: any) => void;
 }
 
-const CustomerForm: VFC<CustomerFormProps> = ({ onfulfilled, onrejected }) => {
+const LeadForm: VFC<LeadFormProps> = ({ onfulfilled, onrejected }) => {
   const pi = usePersonalInfoT();
 
-  const { add } = useCustomerContext();
+  const { add } = useLeadContext();
 
   const formProps = useSmartForm({
-    onSubmit: (data: CustomerInfo) =>
+    onSubmit: (data: LeadInfo) =>
       add(data, { onFulfilled: onfulfilled, onRejected: onrejected }),
     resetOnSubmit: true,
   });
@@ -52,4 +52,4 @@ const CustomerForm: VFC<CustomerFormProps> = ({ onfulfilled, onrejected }) => {
   );
 };
 
-export default CustomerForm;
+export default LeadForm;

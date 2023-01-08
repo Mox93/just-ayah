@@ -14,39 +14,39 @@ import { createContext, FC, useCallback, useContext, useState } from "react";
 
 import { db } from "services/firebase";
 import {
-  Customer,
-  CustomerInfo,
-  CustomerInDB,
-  customerFromDB,
-  customerFromInfo,
-} from "models/customer";
+  Lead,
+  LeadInfo,
+  LeadInDB,
+  leadFromDB,
+  leadFromInfo,
+} from "models/lead";
 import { AddData, FetchData } from "models";
 import { devOnly, omit } from "utils";
 
-interface CustomerContext {
-  data: { customers: Customer[] };
-  add: AddData<CustomerInfo>;
+interface LeadContext {
+  data: { leads: Lead[] };
+  add: AddData<LeadInfo>;
   fetch: FetchData;
 }
 
-const initialState: CustomerContext = {
-  data: { customers: [] },
+const initialState: LeadContext = {
+  data: { leads: [] },
   add: omit,
   fetch: omit,
 };
 
-const customerContext = createContext(initialState);
+const leadContext = createContext(initialState);
 
-interface CustomerProviderProps {}
+interface LeadProviderProps {}
 
-export const CustomerProvider: FC<CustomerProviderProps> = ({ children }) => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+export const LeadProvider: FC<LeadProviderProps> = ({ children }) => {
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData>();
-  const collectionRef = collection(db, "customers");
+  const collectionRef = collection(db, "leads");
 
-  const add: AddData<CustomerInfo> = useCallback(
+  const add: AddData<LeadInfo> = useCallback(
     (data, { onFulfilled, onRejected = console.log } = {}) => {
-      addDoc(collectionRef, customerFromInfo(data))
+      addDoc(collectionRef, leadFromInfo(data))
         .then(onFulfilled, onRejected)
         .catch(console.log);
     },
@@ -72,11 +72,11 @@ export const CustomerProvider: FC<CustomerProviderProps> = ({ children }) => {
       );
 
       getDocs(q).then((querySnapshot) => {
-        setCustomers((state) => {
+        setLeads((state) => {
           const newState = [...state];
 
           querySnapshot.docs.forEach((doc, i) => {
-            newState.push(customerFromDB(doc.id, doc.data() as CustomerInDB));
+            newState.push(leadFromDB(doc.id, doc.data() as LeadInDB));
 
             if (i === size - 1) {
               setLastDoc(doc);
@@ -93,10 +93,10 @@ export const CustomerProvider: FC<CustomerProviderProps> = ({ children }) => {
   );
 
   return (
-    <customerContext.Provider value={{ add, fetch, data: { customers } }}>
+    <leadContext.Provider value={{ add, fetch, data: { leads: leads } }}>
       {children}
-    </customerContext.Provider>
+    </leadContext.Provider>
   );
 };
 
-export const useCustomerContext = () => useContext(customerContext);
+export const useLeadContext = () => useContext(leadContext);
