@@ -1,8 +1,9 @@
 import { Timestamp } from "firebase/firestore";
+import { RequireAtLeastOne } from "type-fest";
+import { z } from "zod";
 
+import { Converter } from "models";
 import { identity, range, addZeros } from "utils";
-
-export const DateTime = Timestamp;
 
 export interface DateInfo {
   day: number;
@@ -36,7 +37,7 @@ export interface TimeInfo12H {
 export const hours = (h24?: boolean) => (h24 ? range(24) : range(1, 13));
 export const minutes = (interval = 1) => range(0, 60, interval);
 
-export const weekDays = [
+export const weekDaySchema = z.enum([
   "Fri",
   "Sat",
   "Sun",
@@ -44,9 +45,9 @@ export const weekDays = [
   "Tue",
   "Wed",
   "Thu",
-] as const;
+]);
 
-export type WeekDay = typeof weekDays[number];
+export type WeekDay = z.infer<typeof weekDaySchema>;
 
 export const getAge = (date: string | number | Date) => {
   const today = new Date();
@@ -98,7 +99,7 @@ export const toDateInfo = (date?: any): DateInfo | undefined => {
 
   const _date = new Date(date);
 
-  return isNaN(_date.getDate())
+  return isNaN(_date.getTime())
     ? undefined
     : {
         day: _date.getDate(),
@@ -109,7 +110,7 @@ export const toDateInfo = (date?: any): DateInfo | undefined => {
 
 export const fromTimeInfo = (
   { hour, minute, period }: TimeInfo12H,
-  t: (value: string) => string = identity
+  t: Converter<string> = identity
 ) => `${addZeros(hour)}:${addZeros(minute)}${t(period)}`;
 
 export const to24H = ({ hour, minute, period }: TimeInfo12H): TimeInfo => ({
@@ -130,20 +131,21 @@ export const to12H = ({ hour, minute }: TimeInfo): TimeInfo12H => ({
 
 export const shiftDate = (
   date: Date,
-  { year = 0, month = 0, day = 0, hour = 0, minute = 0 }: TimeDelta,
-  method: "forward" | "backward" = "forward"
+  {
+    year = 0,
+    month = 0,
+    day = 0,
+    hour = 0,
+    minute = 0,
+  }: RequireAtLeastOne<TimeDelta>
 ): Date => {
   const newDate = new Date(date);
-  const apply =
-    method === "backward"
-      ? (a: number, b: number) => a - b
-      : (a: number, b: number) => a + b;
 
-  newDate.setFullYear(apply(newDate.getFullYear(), year));
-  newDate.setMonth(apply(newDate.getMonth(), month));
-  newDate.setDate(apply(newDate.getDate(), day));
-  newDate.setHours(apply(newDate.getHours(), hour));
-  newDate.setMinutes(apply(newDate.getMinutes(), minute));
+  newDate.setFullYear(newDate.getFullYear() + year);
+  newDate.setMonth(newDate.getMonth() + month);
+  newDate.setDate(newDate.getDate() + day);
+  newDate.setHours(newDate.getHours() + hour);
+  newDate.setMinutes(newDate.getMinutes() + minute);
 
   return newDate;
 };
@@ -236,3 +238,18 @@ export const formatTimeDelta = (
   timeDelta: TimeDelta,
   maxUnit: TimeDeltaUnits
 ): TimeDelta => msToTd(tdToMs(timeDelta), maxUnit);
+
+export const toDate = (value: unknown) => {
+  if (value instanceof Timestamp) return value.toDate();
+  if (value instanceof Date) return value;
+  if (typeof value === "string" || typeof value === "number") {
+    const date = new Date(value);
+    if (!isNaN(date.getTime())) return date;
+  }
+};
+
+export const dateSchema = z
+  .union([z.coerce.date(), z.instanceof(Timestamp)])
+  .transform((value) => (value instanceof Timestamp ? value.toDate() : value));
+
+export type DateValue = z.input<typeof dateSchema>;

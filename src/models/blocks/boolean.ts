@@ -1,62 +1,54 @@
-import { identity } from "utils";
+import { z } from "zod";
 
-const trueLike = [true, "true", "yes", "t", "y"] as const;
-const falseLike = [false, "false", "no", "f", "n"] as const;
+import { Converter } from "models";
+import { identity, oneOf } from "utils";
 
-export type TrueLike = typeof trueLike[number];
-export type FalseLike = typeof falseLike[number];
+const trueLike = z.enum(["true", "yes", "t", "y"]);
+const falseLike = z.enum(["false", "no", "f", "n"]);
+export const booleanSchema = z
+  .union([trueLike, falseLike, z.boolean()])
+  .transform((value) =>
+    oneOf(value, trueLike.options)
+      ? true
+      : oneOf(value, falseLike.options)
+      ? false
+      : value
+  );
 
-export type BooleanLike = TrueLike | FalseLike;
+export type TrueLike = z.infer<typeof trueLike>;
+export type FalseLike = z.infer<typeof falseLike>;
+export type BooleanType = z.input<typeof booleanSchema>;
 
-function toBoolean(value: BooleanLike): boolean;
-function toBoolean<T>(value: T): T;
-function toBoolean(value: any) {
-  const processedValue =
-    typeof value === "string" ? value.toLocaleLowerCase() : value;
-
-  return trueLike.includes(processedValue)
-    ? true
-    : falseLike.includes(processedValue)
-    ? false
-    : value;
-}
-
-function booleanToString(
-  value: BooleanLike,
-  trueValue: TrueLike,
-  falseValue: FalseLike
-): BooleanLike;
-function booleanToString(value: BooleanLike): BooleanLike;
-function booleanToString(
-  value: BooleanLike,
+function booleanString(
+  value: BooleanType,
+  trueValue?: TrueLike,
+  falseValue?: FalseLike
+): TrueLike | FalseLike;
+function booleanString(value: BooleanType): `${boolean}`;
+function booleanString(
+  value: BooleanType,
   trueValue?: string,
   falseValue?: string
 ): string;
-function booleanToString<T>(value: T): T;
-function booleanToString(
-  value: any,
+function booleanString(
+  value: BooleanType,
   trueValue: any = "true",
   falseValue: any = "false"
 ) {
-  const processedValue =
-    typeof value === "string" ? value.toLocaleLowerCase() : value;
-
-  return trueLike.includes(processedValue)
-    ? trueValue
-    : falseLike.includes(processedValue)
-    ? falseValue
-    : value;
+  return booleanSchema.parse(value) ? trueValue : falseValue;
 }
 
-export const booleanSelectorProps = (
-  t: (value: string) => string = identity,
+export function booleanSelectorProps(
+  t: Converter<string> = identity,
   trueValue?: string,
   falseValue?: string
-) => ({
-  type: "radio" as const,
-  options: [true, false],
-  renderElement: (value: BooleanLike) =>
-    t(booleanToString(value, trueValue, falseValue)),
-});
+) {
+  return {
+    type: "radio" as const,
+    options: [true, false],
+    renderElement: (value: BooleanType) =>
+      t(booleanString(value, trueValue, falseValue)),
+  };
+}
 
-export { toBoolean, booleanToString };
+export { booleanString };

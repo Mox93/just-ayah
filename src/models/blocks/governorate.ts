@@ -1,3 +1,5 @@
+import { Converter } from "../types";
+
 export const governorate = [
   "Cairo",
   "Alexandria",
@@ -35,6 +37,6 @@ export const egStrip = (value: string) => value.replace(EG_PREFIX, "");
 
 export const egGovernorate = governorate.map((value) => `${EG_PREFIX}${value}`);
 
-export const handleEgGov = (value: string, g: (value: string) => string) => {
-  return value.startsWith(EG_PREFIX) ? g(egStrip(value)) : value;
+export const handleEgGov = (value: string, t: Converter<string>) => {
+  return value.startsWith(EG_PREFIX) ? t(egStrip(value)) : value;
 };

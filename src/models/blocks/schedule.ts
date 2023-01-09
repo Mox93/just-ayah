@@ -1,21 +1,31 @@
+import { z } from "zod";
+
+import { Converter } from "models";
 import { identity } from "utils";
 
-import { fromTimeInfo, to12H, WeekDay } from "./dateTime";
+import { fromTimeInfo, to12H, weekDaySchema } from "./dateTime";
 
-interface ScheduleEntire {
-  day: WeekDay;
-  time: { hour: number; minute: number };
-}
+export const scheduleSchema = z
+  .object({
+    entries: z.array(
+      z.object({
+        day: weekDaySchema,
+        time: z.object({
+          hour: z.number().int().nonnegative().max(23),
+          minute: z.number().int().nonnegative().max(59),
+        }),
+      })
+    ),
+    notes: z.string(),
+  })
+  .partial();
 
-export interface Schedule {
-  entries?: ScheduleEntire[];
-  notes?: string;
-}
+export type Schedule = z.infer<typeof scheduleSchema>;
 
 export const scheduleBrief = (
   schedule?: Schedule,
-  t: (value: string) => string = identity,
-  t1: (value: string) => string = identity
+  t: Converter<string> = identity,
+  t1: Converter<string> = identity
 ) =>
   schedule?.entries
     ?.filter(({ day, time }) => day && time)

@@ -1,9 +1,10 @@
 import { Timestamp } from "firebase/firestore";
+import { z } from "zod";
 
 import { formAtoms } from "components/Form";
 import { identity } from "utils";
 
-import { shortDateRep } from "./dateTime";
+import { dateSchema, shortDateRep } from "./dateTime";
 
 const { Input, DateInput } = formAtoms();
 
@@ -21,6 +22,8 @@ const statusMap = {
   progress: [
     "pending",
     "active",
+    "finished",
+    "canceled",
     {
       name: "postponed",
       type: "date",
@@ -48,11 +51,10 @@ const statusMap = {
         />
       ),
     },
-    "finished",
-    "canceled",
   ],
   subscription: [
     "fullPay",
+    "noPay",
     {
       name: "partialPay",
       type: "number",
@@ -70,7 +72,6 @@ const statusMap = {
         />
       ),
     },
-    "noPay",
   ],
 } as const;
 
@@ -189,3 +190,17 @@ export const mapStatusString = <TVariant extends StatusVariants>(
 
   return parts;
 };
+
+/********************\
+|****** Schema ******|
+\********************/
+
+export const progressSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.enum(["pending", "active", "finished", "canceled"]) }),
+  z.object({ type: z.literal("postponed"), value: dateSchema }),
+]);
+
+export const subscriptionSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.enum(["fullPay", "noPay"]) }),
+  z.object({ type: z.literal("partialPay"), value: z.number().positive() }),
+]);

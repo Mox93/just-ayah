@@ -1,86 +1,76 @@
-import {
-  DocumentData,
-  QueryDocumentSnapshot,
-  SnapshotOptions,
-  Timestamp,
-} from "firebase/firestore";
+import { z } from "zod";
 
-import { DBConverter, Merge } from "..";
-import { shiftDate } from "./dateTime";
+import { AddData, DeleteData, FetchData } from "models";
+import { assert, omit } from "utils";
 
-export interface EnrollInfo {
-  key?: string;
-  duration?: number;
+import { booleanSchema } from "./boolean";
+import { trackableSchema } from "./trackable";
+import { dateSchema, shiftDate } from "./dateTime";
+
+const newEnrollSchema = z.object({
+  name: z.string().optional(),
+  duration: z.number().int().default(48),
+});
+
+const _enrollSchema = trackableSchema.merge(
+  z.object({
+    name: z.string().optional(),
+    awaiting: booleanSchema,
+    expiresAt: dateSchema,
+  })
+);
+
+export type _Enroll = z.infer<typeof _enrollSchema>;
+
+function isEnroll(value: any): value is _Enroll {
+  return ["awaiting", "expiresAt"].every((key) => Object.hasOwn(value, key));
 }
 
-interface Enroll {
-  key?: string;
-  awaiting: boolean;
-  expiresAt: Date;
-  dateCreated: Date;
-}
-
-type EnrollInDB = Merge<
-  Enroll,
-  { expiresAt: Timestamp; dateCreated: Timestamp }
->;
-
-export type UserEnroll<TUser> = Merge<
-  Partial<TUser>,
-  { id: string; enroll: Enroll }
->;
-
-export type UserEnrollInDB<TUserInDB> = Merge<
-  Partial<TUserInDB>,
-  { enroll: EnrollInDB }
->;
-
-const userEnrollFromDB = <TUserInDB, TUser>(
-  id: string,
-  {
-    enroll: { expiresAt, dateCreated, ...enroll },
-    ...data
-  }: UserEnrollInDB<TUserInDB>,
-  userFromDB: DBConverter<TUserInDB, TUser>
-): UserEnroll<TUser> => ({
-  enroll: {
-    ...enroll,
-    expiresAt: expiresAt.toDate(),
-    dateCreated: dateCreated.toDate(),
+const enrollMethods = {
+  renew(duration?: number) {
+    assert(isEnroll(this));
+    const { name } = this;
+    return enrollSchema.parse({ name, duration });
   },
-  ...userFromDB(id, data as any),
-});
+} as const;
 
-export const userEnrollFromInfo = <TUser>({
-  key,
-  duration = 48,
-}: EnrollInfo = {}): Omit<UserEnroll<TUser>, "id"> => {
-  const now = new Date();
+export type Enroll = _Enroll & typeof enrollMethods;
 
-  return {
-    enroll: {
-      ...(key && { key }),
-      awaiting: true,
-      expiresAt: shiftDate(now, { hour: duration }),
-      dateCreated: now,
-    },
-  } as Omit<UserEnroll<TUser>, "id">;
-};
-
-export const userEnrollConverter = <TUserInDB, TUser>(
-  userFromDB: DBConverter<TUserInDB, TUser>
-) => ({
-  toFirestore: (data: any) => userEnrollFromInfo<TUser>(data),
-  fromFirestore: (
-    snapshot: QueryDocumentSnapshot<DocumentData>,
-    options: SnapshotOptions
-  ) =>
-    userEnrollFromDB(
-      snapshot.id,
-      snapshot.data(options) as UserEnrollInDB<TUserInDB>,
-      userFromDB
+export const enrollSchema = z
+  .union([
+    _enrollSchema,
+    newEnrollSchema.transform(({ duration, ...value }) =>
+      _enrollSchema.parse({
+        ...value,
+        awaiting: true,
+        expiresAt: shiftDate(new Date(), { hour: duration }),
+      })
     ),
-});
+  ])
+  .transform<Enroll>((value) =>
+    Object.assign(Object.create(enrollMethods), value)
+  );
 
-export const enrollLinkFromId = (id: string, key: string) =>
-  `${window.location.protocol}//${window.location.host}/${key}/new/${id}`;
+interface EnrollUser {
+  enroll: Enroll;
+}
+
+export interface EnrollContext<T extends EnrollUser = EnrollUser> {
+  enrolls: T[];
+  addEnroll: AddData<Enroll>;
+  fetchEnrolls: FetchData<T>;
+  refreshEnroll: (id: string, duration?: number) => void;
+  updateEnrollName: (id: string, name: string) => void;
+  deleteEnroll: DeleteData;
+  submitEnroll: AddData<EnrollUser>;
+}
+
+export const enrollHookPlaceholder: EnrollContext = {
+  enrolls: [],
+  addEnroll: omit,
+  fetchEnrolls: omit,
+  refreshEnroll: omit,
+  updateEnrollName: omit,
+  deleteEnroll: omit,
+  submitEnroll: omit,
+};

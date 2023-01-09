@@ -1,3 +1,5 @@
-export const genders = ["male", "female"] as const;
+import { z } from "zod";
 
-export type Gender = typeof genders[number];
+export const genderSchema = z.enum(["male", "female"]);
+
+export type Gender = z.infer<typeof genderSchema>;

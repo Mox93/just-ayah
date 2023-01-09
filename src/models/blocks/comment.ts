@@ -1,59 +1,57 @@
-import { Timestamp } from "firebase/firestore";
+import { pluck } from "utils";
+import { z } from "zod";
 
-export interface Comment {
-  dateCreated: Date;
-  dateUpdated?: Date;
-  body: string;
-  createdBy?: {
-    email: string;
-    username?: string;
-    avatar?: string;
-  };
-}
+import { trackableSchema } from "./trackable";
+import { userSchema } from "./user";
 
-export interface CommentMap {
-  [timestamp: string]: Omit<Comment, "dateCreated">;
-}
+const _commentSchema = trackableSchema.merge(
+  z.object({
+    body: z.string(),
+    createdBy: userSchema.optional(),
+  })
+);
 
-export interface CommentInDB
-  extends Omit<Comment, "dateCreated" | "dateUpdated"> {
-  dateUpdated?: Timestamp;
-}
+export type Comment = z.infer<typeof _commentSchema>;
 
-export interface CommentMapInDB {
-  [timestamp: string]: CommentInDB;
-}
-
-export const commentFromDB = (
-  timestamp: string,
-  comment: CommentInDB
-): Comment => {
-  const dateCreated = new Date(Number(timestamp));
-
-  const dateUpdated = comment.dateUpdated && comment.dateUpdated.toDate();
-  const result: Comment = { ...comment, dateCreated, dateUpdated };
-
-  if (result.dateUpdated === undefined) {
-    delete result.dateUpdated;
-  }
-
-  return result;
-};
-
-export const commentListFromDB = (comment: CommentMapInDB): Comment[] => {
-  const timestamps = Object.keys(comment);
-  timestamps.sort((a, b) => (a < b ? 1 : a === b ? 0 : -1));
-
-  return timestamps.map((ts) => commentFromDB(ts, comment[ts]));
-};
-
-export const toCommentMap = (comment: Comment[]): CommentMap => {
-  const commentMap: CommentMap = {};
-
-  comment.forEach((comment) => {
-    const { dateCreated, ...rest } = comment;
-    commentMap[`${dateCreated.getTime()}`] = rest;
+export const commentSchema = trackableSchema
+  .merge(_commentSchema)
+  .merge(
+    z.object({
+      user: userSchema.nullable(),
+    })
+  )
+  .transform(({ createdBy, user, ...rest }) => {
+    return _commentSchema.parse({
+      ...rest,
+      ...(createdBy?.email
+        ? { createdBy }
+        : user?.email
+        ? { createdBy: user }
+        : {}),
+    });
   });
 
-  return commentMap;
-};
+const commentsSchema = z.union([
+  z.record(z.string(), commentSchema),
+  z.array(commentSchema),
+]);
+
+export const commentListSchema = commentsSchema.transform<Comment[]>((value) =>
+  Array.isArray(value)
+    ? value
+    : Object.entries(value)
+        .sort(([a], [b]) => Number(b) - Number(a))
+        .map(pluck("1"))
+);
+
+export const commentMapSchema = commentsSchema.transform((value) =>
+  Array.isArray(value)
+    ? value.reduce(
+        (obj, comment) => ({
+          ...obj,
+          [`${comment.dateCreated.getTime()}`]: comment,
+        }),
+        {}
+      )
+    : value
+);

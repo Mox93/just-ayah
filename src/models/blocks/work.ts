@@ -1,62 +1,58 @@
-import { identity } from "utils";
+import { z } from "zod";
 
-import { BooleanLike, booleanToString, toBoolean } from "./boolean";
+import { assert, identity } from "utils";
 
-export const noWorkReasons = [
-  "student",
-  "housewife",
-  "retired",
-  "other",
-] as const;
+import { Converter, UNKNOWN } from "..";
+import { booleanSchema } from "./boolean";
 
-export type NoWorkReason = typeof noWorkReasons[number];
+const noWorkReasonSchema = z.enum(["student", "housewife", "retired"]);
 
-export type WorkStatus =
-  | { doesWork: true; job: string }
-  | {
-      doesWork: false;
-      reason: Exclude<NoWorkReason, "other">;
-    }
-  | { doesWork: false; reason: "other"; explanation: string };
+const _workStatusSchema = z.discriminatedUnion("doesWork", [
+  z.object({
+    doesWork: z.literal(true),
+    job: z.string(),
+  }),
+  z.object({
+    doesWork: z.literal(false),
+    reason: z.literal("other"),
+    explanation: z.string(),
+  }),
+  z.object({
+    doesWork: z.literal(false),
+    reason: noWorkReasonSchema,
+  }),
+]);
 
-export type WorkStatusInfo = {
-  doesWork?: BooleanLike;
-  job?: string;
-  reason?: NoWorkReason;
-  explanation?: string;
-};
+type _WorkStatus = z.infer<typeof _workStatusSchema>;
 
-export const parseWorkStatus = ({
-  doesWork,
-  job,
-  reason,
-  explanation,
-}: WorkStatusInfo): WorkStatus => {
-  doesWork = toBoolean(doesWork!);
+function isWorkStatus(value: any): value is _WorkStatus {
+  return Object.hasOwn(value, "doesWork");
+}
 
-  return doesWork
-    ? { doesWork, job: job! }
-    : reason !== "other"
-    ? { doesWork: doesWork!, reason: reason! }
-    : { doesWork: doesWork!, reason: reason!, explanation: explanation! };
-};
+const workStatusMethods = {
+  toString(t: Converter<string> = identity) {
+    assert(isWorkStatus(this));
 
-export const workStatusToInfo = ({
-  doesWork,
-  ...rest
-}: WorkStatus): WorkStatusInfo => ({
-  doesWork: booleanToString(doesWork),
-  ...rest,
-});
+    return this.doesWork
+      ? this.job || t(UNKNOWN)
+      : this.reason !== "other"
+      ? t(this.reason || UNKNOWN)
+      : this.explanation || t(this.reason);
+  },
+} as const;
 
-export const getOccupation = (
-  status?: WorkStatus,
-  pi: (value: string) => string = identity
-) =>
-  status
-    ? status.doesWork
-      ? status.job
-      : status.reason !== "other"
-      ? pi(status.reason)
-      : status.explanation || pi(status.reason)
-    : "";
+export type WorkStatus = _WorkStatus & typeof workStatusMethods;
+
+export const workStatusSchema = z
+  .object({
+    doesWork: booleanSchema,
+    job: z.string().optional(),
+    reason: noWorkReasonSchema.optional(),
+    explanation: z.string().optional(),
+  })
+  .transform<WorkStatus>((value) =>
+    Object.assign(
+      Object.create(workStatusMethods),
+      _workStatusSchema.parse(value)
+    )
+  );
