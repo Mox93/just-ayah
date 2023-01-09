@@ -1,9 +1,8 @@
-import { get, isEmpty, set } from "lodash";
-import { Path } from "react-hook-form";
+import { get, isEmpty } from "lodash";
 
-import { identity } from "utils";
+import { Path, SubsetOf } from "models";
 
-import { paths } from "./object";
+import { applyFilters, Filter, identity, nestedPaths } from ".";
 
 type MatchRecord<
   TFieldValues,
@@ -15,11 +14,11 @@ type MatchRecord<
 interface MatchResult<TFieldValues> {
   value: TFieldValues;
   matches: MatchRecord<TFieldValues>;
-  bestScore: number;
+  score: number;
 }
 
-interface SubstringMatchOptions<TFieldName> {
-  filter?: ["take" | "leave", TFieldName[]];
+interface SubstringMatchOptions<TFieldValues> {
+  filter?: Filter<TFieldValues>;
   substringMinLength?: number;
 }
 
@@ -39,13 +38,23 @@ const getUniqueSubstrings = (
   return Array.from(results).filter(identity);
 };
 
+const calculateScore = (matchedSubstring: RegExpMatchArray) =>
+  matchedSubstring.reduce(
+    (score, match) => score + Math.pow(3, match.length),
+    0
+  );
+
 export const substringMatch =
-  <TFieldValues, TFieldName extends Path<TFieldValues> = Path<TFieldValues>>(
+  <TFieldValues>(
     indexData: TFieldValues[],
-    { filter, substringMinLength = 1 }: SubstringMatchOptions<TFieldName> = {}
+    { filter, substringMinLength = 2 }: SubstringMatchOptions<TFieldValues> = {}
   ) =>
   (searchKey: string) => {
-    const results: MatchResult<TFieldValues>[] = [];
+    substringMinLength = Math.max(
+      Math.min(substringMinLength, searchKey.length),
+      1
+    );
+    const results: MatchResult<typeof indexData[number]>[] = [];
 
     const substrings = searchKey
       .toLowerCase()
@@ -68,41 +77,24 @@ export const substringMatch =
       "g"
     );
 
-    const [filterType, fields] = filter || [];
-
     indexData.forEach((obj) => {
-      const allFields: TFieldName[] = paths(obj, { includeAll: true });
-      const IncludedFields =
-        filterType === "take"
-          ? fields!
-          : filterType === "leave"
-          ? allFields.filter((v) => !fields?.includes(v))
-          : allFields;
+      const filteredObj = filter ? applyFilters(obj, filter) : obj;
 
+      const fields = nestedPaths(filteredObj, { includeAll: true });
       const matches: MatchRecord<TFieldValues> = {};
-      let bestScore = 0;
+      let score = 0;
 
-      IncludedFields.forEach((field) => {
-        const fieldValue = get(obj, field);
+      fields.forEach((field) => {
+        const value = get(filteredObj, field);
         const matchedSubstring =
-          typeof fieldValue === "string"
-            ? (fieldValue as string).toLowerCase().match(parts)
-            : null;
-
+          typeof value === "string" && value.toLowerCase().match(parts);
         if (!matchedSubstring) return;
-
-        let score = matchedSubstring.reduce(
-          (score, match) => score + Math.pow(3, match.length),
-          0
-        );
-
-        if (score > bestScore) bestScore = score;
-
-        set(matches, field, { substrings: matchedSubstring, score });
+        const matchScore = calculateScore(matchedSubstring);
+        if (matchScore > score) score = matchScore;
+        matches[field] = { substrings: matchedSubstring, score };
       });
-
-      if (!isEmpty(matches)) results.push({ value: obj, matches, bestScore });
+      if (!isEmpty(matches)) results.push({ value: obj, matches, score });
     });
 
-    return results.sort((a, b) => b.bestScore - a.bestScore);
+    return results.sort((a, b) => b.score - a.score);
   };

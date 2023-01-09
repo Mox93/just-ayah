@@ -1,21 +1,41 @@
 import { get } from "lodash";
-import { Path } from "react-hook-form";
+import { Primitive } from "type-fest";
+
+import { Path } from "models";
 
 export const identity = (value: any) => value;
+
 export const omit = () => {};
 
-type Pass = {
-  (func?: Function, ...args: any): () => any;
-  (value: any): () => any;
-};
+interface OneOf {
+  <U extends Primitive, T extends Readonly<[U, ...U[]]>>(
+    value: any,
+    values: T
+  ): value is T[number];
+  <U extends Primitive, T extends [U, ...U[]]>(
+    value: any,
+    values: T
+  ): value is T[number];
+}
+
+export const oneOf: OneOf = <U extends any, T extends Readonly<[U, ...U[]]>>(
+  value: any,
+  values: T
+): value is T[number] => values.includes(value);
+
+interface Pass {
+  <A, T extends A[], R>(func?: (...args: T) => R, ...args: T): () => R;
+  <T>(value: T): () => T;
+}
+
 export const pass: Pass =
-  (funcOrValue, ...args) =>
+  (funcOrValue: any, ...args: any[]) =>
   () =>
     typeof funcOrValue === "function" ? funcOrValue(...args) : funcOrValue;
 
 export const pluck =
-  <TObject>(path: Path<TObject>) =>
-  (obj?: TObject) =>
+  <T, P extends Path<T> = Path<T>>(path: P) =>
+  (obj: T) =>
     get(obj, path);
 
 export const envAction =
@@ -29,33 +49,14 @@ export const devOnly = (action: (...value: any) => any) =>
 export const prodOnly = (action: (...value: any) => any) =>
   envAction("production", action);
 
-/****************************\
-|****** Function Chain ******|
-\****************************/
+export const hasAtLeastOne = <T>(array?: T[]): array is [T, ...T[]] =>
+  !!array?.length;
 
-export type FunctionChain<TIn = any, TOut = any> = [
-  (value: TIn) => any,
-  ...Function[],
-  (value: any) => TOut
-];
-
-export type FunctionOrChain<TIn = any, TOut = any> =
-  | ((value: TIn) => TOut)
-  | FunctionChain<TIn, TOut>;
-
-export const reduceChain =
-  <TIn, TOut>(chain: Function[]) =>
-  (value: TIn): TOut =>
-    chain.reduce((node, func) => func(node), value) as any;
-
-export const applyInOrder = <TIn = any, TOut = any>(
-  ...funcOrChain: FunctionOrChain<TIn, TOut>[]
-) => {
-  const chain: Function[] = [];
-
-  funcOrChain.forEach((foc) =>
-    typeof foc === "function" ? chain.push(foc) : chain.push(...foc)
-  );
-
-  return reduceChain<TIn, TOut>(chain);
-};
+export function assert(
+  value: unknown,
+  message?: string | Error
+): asserts value {
+  if (!value) {
+    throw message instanceof Error ? message : new Error(message);
+  }
+}
