@@ -151,9 +151,7 @@ const EnrollLinks = <TUser,>({
   );
 
   const [loadEnrolls, isLoading] = useLoading((stopLoading) => {
-    fetchEnrolls({
-      options: { onFulfilled: stopLoading, onRejected: stopLoading },
-    });
+    fetchEnrolls({ onCompleted: stopLoading });
   });
 
   return (

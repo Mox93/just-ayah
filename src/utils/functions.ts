@@ -3,54 +3,61 @@ import { Primitive } from "type-fest";
 
 import { Path } from "models";
 
-export const identity = (value: any) => value;
-
-export const omit = () => {};
-
-interface OneOf {
-  <U extends Primitive, T extends Readonly<[U, ...U[]]>>(
-    value: any,
-    values: T
-  ): value is T[number];
-  <U extends Primitive, T extends [U, ...U[]]>(
-    value: any,
-    values: T
-  ): value is T[number];
+export function identity(value: any) {
+  return value;
 }
 
-export const oneOf: OneOf = <U extends any, T extends Readonly<[U, ...U[]]>>(
+export function omit() {}
+
+function oneOf<U extends Primitive, T extends Readonly<[U, ...U[]]>>(
   value: any,
   values: T
-): value is T[number] => values.includes(value);
-
-interface Pass {
-  <A, T extends A[], R>(func?: (...args: T) => R, ...args: T): () => R;
-  <T>(value: T): () => T;
+): value is T[number];
+function oneOf<U extends Primitive, T extends [U, ...U[]]>(
+  value: any,
+  values: T
+): value is T[number] {
+  return values.includes(value);
 }
 
-export const pass: Pass =
-  (funcOrValue: any, ...args: any[]) =>
-  () =>
+function pass<R, A = unknown, T extends A[] = any[]>(
+  func: (...args: T) => R,
+  ...args: T
+): () => R;
+function pass<T>(value: T): () => T;
+function pass(funcOrValue: any, ...args: any[]) {
+  return () =>
     typeof funcOrValue === "function" ? funcOrValue(...args) : funcOrValue;
+}
 
-export const pluck =
-  <T, P extends Path<T> = Path<T>>(path: P) =>
-  (obj: T) =>
-    get(obj, path);
+export function pluck<T>(path: Path<T>) {
+  return (obj?: T) => get(obj, path);
+}
 
-export const envAction =
-  (env: string, action: (...value: any) => any) =>
-  (...value: any) =>
-    process.env.REACT_APP_ENV === env && action(...value);
+function envAction<T, A, Args extends [...A[]]>(
+  env: string,
+  action: (...args: Args) => T
+) {
+  return process.env.REACT_APP_ENV === env
+    ? (...value: any) => action(...value)
+    : omit;
+}
 
-export const devOnly = (action: (...value: any) => any) =>
-  envAction("development", action);
+export function devOnly<T, A, Args extends [...A[]]>(
+  action: (...args: Args) => T
+) {
+  return envAction("development", action);
+}
 
-export const prodOnly = (action: (...value: any) => any) =>
-  envAction("production", action);
+export function prodOnly<T, A, Args extends [...A[]]>(
+  action: (...args: Args) => T
+) {
+  return envAction("production", action);
+}
 
-export const hasAtLeastOne = <T>(array?: T[]): array is [T, ...T[]] =>
-  !!array?.length;
+export function hasAtLeastOne<T>(array?: T[]): array is [T, ...T[]] {
+  return !!array?.length;
+}
 
 export function assert(
   value: unknown,
@@ -60,3 +67,5 @@ export function assert(
     throw message instanceof Error ? message : new Error(message);
   }
 }
+
+export { pass, oneOf };

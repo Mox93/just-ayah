@@ -108,7 +108,7 @@ const useDropdown = ({
 
   const oDir = useOverflowDir(overflowDir, dir);
 
-  // TODO fix issue with dropdown keyboard control
+  // FIXME issue with dropdown keyboard control
   // const handleToggleButtons = useCallback((event: KeyboardEvent) => {
   //   if ([" "].includes(event.key)) {
   //     event.preventDefault();

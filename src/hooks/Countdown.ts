@@ -2,18 +2,20 @@ import { useCallback, useEffect, useState } from "react";
 
 import { getTimeDelta, tdToMs, TimeDelta, TimeDeltaUnits } from "models/blocks";
 
-const useCountdown = (
+type CountdownState = [TimeDelta, boolean];
+
+export default function useCountdown(
   expiresAt: Date,
   delta: TimeDelta = { minute: 1 },
   maxUnit?: TimeDeltaUnits
-): [TimeDelta, boolean] => {
-  const remainingTime = useCallback((): [TimeDelta, boolean] => {
+): CountdownState {
+  const remainingTime = useCallback((): CountdownState => {
     const now = new Date();
     return [getTimeDelta(expiresAt, now, maxUnit), expiresAt <= now];
   }, [expiresAt, maxUnit]);
 
   const [[countdown, isExpired], setCountdown] =
-    useState<[TimeDelta, boolean]>(remainingTime);
+    useState<CountdownState>(remainingTime);
 
   useEffect(() => setCountdown(remainingTime), [remainingTime]);
 
@@ -28,6 +30,4 @@ const useCountdown = (
   }, [isExpired]);
 
   return [countdown, isExpired];
-};
-
-export default useCountdown;
+}

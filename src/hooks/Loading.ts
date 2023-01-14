@@ -1,18 +1,19 @@
 import { useState } from "react";
 
-type Action = (stopLoading: VoidFunction) => void;
-type UseLoadingResult = [VoidFunction, boolean];
+interface Action<T> {
+  (stopLoading: VoidFunction): T;
+}
 
-const useLoading = (action: Action): UseLoadingResult => {
+function useLoading<T>(action: Action<T>) {
   const [isLoading, setIsLoading] = useState(false);
 
   return [
     () => {
       setIsLoading(true);
-      action(() => setIsLoading(false));
+      return action(() => setIsLoading(false));
     },
     isLoading,
-  ];
-};
+  ] as const;
+}
 
 export default useLoading;

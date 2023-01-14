@@ -5,7 +5,6 @@ import type {
 } from "firebase/firestore";
 import { Ref } from "react";
 import { PartialDeep } from "type-fest";
-import { z, ZodTypeAny } from "zod";
 
 import { Comment } from "../blocks";
 import { Path, PathValue } from "./path";
@@ -22,10 +21,9 @@ export type GenericObject = Record<PropertyKey, any>;
 |****** UTILITY TYPES ******|
 \***************************/
 
-export type SchemaType<
-  T extends { schema(): Record<string, ZodTypeAny> },
-  K extends keyof ReturnType<T["schema"]>
-> = z.infer<ReturnType<T["schema"]>[K]>;
+export type FactoryInstance<T extends (...args: any[]) => any> = InstanceType<
+  ReturnType<T>
+>;
 
 export type Merge<Obj1, Obj2> = Omit<Obj1, keyof Obj2> & Obj2;
 
@@ -55,6 +53,8 @@ export interface FetchDataOptions<
 interface RequestCallback {
   onFulfilled?: (...args: any[]) => void;
   onRejected?: (...args: any[]) => void;
+  onFailed?: (...args: any[]) => void;
+  onCompleted?: () => void;
 }
 
 interface LocalAction {

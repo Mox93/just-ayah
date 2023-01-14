@@ -3,13 +3,20 @@ import type {
   QueryDocumentSnapshot,
   SnapshotOptions,
 } from "firebase/firestore";
+import { Class } from "type-fest";
 
-import { DBModel } from "models/abstract";
+import { GenericObject } from "models";
 
-export const dbConverter = <T extends typeof DBModel>(Class: T) => ({
-  toFirestore: (model: InstanceType<T>) => model.db,
+interface DBModel {
+  data: GenericObject;
+}
+
+export const dbConverter = <T extends DBModel>(
+  DBClass: Class<T, [string, GenericObject]>
+) => ({
+  toFirestore: (model: T) => model.data,
   fromFirestore: (
     snapshot: QueryDocumentSnapshot<DocumentData>,
     options: SnapshotOptions
-  ) => new Class(snapshot.id, snapshot.data(options)) as InstanceType<T>,
+  ) => new DBClass(snapshot.id, snapshot.data(options)),
 });

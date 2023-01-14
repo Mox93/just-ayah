@@ -1,7 +1,8 @@
 import { cloneDeep, uniqueId } from "lodash";
 import { Reducer, useEffect, useMemo, useReducer } from "react";
+import { oneOf } from "utils";
 
-type Items<T> = { id: string; item: T | null }[];
+type Items<T> = { id: string; item: T | undefined }[];
 
 interface OnChange<TItem> {
   onChange?: (items: TItem[]) => void;
@@ -43,7 +44,7 @@ type Action<TItem> =
     ) &
       OnChange<TItem>;
 
-const emptyItems = () => [{ id: uniqueId(), item: null }];
+const emptyItems = () => [{ id: uniqueId(), item: undefined }];
 
 const itemsInit = <TItem>(items?: TItem[]): State<TItem> => ({
   items:
@@ -57,32 +58,25 @@ const reduce = <TItem>(
   { items }: State<TItem>,
   { type, payload, onChange }: Action<TItem>
 ): State<TItem> => {
-  let newItems = [...items];
+  const newItems = [...items];
+  const index = oneOf(type, ["add", "clone"]) ? (payload as P1).index : -1;
+  const next = index + 1;
 
   switch (type) {
     case "add":
-      const { data = null, index: idx } = payload as P2<TItem>;
-      const next = idx + 1;
-      newItems = [
-        ...items.slice(0, next),
-        { id: uniqueId(), item: data },
-        ...items.slice(next),
-      ];
+      const { data } = payload as P2<TItem>;
+      newItems.splice(next, 0, { id: uniqueId(), item: data });
       break;
 
     case "clone":
-      const { index: i } = payload as P2<TItem>;
-      const next1 = i + 1;
-      newItems = [
-        ...items.slice(0, next1),
-        { id: uniqueId(), item: cloneDeep(newItems[i].item) },
-        ...items.slice(next1),
-      ];
+      newItems.splice(next, 0, {
+        id: uniqueId(),
+        item: cloneDeep(newItems[index].item),
+      });
       break;
 
     case "remove":
-      const { index } = payload as P1;
-      newItems = [...items.slice(0, index), ...items.slice(index + 1)];
+      newItems.splice(index, 1);
       break;
 
     case "move":
@@ -104,7 +98,7 @@ const reduce = <TItem>(
   }
 
   if (newItems.length === 0) {
-    newItems = emptyItems();
+    newItems.push(...emptyItems());
   }
 
   if (onChange) {

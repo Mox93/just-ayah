@@ -63,9 +63,7 @@ const TeacherList: VFC<TeacherListProps> = () => {
     });
 
   const [loadTeachers, isLoading] = useLoading((stopLoading) => {
-    fetchTeachers({
-      options: { onFulfilled: stopLoading, onRejected: stopLoading },
-    });
+    fetchTeachers({ onCompleted: stopLoading });
   });
 
   useEffect(() => {

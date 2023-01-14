@@ -4,7 +4,7 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import LoadingPopup from "components/LoadingPopup";
 import { useGlobalT } from "hooks";
 import NotFound from "pages/NotFound";
-import { devOnly, pass } from "utils";
+import { devOnly, omit } from "utils";
 
 interface FetchGuardProps {
   fetcher?: Function;
@@ -14,7 +14,7 @@ interface FetchGuardProps {
 }
 
 const FetchGuard: VFC<FetchGuardProps> = ({
-  fetcher = pass({}),
+  fetcher = omit,
   loading,
   notFound = <NotFound />,
   failed = <NotFound />,
@@ -29,12 +29,12 @@ const FetchGuard: VFC<FetchGuardProps> = ({
   useEffect(() => {
     Promise.resolve(fetcher(params))
       .then((data: any) => {
-        location.state = { ...(location.search as any), data };
+        if (data) location.state = data;
         setFetchState(data ? "success" : "notFound");
-        devOnly(() => console.log("Fetch Succeeded", data));
+        devOnly(() => console.log("Fetch Succeeded", data))();
       })
       .catch((error) => {
-        devOnly(() => console.log("Fetch Failed", error));
+        devOnly(() => console.log("Fetch Failed", error))();
         setFetchState("failed");
       });
   }, []);

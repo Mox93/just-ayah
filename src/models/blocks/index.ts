@@ -10,4 +10,5 @@ export * from "./phoneNumber";
 export * from "./schedule";
 export * from "./status";
 export * from "./timezone";
+export * from "./trackable";
 export * from "./work";

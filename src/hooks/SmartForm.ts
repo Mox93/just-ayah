@@ -40,19 +40,26 @@ const useSmartForm = <TFieldValues extends FieldValues>({
 
   const { handleSubmit, ...formHook } = useForm<TFieldValues>({
     ...config,
-    // TODO replace values from defaultValues with non empty values from formSession
-    defaultValues: applyUpdates(
-      config.defaultValues || {},
-      formSession?.data || {}
-    ) as any,
+    defaultValues: formSession?.data
+      ? config.defaultValues
+        ? (applyUpdates(
+            config.defaultValues,
+            /**
+             * TODO need to make sure the data coming from here only contains keys the user has changed,
+             * otherwise it will needlessly override defaultValues
+             **/
+            formSession.data
+          ) as typeof config.defaultValues)
+        : (formSession?.data as typeof config.defaultValues)
+      : config.defaultValues,
   });
 
   const { watch, reset } = formHook;
 
   useEffect(() => {
     //TODO filter out empty fields
-    const subscription = watch((data, { name }) =>
-      formSession?.set(data as any)
+    const subscription = watch((data) =>
+      formSession?.set(data as TFieldValues)
     );
     return subscription.unsubscribe;
   }, [formSession, watch]);
@@ -62,15 +69,15 @@ const useSmartForm = <TFieldValues extends FieldValues>({
   const handleReset = useCallback(
     (keepDefaultValue?: boolean) => () => {
       const values = watch();
-      const resetValues = mapValues(values as any, (value) =>
+      const resetValues = mapValues(values, (value) =>
         isPlainObject(value) ? {} : null
       );
 
       reset({
         ...resetValues,
         ...(keepDefaultValue ? defaultValues : {}),
-      } as any);
-      formSession?.delete();
+      } as typeof defaultValues);
+      formSession?.remove();
     },
     [defaultValues, reset, formSession, watch]
   );
@@ -78,7 +85,9 @@ const useSmartForm = <TFieldValues extends FieldValues>({
   return {
     formHook,
     onSubmit: handleSubmit(
-      mergeCallbacks(onSubmit, resetOnSubmit && handleReset()) as any,
+      mergeCallbacks(onSubmit, resetOnSubmit && handleReset()) as NonNullable<
+        typeof onSubmit
+      >,
       onFail
     ),
     onReset: handleReset(resetToDefaultValues),
