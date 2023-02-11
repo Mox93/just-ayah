@@ -34,7 +34,7 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
   } = formProps;
 
   const { items, cloneItem, removeItem, moveItem } = useDynamicList({
-    items: watch("entries"),
+    items: watch("entries"), // useWatch does not work here
     onChange: (items) => resetField("entries", { defaultValue: items }),
   });
 
@@ -50,7 +50,7 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
             <SelectionMenu
               options={range(1, items.length + 1)}
               selected={index + 1}
-              className="action"
+              className="position"
               noArrow
               setValue={(to) => moveItem(index, to - 1)}
             />

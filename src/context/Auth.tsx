@@ -15,12 +15,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Location, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
+import LoadingPopup from "components/LoadingPopup";
+import { useGlobalT, useLanguage, useLocalStorage } from "hooks";
+import { Location } from "models";
 import { auth } from "services/firebase";
 import { pass } from "utils";
-import { useGlobalT, useLanguage, useLocalStorage } from "hooks";
-import LoadingPopup from "components/LoadingPopup";
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -62,10 +63,11 @@ interface AuthProviderProps {}
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const glb = useGlobalT();
+  // TODO move this into a reducer
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [claims, setClaims] = useState<Claims>({});
-  const { state } = useLocation();
+  const { state } = useLocation() as Location<LocationState | undefined>;
   const navigate = useNavigate();
   const [language] = useLanguage();
   auth.languageCode = language;
@@ -81,7 +83,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const signInSession = useLocalStorage<LocationState>("signInSession");
 
   const signIn = useCallback(() => {
-    if (state) signInSession.set(state as LocationState);
+    if (state) signInSession.set(state);
 
     signInWithRedirect(auth, googleAuthProvider).catch((error) =>
       console.log("signInWithRedirect.ERROR", error)
@@ -93,7 +95,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       if (!result) return;
 
       const { from } = signInSession.data ?? {};
-      signInSession.delete();
+      signInSession.clear();
 
       if (from) navigate(from);
     });

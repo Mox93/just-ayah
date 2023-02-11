@@ -1,100 +1,100 @@
+import { z } from "zod";
+
+import { dbConverter } from "utils";
+
 import {
-  DocumentData,
-  QueryDocumentSnapshot,
-  SnapshotOptions,
-  Timestamp,
-} from "firebase/firestore";
-import { get, set } from "react-hook-form";
+  DataModel,
+  ExternalUser,
+  externalUserSchema,
+  BaseModel,
+} from "./abstract";
+import {
+  booleanSchema,
+  commentListSchema,
+  commentMapSchema,
+  countrySchema,
+  genderSchema,
+  phoneNumberListSchema,
+  scheduleSchema,
+  simplePhoneNumberListSchema,
+  timezoneSchema,
+  trackableSchema,
+} from "./blocks";
+import { dateSchema } from "./_blocks";
 
-import { DBConverter, Merge } from ".";
-import { filterPhoneNumberList, Gender, PhoneNumberList } from "./blocks";
+const metaSchema = trackableSchema.merge(
+  z
+    .object({
+      schedule: scheduleSchema,
+      dailyHours: z.number().int(),
+      leads: z.string(),
+      termsOfService: z.string(),
+      notes: commentListSchema,
+      useTelegram: booleanSchema,
+      zoom: z
+        .object({ canUse: booleanSchema, needTutorial: booleanSchema })
+        .partial(),
+    })
+    .partial()
+);
 
-interface Meta {
-  dateCreated: Date;
-  dateUpdated?: Date;
+const metaDBSchema = metaSchema.extend({ notes: commentMapSchema.optional() });
+
+const teacherSchema = z.object({
+  firstName: z.string(),
+  middleName: z.string(),
+  lastName: z.string(),
+  gender: genderSchema,
+  governorate: z.string().optional(),
+  email: z.string().email().optional(),
+  facebook: z.string().url().optional(),
+  dateOfBirth: dateSchema,
+  nationality: countrySchema,
+  country: countrySchema,
+  nationalID: z.string().optional(),
+  timezone: z.optional(timezoneSchema),
+  phoneNumber: phoneNumberListSchema,
+  meta: metaSchema.default({}),
+});
+
+const teacherDBSchema = teacherSchema.merge(
+  z.object({
+    meta: metaDBSchema.default({}),
+    phoneNumber: simplePhoneNumberListSchema,
+  })
+);
+
+const teacherFormSchema = teacherSchema.extend({
+  phoneNumber: simplePhoneNumberListSchema,
+});
+
+export default class Teacher extends DataModel(teacherSchema) {
+  static DB = BaseModel(teacherDBSchema);
 }
 
-type MetaInDB = Merge<
-  Meta,
-  {
-    dateCreated: Timestamp;
-    dateUpdated?: Timestamp;
-  }
->;
+const teacherEnrollSchema = externalUserSchema.merge(teacherSchema.partial());
 
-export interface TeacherInfo {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  gender: Gender;
-  phoneNumber: PhoneNumberList;
-  email?: string;
-  nationalID?: string;
-  address?: string;
+const teacherEnrollDBSchema = externalUserSchema.merge(
+  teacherDBSchema.partial()
+);
+
+export class TeacherEnroll extends ExternalUser(
+  teacherEnrollSchema,
+  "teachers/new"
+) {
+  static DB = BaseModel(teacherEnrollDBSchema);
 }
 
-export interface Teacher extends TeacherInfo {
-  id: string;
-  meta: Meta;
-}
+export const teacherConverter = dbConverter(Teacher, teacherDBSchema);
+export const teacherEnrollConverter = dbConverter(
+  TeacherEnroll,
+  teacherEnrollDBSchema
+);
 
-export type TeacherInDB = Merge<Omit<Teacher, "id">, { meta: MetaInDB }>;
+export type TeacherDB = InstanceType<typeof Teacher.DB>;
+export type TeacherDBData = TeacherDB["data"];
 
-export const defaultMeta = (): Meta => {
-  const now = new Date();
-  return { dateCreated: now };
-};
+export type TeacherEnrollDB = InstanceType<typeof TeacherEnroll.DB>;
+export type TeacherEnrollDBData = TeacherEnrollDB["data"];
 
-export const teacherFromDB: DBConverter<TeacherInDB, Teacher> = (
-  id,
-  { meta, ...data }
-) => {
-  const now = new Date();
-
-  const { dateCreated, dateUpdated, ..._meta } = meta || {};
-
-  return {
-    ...data,
-    id,
-    ...(meta && {
-      meta: {
-        ..._meta,
-        dateCreated: dateCreated ? dateCreated.toDate() : now,
-        ...(dateUpdated && { dateUpdated: dateUpdated.toDate() }),
-      },
-    }),
-  } as any;
-};
-
-const teacherFromInfo = ({
-  phoneNumber,
-  email,
-  nationalID,
-  address,
-  ...data
-}: TeacherInfo) => {
-  const processedData: Omit<Teacher, "id"> = {
-    ...data,
-    phoneNumber: filterPhoneNumberList(phoneNumber),
-    meta: defaultMeta(),
-  };
-
-  const optionalData = { email, nationalID, address };
-
-  for (let key in optionalData) {
-    const value = get(optionalData, key);
-    if (value) set(processedData, key, value);
-  }
-
-  return processedData;
-};
-
-export const teacherConverter = {
-  toFirestore: (data: any) => teacherFromInfo(data),
-  fromFirestore: (
-    snapshot: QueryDocumentSnapshot<DocumentData>,
-    options: SnapshotOptions
-  ): Teacher => {
-    return teacherFromDB(snapshot.id, snapshot.data(options) as TeacherInDB);
-  },
-};
+export type TeacherFormData = z.infer<typeof teacherFormSchema>;

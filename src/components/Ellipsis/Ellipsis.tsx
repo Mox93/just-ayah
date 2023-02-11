@@ -1,27 +1,50 @@
-import { FC, HTMLAttributes, ReactNode } from "react";
+import { VFC, HTMLAttributes, ReactNode } from "react";
 
+import { useDirT } from "hooks";
 import { cn } from "utils";
 
-interface EllipsisProps extends HTMLAttributes<HTMLParagraphElement> {
-  component?: string | FC<any>;
+interface EllipsisProps extends HTMLAttributes<HTMLElement> {
+  Component?: string | VFC<HTMLAttributes<HTMLElement>>;
+  position?: "start" | "center" | "end";
+  children: string;
 }
 
-const Ellipsis: FC<EllipsisProps> = ({
+const Ellipsis: VFC<EllipsisProps> = ({
   children,
   className,
-  component: Component = "p",
+  Component = "p",
+  position,
+  dir,
   ...props
 }) => {
-  return typeof children === "string" ? (
-    <Component {...props} className={cn("Ellipsis", className)}>
-      {children}
+  const dirT = useDirT();
+
+  let parts: ReactNode = children;
+
+  if (position === "center") {
+    const part1 = children.slice(0, Math.ceil(children.length / 2 + 3));
+    const part2 = children.slice(part1.length, -1);
+    parts = (
+      <>
+        <span>{part1}</span>
+        <span>{". . ."}</span>
+        <span dir={dir || dirT}>{part2}</span>
+      </>
+    );
+  }
+
+  return (
+    <Component
+      {...props}
+      className={cn("Ellipsis", className, position)}
+      dir={dir || dirT}
+    >
+      {parts}
     </Component>
-  ) : (
-    <>{children}</>
   );
 };
 
 export default Ellipsis;
 
-export const ellipsis = (props?: EllipsisProps) => (value: ReactNode) =>
+export const ellipsis = (props?: EllipsisProps) => (value: string) =>
   <Ellipsis {...props}>{value}</Ellipsis>;

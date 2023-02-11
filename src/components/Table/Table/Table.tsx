@@ -5,6 +5,10 @@ import Container from "components/Container";
 import { cn, pass } from "utils";
 import { useDirT } from "hooks";
 
+interface DataWithId {
+  id: string;
+}
+
 export interface FieldProps<T> {
   name: string;
   header: ReactNode;
@@ -18,17 +22,16 @@ interface TableProps<T> {
   className?: string;
   dir?: string;
   fields: FieldProps<T>[];
-  data: (T & { id: string })[];
+  data: T[];
   selected?: Set<string>;
   footer?: ReactNode;
   noCheckbox?: boolean;
   flat?: boolean;
-  toggleSelect?: (checked: boolean, id: string) => void;
-  toggleSelectAll?: (checked: boolean) => void;
+  toggleSelect?: (checked: boolean, id?: string) => void;
   extraProps?: (data: T, index: number) => Record<string, any>;
 }
 
-const Table = <T,>({
+const Table = <T extends DataWithId>({
   className,
   dir,
   fields,
@@ -38,7 +41,6 @@ const Table = <T,>({
   noCheckbox,
   flat,
   toggleSelect,
-  toggleSelectAll,
   extraProps = pass({}),
 }: TableProps<T>) => {
   const dirT = useDirT();
@@ -54,7 +56,7 @@ const Table = <T,>({
                   type="checkbox"
                   name="selectAll"
                   id={"all"}
-                  onChange={(e) => toggleSelectAll?.(e.target.checked)}
+                  onChange={(e) => toggleSelect?.(e.target.checked)}
                   checked={data.length > 0 && selected?.size === data.length}
                 />
               </th>

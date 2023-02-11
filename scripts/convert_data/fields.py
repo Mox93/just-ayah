@@ -182,8 +182,8 @@ def parse_education(data):
 
 def parse_work_status(data):
     occupation = data["occupation"].strip()
-    reason = data["no work label"].strip().lower()
-    does_work = not reason
+    status = data["no work label"].strip().lower()
+    does_work = not status
 
     return {
         "workStatus": {
@@ -191,15 +191,17 @@ def parse_work_status(data):
             **(
                 {"job": occupation}
                 if does_work else {
-                    "reason": reason,
-                    **(
-                        {"explanation": occupation}
-                        if reason == "other" else {}
-                    )
+                    "status": {
+                        "value": status,
+                        **(
+                            {"other": occupation}
+                            if status == "other" else {}
+                        )
+                    }
                 }
             )
-        }
-    } if reason != "unknown" else {}
+        } if status != "unknown" else {"doesWork": False, "status": {"value": "other", "other": status}}
+    }
 
 
 def parse_quran(data):

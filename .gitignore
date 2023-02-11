@@ -29,3 +29,4 @@ firebase-debug.log
 # python
 .venv
 scripts/data
+scripts/**/__pycache__

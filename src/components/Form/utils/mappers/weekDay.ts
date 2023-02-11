@@ -1,5 +1,5 @@
 import { useDateTimeT } from "hooks";
-import { WeekDay, weekDays } from "models/blocks";
+import { WeekDay, weekDaySchema } from "models/_blocks";
 import { PathsOrConverters } from "utils/render";
 import { createModifier } from "utils/transformer";
 
@@ -16,7 +16,7 @@ const weekDayMapper = createModifier<{
   return {
     ...props,
     renderElement: short ? swdT : wdT,
-    options: weekDays,
+    options: weekDaySchema.options,
   };
 });
 

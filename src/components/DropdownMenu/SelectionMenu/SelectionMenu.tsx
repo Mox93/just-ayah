@@ -57,10 +57,10 @@ const SelectionMenu = <TOption,>(
       onClick: "toggle",
     });
 
-  const render = applyInOrder(
+  const render = applyInOrder([
     (element) => (keepFormat ? element : capitalize(element)),
-    renderElement
-  );
+    renderElement,
+  ]);
 
   const ButtonComponent = noArrow ? Button : DropdownButton;
 

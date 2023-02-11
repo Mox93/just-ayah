@@ -5,6 +5,7 @@ import LoadingPopup from "components/LoadingPopup";
 import { useGlobalT } from "hooks";
 import NotFound from "pages/NotFound";
 import { devOnly, omit } from "utils";
+import { Location } from "models";
 
 interface FetchGuardProps {
   fetcher?: Function;
@@ -24,12 +25,12 @@ const FetchGuard: VFC<FetchGuardProps> = ({
     "loading" | "success" | "failed" | "notFound"
   >("loading");
   const params = useParams();
-  const location = useLocation();
+  const location = useLocation() as Location<{} | undefined>;
 
   useEffect(() => {
     Promise.resolve(fetcher(params))
       .then((data: any) => {
-        if (data) location.state = data;
+        if (data) location.state = { ...location.state, data };
         setFetchState(data ? "success" : "notFound");
         devOnly(() => console.log("Fetch Succeeded", data))();
       })

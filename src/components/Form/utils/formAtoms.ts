@@ -1,16 +1,16 @@
 import { FieldValues } from "react-hook-form";
 import { FC, VFC } from "react";
 
+import { Country } from "models/blocks";
 import {
-  Country,
   fromDateInfo,
-  Timezone,
   toDateInfo,
   WeekDay,
-  weekDays,
-} from "models/blocks";
-import { StudentInfo } from "models/student";
-import { TeacherInfo } from "models/teacher";
+  weekDaySchema,
+} from "models/_blocks";
+import { Timezone } from "models/blocks";
+import { StudentFormData } from "models/student";
+import { TeacherFormData } from "models/teacher";
 import { transformer } from "utils/transformer";
 
 import {
@@ -47,18 +47,18 @@ import {
 const selectionInput = {
   Student: formChild(
     SelectionInput,
-    processProps<StudentInfo>(),
-    registerField<StudentInfo>()
+    processProps<StudentFormData>(),
+    registerField<StudentFormData>()
   ),
   Teacher: formChild(
     SelectionInput,
-    processProps<TeacherInfo>(),
-    registerField<TeacherInfo>()
+    processProps<TeacherFormData>(),
+    registerField<TeacherFormData>()
   ),
 };
 
 /**
- * TODO:
+// TODO:
  *  - Investigate the possibility of using overload to pass a namespace and get back the correct type
  */
 
@@ -130,7 +130,9 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
     WeekDayInput: formChild(
       MenuInput as VFC<MenuInputProps<WeekDay>>,
       processPropsMod,
-      menu<TFieldValues>({ extraProps: () => ({ options: weekDays }) }),
+      menu<TFieldValues>({
+        extraProps: () => ({ options: weekDaySchema.optional }),
+      }),
       weekDayMapper,
       registerFieldMod
     ),

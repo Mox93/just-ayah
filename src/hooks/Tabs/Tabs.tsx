@@ -1,10 +1,10 @@
-import { ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useState } from "react";
 
 import { applyInOrder, cn, FunctionOrChain, identity } from "utils";
 
 interface Tab {
   key: string;
-  body: () => ReactNode;
+  body: ReactElement;
 }
 
 export type Tabs = [Tab, ...Tab[]];
@@ -15,31 +15,29 @@ interface UseTabsProps {
   renderHeader?: FunctionOrChain<string, ReactNode>;
 }
 
-const useTabs = ({
+export default function useTabs({
   tabs,
   defaultTab,
   renderHeader = identity,
-}: UseTabsProps) => {
+}: UseTabsProps) {
   const [selectedTab, setSelectedTab] = useState(defaultTab || tabs[0].key);
 
   const render = applyInOrder(renderHeader);
 
   return [
     <div className="Tabs">
-      {tabs.map((tab) => (
+      {tabs.map(({ key }) => (
         <button
-          key={tab.key}
+          key={key}
           className={cn("tabButton", {
-            selected: tab.key === selectedTab,
+            selected: key === selectedTab,
           })}
-          onClick={() => setSelectedTab(tab.key)}
+          onClick={() => setSelectedTab(key)}
         >
-          {render(tab.key)}
+          {render(key)}
         </button>
       ))}
     </div>,
-    tabs.find((tab) => tab.key === selectedTab)?.body(),
+    tabs.find(({ key }) => key === selectedTab)?.body,
   ];
-};
-
-export default useTabs;
+}

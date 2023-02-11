@@ -1,26 +1,39 @@
-export type FunctionChain<TIn = any, TOut = any> = [
+import { identity } from "utils";
+
+export type FunctionChain<TIn, TOut> = [
   (value: TIn) => any,
   ...Function[],
   (value: any) => TOut
 ];
 
-export type FunctionOrChain<TIn = any, TOut = any> =
+export type FunctionOrChain<TIn, TOut> =
   | ((value: TIn) => TOut)
   | FunctionChain<TIn, TOut>;
 
-export const reduceChain =
-  <TIn, TOut>(chain: Function[]) =>
-  (value: TIn) =>
+function reduceChain<TIn, TOut>(chain: Function[]) {
+  return (value: TIn) =>
     chain.reduce((node, func) => func(node), value) as unknown as TOut;
+}
 
-export const applyInOrder = <TIn = any, TOut = any>(
-  ...funcOrChain: FunctionOrChain<TIn, TOut>[]
-) => {
-  const chain: Function[] = [];
+function applyInOrder<TIn, TOut>(
+  funcOrChain: FunctionOrChain<TIn, TOut>[] | FunctionOrChain<TIn, TOut>
+): (value: TIn) => TOut;
+function applyInOrder<TIn, TOut>(
+  funcOrChain: FunctionOrChain<TIn, TOut>[] | FunctionOrChain<TIn, TOut>,
+  args: TIn
+): TOut;
+function applyInOrder<TIn, TOut>(
+  funcOrChain: FunctionOrChain<TIn, TOut>[] | FunctionOrChain<TIn, TOut>,
+  value?: TIn
+) {
+  const chain: Function[] =
+    typeof funcOrChain === "function"
+      ? [funcOrChain]
+      : funcOrChain.flatMap(identity);
 
-  funcOrChain.forEach((foc) =>
-    typeof foc === "function" ? chain.push(foc) : chain.push(...foc)
-  );
+  const callback = reduceChain<TIn, TOut>(chain);
 
-  return reduceChain<TIn, TOut>(chain);
-};
+  return value === undefined ? callback : callback(value);
+}
+
+export { applyInOrder };

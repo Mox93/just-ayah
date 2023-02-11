@@ -1,7 +1,7 @@
 import { get } from "lodash";
 import { Primitive } from "type-fest";
 
-import { Path } from "models";
+import { Path, PathValue } from "models";
 
 export function identity(value: any) {
   return value;
@@ -30,8 +30,20 @@ function pass(funcOrValue: any, ...args: any[]) {
     typeof funcOrValue === "function" ? funcOrValue(...args) : funcOrValue;
 }
 
-export function pluck<T>(path: Path<T>) {
-  return (obj?: T) => get(obj, path);
+// FIXME type signature dons't work properly
+function pluck<T, S extends false = false>(
+  path: Path<T>,
+  strict?: S
+): (obj?: T) => PathValue<T, typeof path> | undefined;
+function pluck<T, S extends true>(
+  path: Path<T>,
+  strict: S
+): (obj: T) => PathValue<T, typeof path>;
+function pluck<T, S extends boolean = false>(path: Path<T>, strict?: S) {
+  return (obj?: T) => {
+    assert(obj || !strict);
+    return get(obj, path);
+  };
 }
 
 function envAction<T, A, Args extends [...A[]]>(
@@ -68,4 +80,4 @@ export function assert(
   }
 }
 
-export { pass, oneOf };
+export { oneOf, pass, pluck };

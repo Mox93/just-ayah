@@ -1,4 +1,4 @@
-import { StrictMode, Suspense } from "react";
+import { StrictMode, Suspense, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 
 import LoadingPopup from "components/LoadingPopup";
@@ -8,7 +8,7 @@ import {
   LeadProvider,
   MetaProvider,
   StudentProvider,
-  PopupProvider,
+  usePopupProvider,
   TeacherProvider,
   StudentEnrollProvider,
   TeacherEnrollProvider,
@@ -16,29 +16,54 @@ import {
 import "services/i18n";
 import "styles/index.scss";
 
-import Composer from "./Composer";
-import ViewHandler from "./ViewHandler";
+import Nest from "./Nest";
+import { RoutHandler } from "./routes";
+import { devOnly } from "utils";
+
+const now = new Date();
 
 function App() {
+  const [PopupProvider, popups] = usePopupProvider();
+
+  useEffect(() => {
+    devOnly(() =>
+      console.log(
+        ">>> PopupProvider changed",
+        new Date().getTime() - now.getTime()
+      )
+    );
+  }, [PopupProvider]);
+
+  useEffect(() => {
+    devOnly(() =>
+      console.log(">>> popups changed", new Date().getTime() - now.getTime())
+    );
+  }, [popups]);
+
+  devOnly(() =>
+    console.log(">>> App changed", new Date().getTime() - now.getTime())
+  );
+
   return (
-    <Composer
-      components={[
-        StrictMode,
-        BrowserRouter,
-        [Suspense, { fallback: <LoadingPopup message="loading" /> }],
-        AuthProvider,
-        MetaProvider,
-        TeacherProvider,
-        CourseProvider,
-        LeadProvider,
-        StudentProvider,
-        StudentEnrollProvider,
-        TeacherEnrollProvider,
-        PopupProvider,
-      ]}
-    >
-      <ViewHandler />
-    </Composer>
+    <Nest>
+      <StrictMode />
+      <PopupProvider />
+      <BrowserRouter />
+      <Suspense fallback={<LoadingPopup message="loading" />} />
+      {/* <Suspense fallback={<LoadingSpinner />} /> */}
+      <AuthProvider />
+      <MetaProvider />
+      <TeacherProvider />
+      <CourseProvider />
+      <LeadProvider />
+      <StudentProvider />
+      <StudentEnrollProvider />
+      <TeacherEnrollProvider />
+      <>
+        <RoutHandler />
+        {popups}
+      </>
+    </Nest>
   );
 }
 

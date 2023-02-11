@@ -13,13 +13,19 @@ import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.sv
 import { DropdownArrow } from "components/Icons";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown } from "hooks";
-import { GetKey, Merge } from "models";
-import { applyInOrder, cn, FunctionOrChain, identity } from "utils";
+import { GetKey, Merge, Path } from "models";
+import {
+  applyInOrder,
+  cn,
+  FunctionOrChain,
+  hasAtLeastOne,
+  identity,
+  oneOf,
+} from "utils";
 import { after, before } from "utils/position";
 import { substringMatch } from "utils/match";
 
 import Input, { InputProps } from "../Input";
-import { Path } from "react-hook-form";
 
 export type MenuInputProps<TOption> = Merge<
   InputProps,
@@ -38,7 +44,7 @@ interface MenuInputPropsInternal<TOption> extends MenuInputProps<TOption> {
 }
 
 /**
- * TODO:
+// TODO:
  *  - Implement filtering
  *  - Handle reset selection
  */
@@ -67,20 +73,22 @@ const MenuInput = <TOption,>(
       onClick: "toggle",
     });
 
-  const isSelected = !["", null, undefined].includes(selected as any);
+  const isSelected = !oneOf(selected, ["", null, undefined]);
 
-  const applyFilter: ChangeEventHandler<HTMLInputElement> | undefined = useMemo(
+  const applyFilter = useMemo<ChangeEventHandler<HTMLInputElement> | undefined>(
     () =>
-      searchFields &&
-      ((e) => {
-        const results = substringMatch(options, {
-          filter: ["take", searchFields],
-        })(e.target.value);
+      hasAtLeastOne(searchFields)
+        ? (e) => {
+            const results = substringMatch(options, {
+              filter: { type: "pick", fields: searchFields },
+            })(e.target.value);
 
-        setOptionList(() =>
-          results?.length ? results.map(({ value }) => value) : options
-        );
-      }),
+            setOptionList(
+              results?.length ? results.map(({ value }) => value) : options
+            );
+          }
+        : undefined,
+
     [searchFields, options]
   );
 
@@ -101,7 +109,7 @@ const MenuInput = <TOption,>(
         ? before(
             "input",
             <div className="selected">
-              {applyInOrder(renderElement)(selected!)}
+              {applyInOrder(renderElement, selected!)}
             </div>
           )
         : null}

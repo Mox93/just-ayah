@@ -1,37 +1,36 @@
 import { VFC } from "react";
 
-import Container from "components/Container";
+import { ErrorMessage, ReachOutMessage } from "components/FlashMessages";
 import { FormLayout } from "components/Layouts";
-import { usePopupContext } from "context";
+import { useLeadContext, usePopupContext } from "context";
 import { usePageT } from "hooks";
+import Lead, { LeadFormData } from "models/lead";
 
 import LeadForm from "../LeadForm";
 
 interface NewLeadProps {}
 
 const NewLead: VFC<NewLeadProps> = () => {
-  const cst = usePageT("lead");
+  const ldt = usePageT("lead");
+
   const { openModal } = usePopupContext();
+  const { addLead } = useLeadContext();
 
   return (
-    <FormLayout name="NewLead" title={cst("formTitle")}>
-      <Container
-        variant="form"
-        header={<h2 className="title">{cst("formTitle")}</h2>}
-      >
-        <LeadForm
-          onfulfilled={() =>
-            openModal(
-              <>
-                <h1>Thank you for signing up</h1>
-                <p>We will contact you soon</p>
-                <a href="/">go back to the home page</a>
-                <a href="/join">fill in a new form</a>
-              </>
-            )
-          }
-        />
-      </Container>
+    <FormLayout name="NewLead" title={ldt("formTitle")}>
+      <LeadForm
+        onSubmit={(data: LeadFormData) =>
+          addLead(new Lead.DB(data), {
+            onFulfilled: () =>
+              openModal(<ReachOutMessage />, { center: true, closable: true }),
+            onRejected: () =>
+              openModal(<ErrorMessage />, {
+                center: true,
+                closable: true,
+              }),
+          })
+        }
+      />
     </FormLayout>
   );
 };

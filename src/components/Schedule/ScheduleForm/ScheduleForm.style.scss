@@ -10,5 +10,11 @@
       flex-grow: 0;
       align-self: flex-end;
     }
+
+    & > .position {
+      flex-grow: 0;
+      align-self: flex-end;
+      min-width: 2.5rem;
+    }
   }
 }

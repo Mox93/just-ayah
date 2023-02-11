@@ -1,26 +1,22 @@
 import { VFC } from "react";
+import { SubmitHandler } from "react-hook-form";
 
 import { formAtoms } from "components/Form";
-import { useLeadContext } from "context";
 import { usePersonalInfoT, useSmartForm } from "hooks";
-import { LeadInfo } from "models/lead";
+import { LeadFormData } from "models/lead";
 
 const { Form, Input, Textarea, InputGroup, PhoneNumberInput } =
-  formAtoms<LeadInfo>();
+  formAtoms<LeadFormData>();
 
 interface LeadFormProps {
-  onfulfilled?: (response: any) => void;
-  onrejected?: (response: any) => void;
+  onSubmit: SubmitHandler<LeadFormData>;
 }
 
-const LeadForm: VFC<LeadFormProps> = ({ onfulfilled, onrejected }) => {
+const LeadForm: VFC<LeadFormProps> = ({ onSubmit }) => {
   const pi = usePersonalInfoT();
 
-  const { add } = useLeadContext();
-
   const formProps = useSmartForm({
-    onSubmit: (data: LeadInfo) =>
-      add(data, { onFulfilled: onfulfilled, onRejected: onrejected }),
+    onSubmit,
     resetOnSubmit: true,
   });
 

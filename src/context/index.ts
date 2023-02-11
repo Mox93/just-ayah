@@ -4,5 +4,4 @@ export * from "./Meta";
 export * from "./Lead";
 export * from "./Popup";
 export * from "./Student";
-export * from "./Enroll";
 export * from "./Teacher";

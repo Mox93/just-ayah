@@ -8,7 +8,8 @@ import {
   useContext,
   useReducer,
 } from "react";
-import { omit } from "utils";
+
+import { assert, mergeCallbacks, pass } from "utils";
 
 import Modal, { ModalProps } from "./Modal";
 import Network from "./Network";
@@ -20,6 +21,7 @@ type OpenModal = (
     closable?: boolean;
     dismissible?: boolean;
     center?: boolean;
+    dir?: string;
   }
 ) => void;
 
@@ -28,6 +30,7 @@ type OpenToast = (
   options?: {
     variant?: ToastVariant;
     duration?: number;
+    dir?: string;
   }
 ) => void;
 
@@ -38,17 +41,10 @@ interface PopupContext {
   closeToast: VoidFunction;
 }
 
-const popupContext = createContext<PopupContext>({
-  openModal: omit,
-  closeModal: omit,
-  openToast: omit,
-  closeToast: omit,
-});
+const popupContext = createContext<PopupContext | null>(null);
 
-interface PopupProviderProps {}
-
-export const PopupProvider: FC<PopupProviderProps> = ({ children }) => {
-  const [{ modal: popup, toast }, dispatch] = useReducer(reduce, {
+export function usePopupProvider(): [FC, ReactElement] {
+  const [{ modal, toast }, dispatch] = useReducer(reduce, {
     modal: { isOpen: false },
     toast: { isOpen: false },
   });
@@ -65,42 +61,55 @@ export const PopupProvider: FC<PopupProviderProps> = ({ children }) => {
           ...(closable && { close: closeModal }),
         },
       }),
-    [closeModal]
+    []
   );
 
   const closeToast = useCallback(() => dispatch({ type: "closeToast" }), []);
 
   const openToast = useCallback<OpenToast>(
     (message, { duration = 7e3, ...props } = {}) => {
+      const timeoutId = setTimeout(closeToast, duration);
+
       dispatch({
         type: "openToast",
         payload: {
           ...props,
           message,
-          close: closeToast,
+          close: mergeCallbacks(closeToast, pass(clearTimeout, timeoutId)),
         },
       });
-
-      setTimeout(closeToast, duration);
     },
-    [closeToast]
+    []
   );
 
-  return (
-    <popupContext.Provider
-      value={{ openModal, closeModal, openToast, closeToast }}
-    >
-      {children}
-      {popup.isOpen && <Modal {...popup.props} />}
+  return [
+    useCallback(
+      ({ children }) => (
+        <popupContext.Provider
+          value={{ openModal, closeModal, openToast, closeToast }}
+        >
+          {children}
+        </popupContext.Provider>
+      ),
+      []
+    ),
+    <>
+      {modal.isOpen && <Modal {...modal.props} />}
       {toast.isOpen && <Toast {...toast.props} />}
       <Network />
-    </popupContext.Provider>
-  );
+    </>,
+  ];
+}
+
+export const usePopupContext = () => {
+  const context = useContext(popupContext);
+  assert(context !== null);
+  return context;
 };
 
-export const usePopupContext = () => useContext(popupContext);
-
-type PropsOrNot<TProps> = { props: TProps; isOpen: true } | { isOpen: false };
+type PropsOrNot<TProps> =
+  | { isOpen: true; props: TProps }
+  | { isOpen: false; props?: never };
 
 type State = {
   modal: PropsOrNot<ModalProps>;

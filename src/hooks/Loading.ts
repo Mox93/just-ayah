@@ -4,7 +4,7 @@ interface Action<T> {
   (stopLoading: VoidFunction): T;
 }
 
-function useLoading<T>(action: Action<T>) {
+export default function useLoading<T>(action: Action<T>) {
   const [isLoading, setIsLoading] = useState(false);
 
   return [
@@ -15,5 +15,3 @@ function useLoading<T>(action: Action<T>) {
     isLoading,
   ] as const;
 }
-
-export default useLoading;

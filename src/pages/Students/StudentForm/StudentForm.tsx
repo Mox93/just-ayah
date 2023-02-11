@@ -1,15 +1,18 @@
 import { VFC } from "react";
+import { SubmitHandler } from "react-hook-form";
+import { PartialDeep } from "type-fest";
 
 import { formAtoms } from "components/Form";
 import { useGlobalT, usePersonalInfoT, useSmartForm } from "hooks";
+import { OTHER } from "models";
 import {
   booleanSelectorProps,
-  genders,
+  genderSchema,
   noWorkReasons,
-  toBoolean,
-  WorkStatusInfo,
 } from "models/blocks";
-import { Student, StudentInfo, toStudentInfo } from "models/student";
+import { StudentFormData } from "models/student";
+
+import { useWorkStatus } from "./StudentForm.utils";
 
 const {
   CountrySelectorInput,
@@ -22,51 +25,48 @@ const {
   SelectionInput: { Student: SelectionInput },
   TermsOfService,
   TimezoneSelectorInput,
-} = formAtoms<StudentInfo>();
+} = formAtoms<StudentFormData>();
 
 interface StudentFormProps {
   formId?: string;
-  defaultValues?: Partial<Student>;
-  onSubmit: (data: StudentInfo) => void;
+  termsUrl?: string;
+  defaultValues?: PartialDeep<StudentFormData>;
+  onSubmit: SubmitHandler<StudentFormData>;
 }
 
 const StudentForm: VFC<StudentFormProps> = ({
   formId,
   defaultValues,
+  termsUrl,
   onSubmit,
 }) => {
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
 
-  const formProps = useSmartForm<StudentInfo>({
+  const {
+    formHook,
+    formHook: { control },
+    ...formProps
+  } = useSmartForm<StudentFormData>({
     onSubmit,
-    ...(defaultValues && { defaultValues: toStudentInfo(defaultValues) }),
+    ...(defaultValues && { defaultValues }),
     storage: {
       key: "studentForm" + (formId ? `/${formId}` : ""),
-      filter: { type: "exclude", fields: ["termsOfService"] },
+      filter: { type: "omit", fields: ["meta.termsOfService"] },
     },
     resetOnSubmit: true,
   });
 
-  const {
-    formHook: { watch },
-  } = formProps;
-
-  const value = watch("workStatus");
-  const workStatus: WorkStatusInfo | undefined = value && {
-    ...value,
-    doesWork: toBoolean(value.doesWork),
-  };
-
-  const now = new Date();
-
+  const workStatus = useWorkStatus(control);
   const yesNoProps = booleanSelectorProps(glb, "yes", "no");
+  const now = new Date();
 
   return (
     <Form
       className="StudentForm"
       submitProps={{ children: glb("joinInitiative") }}
       resetProps={{}}
+      formHook={formHook}
       {...formProps}
     >
       <InputGroup>
@@ -102,7 +102,7 @@ const StudentForm: VFC<StudentFormProps> = ({
           name="gender"
           type="radio"
           label={pi("gender")}
-          options={[...genders]}
+          options={genderSchema.options}
           renderElement={pi}
           rules={{ required: "noGender" }}
         />
@@ -128,7 +128,7 @@ const StudentForm: VFC<StudentFormProps> = ({
       <InputGroup>
         <GovernorateSelectorInput
           name="governorate"
-          countryField={"country"}
+          countryField="country"
           label={pi("governorate")}
           rules={{ required: "noGovernorate" }}
         />
@@ -172,7 +172,7 @@ const StudentForm: VFC<StudentFormProps> = ({
           {...yesNoProps}
         />
 
-        {workStatus?.doesWork === true ? (
+        {workStatus?.doesWork ? (
           <Input
             name="workStatus.job"
             label={pi("occupation")}
@@ -180,9 +180,9 @@ const StudentForm: VFC<StudentFormProps> = ({
           />
         ) : workStatus?.doesWork === false ? (
           <SelectionInput
-            name="workStatus.reason"
+            name="workStatus.status.value"
             type="radio"
-            options={[...noWorkReasons]}
+            options={noWorkReasons}
             renderElement={pi}
             label={pi("noWorkReason")}
             rules={{ required: "noWorkStatus", shouldUnregister: true }}
@@ -190,31 +190,30 @@ const StudentForm: VFC<StudentFormProps> = ({
         ) : null}
       </InputGroup>
 
-      {workStatus?.reason === "other" && (
-        <Input
-          name="workStatus.explanation"
-          label={pi("noWorkDetails")}
-          rules={{ required: "noWorkStatus", shouldUnregister: true }}
-        />
-      )}
+      {workStatus?.doesWork === false &&
+        workStatus?.status?.value === OTHER && (
+          <Input
+            name="workStatus.status.other"
+            label={pi("noWorkDetails")}
+            rules={{ required: "noWorkStatus", shouldUnregister: true }}
+          />
+        )}
 
       <SelectionInput
-        name="Quran"
+        name="meta.quran"
         label={pi("quran")}
         rules={{ required: "noAnswer" }}
         {...yesNoProps}
       />
 
       <SelectionInput
-        name="Zoom"
+        name="meta.zoom.canUse"
         label={pi("zoom")}
         rules={{ required: "noAnswer" }}
         {...yesNoProps}
       />
-      <TermsOfService
-        name="termsOfService"
-        url="https://drive.google.com/file/d/1uXAUeNnZAVRCSq8u7Xv1lZXBX-fmLR-k/preview"
-      />
+
+      {termsUrl && <TermsOfService name="meta.termsOfService" url={termsUrl} />}
     </Form>
   );
 };

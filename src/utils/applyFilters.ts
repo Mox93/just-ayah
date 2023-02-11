@@ -13,7 +13,7 @@ type ValidationFilter<T> = {
 
 export type Filter<T> =
   | {
-      type: "pick" | "exclude";
+      type: "pick" | "omit";
       fields: [Path<T>, ...Path<T>[]];
       validations?: ValidationFilter<T>;
     }
@@ -39,7 +39,7 @@ export const applyFilters = <T>(
   } else {
     result = cloneDeep(obj) as GenericObject;
 
-    if (type === "exclude") {
+    if (type === "omit") {
       fields!.forEach((path) => unset(result, path));
     }
   }

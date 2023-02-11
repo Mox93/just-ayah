@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { Converter } from "models";
 import { identity } from "utils";
 
-import { fromTimeInfo, to12H, weekDaySchema } from "./dateTime";
+import { Converter } from "../types";
+import { fromTimeInfo, to12H, weekDaySchema } from "../_blocks/dateTime";
 
 export const scheduleSchema = z
   .object({

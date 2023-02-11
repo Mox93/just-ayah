@@ -1,14 +1,13 @@
 import { cloneDeep, uniqueId } from "lodash";
-import { Reducer, useEffect, useMemo, useReducer } from "react";
-import { oneOf } from "utils";
+import { Reducer, useEffect, useReducer } from "react";
 
 type Items<T> = { id: string; item: T | undefined }[];
 
-interface OnChange<TItem> {
+interface Dependencies<TItem> {
   onChange?: (items: TItem[]) => void;
 }
 
-interface UseDynamicListProps<TItem> extends OnChange<TItem> {
+interface UseDynamicListProps<TItem> extends Dependencies<TItem> {
   items?: TItem[];
 }
 
@@ -16,33 +15,28 @@ interface State<TItem> {
   items: Items<TItem>;
 }
 
-interface P1 {
-  index: number;
-}
-
-interface P2<TIrem> extends P1 {
-  data?: TIrem;
-}
-
-interface P3 {
-  from: number;
-  to: number;
-}
-
-type Action<TItem> =
-  | (
-      | {
-          type: "remove" | "clone";
-          payload: P1;
-        }
-      | { type: "add"; payload: P2<TItem> }
-      | {
-          type: "move" | "swap";
-          payload: P3;
-        }
-      | { type: "update"; payload?: TItem[] }
-    ) &
-      OnChange<TItem>;
+type Action<TItem> = (
+  | {
+      type: "remove" | "clone";
+      payload: { index: number };
+    }
+  | {
+      type: "add";
+      payload: {
+        index: number;
+        data?: TItem;
+      };
+    }
+  | {
+      type: "move" | "swap";
+      payload: {
+        from: number;
+        to: number;
+      };
+    }
+  | { type: "update"; payload?: TItem[] }
+) &
+  Dependencies<TItem>;
 
 const emptyItems = () => [{ id: uniqueId(), item: undefined }];
 
@@ -56,45 +50,66 @@ const itemsInit = <TItem>(items?: TItem[]): State<TItem> => ({
 
 const reduce = <TItem>(
   { items }: State<TItem>,
-  { type, payload, onChange }: Action<TItem>
+  { onChange, ...action }: Action<TItem>
 ): State<TItem> => {
   const newItems = [...items];
-  const index = oneOf(type, ["add", "clone"]) ? (payload as P1).index : -1;
-  const next = index + 1;
 
-  switch (type) {
-    case "add":
-      const { data } = payload as P2<TItem>;
+  switch (action.type) {
+    case "update": {
+      const { payload } = action;
+
+      return itemsInit(payload);
+    }
+
+    case "add": {
+      const index = action.payload.index;
+      const next = index + 1;
+      const {
+        payload: { data },
+      } = action;
+
       newItems.splice(next, 0, { id: uniqueId(), item: data });
       break;
+    }
 
-    case "clone":
+    case "clone": {
+      const index = action.payload.index;
+      const next = index + 1;
+
       newItems.splice(next, 0, {
         id: uniqueId(),
         item: cloneDeep(newItems[index].item),
       });
       break;
+    }
 
-    case "remove":
+    case "remove": {
+      const index = action.payload.index;
       newItems.splice(index, 1);
       break;
+    }
 
-    case "move":
-      const { from, to } = payload as P3;
+    case "move": {
+      const {
+        payload: { from, to },
+      } = action;
       const [target] = newItems.splice(from, 1);
+
       newItems.splice(to, 0, target);
       break;
+    }
 
-    case "swap":
-      const { from: idx1, to: idx2 } = payload as P3;
-      const item1 = newItems[idx1];
-      const item2 = newItems[idx2];
-      newItems[idx1] = item2;
-      newItems[idx2] = item1;
+    case "swap": {
+      const {
+        payload: { from, to },
+      } = action;
+      const item1 = newItems[from];
+      const item2 = newItems[to];
+
+      newItems[from] = item2;
+      newItems[to] = item1;
       break;
-
-    case "update":
-      return itemsInit(payload as TItem[]);
+    }
   }
 
   if (newItems.length === 0) {
@@ -116,10 +131,10 @@ const reduce = <TItem>(
   return { items: newItems };
 };
 
-const useDynamicList = <TItem>({
+export default function useDynamicList<TItem>({
   items,
   onChange,
-}: UseDynamicListProps<TItem> = {}) => {
+}: UseDynamicListProps<TItem> = {}) {
   const [{ items: newItems }, dispatch] = useReducer<
     Reducer<State<TItem>, Action<TItem>>,
     TItem[] | undefined
@@ -129,28 +144,22 @@ const useDynamicList = <TItem>({
     dispatch({ type: "update", payload: items });
   }, [items]);
 
-  const actions = useMemo(
-    () => ({
-      addItem: (index: number, data?: TItem) => {
-        dispatch({ type: "add", payload: { index, data }, onChange });
-      },
-      cloneItem: (index: number) => {
-        dispatch({ type: "clone", payload: { index }, onChange });
-      },
-      removeItem: (index: number) => {
-        dispatch({ type: "remove", payload: { index }, onChange });
-      },
-      moveItem: (from: number, to: number) => {
-        dispatch({ type: "move", payload: { from, to }, onChange });
-      },
-      swapItem: (from: number, to: number) => {
-        dispatch({ type: "swap", payload: { from, to }, onChange });
-      },
-    }),
-    [onChange]
-  );
-
-  return { items: newItems, ...actions };
-};
-
-export default useDynamicList;
+  return {
+    items: newItems,
+    addItem: (index: number, data?: TItem) => {
+      dispatch({ type: "add", payload: { index, data }, onChange });
+    },
+    cloneItem: (index: number) => {
+      dispatch({ type: "clone", payload: { index }, onChange });
+    },
+    removeItem: (index: number) => {
+      dispatch({ type: "remove", payload: { index }, onChange });
+    },
+    moveItem: (from: number, to: number) => {
+      dispatch({ type: "move", payload: { from, to }, onChange });
+    },
+    swapItem: (from: number, to: number) => {
+      dispatch({ type: "swap", payload: { from, to }, onChange });
+    },
+  };
+}

@@ -1,7 +1,7 @@
 import { VFC } from "react";
 
 import { useCountdown, useGlobalT } from "hooks";
-import { TimeDelta, timeDeltaUnits, TimeDeltaUnits } from "models/blocks";
+import { TimeDelta, timeDeltaUnits, TimeDeltaUnits } from "models/_blocks";
 import { addZeros } from "utils";
 
 interface CountdownProps {

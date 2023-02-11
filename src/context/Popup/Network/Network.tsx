@@ -12,7 +12,7 @@ const Network: VFC<NetworkProps> = () => {
   const msg = useMessageT();
   const dirT = useDirT();
   const [isVisible, setIsVisible] = useState(!isOnline);
-  const timeout = useRef<NodeJS.Timeout | null>(null);
+  const timeout = useRef<NodeJS.Timeout | undefined>();
 
   useEffect(() => {
     if (isOnline) {
@@ -20,7 +20,7 @@ const Network: VFC<NetworkProps> = () => {
     } else {
       if (timeout.current) {
         clearTimeout(timeout.current);
-        timeout.current = null;
+        timeout.current = undefined;
         setIsVisible(true);
       }
     }

@@ -16,14 +16,14 @@ import {
   booleanSelectorProps,
   CountryCode,
   countrySelectorProps,
-  fromDateInfo,
-  PhoneNumberInfo,
+  SimplePhoneNumber,
 } from "models/blocks";
+import { fromDateInfo } from "models/_blocks";
 
 interface TestData {
   name: string;
   country: CountryCode;
-  phoneNumber: PhoneNumberInfo[];
+  phoneNumber: SimplePhoneNumber[];
   oneChoice: string;
   multipleChoices: string[];
   canDoThis: boolean;

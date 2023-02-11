@@ -1,41 +1,39 @@
 import { z } from "zod";
 
-import { Converter } from "models";
-import { identity, oneOf } from "utils";
+import { identity, pass } from "utils";
 
-const trueLike = z.enum(["true", "yes", "t", "y"]);
-const falseLike = z.enum(["false", "no", "f", "n"]);
-export const booleanSchema = z
-  .union([trueLike, falseLike, z.boolean()])
-  .transform((value) =>
-    oneOf(value, trueLike.options)
-      ? true
-      : oneOf(value, falseLike.options)
-      ? false
-      : value
-  );
+import { Converter } from "../types";
 
-export type TrueLike = z.infer<typeof trueLike>;
-export type FalseLike = z.infer<typeof falseLike>;
+export const trueLike = z
+  .enum(["true", "yes", "t", "y"])
+  .transform(pass(true as const));
+export const falseLike = z
+  .enum(["false", "no", "f", "n"])
+  .transform(pass(false as const));
+
+export const booleanSchema = z.union([trueLike, falseLike, z.boolean()]);
+
+export type TrueLike = z.input<typeof trueLike>;
+export type FalseLike = z.input<typeof falseLike>;
 export type BooleanType = z.input<typeof booleanSchema>;
 
 function booleanString(
-  value: BooleanType,
+  value: boolean,
   trueValue?: TrueLike,
   falseValue?: FalseLike
 ): TrueLike | FalseLike;
-function booleanString(value: BooleanType): `${boolean}`;
+function booleanString(value: boolean): `${boolean}`;
 function booleanString(
-  value: BooleanType,
+  value: boolean,
   trueValue?: string,
   falseValue?: string
 ): string;
 function booleanString(
-  value: BooleanType,
+  value: boolean,
   trueValue: any = "true",
   falseValue: any = "false"
 ) {
-  return booleanSchema.parse(value) ? trueValue : falseValue;
+  return value ? trueValue : falseValue;
 }
 
 export function booleanSelectorProps(
@@ -47,7 +45,7 @@ export function booleanSelectorProps(
     type: "radio" as const,
     options: [true, false],
     renderElement: (value: BooleanType) =>
-      t(booleanString(value, trueValue, falseValue)),
+      t(booleanString(booleanSchema.parse(value), trueValue, falseValue)),
   };
 }
 

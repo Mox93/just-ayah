@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { getTimeDelta, tdToMs, TimeDelta, TimeDeltaUnits } from "models/blocks";
+import {
+  getTimeDelta,
+  tdToMs,
+  TimeDelta,
+  TimeDeltaUnits,
+} from "models/_blocks";
 
 type CountdownState = [TimeDelta, boolean];
 

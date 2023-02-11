@@ -1,12 +1,15 @@
 import type {
   FieldPath,
+  FieldValue,
   OrderByDirection,
+  UpdateData,
   WhereFilterOp,
 } from "firebase/firestore";
 import { Ref } from "react";
 import { PartialDeep } from "type-fest";
 
 import { Comment } from "../blocks";
+import { DeepUnion } from "./deepUnion";
 import { Path, PathValue } from "./path";
 
 /******************************\
@@ -14,18 +17,23 @@ import { Path, PathValue } from "./path";
 \******************************/
 
 export const UNKNOWN = "unknown";
+export const OTHER = "other";
 
 export type GenericObject = Record<PropertyKey, any>;
+
+export interface BaseModel<T extends GenericObject = GenericObject> {
+  data: T;
+}
+
+export interface DataModel<T extends GenericObject = GenericObject>
+  extends BaseModel<T> {
+  id: string;
+  update(updates: UpdateObject<T>): this;
+}
 
 /***************************\
 |****** UTILITY TYPES ******|
 \***************************/
-
-export type FactoryInstance<T extends (...args: any[]) => any> = InstanceType<
-  ReturnType<T>
->;
-
-export type Merge<Obj1, Obj2> = Omit<Obj1, keyof Obj2> & Obj2;
 
 export type SubsetOf<T> = T | Partial<T> | PartialDeep<T>;
 
@@ -33,13 +41,24 @@ export type InnerProps<TProps, TElement = any> = Partial<TProps> & {
   ref?: Ref<TElement>;
 };
 
-export type UpdateObject<TData, TPath extends Path<TData> = Path<TData>> = {
-  [path in TPath]+?: PathValue<TData, TPath>;
-};
+// FIXME returns unknown as value in nested objects
+export type UpdateObject<TData> = { [K in Path<TData>]+?: PathValue<TData, K> };
+
+export type UpdateDBObject<TData> = DeepUnion<
+  UpdateObject<TData>,
+  { [K in Path<TData>]+?: FieldValue }
+>;
 
 /**********************************\
 |****** SERVER REQUEST TYPES ******|
 \**********************************/
+
+interface RequestCallback {
+  onFulfilled?: (...args: any[]) => void;
+  onRejected?: (...args: any[]) => void;
+  onFailed?: (...args: any[]) => void;
+  onCompleted?: () => void;
+}
 
 export interface FetchDataOptions<
   TData,
@@ -48,13 +67,6 @@ export interface FetchDataOptions<
   filters?: [TPath, WhereFilterOp, PathValue<TData, TPath>][];
   size?: number;
   sort?: { by: TPath | FieldPath; direction?: OrderByDirection };
-}
-
-interface RequestCallback {
-  onFulfilled?: (...args: any[]) => void;
-  onRejected?: (...args: any[]) => void;
-  onFailed?: (...args: any[]) => void;
-  onCompleted?: () => void;
 }
 
 interface LocalAction {
@@ -66,30 +78,36 @@ interface CachingAction {
   cache?: boolean;
 }
 
-export type AddData<TBase = unknown> = <TData extends TBase>(
+export type AddDataFunc<TBase = unknown> = <TData extends TBase>(
   data: TData,
   options?: RequestCallback & LocalAction
 ) => void;
 
-export type FetchData<TData> = (options?: FetchDataOptions<TData>) => void;
-
-export type UpdateData<TData> = (
+export type SetDataFunc<TData> = (
   id: string,
-  updates: UpdateObject<TData>,
+  data: TData,
   options?: RequestCallback & LocalAction
 ) => void;
 
-export type GetData<TData> = (
+export type FetchDataFunc<TData> = (options?: FetchDataOptions<TData>) => void;
+
+export type UpdateDataFunc<TData> = (
+  id: string,
+  updates: UpdateData<TData>,
+  options?: RequestCallback & LocalAction
+) => void;
+
+export type GetDataFunc<TData> = (
   id: string,
   options?: CachingAction
 ) => Promise<TData | undefined>;
 
-export type DeleteData = (
+export type DeleteDataFunc = (
   id: string,
   options?: RequestCallback & LocalAction
 ) => void;
 
-export type AddComment = (id: string, comment: Comment) => void;
+export type AddCommentFunc = (id: string, comment: Comment) => void;
 
 /*********************************\
 |****** FUNCTION DEFINITION ******|

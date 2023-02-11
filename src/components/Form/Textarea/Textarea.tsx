@@ -1,5 +1,4 @@
 import autoSize from "autosize";
-import { uniqueId } from "lodash";
 import {
   forwardRef,
   ReactNode,
@@ -9,7 +8,7 @@ import {
   useRef,
 } from "react";
 
-import { useDirT } from "hooks";
+import { useDirT, useUniqueId } from "hooks";
 import { cn, mergeRefs } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
 
@@ -52,7 +51,7 @@ const Textarea = (
 ) => {
   const dirT = useDirT();
   const innerRef = useRef(null);
-  id = id || uniqueId(name ? `${name}-` : "textarea-");
+  const _id = useUniqueId(name || "textarea");
 
   useEffect(() => {
     innerRef.current && autoSize(innerRef.current);
@@ -60,7 +59,10 @@ const Textarea = (
 
   return (
     <div className={cn("Textarea", className)} dir={dir || dirT}>
-      <FieldHeader htmlFor={id} {...{ label, required, isRequired, isInvalid }}>
+      <FieldHeader
+        htmlFor={id || _id}
+        {...{ label, required, isRequired, isInvalid }}
+      >
         {children}
       </FieldHeader>
 
@@ -73,8 +75,8 @@ const Textarea = (
       >
         {before("textarea", children)}
         <textarea
-          {...props}
-          {...{ name, required, id }}
+          {...{ ...props, name, required }}
+          id={id || _id}
           ref={mergeRefs(ref, innerRef)}
           dir="auto"
           placeholder={placeholder || label || " "}

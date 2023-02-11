@@ -51,4 +51,4 @@ export type Path<T> = T extends infer O
  * PathValue<[number, string], '1'> = string
  * ```
  */
-export declare type PathValue<T, P extends Path<T>> = Get<T, P>;
+export type PathValue<T, P extends Path<T>> = Get<T, P>;

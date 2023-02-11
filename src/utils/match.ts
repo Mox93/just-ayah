@@ -1,6 +1,6 @@
 import { get, isEmpty } from "lodash";
 
-import { Path, SubsetOf } from "models";
+import { Path } from "models";
 
 import { applyFilters, Filter, identity, nestedPaths } from ".";
 

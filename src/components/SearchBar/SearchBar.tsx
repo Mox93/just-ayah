@@ -1,4 +1,3 @@
-import { identity } from "lodash";
 import { ChangeEventHandler, useCallback, useMemo, useState } from "react";
 
 import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.svg";
@@ -7,7 +6,7 @@ import Highlight from "components/Highlight";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown, useGlobalT, useSmartForm } from "hooks";
 import { Converter, GetKey } from "models";
-import { pass } from "utils";
+import { identity, pass } from "utils";
 import { before } from "utils/position";
 import { renderAttributes } from "utils/render";
 

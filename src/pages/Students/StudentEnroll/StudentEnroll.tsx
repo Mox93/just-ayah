@@ -1,54 +1,44 @@
-import { deleteField } from "firebase/firestore";
-import { VFC, useCallback } from "react";
+import { VFC } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { PartialDeep } from "type-fest";
 
-import Container from "components/Container";
 import { EnrolledMessage, ErrorMessage } from "components/FlashMessages";
 import { FormLayout } from "components/Layouts";
-import { usePopupContext, useStudentContext } from "context";
+import { usePopupContext, useStudentEnrollContext } from "context";
 import { usePageT } from "hooks";
-import { studentFromInfo, StudentInfo } from "models/student";
+import { Location } from "models";
+import Student, { StudentFormData } from "models/student";
 
 import StudentForm from "../StudentForm";
 
 const StudentEnroll: VFC = () => {
   const stu = usePageT("student");
+
   const { openModal } = usePopupContext();
+  const { submitEnroll } = useStudentEnrollContext();
+
   const { id } = useParams();
-  const { state } = useLocation();
-
-  const { updateStudent } = useStudentContext();
-  const onSubmit = useCallback(
-    (data: StudentInfo) => {
-      updateStudent(
-        id!,
-        {
-          ...studentFromInfo(data),
-          ...{ enroll: deleteField() },
-        },
-        {
-          onFulfilled: () => openModal(<EnrolledMessage />, { center: true }),
-          onRejected: (reason) =>
-            openModal(<ErrorMessage error={reason} />, {
-              center: true,
-              closable: true,
-            }),
-        }
-      );
-    },
-    [id]
-  );
-
-  const { data } = state as any;
+  const {
+    state: { data },
+  } = useLocation() as Location<{ data: PartialDeep<StudentFormData> }>;
 
   return (
     <FormLayout name="StudentEnroll" title={stu("formTitle")}>
-      <Container
-        variant="form"
-        header={<h2 className="title">{stu("formTitle")}</h2>}
-      >
-        <StudentForm onSubmit={onSubmit} formId={id} defaultValues={data} />
-      </Container>
+      <StudentForm
+        onSubmit={(data: StudentFormData) =>
+          submitEnroll(id!, new Student.DB(data), {
+            onFulfilled: () => openModal(<EnrolledMessage />, { center: true }),
+            onRejected: (reason) =>
+              openModal(<ErrorMessage error={reason} />, {
+                center: true,
+                closable: true,
+              }),
+          })
+        }
+        formId={id}
+        defaultValues={data}
+        termsUrl="https://drive.google.com/file/d/1uXAUeNnZAVRCSq8u7Xv1lZXBX-fmLR-k/preview"
+      />
     </FormLayout>
   );
 };

@@ -1,81 +1,48 @@
-import { Timestamp } from "firebase/firestore";
-import { get, set } from "react-hook-form";
+import { z } from "zod";
 
-import { Merge } from "models";
+import { dbConverter } from "utils";
 
-import { filterPhoneNumberList, PhoneNumberList } from "./blocks";
+import { DataModel, BaseModel } from "./abstract";
+import {
+  phoneNumberListSchema,
+  simplePhoneNumberListSchema,
+  trackableSchema,
+} from "./blocks";
 
-const statuses = [
+const statusSchema = z.enum([
   "registered",
   "contacted",
   "postponed",
   "uninterested",
-] as const;
+]);
 
-type Status = typeof statuses[number];
-
-interface Meta {
-  dateCreated: Date;
-  dateUpdated: Date;
-  status: Status;
-}
-
-type MetaInDB = Merge<
-  Meta,
-  {
-    dateCreated: Timestamp;
-    dateUpdated: Timestamp;
-  }
->;
-
-export interface LeadInfo {
-  fullName: string;
-  phoneNumber: PhoneNumberList;
-  facebook?: string;
-  message?: string;
-}
-
-export interface Lead extends LeadInfo {
-  id: string;
-  meta: Meta;
-}
-
-export interface LeadInDB extends LeadInfo {
-  meta: MetaInDB;
-}
-
-const defaultMeta = (): Meta => {
-  const now = new Date();
-  return { dateCreated: now, dateUpdated: now, status: "registered" };
-};
-
-export const leadFromDB = (
-  id: string,
-  { meta: { dateCreated, dateUpdated, ...meta }, ...data }: LeadInDB
-): Lead => ({
-  ...data,
-  id,
-  meta: {
-    ...defaultMeta(),
-    ...meta,
-    ...(dateCreated && { dateCreated: dateCreated.toDate() }),
-    ...(dateUpdated && { dateUpdated: dateUpdated.toDate() }),
-  },
+const metaSchema = trackableSchema.extend({
+  status: statusSchema.default("postponed"),
 });
 
-export const leadFromInfo = ({ fullName, phoneNumber, ...data }: LeadInfo) => {
-  const processedData: Omit<Lead, "id"> = {
-    fullName,
-    phoneNumber: filterPhoneNumberList(phoneNumber),
-    meta: defaultMeta(),
-  };
+const leadSchema = z.object({
+  fullName: z.string(),
+  phoneNumber: phoneNumberListSchema,
+  facebook: z.string().url().optional(),
+  message: z.string().optional(),
+  meta: metaSchema.default({}),
+});
 
-  for (let key in data) {
-    const value = get(data, key);
-    if (value !== undefined) set(processedData, key, value);
-  }
+const leadDBSchema = leadSchema.extend({
+  phoneNumber: simplePhoneNumberListSchema,
+});
 
-  console.log(processedData);
+const leadFormSchema = leadSchema.extend({
+  phoneNumber: simplePhoneNumberListSchema,
+});
 
-  return processedData;
-};
+export default class Lead extends DataModel(leadSchema) {
+  static DB = BaseModel(leadDBSchema);
+}
+
+export const leadConverter = dbConverter(Lead, leadDBSchema);
+
+export type LeadDB = InstanceType<typeof Lead.DB>;
+export type LeadDBData = LeadDB["data"];
+
+export type LeadFormData = z.infer<typeof leadFormSchema>;

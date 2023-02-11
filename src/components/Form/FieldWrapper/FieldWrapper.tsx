@@ -1,9 +1,7 @@
 import { Children, forwardRef, PropsWithChildren, ReactNode, Ref } from "react";
 
 import { useDirT } from "hooks";
-import { cn } from "utils";
-
-const EMPTY: any[] = [null, undefined, false];
+import { cn, oneOf } from "utils";
 
 type Partition = (ket: string | number) => ReactNode;
 
@@ -11,7 +9,7 @@ const injectPartitions = (children: ReactNode, partition?: Partition) => {
   const newChildren: ReactNode[] = [];
 
   Children.forEach(children, (child, index) => {
-    if (!EMPTY.includes(child) && index > 0)
+    if (!oneOf(child, [null, undefined, false]) && index > 0)
       newChildren.push(
         partition ? partition(index) : <div className="partition" key={index} />
       );

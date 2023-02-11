@@ -1,11 +1,5 @@
 import { isEmpty } from "lodash";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 
 import { Converter, SubsetOf, UpdateObject } from "models";
 import { applyFilters, applyUpdates, Filter } from "utils";
@@ -16,15 +10,24 @@ function getItem<TData>(key: string, parse: Converter<string, TData>) {
   return result || undefined;
 }
 
-function handleNewState<TData>(
-  key: string,
-  newState: SubsetOf<TData> | undefined,
-  stringify: Converter<SubsetOf<TData>, string>,
-  filter?: Filter<TData>
-) {
+interface HandleNEsStateProps<TData> {
+  key: string;
+  newState?: SubsetOf<TData>;
+  stringify: Converter<SubsetOf<TData>, string>;
+  filter?: Filter<TData>;
+}
+
+function handleNewState<TData>({
+  key,
+  newState,
+  stringify,
+  filter,
+}: HandleNEsStateProps<TData>) {
   if (!isEmpty(newState) && filter) newState = applyFilters(newState!, filter);
 
   if (isEmpty(newState)) {
+    console.log(">>>", { newState, isEmpty: isEmpty(newState) });
+
     window.localStorage.removeItem(key);
     return;
   }
@@ -40,14 +43,16 @@ export interface LocalStorageOptions<TData> {
 }
 
 type SetData<TData> = Dispatch<SetStateAction<TData>>;
-type UpdateData<TData> = (updates: UpdateObject<TData> | TData) => void;
+type UpdateData<TData> = (
+  updates: UpdateObject<TData> | SubsetOf<TData>
+) => void;
 
 interface UseLocalStorageReturn<TData> {
   data?: SubsetOf<TData>;
   set: SetData<TData>;
   update: UpdateData<TData>;
-  refresh: VoidFunction;
-  remove: VoidFunction;
+  refresh: () => SubsetOf<TData> | undefined;
+  clear: VoidFunction;
 }
 
 function useLocalStorage(key: undefined): void;
@@ -67,60 +72,51 @@ function useLocalStorage<TData>(
     filter,
   }: LocalStorageOptions<TData> = {}
 ): UseLocalStorageReturn<TData> | undefined {
-  const [data, setData] = useState<SubsetOf<TData> | undefined>(
+  const data = useRef<SubsetOf<TData> | undefined>(
     key ? getItem(key, parse) : undefined
   );
 
-  const set = useCallback<SetData<TData>>(
-    (valueOrFunction) =>
-      key &&
-      setData((state) => {
-        return handleNewState(
-          key,
-          typeof valueOrFunction === "function"
-            ? (valueOrFunction as Converter<SubsetOf<TData> | undefined>)(state)
-            : valueOrFunction,
-          stringify,
-          filter
-        );
-      }),
-    [key, filter, stringify]
-  );
+  const set: SetData<TData> = (valueOrFunction) => {
+    data.current = handleNewState({
+      key: key!,
+      newState:
+        typeof valueOrFunction === "function"
+          ? (valueOrFunction as Converter<SubsetOf<TData> | undefined>)(
+              data.current
+            )
+          : valueOrFunction,
+      stringify,
+      filter,
+    });
+  };
 
-  const update = useCallback<UpdateData<TData>>(
-    (updates) =>
-      key &&
-      setData((state) => {
-        if (updates instanceof Object) {
-          return handleNewState(
-            key,
-            applyUpdates(state instanceof Object ? state : {}, updates),
-            stringify,
-            filter
-          );
-        }
+  const update: UpdateData<TData> = (updates) => {
+    data.current = handleNewState({
+      key: key!,
+      newState:
+        updates instanceof Object
+          ? applyUpdates(
+              data.current instanceof Object ? data.current : {},
+              updates
+            )
+          : updates,
+      stringify,
+      filter,
+    });
+  };
 
-        return updates;
-      }),
-    [key, filter, stringify]
-  );
+  const refresh = () => {
+    data.current = getItem(key!, parse);
 
-  const refresh = useCallback(
-    () => key && setData(getItem(key, parse)),
-    [key, parse]
-  );
+    return data.current;
+  };
 
-  const remove = useCallback(() => {
-    if (key) {
-      window.localStorage.removeItem(key);
-      setData(undefined);
-    }
-  }, [key]);
+  const clear = () => {
+    window.localStorage.removeItem(key!);
+    data.current = undefined;
+  };
 
-  return useMemo<UseLocalStorageReturn<TData> | undefined>(
-    () => (key ? { data, set, update, refresh, remove } : undefined),
-    [data, key, refresh, remove, set, update]
-  );
+  return key ? { data: data.current, set, update, refresh, clear } : undefined;
 }
 
 export default useLocalStorage;
