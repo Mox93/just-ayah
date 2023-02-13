@@ -13,14 +13,13 @@ ENV = {
 }
 
 
-def db_init(env):
+def db_init(env: str):
     firebase_admin.initialize_app(credentials.Certificate(ENV[env]))
 
     return firestore.client()
 
 
-def push_student_data(env: str, limit: int = None):
-    db = db_init(env)
+def push_student_data(db, limit: int = None):
     col_ref = db.collection("students")
 
     with open("data/student_data.json", "r") as json_file:
@@ -58,8 +57,7 @@ def push_student_data(env: str, limit: int = None):
         batch.commit()
 
 
-def push_teachers_data(env):
-    db = db_init(env)
+def push_teachers_data(db):
     col_ref = db.collection("meta")
 
     with open("data/teacher.json") as json_file:
@@ -69,8 +67,7 @@ def push_teachers_data(env):
         col_ref.document("shortList").update({"teachers": data})
 
 
-def push_student_index_data(env):
-    db = db_init(env)
+def push_student_index_data(db):
     col_ref = db.collection("meta")
 
     with open("data/student_index_data.json") as json_file:
@@ -80,8 +77,7 @@ def push_student_index_data(env):
         col_ref.document("studentIndex").set(data)
 
 
-def delete_students(env):
-    db = db_init(env)
+def delete_students(db):
     col_ref = db.collection("students")
 
     docs = col_ref.where("meta.quran", "!=", "").stream()
@@ -91,8 +87,9 @@ def delete_students(env):
 
 
 if __name__ == "__main__":
-    push_student_data("dev", 100)
-    # delete_students("dev")
-    # push_teachers_data()
-    # push_student_index_data()
+    db = db_init("dev")
+    push_student_data(db, 100)
+    # delete_students(db)
+    # push_teachers_data(db)
+    # push_student_index_data(db)
     pass
