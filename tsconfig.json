@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/models/blocks/schemas.ts"  ]
 }

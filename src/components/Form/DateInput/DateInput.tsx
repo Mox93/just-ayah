@@ -9,7 +9,7 @@ import {
 } from "react";
 
 import { useDateTimeT } from "hooks";
-import { DateInfo, clampDate, toDateInfo } from "models/dateTime";
+import { DateInfo, clampDate, toDateInfo } from "models/_blocks";
 import { addZeros, cn, range } from "utils";
 import { PositionalElement } from "utils/position";
 
@@ -46,6 +46,7 @@ interface DateInputProps extends HTMLAttributes<HTMLDivElement> {
   isRequired?: boolean;
   children?: PositionalElement<string>;
   errorMessage?: ReactNode;
+  // FIXME instead of a range for years only, we should pass a start and end dates.
   yearsRange?: { start?: number; end?: number };
   innerProps?: InputHTMLAttributes<HTMLInputElement>;
   selected?: DateInfo;

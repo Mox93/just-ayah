@@ -7,10 +7,17 @@ import { cn } from "utils";
 export type ModalProps = {
   dismissible?: boolean;
   center?: boolean;
+  dir?: string;
   close?: VoidFunction;
 };
 
-const Modal: FC<ModalProps> = ({ children, close, dismissible, center }) => {
+const Modal: FC<ModalProps> = ({
+  children,
+  close,
+  dismissible,
+  center,
+  dir,
+}) => {
   const dirT = useDirT();
 
   useEffect(() => {
@@ -25,7 +32,7 @@ const Modal: FC<ModalProps> = ({ children, close, dismissible, center }) => {
   }, [dismissible, close]);
 
   return (
-    <div className="Modal" dir={dirT}>
+    <div className="Modal" dir={dir || dirT}>
       <div
         className="background"
         onClick={() => dismissible && close && close()}
@@ -33,7 +40,7 @@ const Modal: FC<ModalProps> = ({ children, close, dismissible, center }) => {
       <div className={cn("foreground", { center })}>
         <div className="body">
           {children}
-          {close && <CloseButton onClick={close} />}
+          {close && <CloseButton onClick={close} dir={dir || dirT} />}
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import {
   useForm,
   UseFormProps,
 } from "react-hook-form";
+import { PartialDeep } from "type-fest";
 
 import { applyUpdates, mergeCallbacks } from "utils";
 
@@ -18,71 +19,79 @@ interface Storage<TData> extends LocalStorageOptions<TData> {
 
 interface UseSmartFormProps<TFieldValues extends FieldValues>
   extends UseFormProps<TFieldValues> {
-  storage?: Storage<TFieldValues>;
+  storage?: Storage<PartialDeep<TFieldValues>>;
   resetOnSubmit?: boolean;
   resetToDefaultValues?: boolean;
   onSubmit?: SubmitHandler<TFieldValues>;
   onFail?: SubmitErrorHandler<TFieldValues>;
 }
 
-const useSmartForm = <TFieldValues extends FieldValues>({
+export default function useSmartForm<TFieldValues extends FieldValues>({
   storage,
   resetOnSubmit,
   resetToDefaultValues,
   onSubmit,
   onFail,
   ...config
-}: UseSmartFormProps<TFieldValues> = {}) => {
+}: UseSmartFormProps<TFieldValues> = {}) {
   const { key, ...options } = storage || {};
-  const formSession = useLocalStorage<TFieldValues>(key, options);
+  const formSession = useLocalStorage<PartialDeep<TFieldValues>>(key, options);
 
   config = cloneDeep(config);
+  const { defaultValues } = config;
 
   const { handleSubmit, ...formHook } = useForm<TFieldValues>({
     ...config,
-    // TODO replace values from defaultValues with non empty values from formSession
-    defaultValues: applyUpdates(
-      config.defaultValues || {},
-      formSession?.data || {}
-    ) as any,
+    defaultValues: (formSession?.data
+      ? defaultValues
+        ? applyUpdates(
+            defaultValues,
+            /**
+            // TODO need to make sure the data coming from here only contains keys the user has changed,
+             * otherwise it will needlessly override defaultValues
+             **/
+            formSession.data
+          )
+        : formSession?.data
+      : defaultValues) as typeof defaultValues,
   });
 
   const { watch, reset } = formHook;
 
   useEffect(() => {
+    if (!key) return;
+
     //TODO filter out empty fields
-    const subscription = watch((data, { name }) =>
-      formSession?.set(data as any)
+    const subscription = watch((data) =>
+      formSession?.set(data as PartialDeep<TFieldValues>)
     );
     return subscription.unsubscribe;
-  }, [formSession, watch]);
-
-  const { defaultValues } = config;
+  }, [key, watch]);
 
   const handleReset = useCallback(
     (keepDefaultValue?: boolean) => () => {
       const values = watch();
-      const resetValues = mapValues(values as any, (value) =>
+      const resetValues = mapValues(values, (value) =>
         isPlainObject(value) ? {} : null
       );
 
       reset({
         ...resetValues,
         ...(keepDefaultValue ? defaultValues : {}),
-      } as any);
-      formSession?.delete();
+      } as typeof defaultValues);
+      formSession?.clear();
     },
-    [defaultValues, reset, formSession, watch]
+    [defaultValues, reset, watch]
   );
 
   return {
     formHook,
     onSubmit: handleSubmit(
-      mergeCallbacks(onSubmit, resetOnSubmit && handleReset()) as any,
+      mergeCallbacks(onSubmit, resetOnSubmit && handleReset()) as NonNullable<
+        typeof onSubmit
+      >,
       onFail
     ),
     onReset: handleReset(resetToDefaultValues),
   };
-};
-
-export default useSmartForm;
+}

@@ -7,7 +7,6 @@ import { MainLayout } from "components/Layouts";
 import SearchBar from "components/SearchBar";
 import { useMetaContext, usePopupContext } from "context";
 import { usePageT } from "hooks";
-import { pluck } from "utils";
 import { substringMatch } from "utils/match";
 
 import NewTeacher from "../NewTeacher";
@@ -23,7 +22,7 @@ const Teachers: VFC<TeachersProps> = () => {
   const applySearch = useMemo(
     () =>
       substringMatch(teacherIndex, {
-        filter: ["leave", ["id"]],
+        filter: { type: "omit", fields: ["id"] },
       }),
     [teacherIndex]
   );
@@ -37,7 +36,7 @@ const Teachers: VFC<TeachersProps> = () => {
           <SearchBar
             onChange={applySearch}
             onSelect={({ value: { id } }) => console.log(id)} // TODO Redirect to profile page
-            getKey={pluck("value.id")}
+            getKey={({ value: { id } }) => id}
             showButton
             showResults
             overflowDir="start"

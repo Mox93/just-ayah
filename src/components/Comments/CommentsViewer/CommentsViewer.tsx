@@ -4,50 +4,40 @@ import Container from "components/Container";
 import { formAtoms } from "components/Form";
 import { useAuthContext } from "context";
 import { useGlobalT, useMessageT, useSmartForm } from "hooks";
-import { Comment } from "models/comment";
+import { Comment, commentSchema } from "models/blocks";
 
 import CommentItem from "../CommentItem";
 
-type CommentInfo = { draft: string };
+interface CommentForm {
+  draft: string;
+}
 
-const { Form, Textarea } = formAtoms<CommentInfo>();
+const { Form, Textarea } = formAtoms<CommentForm>();
 
 interface CommentsViewerProps {
   comments?: Comment[];
   storageKey?: string;
-  messageNoComments?: string;
+  placeholder?: string;
   header?: string;
-  onCommentAdd: (comment: Comment) => void;
+  onAddComment: (comment: Comment) => void;
 }
 
 const CommentsViewer: VFC<CommentsViewerProps> = ({
   comments,
   storageKey,
-  messageNoComments,
+  placeholder,
   header,
-  onCommentAdd,
+  onAddComment,
 }) => {
   const glb = useGlobalT();
   const msg = useMessageT();
   const { user } = useAuthContext();
 
-  const formProps = useSmartForm({
-    onSubmit: ({ draft }: CommentInfo) => {
-      const comment: Comment = {
-        dateCreated: new Date(),
-        ...(user?.email && {
-          createdBy: {
-            email: user.email,
-            ...(user.displayName && { username: user.displayName }),
-            ...(user.photoURL && { avatar: user.photoURL }),
-          },
-        }),
-        body: draft,
-      };
-
-      onCommentAdd(comment);
-    },
-    ...(storageKey && { storage: { key: storageKey } }),
+  const formProps = useSmartForm<CommentForm>({
+    onSubmit: ({ draft }) =>
+      // TODO use safeParse and handle error state
+      onAddComment(commentSchema.parse({ body: draft, user })),
+    ...(storageKey ? { storage: { key: storageKey } } : {}),
     resetOnSubmit: true,
   });
 
@@ -62,16 +52,19 @@ const CommentsViewer: VFC<CommentsViewerProps> = ({
         resetProps={{ children: glb("clear") }}
         {...formProps}
       >
-        <Textarea name="draft" />
+        <Textarea name="draft" rules={{ required: "noText" }} />
       </Form>
       {comments ? (
         <div className="list">
           {comments.map((comment) => (
-            <CommentItem data={comment} key={comment.dateCreated.getTime()} />
+            <CommentItem
+              comment={comment}
+              key={comment.dateCreated.getTime()}
+            />
           ))}
         </div>
       ) : (
-        <h4 className="noComments">{messageNoComments || msg("noComments")}</h4>
+        <h4 className="noComments">{placeholder || msg("noComments")}</h4>
       )}
     </Container>
   );

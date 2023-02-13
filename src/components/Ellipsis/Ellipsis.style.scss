@@ -1,8 +1,44 @@
 .Ellipsis {
-  color: var(--text-color);
+  position: relative;
   max-width: 100%;
-  overflow-x: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-align: start;
+  color: var(--text-color);
+
+  &.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      --ellipsis-width: 1.375rem;
+
+      &:first-child,
+      &:last-child {
+        display: inline-block;
+        max-width: calc(50% - var(--ellipsis-width) / 2);
+        overflow-x: hidden;
+        white-space: nowrap;
+        text-overflow: "";
+      }
+
+      &:nth-child(2) {
+        width: var(--ellipsis-width);
+      }
+
+      &:last-child {
+        &[dir="rtl"] {
+          direction: ltr;
+        }
+
+        &[dir="ltr"] {
+          direction: rtl;
+        }
+      }
+    }
+  }
+
+  &:not(.center) {
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }

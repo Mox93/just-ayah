@@ -41,6 +41,7 @@ const SelectionInput = <TOption,>(
   ref: Ref<HTMLInputElement>
 ) => {
   const dirT = useDirT();
+  const render = applyInOrder(renderElement);
 
   return (
     <div className={cn("SelectionInput", className)} dir={dir || dirT}>
@@ -53,7 +54,7 @@ const SelectionInput = <TOption,>(
         {options.map((option) => {
           const key = getKey(option);
           const id = `${name}_${key}`;
-          const label = applyInOrder(renderElement)(option);
+          const label = render(option);
 
           return (
             <div className="option" key={key}>

@@ -28,4 +28,5 @@ firebase-debug.log
 
 # python
 .venv
+__pycache__
 scripts/data

@@ -54,7 +54,11 @@
     border-inline-start: 1px solid var(--toast-fg-color);
     padding-inline-start: 0.4rem;
     padding-block: var(--spacing-s);
-    color: var(--toast-text-color);
+
+    &,
+    & * {
+      color: var(--toast-text-color);
+    }
   }
 
   .CloseButton {

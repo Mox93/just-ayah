@@ -14,7 +14,16 @@ const Admin: VFC<AdminProps> = () => {
 
   useEffect(() => {
     openToast(
-      "Welcome to the admin dashboard, we are very happy that you are using out app. Bla bla bla. Bla bla bla. Bla bla bla \nThis is a test message..."
+      <>
+        <p>
+          This app is still in its development phase so there will be a lot
+          changes in the future. I'd appreciate your feedback and ideas to
+          improve the app. If you're facing any issues, please contact me right
+          away.
+        </p>
+        <b>email: mohamed.ragaiy.saleh@gmail.com</b>
+      </>,
+      { dir: "ltr" }
     );
   }, []);
 

@@ -48,12 +48,12 @@ interface UseDropdownProps {
   onClick?: "open" | "toggle";
 }
 
-const useDropdown = ({
+export default function useDropdown({
   className,
   dir,
   overflowDir,
   onClick,
-}: UseDropdownProps = {}) => {
+}: UseDropdownProps = {}) {
   const [{ isOpen }, dispatch] = useReducer(reduce, { isOpen: false });
 
   const driverRef = useRef<any>(null);
@@ -108,7 +108,7 @@ const useDropdown = ({
 
   const oDir = useOverflowDir(overflowDir, dir);
 
-  // TODO fix issue with dropdown keyboard control
+  // FIXME issue with dropdown keyboard control
   // const handleToggleButtons = useCallback((event: KeyboardEvent) => {
   //   if ([" "].includes(event.key)) {
   //     event.preventDefault();
@@ -146,6 +146,4 @@ const useDropdown = ({
     dropdownAction: dispatch,
     dropdownWrapper: wrapper,
   };
-};
-
-export default useDropdown;
+}

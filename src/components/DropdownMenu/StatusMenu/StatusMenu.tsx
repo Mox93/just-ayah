@@ -13,7 +13,6 @@ import Container from "components/Container";
 import { CheckMark } from "components/Icons";
 import { DropdownAction, useDropdown, useGlobalT } from "hooks";
 import { UNKNOWN } from "models";
-import { cn, mergeRefs, capitalize } from "utils";
 import {
   mapStatusType,
   Status,
@@ -21,7 +20,9 @@ import {
   StatusTypes,
   StatusVariants,
   getCustomStatus,
-} from "models/status";
+} from "models/blocks";
+import { cn, mergeRefs, capitalize } from "utils";
+
 import StatusForm from "./StatusForm";
 
 type State = {

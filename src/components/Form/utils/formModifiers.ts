@@ -13,6 +13,8 @@ import {
   RegisterOptions,
   UseFormRegisterReturn,
   UseFormReturn,
+  useWatch,
+  useFormState,
 } from "react-hook-form";
 
 import { Converter, Merge } from "models";
@@ -31,7 +33,10 @@ export type FormHook<TFieldValues extends FieldValues> = Omit<
   "handleSubmit"
 >;
 
-type GenerateExtraProps<TFieldValues extends FieldValues, TProps = {}> = (
+type GenerateExtraProps<
+  TFieldValues extends FieldValues,
+  TProps extends {} = {}
+> = (
   props: Merge<
     TProps,
     {
@@ -56,16 +61,16 @@ export const smartForm = <TFieldValues extends FieldValues>(
       formHook,
       children,
       noErrorMessage,
-      submitProps,
+      // submitProps,
       ...props
     }: SmartFormProps<TFieldValues>) => {
-      const {
-        formState: { isSubmitting }, // TODO this is not working need to use Loading hook
-      } = formHook;
+      // const {
+      //   formState: { isSubmitting }, // FIXME this is not working need to use Loading hook
+      // } = formHook;
 
       return {
         ...props,
-        submitProps: { isLoading: isSubmitting, ...submitProps },
+        // submitProps: { isLoading: isSubmitting, ...submitProps },
         children: handleFormChildren(children, { formHook, noErrorMessage }),
         ...extraProps({ formHook }),
       };
@@ -129,7 +134,7 @@ export type DefaultInputProps = InputHTMLAttributes<HTMLInputElement>;
 
 export type WithFormHook<
   TFieldValues extends FieldValues,
-  TExtraProps = {}
+  TExtraProps extends {} = {}
 > = Merge<
   TExtraProps,
   {
@@ -137,7 +142,10 @@ export type WithFormHook<
   }
 >;
 
-type ProcessedProps<TProps, TFieldValues extends FieldValues> = Partial<
+type ProcessedProps<
+  TProps extends {},
+  TFieldValues extends FieldValues
+> = Partial<
   Merge<
     TProps,
     {
@@ -164,7 +172,7 @@ export interface NamedChildProps<
 
 type WithExtraProps<
   TFieldValues extends FieldValues,
-  TProps = {},
+  TProps extends {} = {},
   TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = Merge<
   TProps,
@@ -257,11 +265,11 @@ export const menu = <TFieldValues extends FieldValues>({
     }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
       if (!formHook) return { ...props, name };
 
-      const {
-        setValue: setValueByName,
-        formState: { isSubmitted },
-        watch,
-      } = formHook;
+      const { setValue: setValueByName, control } = formHook;
+
+      const { isSubmitted } = useFormState({ control });
+
+      const selected = useWatch({ control, name });
 
       const setValue = (value: any) =>
         setValueByName(name, toValue(value), {
@@ -273,7 +281,7 @@ export const menu = <TFieldValues extends FieldValues>({
         name,
         formHook,
         setValue,
-        selected: toSelected(watch(name)),
+        selected: toSelected(selected),
         ...extraProps({ name, formHook }),
       };
     }
@@ -293,13 +301,12 @@ export const registerField = <TFieldValues extends FieldValues>(
     }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
       if (!formHook) return { ...props, name, ref };
 
-      const {
-        register,
-        formState: { errors },
-      } = formHook;
-      const errorMessage = get(errors, name);
+      const { register, control } = formHook;
       const { className } = props as DefaultInputProps;
       const { ref: registerRef, ...rest } = register(name, rules);
+
+      const { errors } = useFormState({ control, name });
+      const errorMessage = get(errors, name);
 
       return {
         ...props,

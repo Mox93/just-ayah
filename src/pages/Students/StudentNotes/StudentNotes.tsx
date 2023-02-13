@@ -1,8 +1,9 @@
+import { VFC, useEffect, useState } from "react";
+
 import { CommentsViewer } from "components/Comments";
 import { useStudentContext } from "context";
 import { useGlobalT, useMessageT } from "hooks";
-import { Comment } from "models/comment";
-import { VFC, useEffect, useState } from "react";
+import { Comment } from "models/blocks";
 
 interface StudentNotesProps {
   id: string;
@@ -25,8 +26,8 @@ const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
   return (
     <CommentsViewer
       comments={notes}
-      onCommentAdd={(note: Comment) => addNote(id, note)}
-      messageNoComments={msg("noNotes")}
+      onAddComment={(note) => addNote(id, note)}
+      placeholder={msg("noNotes")}
       header={glb("notes")}
     />
   );

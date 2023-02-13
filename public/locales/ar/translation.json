@@ -136,10 +136,10 @@
       "counter_many": "تم تحديد {{count}} طالب",
       "counter_other": "تم تحديد {{count}} طالب",
       "formTitle": "بيانات الطالب",
-      "newStudents": "الطُلاب الجُديد",
+      "newStudents": "الطُلاب الجُدد",
       "newEnroll": "اسم رابط تسجيل جديد"
     },
-    "customer": {
+    "lead": {
       "formTitle": "تواصل معنا"
     },
     "teacher": {

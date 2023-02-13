@@ -1,0 +1,46 @@
+@use "styles/abstracts/mixins" as *;
+
+.EnrollsViewer {
+  display: grid;
+  gap: var(--spacing-l);
+
+  .actions {
+    display: flex;
+    gap: var(--spacing-m);
+  }
+
+  .withAction {
+    height: var(--row-height);
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .headsUp {
+      background-color: var(--c-gray-300);
+      color: var(--c-white);
+      padding: var(--spacing-s) var(--spacing-m);
+      border-radius: var(--spacing-s);
+      opacity: 0;
+      transition: opacity 0.2s;
+
+      @include positioning();
+
+      &.active {
+        opacity: 1;
+      }
+    }
+
+    &:hover {
+      & > .action {
+        opacity: 1;
+      }
+    }
+
+    & > .action {
+      opacity: 0;
+      transition: opacity 0.2s;
+
+      @include positioning($inlineDir: end, $inline: 0, $x: 0);
+    }
+  }
+}

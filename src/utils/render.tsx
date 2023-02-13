@@ -1,6 +1,7 @@
-import { get, isArray } from "lodash";
+import { get } from "lodash";
 import { ReactNode } from "react";
-import { Path } from "react-hook-form";
+
+import { Path } from "models";
 
 export type PathsOrConverters<TObject, TOutput = any> = (
   | Path<TObject>
@@ -25,7 +26,7 @@ export const renderAttributes =
         if (part) parts.push(part);
       } else if (typeof field === "function") {
         const output = field(obj);
-        parts.push(...(isArray(output) ? output : [output]));
+        parts.push(...(Array.isArray(output) ? output : [output]));
       }
     });
 

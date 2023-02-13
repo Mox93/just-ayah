@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-const useNetwork = (): boolean => {
+const STATES = ["online", "offline"];
+
+export default function useNetwork(): boolean {
   const [isOnline, setIsOnline] = useState(window.navigator.onLine);
 
   useEffect(() => {
@@ -8,16 +10,15 @@ const useNetwork = (): boolean => {
       setIsOnline(window.navigator.onLine);
     };
 
-    window.addEventListener("offline", updateNetworkStatus);
-    window.addEventListener("online", updateNetworkStatus);
+    STATES.forEach((event) =>
+      window.addEventListener(event, updateNetworkStatus)
+    );
 
-    return () => {
-      window.removeEventListener("offline", updateNetworkStatus);
-      window.removeEventListener("oline", updateNetworkStatus);
-    };
+    return () =>
+      STATES.forEach((event) =>
+        window.removeEventListener(event, updateNetworkStatus)
+      );
   }, []);
 
   return isOnline;
-};
-
-export default useNetwork;
+}

@@ -5,8 +5,13 @@ import { ReactComponent as WhatsAppIcon } from "assets/icons/whatsapp-svgrepo-co
 import { ReactComponent as TelegramIcon } from "assets/icons/telegram-svgrepo-com.svg";
 import { useGlobalT, useMessageT } from "hooks";
 import { InnerProps } from "models";
-import { Country, CountryCode, countrySelectorProps } from "models/country";
-import { phoneNumberTags, PhoneNumberTags } from "models/phoneNumber";
+import {
+  Country,
+  CountryCode,
+  countrySelectorProps,
+  phoneNumberTagsSchema,
+  PhoneNumberTag,
+} from "models/blocks";
 import { cn } from "utils";
 import { after, PositionalElement } from "utils/position";
 
@@ -27,7 +32,7 @@ interface PhoneNumberInputProps extends HTMLAttributes<HTMLDivElement> {
   innerProps?: {
     code?: InnerProps<MenuInputProps<Country> & { selected?: CountryCode }>;
     number?: InnerProps<InputProps>;
-    tags?: InnerProps<SelectionInputProps<PhoneNumberTags>>;
+    tags?: InnerProps<SelectionInputProps<PhoneNumberTag>>;
   };
 }
 
@@ -83,7 +88,7 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
       {withTags && (
         <SelectionInput
           type="checkbox"
-          options={[...phoneNumberTags]}
+          options={phoneNumberTagsSchema.options}
           name={`${name}.tags`}
           isInvalid={isInvalid}
           renderElement={(option) => (
@@ -105,7 +110,7 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
 
 export default PhoneNumberInput;
 
-const icons: { [key in PhoneNumberTags]: ReactNode } = {
+const icons: { [key in PhoneNumberTag]: ReactNode } = {
   call: <CallIcon className="call" />,
   whatsapp: <WhatsAppIcon className="whatsapp" />,
   telegram: <TelegramIcon className="telegram" />,

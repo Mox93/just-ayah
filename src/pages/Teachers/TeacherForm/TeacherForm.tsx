@@ -1,9 +1,10 @@
 import { VFC } from "react";
+import { PartialDeep } from "type-fest";
 
 import { formAtoms } from "components/Form";
 import { useGlobalT, usePersonalInfoT, useSmartForm } from "hooks";
-import { genders } from "models/gender";
-import { TeacherInfo } from "models/teacher";
+import { genderSchema } from "models/blocks";
+import { TeacherFormData } from "models/teacher";
 
 const {
   Form,
@@ -11,12 +12,12 @@ const {
   InputGroup,
   PhoneNumberInput,
   SelectionInput: { Teacher: SelectionInput },
-} = formAtoms<TeacherInfo>();
+} = formAtoms<TeacherFormData>();
 
 interface TeacherFormProps {
   formId?: string;
-  defaultValues?: Partial<TeacherInfo>;
-  onSubmit: (data: TeacherInfo) => void;
+  defaultValues?: PartialDeep<TeacherFormData>;
+  onSubmit: (data: TeacherFormData) => void;
 }
 
 const TeacherForm: VFC<TeacherFormProps> = ({
@@ -27,7 +28,7 @@ const TeacherForm: VFC<TeacherFormProps> = ({
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
 
-  const formProps = useSmartForm<TeacherInfo>({
+  const formProps = useSmartForm<TeacherFormData>({
     onSubmit,
     defaultValues,
     storage: { key: "teacherForm" + (formId ? `/${formId}` : "") },
@@ -64,7 +65,7 @@ const TeacherForm: VFC<TeacherFormProps> = ({
           name="gender"
           type="radio"
           label={pi("gender")}
-          options={[...genders]}
+          options={genderSchema.options}
           renderElement={pi}
           rules={{ required: "noGender" }}
         />

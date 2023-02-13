@@ -1,7 +1,6 @@
-import { uniqueId } from "lodash";
 import { forwardRef, InputHTMLAttributes, ReactNode, Ref } from "react";
 
-import { useDirT } from "hooks";
+import { useDirT, useUniqueId } from "hooks";
 import { cn } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
 
@@ -43,11 +42,14 @@ const Input = (
   ref: Ref<HTMLInputElement>
 ) => {
   const dirT = useDirT();
-  id = id || uniqueId(name ? `${name}-` : "input-");
+  const _id = useUniqueId(name || "input");
 
   return (
     <div className={cn("Input", className)} dir={dir || dirT}>
-      <FieldHeader htmlFor={id} {...{ label, required, isRequired, isInvalid }}>
+      <FieldHeader
+        htmlFor={id || _id}
+        {...{ label, required, isRequired, isInvalid }}
+      >
         {children}
       </FieldHeader>
 
@@ -59,8 +61,8 @@ const Input = (
       >
         {before("input", children)}
         <input
-          {...props}
-          {...{ required, ref, id, name }}
+          {...{ ...props, required, ref, name }}
+          id={id || _id}
           dir="auto"
           placeholder={placeholder || label || " "}
           className="field"

@@ -1,4 +1,4 @@
-import { FC, ReactElement, SVGProps, VFC } from "react";
+import { ReactElement, SVGProps, VFC } from "react";
 
 import { ReactComponent as DangerIcon } from "assets/icons/block-svgrepo-com.svg";
 import { ReactComponent as InfoIcon } from "assets/icons/info-svgrepo-com.svg";
@@ -10,7 +10,11 @@ import { useDirT } from "hooks";
 
 export type ToastVariant = "success" | "info" | "warning" | "danger";
 
-const icons: Record<ToastVariant, FC<SVGProps<SVGSVGElement>>> = {
+interface ExtraProps {
+  dir: string;
+}
+
+const icons: Record<ToastVariant, VFC<SVGProps<SVGSVGElement> & ExtraProps>> = {
   success: SuccessIcon,
   info: InfoIcon,
   warning: WarningIcon,
@@ -21,6 +25,7 @@ export interface ToastProps {
   message: string | ReactElement;
   variant?: ToastVariant;
   floating?: boolean;
+  dir?: string;
   close?: VoidFunction;
 }
 
@@ -28,16 +33,17 @@ const Toast: VFC<ToastProps> = ({
   message,
   floating,
   variant = "info",
+  dir,
   close,
 }) => {
   const dirT = useDirT();
   const Icon = icons[variant];
 
   return (
-    <div className={cn("Toast", variant, { floating })} dir={dirT}>
-      {<Icon className="toastIcon iconL" {...{ dir: dirT }} />}
+    <div className={cn("Toast", variant, { floating })} dir={dir || dirT}>
+      {<Icon className="toastIcon iconL" dir={dir || dirT} />}
       <p className="message">{message}</p>
-      <CloseButton onClick={close} />
+      <CloseButton onClick={close} dir={dir || dirT} />
     </div>
   );
 };

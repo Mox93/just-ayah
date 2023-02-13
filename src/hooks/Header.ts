@@ -6,17 +6,15 @@ interface HeaderHookProps {
   title?: string;
 }
 
-const useHeader = ({ title }: HeaderHookProps) => {
+export default function useHeader({ title }: HeaderHookProps) {
   const glb = useGlobalT();
-  const justAyah = glb("justAyah");
 
   useEffect(() => {
+    const justAyah = glb("justAyah");
     document.title = justAyah + (title ? ` - ${title}` : "");
 
     return () => {
       document.title = justAyah;
     };
   }, [title]);
-};
-
-export default useHeader;
+}

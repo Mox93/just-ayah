@@ -4,14 +4,14 @@ import { FieldErrors, Path } from "react-hook-form";
 import { useDirT, useMessageT } from "hooks";
 
 interface ErrorMessageProps<
-  TFieldValues,
+  TFieldValues extends {},
   TFieldName extends Path<TFieldValues> = Path<TFieldValues>
 > {
   name: TFieldName;
   errors?: FieldErrors<TFieldValues>;
 }
 
-const ErrorMessage = <TFieldValues,>({
+const ErrorMessage = <TFieldValues extends {}>({
   name,
   errors,
 }: ErrorMessageProps<TFieldValues>) => {

@@ -1,72 +1,29 @@
-import { VFC, useState, useEffect, useMemo } from "react";
+import { VFC, useEffect } from "react";
 
 import { Button } from "components/Buttons";
-import { FieldProps, Table } from "components/Table";
+import { Table } from "components/Table";
 import { useTeacherContext } from "context";
-import { useGlobalT, useLoading, usePageT, usePersonalInfoT } from "hooks";
-import { Teacher } from "models/teacher";
-import { historyRep } from "models/dateTime";
-import { getPhoneNumberByTag } from "models/phoneNumber";
-import { concat, prodOnly } from "utils";
+import { useGlobalT, useLoading, usePageT, useSelect } from "hooks";
+import { prodOnly } from "utils";
+
+import { UseTableFields } from "./TeacherList.utils";
 
 interface TeacherListProps {}
 
 const TeacherList: VFC<TeacherListProps> = () => {
   const glb = useGlobalT();
   const tch = usePageT("teacher");
-  const pi = usePersonalInfoT();
 
   const { teachers, fetchTeachers } = useTeacherContext();
 
-  const fields = useMemo<FieldProps<Teacher>[]>(
-    () => [
-      {
-        name: "name",
-        header: pi("fullName"),
-        className: "name",
-        getValue: ({ firstName, middleName, lastName }) =>
-          concat(firstName, middleName, lastName),
-      },
-      {
-        name: "phoneNumber",
-        header: pi("phoneNumber"),
-        className: "phoneNumber",
-        getValue: ({ phoneNumber }) =>
-          getPhoneNumberByTag(phoneNumber, "whatsapp"),
-        fit: true,
-      },
-      {
-        name: "dateCreated",
-        header: glb("dateCreated"),
-        getValue: ({ meta: { dateCreated } }) => historyRep(dateCreated),
-        fit: true,
-      },
-    ],
-    [pi, glb]
+  const fields = UseTableFields();
+
+  const [selected, toggleSelect] = useSelect(() =>
+    teachers.map(({ id }) => id)
   );
 
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const handleSelect = (id: string) =>
-    setSelected((state) => {
-      return id === "*"
-        ? new Set([...teachers.map(({ id }) => id), "*"])
-        : new Set(state.add(id));
-    });
-
-  const handleDeselect = (id: string) =>
-    setSelected((state) => {
-      if (id === "*") {
-        return new Set();
-      } else {
-        state.delete(id);
-        return new Set(state);
-      }
-    });
-
   const [loadTeachers, isLoading] = useLoading((stopLoading) => {
-    fetchTeachers({
-      options: { onFulfilled: stopLoading, onRejected: stopLoading },
-    });
+    fetchTeachers({ onCompleted: stopLoading });
   });
 
   useEffect(() => {
@@ -86,15 +43,8 @@ const TeacherList: VFC<TeacherListProps> = () => {
         fields={fields}
         data={teachers}
         selected={selected}
-        toggleSelect={(checked, id) =>
-          checked ? handleSelect(id) : handleDeselect(id)
-        }
-        toggleSelectAll={(checked) =>
-          setSelected(
-            checked ? new Set(teachers.map(({ id }) => id)) : new Set()
-          )
-        }
-        extraProps={({ gender }) => ({ gender })}
+        toggleSelect={toggleSelect}
+        extraProps={({ data: { gender } }) => ({ gender })}
         footer={
           <Button
             className="loadMore"

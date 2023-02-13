@@ -12,15 +12,18 @@ import {
   MiniForm,
   MenuInput,
 } from "components/Form";
-import { booleanSelectorProps } from "models/boolean";
-import { CountryCode, countrySelectorProps } from "models/country";
-import { fromDateInfo } from "models/dateTime";
-import { PhoneNumberInfo } from "models/phoneNumber";
+import {
+  booleanSelectorProps,
+  CountryCode,
+  countrySelectorProps,
+  SimplePhoneNumber,
+} from "models/blocks";
+import { fromDateInfo } from "models/_blocks";
 
 interface TestData {
   name: string;
   country: CountryCode;
-  phoneNumber: PhoneNumberInfo[];
+  phoneNumber: SimplePhoneNumber[];
   oneChoice: string;
   multipleChoices: string[];
   canDoThis: boolean;

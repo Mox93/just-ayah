@@ -6,7 +6,7 @@ import { Button } from "components/Buttons";
 import { SelectionMenu } from "components/DropdownMenu";
 import { formAtoms } from "components/Form";
 import { useDynamicList, useGlobalT, useSmartForm } from "hooks";
-import { Schedule } from "models/schedule";
+import { Schedule } from "models/blocks";
 import { range } from "utils";
 import Container from "components/Container";
 
@@ -34,7 +34,7 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
   } = formProps;
 
   const { items, cloneItem, removeItem, moveItem } = useDynamicList({
-    items: watch("entries"),
+    items: watch("entries"), // useWatch does not work here
     onChange: (items) => resetField("entries", { defaultValue: items }),
   });
 
@@ -50,7 +50,7 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
             <SelectionMenu
               options={range(1, items.length + 1)}
               selected={index + 1}
-              className="action"
+              className="position"
               noArrow
               setValue={(to) => moveItem(index, to - 1)}
             />

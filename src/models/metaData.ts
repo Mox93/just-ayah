@@ -1,4 +1,4 @@
-import { getCountry } from "./country";
+import { CountryCode, getCountry } from "./blocks";
 
 interface ShortList {
   teachers?: string[];
@@ -39,7 +39,9 @@ export const personIndexFromDB = (
     id,
     phoneNumber: phoneNumber.map((value) => {
       const [code, ...number] = value.split("-", 1);
-      return [getCountry(code as any)?.phone ?? code, ...number].join("");
+      return [getCountry(code as CountryCode)?.phone ?? code, ...number].join(
+        ""
+      );
     }),
     ...data,
   }));

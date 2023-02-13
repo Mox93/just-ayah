@@ -1,7 +1,7 @@
 import { VFC } from "react";
 
 import { useLanguage } from "hooks";
-import { languages } from "models/language";
+import { languages } from "models/blocks";
 import { cn } from "utils";
 
 interface LanguageSelectorProps {}

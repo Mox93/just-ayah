@@ -1,6 +1,11 @@
-export * from "./array";
+export * from "./applyConverters";
+export * from "./applyFilters";
+export * from "./applyUpdates";
+export * from "./dbConverter";
 export * from "./functions";
+export * from "./functionChain";
 export * from "./merge";
-export * from "./object";
+export * from "./nestedPaths";
+export * from "./range";
 export * from "./string";
 export { default as cn } from "classnames";

@@ -1,35 +1,40 @@
 import { VFC } from "react";
 
-import { Comment } from "models/comment";
-import { useDirT } from "hooks";
-import Avatar from "components/Icons/Avatar";
-import { historyRep } from "models/dateTime";
 import Ellipsis from "components/Ellipsis";
+import Avatar from "components/Icons/Avatar";
+import { useDirT } from "hooks";
+import { Comment } from "models/blocks";
+import { historyRep } from "models/_blocks";
 
 interface CommentItemProps {
-  data: Comment;
+  comment: Comment;
   dir?: string;
 }
 
-const CommentItem: VFC<CommentItemProps> = ({ data, dir }) => {
+const CommentItem: VFC<CommentItemProps> = ({
+  comment: { body, dateCreated, createdBy: { displayName, photoURL } = {} },
+  dir,
+}) => {
   const dirT = useDirT();
 
   return (
     <div className="CommentItem" dir={dir || dirT}>
       <div className="header">
-        <Avatar url={data.createdBy?.avatar} />
+        <Avatar url={photoURL} />
         <div className="userInfo">
-          <Ellipsis component="h3" dir="auto" className="username">
-            {data.createdBy?.username}
-          </Ellipsis>
+          {displayName && (
+            <Ellipsis Component="h3" dir="auto" className="username">
+              {displayName}
+            </Ellipsis>
+          )}
           <div className="divider" />
-          <Ellipsis component="h5" dir="ltr" className="timestamp">
-            {historyRep(data.dateCreated)}
+          <Ellipsis Component="h5" dir="ltr" className="timestamp">
+            {historyRep(dateCreated)}
           </Ellipsis>
         </div>
       </div>
       <p className="body" dir="auto">
-        {data.body}
+        {body}
       </p>
     </div>
   );

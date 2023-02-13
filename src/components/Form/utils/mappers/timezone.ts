@@ -1,6 +1,6 @@
 import { FieldPath } from "react-hook-form";
 
-import { Timezone, timezoneSelectorProps } from "models/timezone";
+import { Timezone, timezoneSelectorProps } from "models/blocks";
 import { PathsOrConverters } from "utils/render";
 import { createModifier } from "utils/transformer";
 

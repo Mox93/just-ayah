@@ -6,9 +6,9 @@ import Unauthorized from "pages/Unauthorized";
 
 const AuthGuard: VFC = () => {
   const { authorized } = useAuthContext();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
-  return authorized(location.pathname) ? <Outlet /> : <Unauthorized />;
+  return authorized(pathname) ? <Outlet /> : <Unauthorized />;
 };
 
 export default AuthGuard;

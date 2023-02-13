@@ -25,24 +25,24 @@ const Container = (
   ref: Ref<HTMLDivElement>
 ) => {
   const dirT = useDirT();
-  const _dir = dir || dirT;
+  dir = dir || dirT;
 
   return (
     <div
       ref={ref}
       className={cn("Container", variant, className, { flat })}
-      dir={_dir}
+      dir={dir}
     >
       {header && (
-        <div className="header" dir={_dir}>
+        <div className="header" dir={dir}>
           {header}
         </div>
       )}
-      <div className="body" dir={_dir}>
+      <div className="body" dir={dir}>
         {children}
       </div>
       {footer && (
-        <div className="footer" dir={_dir}>
+        <div className="footer" dir={dir}>
           {footer}
         </div>
       )}

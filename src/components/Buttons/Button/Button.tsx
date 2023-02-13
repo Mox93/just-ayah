@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, forwardRef, Ref, useRef } from "react";
+import { ButtonHTMLAttributes, Children, forwardRef, Ref, useRef } from "react";
 
 import { useDirT } from "hooks";
 import { cn, mergeCallbacks, mergeRefs, capitalize } from "utils";
@@ -65,9 +65,9 @@ const Button = (
       onClick={mergeCallbacks(onClick, blur)}
       disabled={isLoading || disabled}
     >
-      {typeof children !== "string" || keepFormat
-        ? children
-        : capitalize(children)}
+      {Children.map(children, (child) =>
+        typeof child !== "string" || keepFormat ? child : capitalize(child)
+      )}
       {isLoading && <LoadingDots className="loadingIndicator" />}
     </button>
   );
