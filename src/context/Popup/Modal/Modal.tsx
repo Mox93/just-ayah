@@ -40,7 +40,7 @@ const Modal: FC<ModalProps> = ({
       <div className={cn("foreground", { center })}>
         <div className="body">
           {children}
-          {close && <CloseButton onClick={close} dir={dir || dirT} />}
+          {close && <CloseButton onClick={close} dir={dir} />}
         </div>
       </div>
     </div>

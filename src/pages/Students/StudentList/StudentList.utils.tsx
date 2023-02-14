@@ -40,9 +40,7 @@ export function useTableFields() {
     data: { courses },
   } = useCourseContext();
 
-  const {
-    shortList: { teachers = [] },
-  } = useMetaContext();
+  const { teacherIndex } = useMetaContext();
 
   const { openModal } = usePopupContext();
 
@@ -176,10 +174,13 @@ export function useTableFields() {
         getValue: ({ id, meta: { teacher } }) => (
           <SelectionMenu
             selected={teacher}
-            options={teachers}
+            options={teacherIndex.sort(({ name: a }, { name: b }) =>
+              a > b ? 1 : -1
+            )}
             size="small"
             setValue={updateField("meta.teacher", id)}
-            renderElement={ellipsis()}
+            getKey={({ id }) => id}
+            renderElement={({ name }) => <Ellipsis>{name}</Ellipsis>}
           />
         ),
       },
@@ -228,6 +229,6 @@ export function useTableFields() {
         fit: true,
       },
     ],
-    [teachers, courses]
+    [teacherIndex, courses]
   );
 }

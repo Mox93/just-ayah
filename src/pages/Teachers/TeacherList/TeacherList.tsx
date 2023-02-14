@@ -16,8 +16,6 @@ const TeacherList: VFC<TeacherListProps> = () => {
 
   const { teachers, fetchTeachers } = useTeacherContext();
 
-  const fields = UseTableFields();
-
   const [selected, toggleSelect] = useSelect(() =>
     teachers.map(({ id }) => id)
   );
@@ -26,11 +24,14 @@ const TeacherList: VFC<TeacherListProps> = () => {
     fetchTeachers({ onCompleted: stopLoading });
   });
 
-  useEffect(() => {
+  useEffect(
     prodOnly(() => {
       if (!teachers.length) loadTeachers();
-    })();
-  }, []);
+    }),
+    []
+  );
+
+  const fields = UseTableFields();
 
   return (
     <div className="TeacherList">

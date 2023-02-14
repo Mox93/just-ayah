@@ -15,12 +15,13 @@ const Admin: VFC<AdminProps> = () => {
   useEffect(() => {
     openToast(
       <>
-        <p>
+        <span>
           This app is still in its development phase so there will be a lot
           changes in the future. I'd appreciate your feedback and ideas to
           improve the app. If you're facing any issues, please contact me right
           away.
-        </p>
+        </span>
+        <br />
         <b>email: mohamed.ragaiy.saleh@gmail.com</b>
       </>,
       { dir: "ltr" }

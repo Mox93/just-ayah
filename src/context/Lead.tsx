@@ -25,7 +25,11 @@ interface LeadProviderProps {}
 export const LeadProvider: FC<LeadProviderProps> = ({ children }) => {
   const [leads, setLeads] = useState<Lead[]>([]);
 
-  const addLead = useAddDoc({ collectionRef: leadRef, setData: setLeads });
+  const addLead = useAddDoc({
+    collectionRef: leadRef,
+    setData: setLeads,
+    DataClass: Lead,
+  });
 
   const fetchLeads = useGetDocs<Lead, LeadDBData>({
     collectionRef: leadRef,

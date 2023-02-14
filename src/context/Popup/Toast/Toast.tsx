@@ -1,4 +1,4 @@
-import { ReactElement, SVGProps, VFC } from "react";
+import { ReactFragment, SVGProps, VFC } from "react";
 
 import { ReactComponent as DangerIcon } from "assets/icons/block-svgrepo-com.svg";
 import { ReactComponent as InfoIcon } from "assets/icons/info-svgrepo-com.svg";
@@ -22,7 +22,7 @@ const icons: Record<ToastVariant, VFC<SVGProps<SVGSVGElement> & ExtraProps>> = {
 };
 
 export interface ToastProps {
-  message: string | ReactElement;
+  message: string | ReactFragment;
   variant?: ToastVariant;
   floating?: boolean;
   dir?: string;

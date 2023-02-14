@@ -49,7 +49,7 @@ const Students: VFC<StudentsProps> = () => {
                 matches: matches.name?.substrings,
               }),
               ({ value, matches }) =>
-                value.phoneNumber.map((phoneNumber, index) => ({
+                (value.phoneNumber || []).map((phoneNumber, index) => ({
                   value: phoneNumber,
                   matches: get(matches, `phoneNumber.${index}`)?.substrings,
                 })),

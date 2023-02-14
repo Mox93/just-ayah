@@ -1,7 +1,7 @@
 import { assert } from "utils";
 import { z, ZodTypeAny } from "zod";
 
-import { countryCodeSchema, countrySchema } from "./country";
+import { countryCodeList, countryCodeSchema, countrySchema } from "./country";
 import { nonEmptyArray } from "./schemas";
 
 export const phoneNumberTagsSchema = z.enum(["call", "whatsapp", "telegram"]);
@@ -26,6 +26,17 @@ const _phoneNumberSchema = z.object({
 });
 
 type PhoneNumber = z.infer<typeof _phoneNumberSchema>;
+
+const _phoneNumberStringSchema = z
+  .string()
+  .max(17)
+  .regex(new RegExp(`^(${countryCodeList.join("|")})-\\d+$`));
+
+export const phoneNumberStringSchema = z
+  .union([_phoneNumberStringSchema, _phoneNumberSchema])
+  .transform((value) => {
+    return typeof value === "string" ? value : `${value.code}-${value.number}`;
+  });
 
 const _simplePhoneNumberSchema = _phoneNumberSchema.merge(
   z.object({
@@ -115,14 +126,10 @@ export function filterPhoneNumberByTags(
 function extendPhoneNumberSchema<S extends ZodTypeAny>(schema: S) {
   return z.union([
     schema,
-    z
-      .string()
-      .max(17)
-      .regex(new RegExp(`^(${countryCodeSchema.options.join("|")})-\\d+$`))
-      .transform<z.infer<S>>((value) => {
-        const [code, number] = value.split("-");
-        return schema.parse({ code, number });
-      }),
+    _phoneNumberStringSchema.transform<z.infer<S>>((value) => {
+      const [code, number] = value.split("-");
+      return schema.parse({ code, number });
+    }),
   ]);
 }
 

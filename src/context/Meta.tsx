@@ -5,18 +5,14 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { createContext, FC, useContext, useEffect, useReducer } from "react";
+import { createContext, FC, useContext, useEffect, useState } from "react";
 
-import {
-  MetaData,
-  metaDataDocs,
-  MetaDataInDB,
-  personIndexFromDB,
-} from "models/metaData";
+import { MetaData, META_DATA_DOCS, userIndexFromDB } from "models/metaData";
 import { db } from "services/firebase";
-import { devOnly } from "utils";
+import { devOnly, oneOf } from "utils";
 
 import { useAuthContext } from ".";
+import { countryCodeSchema } from "models/blocks";
 
 const collectionRef = collection(db, "meta");
 
@@ -33,9 +29,7 @@ const metaContext = createContext(initialState);
 interface MetaProviderProps {}
 
 export const MetaProvider: FC<MetaProviderProps> = ({ children }) => {
-  const [{ context }, dispatch] = useReducer(reduce, {
-    context: initialState,
-  });
+  const [metaData, setMetaData] = useState(initialState);
 
   const { authorized } = useAuthContext();
   const isAuthorized = authorized();
@@ -43,15 +37,24 @@ export const MetaProvider: FC<MetaProviderProps> = ({ children }) => {
   useEffect(() => {
     if (!isAuthorized) return;
 
-    const q = query(collectionRef, where(documentId(), "in", metaDataDocs));
+    const q = query(collectionRef, where(documentId(), "in", META_DATA_DOCS));
 
     return onSnapshot(q, {
       next: (snapshot) => {
-        const metaData: any = {};
-        snapshot.forEach((doc) => (metaData[doc.id] = doc.data()));
-        devOnly(() => console.log("Got metaData"));
+        const data: any = {};
+        snapshot.forEach(
+          (doc) =>
+            (data[doc.id as keyof MetaData] = oneOf(doc.id, [
+              "studentIndex",
+              "teacherIndex",
+            ])
+              ? userIndexFromDB(doc.data())
+              : doc.data())
+        );
 
-        dispatch({ type: "populate", payload: metaData });
+        devOnly(() => console.log("Got metaData", data))();
+
+        setMetaData(data);
       },
       error: (error) => {
         console.log("ERROR", error);
@@ -60,29 +63,10 @@ export const MetaProvider: FC<MetaProviderProps> = ({ children }) => {
   }, [isAuthorized]);
 
   return (
-    <metaContext.Provider value={context}>{children}</metaContext.Provider>
+    <metaContext.Provider value={metaData}>{children}</metaContext.Provider>
   );
 };
 
-export const useMetaContext = () => useContext(metaContext);
-
-type State = { context: MetaContext };
-
-type Action = { type: "populate"; payload: MetaDataInDB };
-
-const reduce = (state: State, { type, payload }: Action): State => {
-  switch (type) {
-    case "populate":
-      const { shortList = {}, studentIndex = {}, teacherIndex = {} } = payload;
-      return {
-        ...state,
-        context: {
-          shortList,
-          studentIndex: personIndexFromDB(studentIndex),
-          teacherIndex: personIndexFromDB(teacherIndex),
-        },
-      };
-    default:
-      return state;
-  }
-};
+export function useMetaContext() {
+  return useContext(metaContext);
+}

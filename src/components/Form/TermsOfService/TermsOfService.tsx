@@ -16,6 +16,12 @@ import { usePopupContext } from "context";
 import { useGlobalT, useMessageT } from "hooks";
 import { cn } from "utils";
 
+const icons = {
+  invalid: InvalidIcon,
+  accepted: AcceptedIcon,
+  idle: IdleIcon,
+};
+
 interface TermsOfServiceProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "type"> {
   url: string;
@@ -27,18 +33,13 @@ const TermsOfService: VFC<TermsOfServiceProps> = (
   { url, isInvalid, onAccept, ...props },
   ref: Ref<HTMLInputElement>
 ) => {
-  const [status, setStatus] = useState<"invalid" | "accepted">();
+  const [status, setStatus] = useState<"idle" | "invalid" | "accepted">("idle");
 
   useEffect(() => {
     if (isInvalid) setStatus("invalid");
   }, [isInvalid]);
 
-  const Icon =
-    status === "invalid"
-      ? InvalidIcon
-      : status === "accepted"
-      ? AcceptedIcon
-      : IdleIcon;
+  const Icon = icons[status];
 
   const glb = useGlobalT();
   const msg = useMessageT();
@@ -50,7 +51,7 @@ const TermsOfService: VFC<TermsOfServiceProps> = (
       <input {...props} value={url} type="checkbox" ref={ref} hidden />
       <Button
         variant="plain-text"
-        className={cn("TermsOfService", status || "idle")}
+        className={cn("TermsOfService", status)}
         iconButton
         onClick={() =>
           openModal(
@@ -72,6 +73,7 @@ const TermsOfService: VFC<TermsOfServiceProps> = (
               center: true,
               closable: true,
               dismissible: true,
+              dir: "rtl",
             }
           )
         }

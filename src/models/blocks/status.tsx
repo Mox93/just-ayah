@@ -197,7 +197,10 @@ export const mapStatusString = <TVariant extends StatusVariants>(
 
 export const progressSchema = z.discriminatedUnion("type", [
   z.object({ type: z.enum(["pending", "active", "finished", "canceled"]) }),
-  z.object({ type: z.literal("postponed"), value: dateSchema }),
+  z.object({
+    type: z.literal("postponed"),
+    value: dateSchema.default(new Date()),
+  }),
 ]);
 
 export const subscriptionSchema = z.discriminatedUnion("type", [

@@ -4,7 +4,7 @@ import { FieldProps } from "components/Table";
 import { useGlobalT, usePersonalInfoT } from "hooks";
 import Teacher from "models/teacher";
 import { concat } from "utils";
-import { findPhoneNumberByTags } from "models/blocks";
+import { findPhoneNumberByTags, phoneNumberString } from "models/blocks";
 import { historyRep } from "models/_blocks";
 
 export function UseTableFields() {
@@ -25,7 +25,7 @@ export function UseTableFields() {
         header: pi("phoneNumber"),
         className: "phoneNumber",
         getValue: ({ data: { phoneNumber } }) =>
-          findPhoneNumberByTags(phoneNumber, ["whatsapp"]),
+          phoneNumberString(findPhoneNumberByTags(phoneNumber, ["whatsapp"])),
         fit: true,
       },
       {

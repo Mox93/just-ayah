@@ -13,7 +13,7 @@ export const capitalize: Capitalize = <T>(value: T) =>
 export const toTitle = (value: string) =>
   value.split(" ").map(capitalize).join(" ");
 
-export const concat = (...values: string[]) =>
+export const concat = (...values: (string | undefined)[]) =>
   values.filter(identity).join(" ");
 
 export const addZeros = (x = 0, length = 2) => {

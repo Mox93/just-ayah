@@ -1,3 +1,4 @@
+import { countryCodeSchema } from "./blocks/country";
 import { z } from "zod";
 
 import { dbConverter } from "utils";
@@ -20,8 +21,10 @@ import {
   scheduleSchema,
   simplePhoneNumberListSchema,
   subscriptionSchema,
+  timezoneCodeSchema,
   timezoneSchema,
   trackableSchema,
+  userRefSchema,
   workStatusSchema,
 } from "./blocks";
 
@@ -29,7 +32,7 @@ const metaSchema = trackableSchema.merge(
   z
     .object({
       course: z.string(),
-      teacher: z.string(),
+      teacher: userRefSchema,
       schedule: scheduleSchema,
       sessions: z.number().int(),
       lead: z.string(),
@@ -52,7 +55,7 @@ const metaDBSchema = metaSchema.merge(
 
 const studentSchema = z.object({
   firstName: z.string(),
-  middleName: z.string(),
+  middleName: z.string().optional(), // TODO make required once all data is valid in the DB
   lastName: z.string(),
   gender: genderSchema,
   governorate: z.string().optional(),
@@ -62,20 +65,25 @@ const studentSchema = z.object({
   dateOfBirth: dateSchema,
   nationality: countrySchema,
   country: countrySchema,
-  timezone: z.optional(timezoneSchema),
+  timezone: timezoneSchema.optional(),
   phoneNumber: phoneNumberListSchema,
   workStatus: workStatusSchema,
   meta: metaSchema.default({}),
 });
 
+const simpleFields = {
+  phoneNumber: simplePhoneNumberListSchema,
+  nationality: countryCodeSchema,
+  country: countryCodeSchema,
+  timezone: timezoneCodeSchema.optional(),
+};
+
 const studentDBSchema = studentSchema.extend({
   meta: metaDBSchema.default({}),
-  phoneNumber: simplePhoneNumberListSchema,
+  ...simpleFields,
 });
 
-const studentFormSchema = studentSchema.extend({
-  phoneNumber: simplePhoneNumberListSchema,
-});
+const studentFormSchema = studentSchema.extend(simpleFields);
 
 export default class Student extends DataModel(studentSchema) {
   static DB = BaseModel(studentDBSchema);

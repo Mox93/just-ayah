@@ -31,6 +31,8 @@ export default function DataModel<DataIn extends {}, DataOut extends {}>(
       if (result.success) {
         Object.defineProperty(this, "data", { value: result.data });
       } else {
+        console.log(data);
+
         onFailure(result.error, data, this);
       }
     }

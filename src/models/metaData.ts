@@ -1,47 +1,38 @@
-import { CountryCode, getCountry } from "./blocks";
+import { UserRef, userRefSchema } from "./blocks/user";
 
 interface ShortList {
   teachers?: string[];
   courses?: string[];
 }
 
-interface StudentSearchFields {
+interface UserSearchFields {
   name: string;
   phoneNumber: string[];
 }
 
-interface PersonIndexInDB {
-  [id: string]: StudentSearchFields;
+interface UserIndexMap {
+  [id: string]: UserSearchFields;
 }
 
-export type PersonIndex = (StudentSearchFields & {
-  id: string;
-})[];
-
-export interface MetaDataInDB {
-  shortList?: ShortList;
-  studentIndex?: PersonIndexInDB;
-  teacherIndex?: PersonIndexInDB;
-}
+export type UserIndexList = UserRef[];
 
 export interface MetaData {
   shortList: ShortList;
-  studentIndex: PersonIndex;
-  teacherIndex: PersonIndex;
+  studentIndex: UserIndexList;
+  teacherIndex: UserIndexList;
 }
 
-export const metaDataDocs: (keyof MetaData)[] = ["shortList", "studentIndex"];
+export const META_DATA_DOCS: (keyof MetaData)[] = [
+  "shortList",
+  "studentIndex",
+  "teacherIndex",
+];
 
-export const personIndexFromDB = (
-  studentIndex?: PersonIndexInDB
-): PersonIndex =>
-  Object.entries(studentIndex || {}).map(([id, { phoneNumber, ...data }]) => ({
-    id,
-    phoneNumber: phoneNumber.map((value) => {
-      const [code, ...number] = value.split("-", 1);
-      return [getCountry(code as CountryCode)?.phone ?? code, ...number].join(
-        ""
-      );
-    }),
-    ...data,
-  }));
+export const userIndexFromDB = (userIndex?: UserIndexMap): UserIndexList =>
+  Object.entries(userIndex || {}).flatMap(([id, data]) => {
+    const result = userRefSchema.safeParse({ id, ...data });
+
+    // console.log(result, data);
+
+    return result.success ? result.data : [];
+  });

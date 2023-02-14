@@ -1,4 +1,4 @@
-import { CollectionReference, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { useCallback } from "react";
 import { Class } from "type-fest";
 
@@ -12,20 +12,19 @@ import {
   REJECTED,
 } from "./Collection.types";
 
-interface UseSetDocProps<T, D> extends Pick<BaseCollectionProps<T>, "setData"> {
-  collectionRef: CollectionReference<D>;
+interface UseSetDocProps<T> extends BaseCollectionProps<T> {
   DataClass: Class<T>;
 }
 
-export default function useSetDoc<T extends DataModel, D extends DataModel>({
+export default function useSetDoc<T extends DataModel>({
   collectionRef,
   setData,
   DataClass,
-}: UseSetDocProps<T, D>) {
-  return useCallback<SetDataFunc<D>>(
+}: UseSetDocProps<T>) {
+  return useCallback<SetDataFunc<T>>(
     (
       id,
-      { data },
+      data,
       {
         onFulfilled = devOnly((...args) => console.log(FULFILLED, ...args)),
         onRejected = devOnly((...args) => console.log(REJECTED, ...args)),
@@ -37,7 +36,21 @@ export default function useSetDoc<T extends DataModel, D extends DataModel>({
       setDoc(doc(collectionRef, id), data)
         .then((...args) => {
           if (applyLocally)
-            setData?.((state) => [new DataClass(id, data), ...state]);
+            setData?.((state) => {
+              let dataExists = false;
+              const newData = new DataClass(id, data.data);
+              const newState = state.map((oldData) => {
+                if (oldData.id === newData.id) {
+                  dataExists = true;
+                  return newData;
+                }
+
+                return oldData;
+              });
+
+              return dataExists ? newState : [newData, ...newState];
+            });
+
           onFulfilled(...args);
         }, onRejected)
         .catch(onFailed)

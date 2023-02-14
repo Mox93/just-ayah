@@ -12,11 +12,13 @@ import {
   booleanSchema,
   commentListSchema,
   commentMapSchema,
+  countryCodeSchema,
   countrySchema,
   genderSchema,
   phoneNumberListSchema,
   scheduleSchema,
   simplePhoneNumberListSchema,
+  timezoneCodeSchema,
   timezoneSchema,
   trackableSchema,
 } from "./blocks";
@@ -46,27 +48,30 @@ const teacherSchema = z.object({
   lastName: z.string(),
   gender: genderSchema,
   governorate: z.string().optional(),
-  email: z.string().email().optional(),
-  facebook: z.string().url().optional(),
-  dateOfBirth: dateSchema,
-  nationality: countrySchema,
-  country: countrySchema,
+  email: z.union([z.string().email().optional(), z.literal("")]), // FIXME empty fields come from form as empty strings not undefined;
+  facebook: z.union([z.string().url().optional(), z.literal("")]), // FIXME empty fields come from form as empty strings not undefined;
+  dateOfBirth: dateSchema.optional(), // TODO make required once all data is valid in the DB
+  nationality: countrySchema.optional(), // TODO make required once all data is valid in the DB
+  country: countrySchema.optional(), // TODO make required once all data is valid in the DB
   nationalID: z.string().optional(),
   timezone: z.optional(timezoneSchema),
   phoneNumber: phoneNumberListSchema,
   meta: metaSchema.default({}),
 });
 
-const teacherDBSchema = teacherSchema.merge(
-  z.object({
-    meta: metaDBSchema.default({}),
-    phoneNumber: simplePhoneNumberListSchema,
-  })
-);
-
-const teacherFormSchema = teacherSchema.extend({
+const simpleFields = {
   phoneNumber: simplePhoneNumberListSchema,
+  nationality: countryCodeSchema.optional(), // TODO make required once all data is valid in the DB
+  country: countryCodeSchema.optional(), // TODO make required once all data is valid in the DB
+  timezone: timezoneCodeSchema.optional(),
+};
+
+const teacherDBSchema = teacherSchema.extend({
+  meta: metaDBSchema.default({}),
+  ...simpleFields,
 });
+
+const teacherFormSchema = teacherSchema.extend(simpleFields);
 
 export default class Teacher extends DataModel(teacherSchema) {
   static DB = BaseModel(teacherDBSchema);
