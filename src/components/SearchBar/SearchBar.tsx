@@ -116,7 +116,7 @@ const SearchBar = <TIndex,>({
         ? dropdownWrapper(searchBar, () => (
             <Menu
               ref={drivenRef}
-              items={results || []}
+              options={results || []}
               getKey={getKey}
               {...(renderSections && {
                 renderElement: renderAttributes(

@@ -1,29 +1,12 @@
 import { isEqual } from "lodash";
-import {
-  ChangeEventHandler,
-  forwardRef,
-  ReactNode,
-  Ref,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { forwardRef, ReactNode, Ref } from "react";
 
-import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.svg";
 import { DropdownArrow } from "components/Icons";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown } from "hooks";
 import { GetKey, Merge, Path } from "models";
-import {
-  applyInOrder,
-  cn,
-  FunctionOrChain,
-  hasAtLeastOne,
-  identity,
-  oneOf,
-} from "utils";
+import { applyInOrder, cn, FunctionOrChain, identity, oneOf } from "utils";
 import { after, before } from "utils/position";
-import { substringMatch } from "utils/match";
 
 import Input, { InputProps } from "../Input";
 
@@ -43,12 +26,6 @@ interface MenuInputPropsInternal<TOption> extends MenuInputProps<TOption> {
   getKey?: GetKey<TOption>;
 }
 
-/**
-// TODO:
- *  - Implement filtering
- *  - Handle reset selection
- */
-
 const MenuInput = <TOption,>(
   {
     className,
@@ -64,7 +41,6 @@ const MenuInput = <TOption,>(
   }: MenuInputPropsInternal<TOption>,
   ref: Ref<HTMLInputElement>
 ) => {
-  const [optionList, setOptionList] = useState(options);
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
     useDropdown({
       className: cn("MenuInput", className),
@@ -73,39 +49,17 @@ const MenuInput = <TOption,>(
       onClick: "toggle",
     });
 
-  const isSelected = !oneOf(selected, ["", null, undefined]);
-
-  const applyFilter = useMemo<ChangeEventHandler<HTMLInputElement> | undefined>(
-    () =>
-      hasAtLeastOne(searchFields)
-        ? (e) => {
-            const results = substringMatch(options, {
-              filter: { type: "pick", fields: searchFields },
-            })(e.target.value);
-
-            setOptionList(
-              results?.length ? results.map(({ value }) => value) : options
-            );
-          }
-        : undefined,
-
-    [searchFields, options]
-  );
-
-  useEffect(() => {
-    // reset options on close so the next time we don't get the previous search result
-    isOpen || setOptionList(options);
-  }, [isOpen, options]);
+  const hasSelection = !oneOf(selected, ["", null, undefined]);
 
   return dropdownWrapper(
     // TODO replace with Button
     <Input
       {...{ ...props, dir, ref }}
-      className={cn({ hidden: isSelected })} // TODO once filtering is implemented replace condition with `!isOpen && selected`
+      className={cn({ hidden: hasSelection })} // TODO once filtering is implemented replace condition with `!isOpen && selected`
       readOnly // TODO remove once filtering is implemented
       fieldRef={driverRef}
     >
-      {isSelected // TODO once filtering is implemented replace condition with `!isOpen && selected`
+      {hasSelection // TODO once filtering is implemented replace condition with `!isOpen && selected`
         ? before(
             "input",
             <div className="selected">
@@ -117,29 +71,14 @@ const MenuInput = <TOption,>(
     </Input>,
     () => (
       <Menu
-        {...{ dir, getKey }}
+        {...{ dir, getKey, options, searchFields }}
         ref={drivenRef}
-        items={optionList}
-        checkIsSelected={(item) => isEqual(item, selected)}
+        checkIsSelected={(option) => isEqual(option, selected)}
         renderElement={renderElement}
-        onSelect={(item) => {
-          setValue?.(item);
+        onSelect={(option) => {
+          setValue?.(option);
           dropdownAction("close");
         }}
-        {...(searchFields && {
-          header: (
-            <Input
-              dir={dir}
-              className="searchField"
-              onChange={applyFilter}
-              autoComplete="off"
-              autoFocus
-              visibleBorder
-            >
-              {before("input", <SearchIcon className="icon" />)}
-            </Input>
-          ),
-        })}
         withCheckMark
       />
     )

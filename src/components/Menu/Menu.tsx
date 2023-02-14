@@ -3,61 +3,73 @@ import { forwardRef, ReactNode, Ref } from "react";
 import { Button, SizeVariant, ButtonVariant } from "components/Buttons";
 import Container from "components/Container";
 import { CheckMark } from "components/Icons";
-import { Converter, GetKey } from "models";
+import { Converter, GetKey, Path } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, pass } from "utils";
 
-interface MenuProps<TItem> {
-  items: TItem[];
+import { useListFilter } from "./Menu.utils";
+
+interface MenuProps<TOption> {
+  options: TOption[];
   header?: ReactNode;
   className?: string;
   dir?: string;
   withCheckMark?: boolean;
-  renderElement?: FunctionOrChain<TItem, ReactNode>;
+  renderElement?: FunctionOrChain<TOption, ReactNode>;
   variant?: ButtonVariant | null;
   size?: SizeVariant | null;
-  checkIsSelected?: Converter<TItem, boolean>;
-  getKey?: GetKey<TItem>;
-  onSelect?: (item: TItem) => void;
+  searchFields?: Path<TOption>[];
+  checkIsSelected?: Converter<TOption, boolean>;
+  getKey?: GetKey<TOption>;
+  onSelect?: (item: TOption) => void;
 }
 
 const Menu = <TItem,>(
   {
-    items,
+    options,
     className,
     dir,
     header,
     variant = "plain-text",
     size = "small",
     withCheckMark,
-    checkIsSelected = pass(false),
+    searchFields,
     renderElement = identity,
+    checkIsSelected = pass(false),
     getKey = identity,
     onSelect,
   }: MenuProps<TItem>,
   ref: Ref<HTMLDivElement>
 ) => {
+  const [optionList, searchBar] = useListFilter({ options, searchFields, dir });
+
   const render = applyInOrder(renderElement);
 
   return (
     <Container
       variant="menu"
-      {...{ dir, header, ref }}
+      {...{ dir, ref }}
+      header={
+        <>
+          {header}
+          {searchBar}
+        </>
+      }
       className={cn("Menu", className)}
     >
-      {items.map((item) => {
-        const isSelected = checkIsSelected(item);
+      {optionList.map((option) => {
+        const isSelected = checkIsSelected(option);
 
         return (
           <Button
-            key={getKey(item)}
+            key={getKey(option)}
             className={cn("item", {
               withCheckMark,
               selected: isSelected,
             })}
-            onClick={onSelect && pass(onSelect, item)}
+            onClick={onSelect && pass(onSelect, option)}
             {...{ variant, size, dir }}
           >
-            {render(item)}
+            {render(option)}
             {withCheckMark && isSelected && <CheckMark dir={dir} />}
           </Button>
         );

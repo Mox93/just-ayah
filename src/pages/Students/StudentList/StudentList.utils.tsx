@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { ReactComponent as Info } from "assets/icons/info-svgrepo-com.svg";
 import { Button } from "components/Buttons";
 import { SelectionMenu } from "components/DropdownMenu";
-import Ellipsis, { ellipsis } from "components/Ellipsis";
+import Ellipsis from "components/Ellipsis";
 import { StatusMenu } from "components/DropdownMenu";
 import { FieldProps } from "components/Table";
 import {
@@ -110,7 +110,6 @@ export function useTableFields() {
         header: pi("phoneNumber"),
         className: "phoneNumber",
         getValue: ({ data: { phoneNumber } }) =>
-          // phoneNumberString(phoneNumber[0]),
           phoneNumberString(findPhoneNumberByTags(phoneNumber, ["whatsapp"])),
         fit: true,
       },
@@ -163,7 +162,7 @@ export function useTableFields() {
             options={courses}
             size="small"
             setValue={updateField("meta.course", id)}
-            renderElement={ellipsis()}
+            renderElement={(value) => <Ellipsis>{value}</Ellipsis>}
           />
         ),
       },
@@ -181,6 +180,7 @@ export function useTableFields() {
             setValue={updateField("meta.teacher", id)}
             getKey={({ id }) => id}
             renderElement={({ name }) => <Ellipsis>{name}</Ellipsis>}
+            searchFields={["name"]}
           />
         ),
       },

@@ -4,7 +4,7 @@ import { forwardRef, ReactNode, Ref } from "react";
 import { Button, ButtonProps, DropdownButton } from "components/Buttons";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown } from "hooks";
-import { GetKey } from "models";
+import { GetKey, Path } from "models";
 import {
   applyInOrder,
   capitalize,
@@ -22,6 +22,7 @@ interface SelectionMenuProps<TOption> extends Omit<ButtonProps, "children"> {
   placeholder?: string;
   noCheckmark?: boolean;
   noArrow?: boolean;
+  searchFields?: Path<TOption>[];
   getKey?: GetKey<TOption>;
   checkIsSelected?: (option: TOption, selected?: TOption) => boolean;
   setValue?: (option: TOption) => void;
@@ -40,6 +41,7 @@ const SelectionMenu = <TOption,>(
     keepFormat,
     noCheckmark,
     noArrow,
+    searchFields,
     onClick,
     setValue,
     getKey = identity,
@@ -84,12 +86,11 @@ const SelectionMenu = <TOption,>(
     </ButtonComponent>,
     () => (
       <Menu
-        {...{ variant, size, getKey, dir }}
+        {...{ variant, size, getKey, dir, searchFields, options }}
         ref={drivenRef}
-        items={options}
-        checkIsSelected={(item) => checkIsSelected(item, selected)}
-        onSelect={(item) => {
-          setValue?.(item);
+        checkIsSelected={(option) => checkIsSelected(option, selected)}
+        onSelect={(option) => {
+          setValue?.(option);
           dropdownAction("close");
         }}
         renderElement={render}

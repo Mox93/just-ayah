@@ -45,6 +45,3 @@ const Ellipsis: VFC<EllipsisProps> = ({
 };
 
 export default Ellipsis;
-
-export const ellipsis = (props?: EllipsisProps) => (value: string) =>
-  <Ellipsis {...props}>{value}</Ellipsis>;
