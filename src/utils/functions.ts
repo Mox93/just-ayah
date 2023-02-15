@@ -24,6 +24,10 @@ function pass<R, A = unknown, T extends A[] = any[]>(
   func: (...args: T) => R,
   ...args: T
 ): () => R;
+function pass<R, A = unknown, T extends A[] = any[]>(
+  func: ((...args: T) => R) | undefined,
+  ...args: T
+): () => R | undefined;
 function pass<T>(value: T): () => T;
 function pass(funcOrValue: any, ...args: any[]) {
   return () =>

@@ -5,14 +5,7 @@ import { Button, ButtonProps, DropdownButton } from "components/Buttons";
 import Menu from "components/Menu";
 import { OverflowDir, useDropdown } from "hooks";
 import { GetKey, Path } from "models";
-import {
-  applyInOrder,
-  capitalize,
-  cn,
-  FunctionOrChain,
-  identity,
-  mergeRefs,
-} from "utils";
+import { applyInOrder, cn, FunctionOrChain, identity, mergeRefs } from "utils";
 
 interface SelectionMenuProps<TOption> extends Omit<ButtonProps, "children"> {
   options: TOption[];
@@ -25,7 +18,8 @@ interface SelectionMenuProps<TOption> extends Omit<ButtonProps, "children"> {
   searchFields?: Path<TOption>[];
   getKey?: GetKey<TOption>;
   checkIsSelected?: (option: TOption, selected?: TOption) => boolean;
-  setValue?: (option: TOption) => void;
+  onOptionSelect?: (option: TOption) => void;
+  onOptionChange?: (option: TOption) => void;
 }
 
 const SelectionMenu = <TOption,>(
@@ -42,8 +36,8 @@ const SelectionMenu = <TOption,>(
     noCheckmark,
     noArrow,
     searchFields,
-    onClick,
-    setValue,
+    onOptionSelect,
+    onOptionChange,
     getKey = identity,
     checkIsSelected = isEqual,
     renderElement = identity,
@@ -59,10 +53,7 @@ const SelectionMenu = <TOption,>(
       onClick: "toggle",
     });
 
-  const render = applyInOrder([
-    (element) => (keepFormat ? element : capitalize(element)),
-    renderElement,
-  ]);
+  const render = applyInOrder(renderElement);
 
   const ButtonComponent = noArrow ? Button : DropdownButton;
 
@@ -79,7 +70,6 @@ const SelectionMenu = <TOption,>(
       className={cn("driver", {
         empty: selected === undefined && placeholder === undefined,
       })}
-      onClick={onClick}
       ref={mergeRefs(ref, driverRef)}
     >
       {selected ? render(selected) : placeholder || ". . ."}
@@ -90,7 +80,9 @@ const SelectionMenu = <TOption,>(
         ref={drivenRef}
         checkIsSelected={(option) => checkIsSelected(option, selected)}
         onSelect={(option) => {
-          setValue?.(option);
+          if (!checkIsSelected(option, selected)) onOptionChange?.(option);
+
+          onOptionSelect?.(option);
           dropdownAction("close");
         }}
         renderElement={render}

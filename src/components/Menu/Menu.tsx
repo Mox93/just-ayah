@@ -66,7 +66,7 @@ const Menu = <TItem,>(
               withCheckMark,
               selected: isSelected,
             })}
-            onClick={onSelect && pass(onSelect, option)}
+            onClick={pass(onSelect, option)}
             {...{ variant, size, dir }}
           >
             {render(option)}

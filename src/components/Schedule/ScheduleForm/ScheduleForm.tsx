@@ -52,7 +52,7 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
               selected={index + 1}
               className="position"
               noArrow
-              setValue={(to) => moveItem(index, to - 1)}
+              onOptionChange={(to) => moveItem(index, to - 1)}
             />
             <WeekDayInput
               label={index > 0 ? undefined : glb("day")}

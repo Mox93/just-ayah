@@ -22,8 +22,6 @@ const statusMap = {
   progress: [
     "pending",
     "active",
-    "finished",
-    "canceled",
     {
       name: "postponed",
       type: "date",
@@ -51,10 +49,11 @@ const statusMap = {
         />
       ),
     },
+    "finished",
+    "canceled",
   ],
   subscription: [
     "fullPay",
-    "noPay",
     {
       name: "partialPay",
       type: "number",
@@ -72,6 +71,7 @@ const statusMap = {
         />
       ),
     },
+    "noPay",
   ],
 } as const;
 

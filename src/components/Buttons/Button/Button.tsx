@@ -66,7 +66,7 @@ const Button = (
       disabled={isLoading || disabled}
     >
       {Children.map(children, (child) =>
-        typeof child !== "string" || keepFormat ? child : capitalize(child)
+        typeof keepFormat ? child : capitalize(child)
       )}
       {isLoading && <LoadingDots className="loadingIndicator" />}
     </button>

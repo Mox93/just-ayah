@@ -161,7 +161,7 @@ export function useTableFields() {
             selected={course}
             options={courses}
             size="small"
-            setValue={updateField("meta.course", id)}
+            onOptionChange={updateField("meta.course", id)}
             renderElement={(value) => <Ellipsis>{value}</Ellipsis>}
           />
         ),
@@ -169,7 +169,7 @@ export function useTableFields() {
       {
         name: "teacher",
         header: glb("teacher"),
-        className: "buttonCell",
+        className: "buttonCell name",
         getValue: ({ id, meta: { teacher } }) => (
           <SelectionMenu
             selected={teacher}
@@ -177,7 +177,7 @@ export function useTableFields() {
               a > b ? 1 : -1
             )}
             size="small"
-            setValue={updateField("meta.teacher", id)}
+            onOptionChange={updateField("meta.teacher", id)}
             getKey={({ id }) => id}
             renderElement={({ name }) => <Ellipsis>{name}</Ellipsis>}
             searchFields={["name"]}
