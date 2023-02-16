@@ -1,9 +1,3 @@
-import { VFC } from "react";
-
-interface NewCourseProps {}
-
-const NewCourse: VFC<NewCourseProps> = () => {
+export default function NewCourse() {
   return <h1>New Course</h1>;
-};
-
-export default NewCourse;
+}

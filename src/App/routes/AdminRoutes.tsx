@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { Admin, SignIn } from "pages/Admin";
@@ -7,9 +6,7 @@ import { Students, StudentProfile, StudentEnroll } from "pages/Students";
 import { NewTeacher, TeacherProfile, Teachers } from "pages/Teachers";
 import UserGuard from "../guard/UserGuard";
 
-interface AdminRoutesProps {}
-
-const AdminRoutes: VFC<AdminRoutesProps> = () => {
+export default function AdminRoutes() {
   return (
     <Routes>
       <Route element={<UserGuard redirect="sign-in" />}>
@@ -34,6 +31,4 @@ const AdminRoutes: VFC<AdminRoutesProps> = () => {
       </Route>
     </Routes>
   );
-};
-
-export default AdminRoutes;
+}

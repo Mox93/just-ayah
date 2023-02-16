@@ -1,13 +1,10 @@
-import { VFC } from "react";
 import { Trans } from "react-i18next";
 
 import { useMessageT } from "hooks";
 
 import FlashCard from "../FlashCard";
 
-interface EnrolledMessageProps {}
-
-const EnrolledMessage: VFC<EnrolledMessageProps> = () => {
+export default function EnrolledMessage() {
   const msg = useMessageT("flash");
   return (
     <FlashCard state="success">
@@ -20,6 +17,4 @@ const EnrolledMessage: VFC<EnrolledMessageProps> = () => {
       </Trans>
     </FlashCard>
   );
-};
-
-export default EnrolledMessage;
+}

@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { useForm } from "react-hook-form";
 
 import Container from "components/Container";
@@ -30,9 +29,7 @@ interface TestData {
   dateOfBirth: Date;
 }
 
-interface TestFormProps {}
-
-const FormUI: VFC<TestFormProps> = () => {
+export default function FormUI() {
   const { setValue, register, handleSubmit, reset, watch } =
     useForm<TestData>();
 
@@ -182,6 +179,4 @@ const FormUI: VFC<TestFormProps> = () => {
       </Container>
     </main>
   );
-};
-
-export default FormUI;
+}

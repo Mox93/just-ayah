@@ -41,9 +41,7 @@ interface TeacherContext {
 
 const teacherContext = createContext<TeacherContext | null>(null);
 
-interface TeacherProviderProps {}
-
-export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
+export const TeacherProvider: FC = ({ children }) => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
 
   const addTeacher = useAddDoc({

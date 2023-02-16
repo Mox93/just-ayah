@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { NavLink } from "react-router-dom";
 
 import { ReactComponent as HomeIcon } from "assets/icons/home-svgrepo-com.svg";
@@ -11,9 +10,7 @@ import { useAuthContext } from "context";
 import { useDirT, useGlobalT, useNavT } from "hooks";
 import { cn } from "utils";
 
-interface SidebarProps {}
-
-const Sidebar: VFC<SidebarProps> = () => {
+export default function Sidebar() {
   const dirT = useDirT();
   const glb = useGlobalT();
   const nav = useNavT();
@@ -51,6 +48,4 @@ const Sidebar: VFC<SidebarProps> = () => {
       </div>
     </div>
   );
-};
-
-export default Sidebar;
+}

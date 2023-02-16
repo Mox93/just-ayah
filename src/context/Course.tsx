@@ -12,9 +12,7 @@ const initialState: CourseContext = {
 
 const courseContext = createContext(initialState);
 
-interface CourseProviderProps {}
-
-export const CourseProvider: FC<CourseProviderProps> = ({ children }) => {
+export const CourseProvider: FC = ({ children }) => {
   const { shortList: { courses = [] } = {} } = useMetaContext();
 
   return (

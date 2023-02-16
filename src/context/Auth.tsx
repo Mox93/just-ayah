@@ -59,9 +59,7 @@ const authContext = createContext(initialState);
 
 export const useAuthContext = () => useContext(authContext);
 
-interface AuthProviderProps {}
-
-export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: FC = ({ children }) => {
   const glb = useGlobalT();
   // TODO move this into a reducer
   const [user, setUser] = useState<User | null>(null);

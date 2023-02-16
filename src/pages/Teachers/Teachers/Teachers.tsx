@@ -1,5 +1,5 @@
 import { get } from "lodash";
-import { useMemo, VFC } from "react";
+import { useMemo } from "react";
 
 import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
 import { Button } from "components/Buttons";
@@ -11,9 +11,7 @@ import { substringMatch } from "utils/match";
 
 import NewTeacher from "../NewTeacher";
 
-interface TeachersProps {}
-
-const Teachers: VFC<TeachersProps> = () => {
+export default function Teachers() {
   const tch = usePageT("teacher");
 
   const { teacherIndex } = useMetaContext();
@@ -67,6 +65,4 @@ const Teachers: VFC<TeachersProps> = () => {
       }
     />
   );
-};
-
-export default Teachers;
+}

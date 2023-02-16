@@ -12,7 +12,6 @@ import { db } from "services/firebase";
 import { devOnly, oneOf } from "utils";
 
 import { useAuthContext } from ".";
-import { countryCodeSchema } from "models/blocks";
 
 const collectionRef = collection(db, "meta");
 
@@ -26,9 +25,7 @@ const initialState: MetaContext = {
 
 const metaContext = createContext(initialState);
 
-interface MetaProviderProps {}
-
-export const MetaProvider: FC<MetaProviderProps> = ({ children }) => {
+export const MetaProvider: FC = ({ children }) => {
   const [metaData, setMetaData] = useState(initialState);
 
   const { authorized } = useAuthContext();

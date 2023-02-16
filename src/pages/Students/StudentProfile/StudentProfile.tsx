@@ -1,9 +1,3 @@
-import { VFC } from "react";
-
-interface StudentProfileProps {}
-
-const StudentProfile: VFC<StudentProfileProps> = () => {
+export default function StudentProfile() {
   return <h1>Student Profile</h1>;
-};
-
-export default StudentProfile;
+}

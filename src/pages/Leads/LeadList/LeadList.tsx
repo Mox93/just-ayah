@@ -1,9 +1,3 @@
-import { VFC } from "react";
-
-interface LeadListProps {}
-
-const LeadList: VFC<LeadListProps> = () => {
+export default function LeadList() {
   return <h1>Lead List</h1>;
-};
-
-export default LeadList;
+}

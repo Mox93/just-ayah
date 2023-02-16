@@ -20,9 +20,7 @@ interface LeadContext {
 
 const leadContext = createContext<LeadContext | null>(null);
 
-interface LeadProviderProps {}
-
-export const LeadProvider: FC<LeadProviderProps> = ({ children }) => {
+export const LeadProvider: FC = ({ children }) => {
   const [leads, setLeads] = useState<Lead[]>([]);
 
   const addLead = useAddDoc({

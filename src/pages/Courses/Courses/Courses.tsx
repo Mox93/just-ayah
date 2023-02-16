@@ -1,15 +1,10 @@
-import { VFC } from "react";
 import { Outlet } from "react-router-dom";
 
-interface CoursesProps {}
-
-const Courses: VFC<CoursesProps> = () => {
+export default function Courses() {
   return (
     <div>
       <h1>Courses</h1>
       <Outlet />
     </div>
   );
-};
-
-export default Courses;
+}

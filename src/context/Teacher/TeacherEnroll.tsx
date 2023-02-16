@@ -43,11 +43,7 @@ export const teacherEnrollContext = createContext<TeacherEnrollContext | null>(
   null
 );
 
-interface TeacherEnrollProviderProps {}
-
-export const TeacherEnrollProvider: FC<TeacherEnrollProviderProps> = ({
-  children,
-}) => {
+export const TeacherEnrollProvider: FC = ({ children }) => {
   const [enrolls, setEnrolls] = useState<TeacherEnroll[]>([]);
 
   const addEnroll = useAddDoc({

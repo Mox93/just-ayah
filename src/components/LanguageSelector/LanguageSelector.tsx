@@ -1,12 +1,8 @@
-import { VFC } from "react";
-
 import { useLanguage } from "hooks";
 import { languages } from "models/blocks";
 import { cn } from "utils";
 
-interface LanguageSelectorProps {}
-
-const LanguageSelector: VFC<LanguageSelectorProps> = () => {
+export default function LanguageSelector() {
   const [language, setLanguage] = useLanguage();
 
   return (
@@ -22,6 +18,4 @@ const LanguageSelector: VFC<LanguageSelectorProps> = () => {
       ))}
     </div>
   );
-};
-
-export default LanguageSelector;
+}

@@ -1,4 +1,4 @@
-import { useState, VFC } from "react";
+import { useState } from "react";
 
 import { Button } from "components/Buttons";
 import { StatusMenu } from "components/DropdownMenu";
@@ -7,8 +7,6 @@ import LoadingPopup from "components/LoadingPopup";
 import { useDirT } from "hooks";
 import { mapStatusType, mapStatusVariant } from "models/blocks";
 import Toast from "context/Popup/Toast";
-
-interface MainProps {}
 
 const colorVariants = [
   "primary",
@@ -43,7 +41,7 @@ const sectionHeaderStyle: any = {
   marginBlockEnd: "0.5rem",
 };
 
-const MainUI: VFC<MainProps> = () => {
+export default function MainUI() {
   const dirT = useDirT();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -121,6 +119,4 @@ const MainUI: VFC<MainProps> = () => {
       {isLoading && <LoadingPopup message="Loading" />}
     </main>
   );
-};
-
-export default MainUI;
+}

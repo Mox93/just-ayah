@@ -1,4 +1,4 @@
-import { useEffect, VFC } from "react";
+import { useEffect } from "react";
 
 import { Button } from "components/Buttons";
 import { Table } from "components/Table";
@@ -8,9 +8,7 @@ import { prodOnly } from "utils";
 
 import { useTableFields } from "./StudentList.utils";
 
-interface StudentListProps {}
-
-const StudentList: VFC<StudentListProps> = () => {
+export default function StudentList() {
   const glb = useGlobalT();
   const stu = usePageT("student");
 
@@ -58,6 +56,4 @@ const StudentList: VFC<StudentListProps> = () => {
       />
     </div>
   );
-};
-
-export default StudentList;
+}

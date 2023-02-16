@@ -1,13 +1,11 @@
-import { useEffect, VFC } from "react";
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 import Sidebar from "components/Sidebar";
 import { useDirT } from "hooks";
 import { usePopupContext } from "context";
 
-interface AdminProps {}
-
-const Admin: VFC<AdminProps> = () => {
+export default function Admin() {
   const dirT = useDirT();
 
   const { openToast } = usePopupContext();
@@ -34,6 +32,4 @@ const Admin: VFC<AdminProps> = () => {
       <Outlet />
     </div>
   );
-};
-
-export default Admin;
+}

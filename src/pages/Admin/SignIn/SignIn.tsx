@@ -1,5 +1,3 @@
-import { VFC } from "react";
-
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import { ReactComponent as GoogleLogo } from "assets/icons/google-svgrepo-com.svg";
 import { Button } from "components/Buttons";
@@ -8,9 +6,7 @@ import { useAuthContext } from "context";
 import { useGlobalT } from "hooks";
 import { capitalize } from "utils";
 
-interface SignInProps {}
-
-const SignIn: VFC<SignInProps> = () => {
+export default function SignIn() {
   const glb = useGlobalT();
 
   const { signIn } = useAuthContext();
@@ -29,6 +25,4 @@ const SignIn: VFC<SignInProps> = () => {
       </Button>
     </div>
   );
-};
-
-export default SignIn;
+}

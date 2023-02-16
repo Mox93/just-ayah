@@ -41,9 +41,7 @@ interface StudentContext {
 
 const studentContext = createContext<StudentContext | null>(null);
 
-interface StudentProviderProps {}
-
-export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
+export const StudentProvider: FC = ({ children }) => {
   const [students, setStudents] = useState<Student[]>([]);
 
   const addStudent = useAddDoc({
