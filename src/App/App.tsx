@@ -1,4 +1,4 @@
-import { StrictMode, Suspense, useEffect } from "react";
+import { StrictMode, Suspense, useRef } from "react";
 import { BrowserRouter } from "react-router-dom";
 
 import LoadingPopup from "components/LoadingPopup";
@@ -7,61 +7,63 @@ import {
   CourseProvider,
   LeadProvider,
   MetaProvider,
+  PopupOutlet,
+  PopupProvider,
   StudentProvider,
-  usePopupProvider,
   TeacherProvider,
   StudentEnrollProvider,
   TeacherEnrollProvider,
 } from "context";
+import { devOnly } from "utils";
+
+import { Nest, Network } from "./components";
+import { RoutHandler } from "./routes";
+
 import "services/i18n";
 import "styles/index.scss";
 
-import Nest from "./Nest";
-import { RoutHandler } from "./routes";
-import { devOnly } from "utils";
-
-const now = new Date();
-
-function App() {
-  const [PopupProvider, popups] = usePopupProvider();
-
-  useEffect(() => {
-    devOnly(() =>
-      console.log(
-        ">>> PopupProvider changed",
-        new Date().getTime() - now.getTime()
-      )
-    );
-  }, [PopupProvider]);
-
-  useEffect(() => {
-    devOnly(() =>
-      console.log(">>> popups changed", new Date().getTime() - now.getTime())
-    );
-  }, [popups]);
+function useTrackRerender() {
+  const { current: now } = useRef(new Date());
 
   devOnly(() =>
-    console.log(">>> App changed", new Date().getTime() - now.getTime())
-  );
+    console.log(">>> App rerender", new Date().getTime() - now.getTime())
+  )();
+}
+
+function App() {
+  useTrackRerender();
 
   return (
     <Nest>
       <StrictMode />
+
+      {/* General UI Providers */}
       <PopupProvider />
-      <BrowserRouter />
       <Suspense fallback={<LoadingPopup message="loading" />} />
-      {/* <Suspense fallback={<LoadingSpinner />} /> */}
-      <AuthProvider />
-      <MetaProvider />
-      <TeacherProvider />
-      <CourseProvider />
-      <LeadProvider />
-      <StudentProvider />
-      <StudentEnrollProvider />
-      <TeacherEnrollProvider />
       <>
-        <RoutHandler />
-        {popups}
+        <Nest>
+          {/* Path Specific Providers */}
+          <BrowserRouter />
+
+          {/* Role Specific Providers */}
+          <AuthProvider />
+          <MetaProvider />
+
+          {/* System Data Providers */}
+          <CourseProvider />
+          <LeadProvider />
+          <StudentProvider />
+          <StudentEnrollProvider />
+          <TeacherProvider />
+          <TeacherEnrollProvider />
+
+          {/* Page Content */}
+          <>
+            <RoutHandler />
+            <PopupOutlet />
+          </>
+        </Nest>
+        <Network />
       </>
     </Nest>
   );

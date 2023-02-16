@@ -1,23 +1,24 @@
-import { FC, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 import { CloseButton } from "components/Buttons";
 import { useDirT } from "hooks";
 import { cn } from "utils";
 
 export type ModalProps = {
+  content: ReactElement;
   dismissible?: boolean;
   center?: boolean;
   dir?: string;
   close?: VoidFunction;
 };
 
-const Modal: FC<ModalProps> = ({
-  children,
+export default function Modal({
+  content,
   close,
   dismissible,
   center,
   dir,
-}) => {
+}: ModalProps) {
   const dirT = useDirT();
 
   useEffect(() => {
@@ -39,12 +40,10 @@ const Modal: FC<ModalProps> = ({
       />
       <div className={cn("foreground", { center })}>
         <div className="body">
-          {children}
+          {content}
           {close && <CloseButton onClick={close} dir={dir} />}
         </div>
       </div>
     </div>
   );
-};
-
-export default Modal;
+}

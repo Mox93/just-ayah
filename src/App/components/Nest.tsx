@@ -11,13 +11,13 @@ interface NestProps {
 }
 
 const Nest: FC<NestProps> = ({ children }) => {
-  const [head, ...tail] = Children.toArray(children)
+  const [child, ...parents] = Children.toArray(children)
     .filter(isValidElement)
     .reverse();
 
-  return tail.reduce<ReactElement>(
+  return parents.reduce<ReactElement>(
     (child, parent) => cloneElement(parent, {}, child),
-    head
+    child
   );
 };
 

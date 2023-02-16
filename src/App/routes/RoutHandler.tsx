@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useStudentEnrollContext, useTeacherEnrollContext } from "context";
@@ -24,9 +23,7 @@ import { devOnly, pass } from "utils";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
-interface RoutHandlerProps {}
-
-const RoutHandler: VFC<RoutHandlerProps> = () => {
+export default function RoutHandler() {
   // const parts = window.location.hostname.split(".");
   // const subdomain = parts.length > 1 ? parts[0] : null;
 
@@ -132,6 +129,4 @@ const RoutHandler: VFC<RoutHandlerProps> = () => {
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
-};
-
-export default RoutHandler;
+}

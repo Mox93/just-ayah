@@ -10,7 +10,7 @@ interface LoadingSpinnerProps {
 const LoadingSpinner: VFC<LoadingSpinnerProps> = ({ className }) => {
   return (
     <div className={cn("LoadingSpinner", className)}>
-      <Spinner className="icon" />
+      <Spinner className="spinner" />
     </div>
   );
 };

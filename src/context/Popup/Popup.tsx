@@ -1,9 +1,7 @@
 import {
   createContext,
   FC,
-  PropsWithChildren,
   ReactElement,
-  ReactNode,
   useCallback,
   useContext,
   useReducer,
@@ -11,12 +9,12 @@ import {
 
 import { assert, mergeCallbacks, pass } from "utils";
 
+import Loading, { LoadingProps } from "./Loading";
 import Modal, { ModalProps } from "./Modal";
-import Network from "./Network";
 import Toast, { ToastProps, ToastVariant } from "./Toast";
 
 type OpenModal = (
-  children: ReactNode,
+  children: ReactElement,
   options?: {
     closable?: boolean;
     dismissible?: boolean;
@@ -34,30 +32,45 @@ type OpenToast = (
   }
 ) => void;
 
+type StartLoading = (message?: string | ReactElement) => void;
+
+type MaybeProps<TProps> =
+  | { isOpen: true; props: TProps }
+  | { isOpen: false; props?: never };
+
 interface PopupContext {
   openModal: OpenModal;
   closeModal: VoidFunction;
   openToast: OpenToast;
   closeToast: VoidFunction;
+  startLoading: StartLoading;
+  stopLoading: VoidFunction;
+}
+
+interface PopupOutletContext {
+  modal: MaybeProps<ModalProps>;
+  toast: MaybeProps<ToastProps>;
 }
 
 const popupContext = createContext<PopupContext | null>(null);
+const popupOutletContext = createContext<PopupOutletContext | null>(null);
 
-export function usePopupProvider(): [FC, ReactElement] {
-  const [{ modal, toast }, dispatch] = useReducer(reduce, {
+export const PopupProvider: FC = ({ children }) => {
+  const [{ loading, ...outletValue }, dispatch] = useReducer(reduce, {
     modal: { isOpen: false },
     toast: { isOpen: false },
+    loading: { isOpen: false },
   });
 
   const closeModal = useCallback(() => dispatch({ type: "closeModal" }), []);
 
   const openModal = useCallback<OpenModal>(
-    (children, { closable, ...props } = {}) =>
+    (content, { closable, ...props } = {}) =>
       dispatch({
         type: "openModal",
         payload: {
           ...props,
-          children,
+          content,
           ...(closable && { close: closeModal }),
         },
       }),
@@ -82,80 +95,89 @@ export function usePopupProvider(): [FC, ReactElement] {
     []
   );
 
-  return [
-    useCallback(
-      ({ children }) => (
-        <popupContext.Provider
-          value={{ openModal, closeModal, openToast, closeToast }}
-        >
-          {children}
-        </popupContext.Provider>
-      ),
-      []
-    ),
+  const startLoading = useCallback<StartLoading>(
+    (message) => dispatch({ type: "startLoading", payload: { message } }),
+    []
+  );
+
+  const stopLoading = useCallback(() => dispatch({ type: "stopLoading" }), []);
+
+  return (
+    <popupContext.Provider
+      value={{
+        openModal,
+        closeModal,
+        openToast,
+        closeToast,
+        startLoading,
+        stopLoading,
+      }}
+    >
+      <popupOutletContext.Provider value={outletValue}>
+        {children}
+      </popupOutletContext.Provider>
+      {loading.isOpen && <Loading {...loading.props} />}
+    </popupContext.Provider>
+  );
+};
+
+export function PopupOutlet() {
+  const context = useContext(popupOutletContext);
+
+  assert(context !== null);
+
+  const { modal, toast } = context;
+
+  return (
     <>
       {modal.isOpen && <Modal {...modal.props} />}
       {toast.isOpen && <Toast {...toast.props} />}
-      <Network />
-    </>,
-  ];
+    </>
+  );
 }
 
-export const usePopupContext = () => {
+export function usePopupContext() {
   const context = useContext(popupContext);
   assert(context !== null);
   return context;
-};
+}
 
-type PropsOrNot<TProps> =
-  | { isOpen: true; props: TProps }
-  | { isOpen: false; props?: never };
-
-type State = {
-  modal: PropsOrNot<ModalProps>;
-  toast: PropsOrNot<ToastProps>;
-};
+interface State extends PopupOutletContext {
+  loading: MaybeProps<LoadingProps>;
+}
 
 type Action =
-  | {
-      type: "openModal";
-      payload: PropsWithChildren<ModalProps>;
-    }
-  | {
-      type: "closeModal";
-    }
-  | {
-      type: "openToast";
-      payload: ToastProps;
-    }
-  | {
-      type: "closeToast";
-    };
+  | { type: "openModal"; payload: ModalProps }
+  | { type: "closeModal" }
+  | { type: "openToast"; payload: ToastProps }
+  | { type: "closeToast" }
+  | { type: "startLoading"; payload: LoadingProps }
+  | { type: "stopLoading" };
+
+const CLOSE = { isOpen: false } as const;
+
+function OPEN<T>(props: T) {
+  return { isOpen: true, props } as const;
+}
 
 const reduce = (state: State, action: Action): State => {
   switch (action.type) {
     case "openModal":
-      return {
-        ...state,
-        modal: { isOpen: true, props: action.payload },
-      };
+      return { ...state, modal: OPEN(action.payload) };
 
     case "closeModal":
-      return {
-        ...state,
-        modal: { isOpen: false },
-      };
+      return { ...state, modal: CLOSE };
 
     case "openToast":
-      return {
-        ...state,
-        toast: { isOpen: true, props: { ...action.payload, floating: true } },
-      };
+      return { ...state, toast: OPEN({ ...action.payload, floating: true }) };
 
     case "closeToast":
-      return {
-        ...state,
-        toast: { isOpen: false },
-      };
+      return { ...state, toast: CLOSE };
+
+    case "startLoading":
+      return { ...state, loading: OPEN(action.payload) };
+
+    case "stopLoading":
+      return { ...state, loading: CLOSE };
   }
 };

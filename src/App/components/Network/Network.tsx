@@ -1,13 +1,11 @@
-import { useEffect, useRef, useState, VFC } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ReactComponent as Online } from "assets/icons/wifi-svgrepo-com.svg";
 import { ReactComponent as Offline } from "assets/icons/wifi-off-svgrepo-com.svg";
 import { useDirT, useMessageT, useNetwork } from "hooks";
 import { cn } from "utils";
 
-export interface NetworkProps {}
-
-const Network: VFC<NetworkProps> = () => {
+export default function Network() {
   const isOnline = useNetwork();
   const msg = useMessageT();
   const dirT = useDirT();
@@ -48,6 +46,4 @@ const Network: VFC<NetworkProps> = () => {
       )}
     </div>
   );
-};
-
-export default Network;
+}
