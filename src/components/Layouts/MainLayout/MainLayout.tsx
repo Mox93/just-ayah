@@ -1,6 +1,7 @@
 import { ReactElement, VFC } from "react";
 import { Outlet } from "react-router-dom";
 
+import { Await } from "components/Await";
 import Header from "components/Header";
 import { useHeader } from "hooks";
 import { cn } from "utils";
@@ -17,7 +18,9 @@ const MainLayout: VFC<MainLayoutProps> = ({ name, title, actions }) => {
   return (
     <main className={cn("MainLayout", name)}>
       <Header title={title}>{actions}</Header>
-      <Outlet />
+      <Await subject={title}>
+        <Outlet />
+      </Await>
     </main>
   );
 };

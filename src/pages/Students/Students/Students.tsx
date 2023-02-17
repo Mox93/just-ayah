@@ -1,7 +1,8 @@
 import { get } from "lodash";
-import { useMemo } from "react";
+import { lazy, useMemo } from "react";
 
 import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
+import { Await } from "components/Await";
 import { Button } from "components/Buttons";
 import { MainLayout } from "components/Layouts";
 import SearchBar from "components/SearchBar";
@@ -9,7 +10,7 @@ import { useMetaContext, usePopupContext, useStudentContext } from "context";
 import { usePageT } from "hooks";
 import { substringMatch } from "utils/match";
 
-import NewStudent from "../NewStudent";
+const NewStudent = lazy(() => import("../NewStudent"));
 
 export default function Students() {
   const stu = usePageT("student");
@@ -57,9 +58,14 @@ export default function Students() {
             variant="primary-outline"
             iconButton
             onClick={() =>
-              openModal(<NewStudent />, {
-                closable: true,
-              })
+              openModal(
+                <Await>
+                  <NewStudent />
+                </Await>,
+                {
+                  closable: true,
+                }
+              )
             }
           >
             <PlusIcon className="icon" />

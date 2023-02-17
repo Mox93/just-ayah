@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
+import { Await } from "components/Await";
 import Sidebar from "components/Sidebar";
 import { useDirT } from "hooks";
 import { usePopupContext } from "context";
@@ -29,7 +30,9 @@ export default function Admin() {
   return (
     <div className="Admin" dir={dirT}>
       <Sidebar />
-      <Outlet />
+      <Await>
+        <Outlet />
+      </Await>
     </div>
   );
 }

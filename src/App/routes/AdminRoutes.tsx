@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { Admin, SignIn } from "pages/Admin";
 import { Courses, NewCourse, CourseProfile } from "pages/Courses";
 import { Students, StudentProfile, StudentEnroll } from "pages/Students";
-import { NewTeacher, TeacherProfile, Teachers } from "pages/Teachers";
+import { TeacherEnroll, TeacherProfile, Teachers } from "pages/Teachers";
 import UserGuard from "../guard/UserGuard";
 
 export default function AdminRoutes() {
@@ -21,7 +21,7 @@ export default function AdminRoutes() {
           </Route>
           <Route path="teachers" element={<Teachers />}>
             <Route path=":id" element={<TeacherProfile />} />
-            <Route path="new" element={<NewTeacher />} />
+            <Route path="new" element={<TeacherEnroll />} />
           </Route>
         </Route>
       </Route>

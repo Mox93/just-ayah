@@ -1,6 +1,7 @@
 import { VFC } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
+import { Await } from "components/Await";
 import { useAuthContext } from "context";
 
 interface UserGuardProps {
@@ -14,9 +15,12 @@ const UserGuard: VFC<UserGuardProps> = ({ redirect, guestOnly }) => {
   const { pathname } = location;
 
   const nav = <Navigate to={redirect} state={{ from: location }} replace />;
-  const [userCase, noUserCase] = guestOnly
-    ? [nav, <Outlet />]
-    : [<Outlet />, nav];
+  const view = (
+    <Await>
+      <Outlet />
+    </Await>
+  );
+  const [userCase, noUserCase] = guestOnly ? [nav, view] : [view, nav];
 
   return authenticated(pathname) ? userCase : noUserCase;
 };

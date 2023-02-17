@@ -1,7 +1,8 @@
 import { deleteField } from "firebase/firestore";
-import { useMemo } from "react";
+import { lazy, useMemo } from "react";
 
 import { ReactComponent as Info } from "assets/icons/info-svgrepo-com.svg";
+import { Await } from "components/Await";
 import { Button } from "components/Buttons";
 import { SelectionMenu } from "components/DropdownMenu";
 import Ellipsis from "components/Ellipsis";
@@ -26,8 +27,8 @@ import {
 import Student from "models/student";
 import { cn, concat } from "utils";
 
-import StudentNotes from "../StudentNotes";
-import StudentSchedule from "../StudentSchedule";
+const StudentNotes = lazy(() => import("../StudentNotes"));
+const StudentSchedule = lazy(() => import("../StudentSchedule"));
 
 export function useTableFields() {
   const glb = useGlobalT();
@@ -45,13 +46,23 @@ export function useTableFields() {
   const { openModal } = usePopupContext();
 
   const showNotesPopup = (id: string) => () =>
-    openModal(<StudentNotes id={id} />, { closable: true, dismissible: true });
+    openModal(
+      <Await>
+        <StudentNotes id={id} />
+      </Await>,
+      { closable: true, dismissible: true }
+    );
 
   const showSchedulePopup = (id: string) => () =>
-    openModal(<StudentSchedule id={id} />, {
-      closable: true,
-      dismissible: true,
-    });
+    openModal(
+      <Await>
+        <StudentSchedule id={id} />
+      </Await>,
+      {
+        closable: true,
+        dismissible: true,
+      }
+    );
 
   const { updateStudent } = useStudentContext();
 

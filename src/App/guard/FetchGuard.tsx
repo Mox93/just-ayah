@@ -1,11 +1,12 @@
 import { ReactElement, useEffect, useState, VFC } from "react";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 
+import { Await } from "components/Await";
 import LoadingPopup from "components/LoadingPopup";
 import { useGlobalT } from "hooks";
-import NotFound from "pages/NotFound";
 import { devOnly, omit } from "utils";
 import { Location } from "models";
+import { NotFound } from "pages/Fallback";
 
 interface FetchGuardProps {
   fetcher?: Function;
@@ -44,7 +45,11 @@ const FetchGuard: VFC<FetchGuardProps> = ({
     case "loading":
       return loading ?? <LoadingPopup message={glb("loading")} />;
     case "success":
-      return <Outlet />;
+      return (
+        <Await>
+          <Outlet />
+        </Await>
+      );
     case "notFound":
       return notFound;
     case "failed":

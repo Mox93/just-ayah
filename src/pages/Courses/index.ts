@@ -1,5 +1,6 @@
-export { default as Courses } from "./Courses";
-// export { default as CourseForm } from "./CourseForm";
-export { default as CourseList } from "./CourseList";
-export { default as CourseProfile } from "./CourseProfile";
-export { default as NewCourse } from "./NewCourse";
+import { lazy } from "react";
+
+export const Courses = lazy(() => import("./Courses"));
+export const CourseList = lazy(() => import("./CourseList"));
+export const CourseProfile = lazy(() => import("./CourseProfile"));
+export const NewCourse = lazy(() => import("./NewCourse"));

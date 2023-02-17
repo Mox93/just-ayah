@@ -1,7 +1,8 @@
 import { get } from "lodash";
-import { useMemo } from "react";
+import { lazy, useMemo } from "react";
 
 import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
+import { Await } from "components/Await";
 import { Button } from "components/Buttons";
 import { MainLayout } from "components/Layouts";
 import SearchBar from "components/SearchBar";
@@ -9,7 +10,7 @@ import { useMetaContext, usePopupContext } from "context";
 import { usePageT } from "hooks";
 import { substringMatch } from "utils/match";
 
-import NewTeacher from "../NewTeacher";
+const NewTeacher = lazy(() => import("../NewTeacher"));
 
 export default function Teachers() {
   const tch = usePageT("teacher");
@@ -54,9 +55,14 @@ export default function Teachers() {
             variant="primary-outline"
             iconButton
             onClick={() =>
-              openModal(<NewTeacher />, {
-                closable: true,
-              })
+              openModal(
+                <Await>
+                  <NewTeacher />
+                </Await>,
+                {
+                  closable: true,
+                }
+              )
             }
           >
             <PlusIcon className="icon" />

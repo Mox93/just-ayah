@@ -1,9 +1,11 @@
+import { lazy } from "react";
+
 import { NewUserTabs } from "components/NewUser";
 import { useStudentContext } from "context";
 import { usePageT } from "hooks";
 import Student from "models/student";
 
-import StudentForm from "../StudentForm";
+const StudentForm = lazy(() => import("../StudentForm"));
 
 export default function NewStudent() {
   const stu = usePageT("student");

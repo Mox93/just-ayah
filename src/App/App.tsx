@@ -1,6 +1,7 @@
 import { StrictMode, Suspense, useRef } from "react";
 import { BrowserRouter } from "react-router-dom";
 
+import { Await } from "components/Await";
 import LoadingPopup from "components/LoadingPopup";
 import {
   AuthProvider,
@@ -39,7 +40,8 @@ function App() {
 
       {/* General UI Providers */}
       <PopupProvider />
-      <Suspense fallback={<LoadingPopup message="loading" />} />
+      <Suspense fallback={<LoadingPopup />} />
+      <Await />
       <>
         <Nest>
           {/* Path Specific Providers */}

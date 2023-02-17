@@ -1,5 +1,6 @@
-export { default as Leads } from "./Leads";
-export { default as LeadForm } from "./LeadForm";
-export { default as LeadList } from "./LeadList";
-export { default as LeadProfile } from "./LeadProfile";
-export { default as NewLead } from "./NewLead";
+import { lazy } from "react";
+
+export const Leads = lazy(() => import("./Leads"));
+export const LeadList = lazy(() => import("./LeadList"));
+export const LeadProfile = lazy(() => import("./LeadProfile"));
+export const NewLead = lazy(() => import("./NewLead"));

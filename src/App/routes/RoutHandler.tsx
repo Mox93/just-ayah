@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useStudentEnrollContext, useTeacherEnrollContext } from "context";
 import { Admin, SignIn } from "pages/Admin";
 import { CourseList, CourseProfile, Courses } from "pages/Courses";
+import { NotFound, Unauthorized } from "pages/Fallback";
 import { LeadList, LeadProfile, Leads, NewLead } from "pages/Leads";
 import {
   Students,
@@ -10,16 +11,16 @@ import {
   StudentProfile,
   StudentEnroll,
 } from "pages/Students";
-import NotFound from "pages/NotFound";
-import { TeacherList, TeacherProfile, Teachers } from "pages/Teachers";
-import MainUI from "pages/UI/Main";
-import FormUI from "pages/UI/Form";
-import SandboxUI from "pages/UI/Sandbox";
+import {
+  Teachers,
+  TeacherEnroll,
+  TeacherList,
+  TeacherProfile,
+} from "pages/Teachers";
+import { FormUI, MainUI, SandboxUI } from "pages/UI";
+import { devOnly, pass } from "utils";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guard";
-import Unauthorized from "pages/Unauthorized";
-import TeacherEnroll from "pages/Teachers/TeacherEnroll";
-import { devOnly, pass } from "utils";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
