@@ -9,10 +9,10 @@ interface DropdownButtonProps extends ButtonProps {
   isOpen?: boolean;
 }
 
-const DropdownButton = (
+export default forwardRef(function DropdownButton(
   { children, className, isOpen, dir, ...props }: DropdownButtonProps,
   ref: Ref<HTMLButtonElement>
-) => {
+) {
   return (
     <Button
       {...{ ...props, ref, dir }}
@@ -22,6 +22,4 @@ const DropdownButton = (
       <DropdownArrow {...{ isOpen, dir }} />
     </Button>
   );
-};
-
-export default forwardRef(DropdownButton);
+});

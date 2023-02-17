@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { PartialDeep } from "type-fest";
 
 import { formAtoms } from "components/Form";
@@ -20,11 +19,11 @@ interface TeacherFormProps {
   onSubmit: (data: TeacherFormData) => void;
 }
 
-const TeacherForm: VFC<TeacherFormProps> = ({
+export default function TeacherForm({
   formId,
   defaultValues,
   onSubmit,
-}) => {
+}: TeacherFormProps) {
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
 
@@ -87,6 +86,4 @@ const TeacherForm: VFC<TeacherFormProps> = ({
       </InputGroup>
     </Form>
   );
-};
-
-export default TeacherForm;
+}

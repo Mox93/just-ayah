@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { Class } from "type-fest";
 
 import { formAtoms } from "components/Form";
@@ -18,7 +17,7 @@ interface NewEnrollProps {
   DBClass: Class<BaseModel<EnrollUser>>;
 }
 
-const NewEnroll: VFC<NewEnrollProps> = ({ DBClass, addEnroll }) => {
+export default function NewEnroll({ DBClass, addEnroll }: NewEnrollProps) {
   const glb = useGlobalT();
   const stu = usePageT("student");
 
@@ -39,6 +38,4 @@ const NewEnroll: VFC<NewEnrollProps> = ({ DBClass, addEnroll }) => {
       <Input name="name" placeholder={stu("newEnroll")} />
     </MiniForm>
   );
-};
-
-export default NewEnroll;
+}

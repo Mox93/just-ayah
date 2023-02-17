@@ -1,4 +1,4 @@
-import { VFC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { CommentsViewer } from "components/Comments";
 import { useStudentContext } from "context";
@@ -9,7 +9,7 @@ interface StudentNotesProps {
   id: string;
 }
 
-const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
+export default function StudentNotes({ id }: StudentNotesProps) {
   const { students, addNote } = useStudentContext();
   const [notes, setNotes] = useState<Comment[] | undefined>(
     () => students.find(({ id: studentId }) => id === studentId)?.meta.notes
@@ -31,6 +31,4 @@ const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
       header={glb("notes")}
     />
   );
-};
-
-export default StudentNotes;
+}

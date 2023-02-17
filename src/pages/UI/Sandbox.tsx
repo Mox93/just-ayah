@@ -1,7 +1,3 @@
-import { VFC } from "react";
-
-const SandboxUI: VFC = () => {
+export default function SandboxUI() {
   return <></>;
-};
-
-export default SandboxUI;
+}

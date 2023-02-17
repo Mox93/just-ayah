@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState, VFC } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 
 import { Await } from "components/Await";
@@ -15,12 +15,12 @@ interface FetchGuardProps {
   failed?: ReactElement;
 }
 
-const FetchGuard: VFC<FetchGuardProps> = ({
+export default function FetchGuard({
   fetcher = omit,
   loading,
   notFound = <NotFound />,
   failed = <NotFound />,
-}) => {
+}: FetchGuardProps) {
   const glb = useGlobalT();
   const [fetchState, setFetchState] = useState<
     "loading" | "success" | "failed" | "notFound"
@@ -57,6 +57,4 @@ const FetchGuard: VFC<FetchGuardProps> = ({
     default:
       return <>Something went wrong!</>;
   }
-};
-
-export default FetchGuard;
+}

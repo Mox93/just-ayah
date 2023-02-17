@@ -1,4 +1,4 @@
-import { ReactElement, VFC } from "react";
+import { ReactElement } from "react";
 import { Outlet } from "react-router-dom";
 
 import { Await } from "components/Await";
@@ -12,7 +12,7 @@ interface MainLayoutProps {
   actions?: ReactElement;
 }
 
-const MainLayout: VFC<MainLayoutProps> = ({ name, title, actions }) => {
+export default function MainLayout({ name, title, actions }: MainLayoutProps) {
   useHeader({ title });
 
   return (
@@ -23,6 +23,4 @@ const MainLayout: VFC<MainLayoutProps> = ({ name, title, actions }) => {
       </Await>
     </main>
   );
-};
-
-export default MainLayout;
+}

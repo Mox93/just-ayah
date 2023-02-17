@@ -1,22 +1,22 @@
-import { VFC, HTMLAttributes, ReactNode } from "react";
+import { ComponentType, HTMLAttributes, ReactNode } from "react";
 
 import { useDirT } from "hooks";
 import { cn } from "utils";
 
 interface EllipsisProps extends HTMLAttributes<HTMLElement> {
-  Component?: string | VFC<HTMLAttributes<HTMLElement>>;
+  Component?: string | ComponentType<HTMLAttributes<HTMLElement>>;
   position?: "start" | "center" | "end";
   children: string;
 }
 
-const Ellipsis: VFC<EllipsisProps> = ({
+export default function Ellipsis({
   children,
   className,
   Component = "p",
   position,
   dir,
   ...props
-}) => {
+}: EllipsisProps) {
   const dirT = useDirT();
 
   let parts: ReactNode = children;
@@ -42,6 +42,4 @@ const Ellipsis: VFC<EllipsisProps> = ({
       {parts}
     </Component>
   );
-};
-
-export default Ellipsis;
+}

@@ -78,7 +78,7 @@ interface StatusMenuProps<TVariant extends StatusVariants> {
   onClick?: MouseEventHandler;
 }
 
-const StatusMenu = <TVariant extends StatusVariants>(
+export default forwardRef(function StatusMenu<TVariant extends StatusVariants>(
   {
     className,
     variant,
@@ -88,7 +88,7 @@ const StatusMenu = <TVariant extends StatusVariants>(
     ...props
   }: StatusMenuProps<TVariant>,
   ref: Ref<HTMLButtonElement>
-) => {
+) {
   const glb = useGlobalT();
 
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
@@ -175,6 +175,4 @@ const StatusMenu = <TVariant extends StatusVariants>(
       </Container>
     )
   );
-};
-
-export default forwardRef(StatusMenu);
+});

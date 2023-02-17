@@ -26,7 +26,7 @@ interface MenuInputPropsInternal<TOption> extends MenuInputProps<TOption> {
   getKey?: GetKey<TOption>;
 }
 
-const MenuInput = <TOption,>(
+export default forwardRef(function MenuInput<TOption>(
   {
     className,
     options,
@@ -40,7 +40,7 @@ const MenuInput = <TOption,>(
     ...props
   }: MenuInputPropsInternal<TOption>,
   ref: Ref<HTMLInputElement>
-) => {
+) {
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
     useDropdown({
       className: cn("MenuInput", className),
@@ -83,6 +83,4 @@ const MenuInput = <TOption,>(
       />
     )
   );
-};
-
-export default forwardRef(MenuInput);
+});

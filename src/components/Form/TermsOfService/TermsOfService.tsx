@@ -4,7 +4,6 @@ import {
   Ref,
   useEffect,
   useState,
-  VFC,
 } from "react";
 
 import { ReactComponent as AcceptedIcon } from "assets/icons/success-svgrepo-com.svg";
@@ -29,10 +28,10 @@ interface TermsOfServiceProps
   onAccept?: (url: string) => void;
 }
 
-const TermsOfService: VFC<TermsOfServiceProps> = (
-  { url, isInvalid, onAccept, ...props },
+export default forwardRef(function TermsOfService(
+  { url, isInvalid, onAccept, ...props }: TermsOfServiceProps,
   ref: Ref<HTMLInputElement>
-) => {
+) {
   const [status, setStatus] = useState<"idle" | "invalid" | "accepted">("idle");
 
   useEffect(() => {
@@ -83,6 +82,4 @@ const TermsOfService: VFC<TermsOfServiceProps> = (
       </Button>
     </>
   );
-};
-
-export default forwardRef(TermsOfService);
+});

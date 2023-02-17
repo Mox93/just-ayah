@@ -16,7 +16,7 @@ interface NewUserTabsProps<TUser, TUserForm extends {}> {
   variant: UserVariant;
 }
 
-function NewUserTabs<TUser, TUserForm extends {}>({
+export default function NewUserTabs<TUser, TUserForm extends {}>({
   variant,
   title,
   UserForm,
@@ -45,5 +45,3 @@ function NewUserTabs<TUser, TUserForm extends {}>({
     </Container>
   );
 }
-
-export default NewUserTabs;

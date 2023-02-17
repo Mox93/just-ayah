@@ -26,7 +26,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconButton?: boolean;
 }
 
-const Button = (
+export default forwardRef(function Button(
   {
     children,
     className,
@@ -43,7 +43,7 @@ const Button = (
     ...props
   }: ButtonProps,
   ref: Ref<HTMLButtonElement>
-) => {
+) {
   const dirT = useDirT();
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -71,6 +71,4 @@ const Button = (
       {isLoading && <LoadingDots className="loadingIndicator" />}
     </button>
   );
-};
-
-export default forwardRef(Button);
+});

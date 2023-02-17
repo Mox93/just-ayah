@@ -1,4 +1,4 @@
-import { HTMLAttributes, useEffect, useReducer, VFC } from "react";
+import { HTMLAttributes, useEffect, useReducer } from "react";
 
 import { ReactComponent as Angle } from "assets/icons/angle-up-svgrepo-com.svg";
 import { cn } from "utils";
@@ -22,12 +22,12 @@ interface DropdownArrowProps extends HTMLAttributes<HTMLDivElement> {
   isOpen?: boolean;
 }
 
-const DropdownArrow: VFC<DropdownArrowProps> = ({
+export default function DropdownArrow({
   isOpen,
   className,
   dir,
   ...props
-}) => {
+}: DropdownArrowProps) {
   const dirT = useDirT();
 
   const [{ action }, dispatch] = useReducer(reduce, { wasOpen: !!isOpen });
@@ -42,6 +42,4 @@ const DropdownArrow: VFC<DropdownArrowProps> = ({
       <Angle className={cn("icon", { isOpen }, action)} />
     </div>
   );
-};
-
-export default DropdownArrow;
+}

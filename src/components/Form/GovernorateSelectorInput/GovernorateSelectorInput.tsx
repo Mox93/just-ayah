@@ -11,10 +11,10 @@ interface GovernorateSelectorInputProps extends MenuInputProps<string> {
   selected?: string;
 }
 
-const GovernorateSelectorInput = (
+export default forwardRef(function GovernorateSelectorInput(
   { country, selected, setValue, ...props }: GovernorateSelectorInputProps,
   ref: Ref<HTMLInputElement>
-) => {
+) {
   const gov = useGovT("egypt");
 
   useEffect(() => {
@@ -37,6 +37,4 @@ const GovernorateSelectorInput = (
   ) : (
     <Input {...props} ref={ref} />
   );
-};
-
-export default forwardRef(GovernorateSelectorInput);
+});

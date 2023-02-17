@@ -29,13 +29,13 @@ export interface ToastProps {
   close?: VoidFunction;
 }
 
-const Toast: VFC<ToastProps> = ({
+export default function Toast({
   message,
   floating,
   variant = "info",
   dir,
   close,
-}) => {
+}: ToastProps) {
   const dirT = useDirT();
   const Icon = icons[variant];
 
@@ -46,6 +46,4 @@ const Toast: VFC<ToastProps> = ({
       <CloseButton onClick={close} dir={dir || dirT} />
     </div>
   );
-};
-
-export default Toast;
+}

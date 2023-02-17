@@ -23,7 +23,7 @@ interface MenuProps<TOption> {
   onSelect?: (item: TOption) => void;
 }
 
-const Menu = <TItem,>(
+export default forwardRef(function Menu<TItem>(
   {
     options,
     className,
@@ -39,7 +39,7 @@ const Menu = <TItem,>(
     onSelect,
   }: MenuProps<TItem>,
   ref: Ref<HTMLDivElement>
-) => {
+) {
   const [optionList, searchBar] = useListFilter({ options, searchFields, dir });
 
   const render = applyInOrder(renderElement);
@@ -76,6 +76,4 @@ const Menu = <TItem,>(
       })}
     </Container>
   );
-};
-
-export default forwardRef(Menu);
+});

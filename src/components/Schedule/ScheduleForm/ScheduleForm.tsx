@@ -1,5 +1,3 @@
-import { VFC } from "react";
-
 import { ReactComponent as CrossIcon } from "assets/icons/close-svgrepo-com.svg";
 import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
 import { Button } from "components/Buttons";
@@ -18,7 +16,10 @@ interface ScheduleFormProps {
   onSubmit?: (data: Schedule) => void;
 }
 
-const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
+export default function ScheduleForm({
+  defaultValues,
+  onSubmit,
+}: ScheduleFormProps) {
   const glb = useGlobalT();
   const formProps = useSmartForm({
     onSubmit: ({ entries, notes }) => {
@@ -89,6 +90,4 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
       </Form>
     </Container>
   );
-};
-
-export default ScheduleForm;
+}

@@ -21,7 +21,7 @@ export interface SelectionInputProps<TOption>
 
 const { before, after } = filterByPosition<Location>();
 
-const SelectionInput = <TOption,>(
+export default forwardRef(function SelectionInput<TOption>(
   {
     label,
     isRequired,
@@ -39,7 +39,7 @@ const SelectionInput = <TOption,>(
     ...props
   }: SelectionInputProps<TOption>,
   ref: Ref<HTMLInputElement>
-) => {
+) {
   const dirT = useDirT();
   const render = applyInOrder(renderElement);
 
@@ -75,6 +75,4 @@ const SelectionInput = <TOption,>(
       {errorMessage}
     </div>
   );
-};
-
-export default forwardRef(SelectionInput);
+});

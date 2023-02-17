@@ -1,5 +1,3 @@
-import { VFC } from "react";
-
 import Container from "components/Container";
 import { formAtoms } from "components/Form";
 import { useAuthContext } from "context";
@@ -22,13 +20,13 @@ interface CommentsViewerProps {
   onAddComment: (comment: Comment) => void;
 }
 
-const CommentsViewer: VFC<CommentsViewerProps> = ({
+export default function CommentsViewer({
   comments,
   storageKey,
   placeholder,
   header,
   onAddComment,
-}) => {
+}: CommentsViewerProps) {
   const glb = useGlobalT();
   const msg = useMessageT();
   const { user } = useAuthContext();
@@ -68,6 +66,4 @@ const CommentsViewer: VFC<CommentsViewerProps> = ({
       )}
     </Container>
   );
-};
-
-export default CommentsViewer;
+}

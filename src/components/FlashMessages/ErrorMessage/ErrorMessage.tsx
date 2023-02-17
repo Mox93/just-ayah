@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { Trans } from "react-i18next";
 
 import { useMessageT } from "hooks";
@@ -8,7 +7,7 @@ interface ErrorMessageProps {
   error?: any;
 }
 
-const ErrorMessage: VFC<ErrorMessageProps> = ({ error }) => {
+export default function ErrorMessage({ error }: ErrorMessageProps) {
   const msg = useMessageT("flash");
 
   return (
@@ -25,6 +24,4 @@ const ErrorMessage: VFC<ErrorMessageProps> = ({ error }) => {
       )}
     </FlashCard>
   );
-};
-
-export default ErrorMessage;
+}

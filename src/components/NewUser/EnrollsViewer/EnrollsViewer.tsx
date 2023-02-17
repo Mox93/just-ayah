@@ -1,4 +1,4 @@
-import { useEffect, VFC } from "react";
+import { useEffect } from "react";
 
 import { Button } from "components/Buttons";
 import { Table } from "components/Table";
@@ -12,7 +12,7 @@ interface EnrollsViewerProps {
   variant: UserVariant;
 }
 
-const EnrollsViewer: VFC<EnrollsViewerProps> = ({ variant }) => {
+export default function EnrollsViewer({ variant }: EnrollsViewerProps) {
   const glb = useGlobalT();
 
   const { context, DBClass } = ENROLL_CONTEXT[variant];
@@ -61,6 +61,4 @@ const EnrollsViewer: VFC<EnrollsViewerProps> = ({ variant }) => {
       />
     </div>
   );
-};
-
-export default EnrollsViewer;
+}

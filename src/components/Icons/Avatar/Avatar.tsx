@@ -1,10 +1,8 @@
-import { VFC } from "react";
-
 interface AvatarProps {
   url?: string;
 }
 
-const Avatar: VFC<AvatarProps> = ({ url }) => {
+export default function Avatar({ url }: AvatarProps) {
   return (
     <div className="Avatar">
       <div className="body" />
@@ -12,6 +10,4 @@ const Avatar: VFC<AvatarProps> = ({ url }) => {
       {url && <img className="photo" src={url} alt="avatar" />}
     </div>
   );
-};
-
-export default Avatar;
+}

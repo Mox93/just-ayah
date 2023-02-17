@@ -30,7 +30,7 @@ type FieldWrapperProps = PropsWithChildren<{
   partition?: Partition;
 }>;
 
-const FieldWrapper = (
+export default forwardRef(function FieldWrapper(
   {
     className,
     children,
@@ -43,7 +43,7 @@ const FieldWrapper = (
     partition,
   }: FieldWrapperProps,
   ref: Ref<HTMLDivElement>
-) => {
+) {
   const dirT = useDirT();
 
   return (
@@ -59,6 +59,4 @@ const FieldWrapper = (
       {addPartitions ? injectPartitions(children, partition) : children}
     </div>
   );
-};
-
-export default forwardRef(FieldWrapper);
+});

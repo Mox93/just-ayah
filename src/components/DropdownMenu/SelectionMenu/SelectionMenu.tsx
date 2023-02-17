@@ -22,7 +22,7 @@ interface SelectionMenuProps<TOption> extends Omit<ButtonProps, "children"> {
   onOptionChange?: (option: TOption) => void;
 }
 
-const SelectionMenu = <TOption,>(
+export default forwardRef(function SelectionMenu<TOption>(
   {
     className,
     dir,
@@ -44,7 +44,7 @@ const SelectionMenu = <TOption,>(
     ...props
   }: SelectionMenuProps<TOption>,
   ref: Ref<HTMLButtonElement>
-) => {
+) {
   const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
     useDropdown({
       className: cn("SelectionMenu", className),
@@ -90,6 +90,4 @@ const SelectionMenu = <TOption,>(
       />
     )
   );
-};
-
-export default forwardRef(SelectionMenu);
+});

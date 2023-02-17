@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { SubmitHandler } from "react-hook-form";
 
 import { formAtoms } from "components/Form";
@@ -12,7 +11,7 @@ interface LeadFormProps {
   onSubmit: SubmitHandler<LeadFormData>;
 }
 
-const LeadForm: VFC<LeadFormProps> = ({ onSubmit }) => {
+export default function LeadForm({ onSubmit }: LeadFormProps) {
   const pi = usePersonalInfoT();
 
   const formProps = useSmartForm({
@@ -46,6 +45,4 @@ const LeadForm: VFC<LeadFormProps> = ({ onSubmit }) => {
       <Textarea name="message" label={pi("leaveQuestion")} />
     </Form>
   );
-};
-
-export default LeadForm;
+}

@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { PartialDeep } from "type-fest";
 
@@ -34,12 +33,12 @@ interface StudentFormProps {
   onSubmit: SubmitHandler<StudentFormData>;
 }
 
-const StudentForm: VFC<StudentFormProps> = ({
+export default function StudentForm({
   formId,
   defaultValues,
   termsUrl,
   onSubmit,
-}) => {
+}: StudentFormProps) {
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
 
@@ -216,6 +215,4 @@ const StudentForm: VFC<StudentFormProps> = ({
       {termsUrl && <TermsOfService name="meta.termsOfService" url={termsUrl} />}
     </Form>
   );
-};
-
-export default StudentForm;
+}

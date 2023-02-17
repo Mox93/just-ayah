@@ -22,7 +22,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   visibleBorder?: boolean;
 }
 
-const Input = (
+export default forwardRef(function Input(
   {
     className,
     dir,
@@ -40,7 +40,7 @@ const Input = (
     ...props
   }: InputProps,
   ref: Ref<HTMLInputElement>
-) => {
+) {
   const dirT = useDirT();
   const _id = useUniqueId(name || "input");
 
@@ -73,6 +73,4 @@ const Input = (
       {errorMessage}
     </div>
   );
-};
-
-export default forwardRef(Input);
+});

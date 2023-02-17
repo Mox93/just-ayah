@@ -1,4 +1,4 @@
-import { HTMLAttributes, VFC } from "react";
+import { HTMLAttributes } from "react";
 
 import { ReactComponent as CheckMarkIcon } from "assets/icons/checkmark-svgrepo-com.svg";
 import { useDirT } from "hooks";
@@ -6,7 +6,7 @@ import { cn } from "utils";
 
 interface CheckMarkProps extends HTMLAttributes<SVGSVGElement> {}
 
-const CheckMark: VFC<CheckMarkProps> = ({ className, ...props }) => {
+export default function CheckMark({ className, ...props }: CheckMarkProps) {
   const dirT = useDirT();
 
   if (!props.dir) props.dir = dirT;
@@ -14,6 +14,4 @@ const CheckMark: VFC<CheckMarkProps> = ({ className, ...props }) => {
   return (
     <CheckMarkIcon {...props} className={cn("CheckMark icon", className)} />
   );
-};
-
-export default CheckMark;
+}

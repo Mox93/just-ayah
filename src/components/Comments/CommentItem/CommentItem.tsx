@@ -1,5 +1,3 @@
-import { VFC } from "react";
-
 import Ellipsis from "components/Ellipsis";
 import Avatar from "components/Icons/Avatar";
 import { useDirT } from "hooks";
@@ -11,10 +9,11 @@ interface CommentItemProps {
   dir?: string;
 }
 
-const CommentItem: VFC<CommentItemProps> = ({
-  comment: { body, dateCreated, createdBy: { displayName, photoURL } = {} },
+export default function CommentItem({
+  comment: { body, dateCreated, createdBy },
   dir,
-}) => {
+}: CommentItemProps) {
+  const { displayName, photoURL } = createdBy || {};
   const dirT = useDirT();
 
   return (
@@ -38,6 +37,4 @@ const CommentItem: VFC<CommentItemProps> = ({
       </p>
     </div>
   );
-};
-
-export default CommentItem;
+}
