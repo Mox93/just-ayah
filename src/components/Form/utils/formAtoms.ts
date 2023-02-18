@@ -1,5 +1,5 @@
 import { FieldValues } from "react-hook-form";
-import { FC, VFC } from "react";
+import { FC, PropsWithChildren } from "react";
 
 import { Country } from "models/blocks";
 import {
@@ -70,9 +70,9 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
 
   return {
     // Wrapper Components
-    Form: transformer(Form as FC<{}>, smartForm<TFieldValues>()),
+    Form: transformer(Form as FC<PropsWithChildren>, smartForm<TFieldValues>()),
     MiniForm: transformer(
-      MiniForm as FC<{}>,
+      MiniForm as FC<PropsWithChildren>,
       smartForm<TFieldValues>(
         ({
           formHook: {
@@ -99,14 +99,14 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
       registerFieldMod
     ),
     CountrySelectorInput: formChild(
-      MenuInput as VFC<MenuInputProps<Country>>,
+      MenuInput as FC<MenuInputProps<Country>>,
       processPropsMod,
       menuMod,
       countryMapper,
       registerFieldMod
     ),
     TimezoneSelectorInput: formChild(
-      MenuInput as VFC<MenuInputProps<Timezone>>,
+      MenuInput as FC<MenuInputProps<Timezone>>,
       processPropsMod,
       menuMod,
       timezoneMapper,
@@ -128,7 +128,7 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
       registerField<TFieldValues>((innerProps: any) => ({ innerProps }))
     ),
     WeekDayInput: formChild(
-      MenuInput as VFC<MenuInputProps<WeekDay>>,
+      MenuInput as FC<MenuInputProps<WeekDay>>,
       processPropsMod,
       menu<TFieldValues>({
         extraProps: () => ({ options: weekDaySchema.optional }),

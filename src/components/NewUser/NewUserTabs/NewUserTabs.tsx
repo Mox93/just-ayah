@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { FC } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { Class } from "type-fest";
 
@@ -10,7 +10,7 @@ import { useNewUserTabs } from "./NewUserTabs.utils";
 
 interface NewUserTabsProps<TUser, TUserForm extends {}> {
   title: string;
-  UserForm: VFC<{ onSubmit: SubmitHandler<TUserForm> }>;
+  UserForm: FC<{ onSubmit: SubmitHandler<TUserForm> }>;
   addUser: AddDataFunc<TUser>;
   UserClass: Class<TUser>;
   variant: UserVariant;

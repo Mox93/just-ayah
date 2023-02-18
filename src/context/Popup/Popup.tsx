@@ -1,7 +1,6 @@
 import {
   createContext,
-  FC,
-  ReactElement,
+  PropsWithChildren,
   useCallback,
   useContext,
   useReducer,
@@ -11,28 +10,23 @@ import { assert, mergeCallbacks, pass } from "utils";
 
 import Loading, { LoadingProps } from "./Loading";
 import Modal, { ModalProps } from "./Modal";
-import Toast, { ToastProps, ToastVariant } from "./Toast";
+import Toast, { ToastProps } from "./Toast";
 
 type OpenModal = (
-  children: ReactElement,
-  options?: {
+  children: ModalProps["children"],
+  options?: Pick<ModalProps, "center" | "dir" | "dismissible"> & {
     closable?: boolean;
-    dismissible?: boolean;
-    center?: boolean;
-    dir?: string;
   }
 ) => void;
 
 type OpenToast = (
-  message: string | ReactElement,
-  options?: {
-    variant?: ToastVariant;
+  message: ToastProps["message"],
+  options?: Pick<ToastProps, "dir" | "variant"> & {
     duration?: number;
-    dir?: string;
   }
 ) => void;
 
-type StartLoading = (message?: string | ReactElement) => void;
+type StartLoading = (message?: LoadingProps["message"]) => void;
 
 type MaybeProps<TProps> =
   | { isOpen: true; props: TProps }
@@ -55,7 +49,7 @@ interface PopupOutletContext {
 const popupContext = createContext<PopupContext | null>(null);
 const popupOutletContext = createContext<PopupOutletContext | null>(null);
 
-export const PopupProvider: FC = ({ children }) => {
+export function PopupProvider({ children }: PropsWithChildren) {
   const [{ loading, ...outletValue }, dispatch] = useReducer(reduce, {
     modal: { isOpen: false },
     toast: { isOpen: false },
@@ -65,12 +59,12 @@ export const PopupProvider: FC = ({ children }) => {
   const closeModal = useCallback(() => dispatch({ type: "closeModal" }), []);
 
   const openModal = useCallback<OpenModal>(
-    (content, { closable, ...props } = {}) =>
+    (children, { closable, ...props } = {}) =>
       dispatch({
         type: "openModal",
         payload: {
           ...props,
-          content,
+          children,
           ...(closable && { close: closeModal }),
         },
       }),
@@ -119,7 +113,7 @@ export const PopupProvider: FC = ({ children }) => {
       {loading.isOpen && <Loading {...loading.props} />}
     </popupContext.Provider>
   );
-};
+}
 
 export function PopupOutlet() {
   const context = useContext(popupOutletContext);

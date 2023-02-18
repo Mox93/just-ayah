@@ -4,7 +4,7 @@ import { useFormState, useWatch } from "react-hook-form";
 
 import ErrorMessage from "components/Form/ErrorMessage";
 import { SimplePhoneNumber } from "models/blocks";
-import { cn, identity } from "utils";
+import { cn } from "utils";
 import { createModifier } from "utils/transformer";
 
 import {
@@ -62,12 +62,11 @@ const phoneNumberMapper = <TFieldValues extends {}>() =>
           },
           number: register(NUMBER, {
             ...rules,
-
-            setValueAs: (v: string) => (setValueAs || identity)(v?.trim()),
+            setValueAs: (v: string) => setValueAs?.(v?.trim()),
             pattern: {
               value: /^[0-9]{5,16}$/g,
               message: "wrongPhoneNumber",
-            },
+            } as any, // for some reason the type is throwing an error
           }),
           tags: register(TAGS, {
             ...(rules?.required && {

@@ -1,4 +1,4 @@
-import { FC, FormHTMLAttributes } from "react";
+import { FormHTMLAttributes, ReactElement } from "react";
 
 import { Button } from "components/Buttons";
 import { CheckMark } from "components/Icons";
@@ -8,12 +8,13 @@ import { cn } from "utils";
 import { FormButton } from "../Form";
 
 interface MiniFormProps extends FormHTMLAttributes<HTMLFormElement> {
+  children: ReactElement;
   submitProps?: FormButton;
   resetProps?: FormButton;
   isInvalid?: boolean;
 }
 
-const MiniForm: FC<MiniFormProps> = ({
+export default function MiniForm({
   children,
   className,
   dir,
@@ -21,7 +22,7 @@ const MiniForm: FC<MiniFormProps> = ({
   submitProps,
   resetProps,
   ...props
-}) => {
+}: MiniFormProps) {
   const dirT = useDirT();
 
   return (
@@ -49,6 +50,4 @@ const MiniForm: FC<MiniFormProps> = ({
       )}
     </form>
   );
-};
-
-export default MiniForm;
+}

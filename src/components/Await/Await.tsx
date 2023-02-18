@@ -1,13 +1,13 @@
-import { FC, Suspense } from "react";
+import { PropsWithChildren, Suspense } from "react";
 
 import LoadingPopup from "components/LoadingPopup";
 import { useGlobalT } from "hooks";
 
-interface AwaitProps {
+interface AwaitProps extends PropsWithChildren {
   subject?: string;
 }
 
-const Await: FC<AwaitProps> = ({ children, subject = "" }) => {
+export default function Await({ children, subject = "" }: AwaitProps) {
   const glb = useGlobalT();
   return (
     <Suspense
@@ -18,6 +18,4 @@ const Await: FC<AwaitProps> = ({ children, subject = "" }) => {
       {children}
     </Suspense>
   );
-};
-
-export default Await;
+}

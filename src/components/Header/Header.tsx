@@ -1,15 +1,15 @@
-import { FC } from "react";
+import { PropsWithChildren } from "react";
 
 import Logo from "assets/icons/logo.svg";
 import { useDirT } from "hooks";
 import { cn, toTitle } from "utils";
 
-interface HeaderProps {
+interface HeaderProps extends PropsWithChildren {
   title?: string;
   className?: string;
 }
 
-const Header: FC<HeaderProps> = ({ className, title, children }) => {
+export default function Header({ className, title, children }: HeaderProps) {
   const dirT = useDirT();
 
   return (
@@ -21,6 +21,4 @@ const Header: FC<HeaderProps> = ({ className, title, children }) => {
       <img src={Logo} alt="just ayah logo" className="logo" />
     </div>
   );
-};
-
-export default Header;
+}

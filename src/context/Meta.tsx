@@ -5,7 +5,13 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { createContext, FC, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { MetaData, META_DATA_DOCS, userIndexFromDB } from "models/metaData";
 import { db } from "services/firebase";
@@ -25,7 +31,7 @@ const initialState: MetaContext = {
 
 const metaContext = createContext(initialState);
 
-export const MetaProvider: FC = ({ children }) => {
+export function MetaProvider({ children }: PropsWithChildren) {
   const [metaData, setMetaData] = useState(initialState);
 
   const { authorized } = useAuthContext();
@@ -62,7 +68,7 @@ export const MetaProvider: FC = ({ children }) => {
   return (
     <metaContext.Provider value={metaData}>{children}</metaContext.Provider>
   );
-};
+}
 
 export function useMetaContext() {
   return useContext(metaContext);

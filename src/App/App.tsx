@@ -1,4 +1,4 @@
-import { StrictMode, Suspense, useRef } from "react";
+import { StrictMode, Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 
 import { Await } from "components/Await";
@@ -15,7 +15,6 @@ import {
   StudentEnrollProvider,
   TeacherEnrollProvider,
 } from "context";
-import { devOnly } from "utils";
 
 import { Nest, Network } from "./components";
 import { RoutHandler } from "./routes";
@@ -23,17 +22,7 @@ import { RoutHandler } from "./routes";
 import "services/i18n";
 import "styles/index.scss";
 
-function useTrackRerender() {
-  const { current: now } = useRef(new Date());
-
-  devOnly(() =>
-    console.log(">>> App rerender", new Date().getTime() - now.getTime())
-  )();
-}
-
 function App() {
-  useTrackRerender();
-
   return (
     <Nest>
       <StrictMode />

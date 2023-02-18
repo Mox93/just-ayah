@@ -1,4 +1,4 @@
-import { lazy, useMemo, VFC } from "react";
+import { lazy, useMemo, FC } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { Trans } from "react-i18next";
 import { Class } from "type-fest";
@@ -14,7 +14,7 @@ import { Await } from "components/Await";
 const EnrollsViewer = lazy(() => import("../EnrollsViewer"));
 
 interface UseNewUserTabsProps<TUser, TUserForm extends {}> {
-  UserForm: VFC<{ onSubmit: SubmitHandler<TUserForm> }>;
+  UserForm: FC<{ onSubmit: SubmitHandler<TUserForm> }>;
   addUser: AddDataFunc<TUser>;
   UserClass: Class<TUser>;
   variant: UserVariant;

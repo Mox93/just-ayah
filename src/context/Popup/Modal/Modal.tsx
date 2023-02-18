@@ -5,7 +5,7 @@ import { useDirT } from "hooks";
 import { cn } from "utils";
 
 export type ModalProps = {
-  content: ReactElement;
+  children: ReactElement;
   dismissible?: boolean;
   center?: boolean;
   dir?: string;
@@ -13,7 +13,7 @@ export type ModalProps = {
 };
 
 export default function Modal({
-  content,
+  children,
   close,
   dismissible,
   center,
@@ -40,7 +40,7 @@ export default function Modal({
       />
       <div className={cn("foreground", { center })}>
         <div className="body">
-          {content}
+          {children}
           {close && <CloseButton onClick={close} dir={dir} />}
         </div>
       </div>

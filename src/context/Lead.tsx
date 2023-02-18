@@ -1,5 +1,5 @@
 import { collection } from "firebase/firestore";
-import { createContext, FC, useContext, useState } from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 
 import { db } from "services/firebase";
 import Lead, { leadConverter, LeadDB, LeadDBData } from "models/lead";
@@ -20,7 +20,7 @@ interface LeadContext {
 
 const leadContext = createContext<LeadContext | null>(null);
 
-export const LeadProvider: FC = ({ children }) => {
+export function LeadProvider({ children }: PropsWithChildren) {
   const [leads, setLeads] = useState<Lead[]>([]);
 
   const addLead = useAddDoc({
@@ -39,7 +39,7 @@ export const LeadProvider: FC = ({ children }) => {
       {children}
     </leadContext.Provider>
   );
-};
+}
 
 export function useLeadContext() {
   const context = useContext(leadContext);

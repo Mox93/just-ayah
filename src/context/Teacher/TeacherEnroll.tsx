@@ -1,5 +1,11 @@
 import { deleteField } from "firebase/firestore";
-import { createContext, FC, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 import {
   useAddDoc,
@@ -43,7 +49,7 @@ export const teacherEnrollContext = createContext<TeacherEnrollContext | null>(
   null
 );
 
-export const TeacherEnrollProvider: FC = ({ children }) => {
+export function TeacherEnrollProvider({ children }: PropsWithChildren) {
   const [enrolls, setEnrolls] = useState<TeacherEnroll[]>([]);
 
   const addEnroll = useAddDoc({
@@ -99,7 +105,7 @@ export const TeacherEnrollProvider: FC = ({ children }) => {
       {children}
     </teacherEnrollContext.Provider>
   );
-};
+}
 
 export function useTeacherEnrollContext() {
   const context = useContext(teacherEnrollContext);

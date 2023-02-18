@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useState, useTransition } from "react";
 
 import { applyInOrder, cn, FunctionOrChain, identity } from "utils";
 
@@ -29,9 +29,7 @@ export default function useTabs({
       {tabs.map(({ key }) => (
         <button
           key={key}
-          className={cn("tabButton", {
-            selected: key === selectedTab,
-          })}
+          className={cn("tabButton", { selected: key === selectedTab })}
           onClick={() => setSelectedTab(key)}
         >
           {render(key)}

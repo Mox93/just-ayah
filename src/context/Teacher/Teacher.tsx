@@ -1,5 +1,11 @@
 import { collection, CollectionReference } from "firebase/firestore";
-import { createContext, FC, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 import {
   useAddDoc,
@@ -41,7 +47,7 @@ interface TeacherContext {
 
 const teacherContext = createContext<TeacherContext | null>(null);
 
-export const TeacherProvider: FC = ({ children }) => {
+export function TeacherProvider({ children }: PropsWithChildren) {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
 
   const addTeacher = useAddDoc({
@@ -84,7 +90,7 @@ export const TeacherProvider: FC = ({ children }) => {
       {children}
     </teacherContext.Provider>
   );
-};
+}
 
 export function useTeacherContext() {
   const context = useContext(teacherContext);

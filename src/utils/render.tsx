@@ -12,7 +12,7 @@ export const renderAttributes =
   <TObject, TOutput = any>(
     pathsOrConverters: PathsOrConverters<TObject, TOutput>,
     mapper: (part: TOutput, index?: number) => ReactNode = (part, index) => (
-      <p key={index}>{part}</p>
+      <p key={index}>{part as any}</p>
     )
   ) =>
   (obj?: TObject) => {

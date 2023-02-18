@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { ReactNode } from "react";
 
 import SuccessIcon from "assets/icons/checked-svgrepo-com.svg";
 import ErrorIcon from "assets/icons/cancel-svgrepo-com.svg";
@@ -6,11 +6,16 @@ import Container from "components/Container";
 import { cn } from "utils";
 
 interface FlashCardProps {
+  children: ReactNode;
   state?: "success" | "error";
   className?: string;
 }
 
-const FlashCard: FC<FlashCardProps> = ({ className, state, children }) => {
+export default function FlashCard({
+  className,
+  state,
+  children,
+}: FlashCardProps) {
   return (
     <Container
       variant="card"
@@ -28,6 +33,4 @@ const FlashCard: FC<FlashCardProps> = ({ className, state, children }) => {
       {children}
     </Container>
   );
-};
-
-export default FlashCard;
+}

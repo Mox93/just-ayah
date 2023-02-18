@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { ReactElement } from "react";
 
 import { formAtoms } from "components/Form";
 import { useSmartForm } from "hooks";
@@ -6,15 +6,16 @@ import { useSmartForm } from "hooks";
 const { MiniForm } = formAtoms();
 
 interface StatusFormProps {
+  children: ReactElement;
   onSubmit: (data: Record<string, any>) => void;
   defaultValues: Record<string, any>;
 }
 
-const StatusForm: FC<StatusFormProps> = ({
+export default function StatusForm({
   onSubmit,
   defaultValues,
   children,
-}) => {
+}: StatusFormProps) {
   const formProps = useSmartForm({
     onSubmit,
     defaultValues,
@@ -25,6 +26,4 @@ const StatusForm: FC<StatusFormProps> = ({
       {children}
     </MiniForm>
   );
-};
-
-export default StatusForm;
+}

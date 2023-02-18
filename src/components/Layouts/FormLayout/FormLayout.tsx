@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { ReactElement } from "react";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import Container from "components/Container";
@@ -7,11 +7,12 @@ import { useHeader } from "hooks";
 import { cn } from "utils";
 
 interface FormLayoutProps {
+  children: ReactElement;
   name?: string;
   title?: string;
 }
 
-const FormLayout: FC<FormLayoutProps> = ({ children, name, title }) => {
+export default function FormLayout({ children, name, title }: FormLayoutProps) {
   useHeader({ title });
 
   return (
@@ -23,6 +24,4 @@ const FormLayout: FC<FormLayoutProps> = ({ children, name, title }) => {
       </Container>
     </main>
   );
-};
-
-export default FormLayout;
+}

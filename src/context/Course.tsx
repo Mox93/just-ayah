@@ -1,4 +1,4 @@
-import { createContext, FC, useContext } from "react";
+import { createContext, PropsWithChildren, useContext } from "react";
 
 import { useMetaContext } from ".";
 
@@ -12,7 +12,7 @@ const initialState: CourseContext = {
 
 const courseContext = createContext(initialState);
 
-export const CourseProvider: FC = ({ children }) => {
+export function CourseProvider({ children }: PropsWithChildren) {
   const { shortList: { courses = [] } = {} } = useMetaContext();
 
   return (
@@ -20,6 +20,6 @@ export const CourseProvider: FC = ({ children }) => {
       {children}
     </courseContext.Provider>
   );
-};
+}
 
 export const useCourseContext = () => useContext(courseContext);

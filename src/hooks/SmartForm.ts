@@ -1,4 +1,4 @@
-import { cloneDeep, isPlainObject, mapValues } from "lodash";
+import { cloneDeep, isPlainObject } from "lodash";
 import { useCallback, useEffect } from "react";
 import {
   FieldValues,
@@ -71,14 +71,18 @@ export default function useSmartForm<TFieldValues extends FieldValues>({
   const handleReset = useCallback(
     (keepDefaultValue?: boolean) => () => {
       const values = watch();
-      const resetValues = mapValues(values, (value) =>
-        isPlainObject(value) ? {} : null
+      const resetValues = Object.entries(values).reduce(
+        (obj, [key, value]) => ({
+          ...obj,
+          [key]: isPlainObject(value) ? {} : null,
+        }),
+        {}
       );
 
       reset({
         ...resetValues,
         ...(keepDefaultValue ? defaultValues : {}),
-      } as typeof defaultValues);
+      } as TFieldValues);
       formSession?.clear();
     },
     [defaultValues, reset, watch]

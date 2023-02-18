@@ -39,7 +39,7 @@ export const timezoneSelectorProps = (
   renderSections: PathsOrConverters<Timezone>,
   selectedTimezone: string
 ) => ({
-  renderElement: renderAttributes<Timezone>(renderSections),
+  renderElement: renderAttributes(renderSections),
   options: timezones,
   getKey: (option: Timezone) => option.tzCode,
   selected: getTimezone(selectedTimezone),

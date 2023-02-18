@@ -1,4 +1,4 @@
-import { ReactFragment, SVGProps, VFC } from "react";
+import { FC, ReactElement, SVGProps } from "react";
 
 import { ReactComponent as DangerIcon } from "assets/icons/block-svgrepo-com.svg";
 import { ReactComponent as InfoIcon } from "assets/icons/info-svgrepo-com.svg";
@@ -14,7 +14,7 @@ interface ExtraProps {
   dir: string;
 }
 
-const icons: Record<ToastVariant, VFC<SVGProps<SVGSVGElement> & ExtraProps>> = {
+const icons: Record<ToastVariant, FC<SVGProps<SVGSVGElement> & ExtraProps>> = {
   success: SuccessIcon,
   info: InfoIcon,
   warning: WarningIcon,
@@ -22,7 +22,7 @@ const icons: Record<ToastVariant, VFC<SVGProps<SVGSVGElement> & ExtraProps>> = {
 };
 
 export interface ToastProps {
-  message: string | ReactFragment;
+  message: string | ReactElement;
   variant?: ToastVariant;
   floating?: boolean;
   dir?: string;

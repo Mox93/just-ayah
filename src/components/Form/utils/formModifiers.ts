@@ -207,7 +207,7 @@ export const processProps = <TFieldValues extends FieldValues>(
       const { onChange, onBlur, value, required, ...rest } =
         props as DefaultInputProps;
 
-      const processedRules = { ...rules };
+      const processedRules: typeof rules = { ...rules };
       const processedProps: ProcessedProps<DefaultInputProps, TFieldValues> = {
         ...rest,
         name,

@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import {
   createContext,
-  FC,
+  PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
@@ -59,7 +59,7 @@ const authContext = createContext(initialState);
 
 export const useAuthContext = () => useContext(authContext);
 
-export const AuthProvider: FC = ({ children }) => {
+export function AuthProvider({ children }: PropsWithChildren) {
   const glb = useGlobalT();
   // TODO move this into a reducer
   const [user, setUser] = useState<User | null>(null);
@@ -141,4 +141,4 @@ export const AuthProvider: FC = ({ children }) => {
       {ready ? children : <LoadingPopup message={glb("loading")} />}
     </authContext.Provider>
   );
-};
+}
