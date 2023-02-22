@@ -55,7 +55,7 @@ const selectionInput = {
     processProps<TeacherFormData>(),
     registerField<TeacherFormData>()
   ),
-};
+} as const;
 
 /**
 // TODO:

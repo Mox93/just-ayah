@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes, ReactNode } from "react";
+import { HTMLAttributes, ReactNode } from "react";
 
 import { ReactComponent as CallIcon } from "assets/icons/call-svgrepo-com.svg";
 import { ReactComponent as WhatsAppIcon } from "assets/icons/whatsapp-svgrepo-com.svg";
@@ -36,7 +36,7 @@ interface PhoneNumberInputProps extends HTMLAttributes<HTMLDivElement> {
   };
 }
 
-const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
+export default function PhoneNumberInput({
   label,
   isRequired,
   isInvalid,
@@ -47,7 +47,7 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
   withTags,
   innerProps: { code: codeProps, number: numberProps, tags: tagsProps } = {},
   ...props
-}) => {
+}: PhoneNumberInputProps) {
   const glb = useGlobalT();
   const msg = useMessageT();
 
@@ -106,9 +106,7 @@ const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
       {errorMessage}
     </div>
   );
-};
-
-export default PhoneNumberInput;
+}
 
 const icons: { [key in PhoneNumberTag]: ReactNode } = {
   call: <CallIcon className="call" />,

@@ -1,4 +1,5 @@
-import { FC, HTMLAttributes, ReactElement } from "react";
+import { HTMLAttributes, ReactElement } from "react";
+
 import { cn } from "utils";
 
 interface HighlightProps extends HTMLAttributes<HTMLParagraphElement> {
@@ -6,12 +7,12 @@ interface HighlightProps extends HTMLAttributes<HTMLParagraphElement> {
   sections?: (string | { value: string; index: number })[];
 }
 
-const Highlight: FC<HighlightProps> = ({
+export default function Highlight({
   children,
   className,
   sections,
   ...props
-}) => {
+}: HighlightProps) {
   let parts: (ReactElement | string)[] = [children];
   const highlights = sections?.map((highlight) =>
     typeof highlight === "string" ? { value: highlight, index: 0 } : highlight
@@ -45,6 +46,4 @@ const Highlight: FC<HighlightProps> = ({
       {parts}
     </p>
   );
-};
-
-export default Highlight;
+}

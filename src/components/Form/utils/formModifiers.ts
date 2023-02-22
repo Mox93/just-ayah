@@ -71,7 +71,10 @@ export const smartForm = <TFieldValues extends FieldValues>(
       return {
         ...props,
         // submitProps: { isLoading: isSubmitting, ...submitProps },
-        children: handleFormChildren(children, { formHook, noErrorMessage }),
+        children: passPropsToFormChildren(children, {
+          formHook,
+          noErrorMessage,
+        }),
         ...extraProps({ formHook }),
       };
     }
@@ -101,7 +104,7 @@ const isFormChild = (component: any): component is ReactElement => {
   return component?.type?.formChild;
 };
 
-export const handleFormChildren = (
+export const passPropsToFormChildren = (
   children: ReactNode,
   props: any
 ): ReactNode => {

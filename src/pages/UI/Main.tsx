@@ -92,7 +92,7 @@ export default function MainUI() {
         <Button
           onClick={() => {
             setIsLoading(true);
-            setTimeout(() => setIsLoading(false), 5000);
+            setTimeout(() => setIsLoading(false), 5e3);
           }}
           isLoading={isLoading}
           disabled={isLoading}

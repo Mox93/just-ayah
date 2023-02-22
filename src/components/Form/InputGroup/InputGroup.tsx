@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 import { cn } from "utils";
-import { handleFormChildren } from "../utils/formModifiers";
+import { passPropsToFormChildren } from "../utils/formModifiers";
 
 export interface InputGroupProps {
   children: ReactNode;
@@ -15,7 +15,7 @@ export default function InputGroup({
 }: InputGroupProps) {
   return (
     <div className={cn("InputGroup", className)}>
-      {handleFormChildren(children, props)}
+      {passPropsToFormChildren(children, props)}
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import {
-  FC,
   HTMLAttributes,
   InputHTMLAttributes,
   ReactNode,
@@ -53,7 +52,7 @@ interface DateInputProps extends HTMLAttributes<HTMLDivElement> {
   setValue?: (value: DateInfo) => void;
 }
 
-const DateInput: FC<DateInputProps> = ({
+export default function DateInput({
   label,
   isRequired,
   isInvalid,
@@ -65,7 +64,7 @@ const DateInput: FC<DateInputProps> = ({
   selected,
   setValue,
   ...props
-}) => {
+}: DateInputProps) {
   const dts = useDateTimeT("symbols");
 
   const [{ day, month, year }, dispatch] = useReducer(
@@ -134,6 +133,4 @@ const DateInput: FC<DateInputProps> = ({
       {errorMessage}
     </div>
   );
-};
-
-export default DateInput;
+}
