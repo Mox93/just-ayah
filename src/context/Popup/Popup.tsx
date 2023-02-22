@@ -6,7 +6,7 @@ import {
   useReducer,
 } from "react";
 
-import { assert, mergeCallbacks, pass } from "utils";
+import { assert, mergeCallbacks } from "utils";
 
 import Loading, { LoadingProps } from "./Loading";
 import Modal, { ModalProps } from "./Modal";
@@ -82,7 +82,7 @@ export function PopupProvider({ children }: PropsWithChildren) {
         payload: {
           ...props,
           message,
-          close: mergeCallbacks(closeToast, pass(clearTimeout, timeoutId)),
+          close: mergeCallbacks(closeToast, () => clearTimeout(timeoutId)),
         },
       });
     },

@@ -5,7 +5,7 @@ import { SelectionMenu } from "components/DropdownMenu";
 import { formAtoms } from "components/Form";
 import { useDynamicList, useGlobalT, useSmartForm } from "hooks";
 import { Schedule } from "models/blocks";
-import { range } from "utils";
+import { pass, range } from "utils";
 import Container from "components/Container";
 
 const { Form, Textarea, TimeInput, WeekDayInput, InputGroup } =
@@ -72,7 +72,7 @@ export default function ScheduleForm({
               iconButton
               variant="primary-ghost"
               className="action"
-              onClick={() => cloneItem(index)}
+              onClick={pass(cloneItem, index)}
             >
               <PlusIcon className="icon" />
             </Button>
@@ -80,7 +80,7 @@ export default function ScheduleForm({
               iconButton
               variant="danger-ghost"
               className="action"
-              onClick={() => removeItem(index)}
+              onClick={pass(removeItem, index)}
             >
               <CrossIcon className="icon" />
             </Button>

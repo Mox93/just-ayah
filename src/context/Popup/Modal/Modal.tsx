@@ -2,7 +2,7 @@ import { ReactElement, useEffect } from "react";
 
 import { CloseButton } from "components/Buttons";
 import { useDirT } from "hooks";
-import { cn } from "utils";
+import { cn, pass } from "utils";
 
 export type ModalProps = {
   children: ReactElement;
@@ -36,7 +36,7 @@ export default function Modal({
     <div className="Modal" dir={dir || dirT}>
       <div
         className="background"
-        onClick={() => dismissible && close && close()}
+        onClick={pass(dismissible && close && close)}
       />
       <div className={cn("foreground", { center })}>
         <div className="body">

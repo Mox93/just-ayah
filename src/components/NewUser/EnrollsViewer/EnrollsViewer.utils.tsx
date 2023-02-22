@@ -13,7 +13,7 @@ import { useGlobalT, useMessageT } from "hooks";
 import { StudentEnroll } from "models/student";
 import { TeacherEnroll } from "models/teacher";
 import { DeleteDataFunc } from "models";
-import { cn } from "utils";
+import { cn, pass } from "utils";
 
 export const ENROLL_CONTEXT = {
   student: {
@@ -43,7 +43,7 @@ function useCopyToClipboard() {
     timeout.current = setTimeout(() => {
       setCopied(undefined);
       timeout.current = undefined;
-    }, 1000);
+    }, 1e3);
   }, []);
 
   return [copied, copy] as const;
@@ -79,7 +79,7 @@ export function useTableFields({
                 setEditing(undefined);
                 updateEnrollName(id, value);
               }}
-              onCancel={() => setEditing(undefined)}
+              onCancel={pass(setEditing, undefined)}
             />
           ) : (
             <div className="withAction">
@@ -89,7 +89,7 @@ export function useTableFields({
                 variant="primary-ghost"
                 size="small"
                 iconButton
-                onClick={() => setEditing(id)}
+                onClick={pass(setEditing, id)}
               >
                 <EditIcon className="icon" />
               </Button>
@@ -113,7 +113,7 @@ export function useTableFields({
                 variant="primary-ghost"
                 size="small"
                 iconButton
-                onClick={() => copyToClipboard(enrollUrl)}
+                onClick={pass(copyToClipboard, enrollUrl)}
               >
                 <CopyIcon className="icon" />
               </Button>
@@ -142,7 +142,7 @@ export function useTableFields({
               variant="warning-ghost"
               size="small"
               iconButton
-              onClick={() => refreshEnroll(id)}
+              onClick={pass(refreshEnroll, id)}
             >
               <RefreshIcon className="icon" />
             </Button>
@@ -150,7 +150,7 @@ export function useTableFields({
               variant="danger-ghost"
               size="small"
               iconButton
-              onClick={() => deleteEnroll(id, { applyLocally: true })}
+              onClick={pass(deleteEnroll, id, { applyLocally: true })}
             >
               <CrossIcon className="icon" />
             </Button>
