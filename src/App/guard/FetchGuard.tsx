@@ -1,22 +1,22 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 
 import { Await } from "components/Await";
 import LoadingPopup from "components/LoadingPopup";
-import { useGlobalT } from "hooks";
-import { devOnly, omit } from "utils";
+import { useApplyOnce, useGlobalT } from "hooks";
 import { Location } from "models";
+import { IS_DEV } from "models/config";
 import { NotFound } from "pages/Fallback";
 
 interface FetchGuardProps {
-  fetcher?: Function;
+  fetcher: Function;
   loading?: ReactElement;
   notFound?: ReactElement;
   failed?: ReactElement;
 }
 
 export default function FetchGuard({
-  fetcher = omit,
+  fetcher,
   loading,
   notFound = <NotFound />,
   failed = <NotFound />,
@@ -28,18 +28,18 @@ export default function FetchGuard({
   const params = useParams();
   const location = useLocation() as Location<{} | undefined>;
 
-  useEffect(() => {
+  useApplyOnce(() => {
     Promise.resolve(fetcher(params))
       .then((data: any) => {
         if (data) location.state = { ...location.state, data };
         setFetchState(data ? "success" : "notFound");
-        devOnly(() => console.log("Fetch Succeeded", data))();
+        if (IS_DEV) console.log("Fetch Succeeded", data);
       })
       .catch((error) => {
-        devOnly(() => console.log("Fetch Failed", error))();
+        if (IS_DEV) console.log("Fetch Failed", error);
         setFetchState("failed");
       });
-  }, []);
+  });
 
   switch (fetchState) {
     case "loading":

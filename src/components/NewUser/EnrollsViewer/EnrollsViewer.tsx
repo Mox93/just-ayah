@@ -1,8 +1,6 @@
-import { useEffect } from "react";
-
 import { Button } from "components/Buttons";
 import { Table } from "components/Table";
-import { useGlobalT, useLoading } from "hooks";
+import { useApplyOnce, useGlobalT, useLoading } from "hooks";
 
 import NewEnroll from "../NewEnroll";
 import { UserVariant } from "../NewUser.type";
@@ -26,9 +24,7 @@ export default function EnrollsViewer({ variant }: EnrollsViewerProps) {
     addEnroll,
   } = context();
 
-  useEffect(() => {
-    if (!enrolls.length) fetchEnrolls();
-  }, []);
+  useApplyOnce(fetchEnrolls, !enrolls.length);
 
   const fields = useTableFields({
     refreshEnroll,

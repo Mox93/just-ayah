@@ -1,10 +1,14 @@
-import { useEffect } from "react";
-
 import { Button } from "components/Buttons";
 import { Table } from "components/Table";
 import { useStudentContext } from "context";
-import { useGlobalT, useLoading, usePageT, useSelect } from "hooks";
-import { prodOnly } from "utils";
+import {
+  useApplyOnce,
+  useGlobalT,
+  useLoading,
+  usePageT,
+  useSelect,
+} from "hooks";
+import { IS_PROD } from "models/config";
 
 import { useTableFields } from "./StudentList.utils";
 
@@ -22,12 +26,7 @@ export default function StudentList() {
     fetchStudents({ onCompleted: stopLoading });
   });
 
-  useEffect(
-    prodOnly(() => {
-      if (!students.length) loadStudents();
-    }),
-    []
-  );
+  useApplyOnce(loadStudents, IS_PROD && !students.length);
 
   const fields = useTableFields();
 

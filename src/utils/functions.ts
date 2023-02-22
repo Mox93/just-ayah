@@ -2,6 +2,7 @@ import { get } from "lodash";
 import { Primitive } from "type-fest";
 
 import { Path, PathValue } from "models";
+import { IS_DEV, IS_PROD } from "models/config";
 
 export function identity(value: any) {
   return value;
@@ -50,25 +51,16 @@ function pluck<T, S extends boolean = false>(path: Path<T>, strict?: S) {
   };
 }
 
-function envAction<T, A, Args extends [...A[]]>(
-  env: string,
-  action: (...args: Args) => T
-) {
-  return process.env.REACT_APP_ENV === env
-    ? (...value: any) => action(...value)
-    : omit;
-}
-
 export function devOnly<T, A, Args extends [...A[]]>(
   action: (...args: Args) => T
 ) {
-  return envAction("development", action);
+  return IS_DEV ? (...value: any) => action(...value) : omit;
 }
 
 export function prodOnly<T, A, Args extends [...A[]]>(
   action: (...args: Args) => T
 ) {
-  return envAction("production", action);
+  return IS_PROD ? (...value: any) => action(...value) : omit;
 }
 
 export function hasAtLeastOne<T>(array?: T[]): array is [T, ...T[]] {

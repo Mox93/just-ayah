@@ -1,3 +1,4 @@
+export { default as useApplyOnce } from "./ApplyOnce";
 export { default as useCountdown } from "./Countdown";
 export { default as useDropdown } from "./Dropdown";
 export type { DropdownAction, OverflowDir } from "./Dropdown";

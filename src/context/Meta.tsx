@@ -15,9 +15,10 @@ import {
 
 import { MetaData, META_DATA_DOCS, userIndexFromDB } from "models/metaData";
 import { db } from "services/firebase";
-import { devOnly, oneOf } from "utils";
+import { oneOf } from "utils";
 
 import { useAuthContext } from ".";
+import { IS_DEV } from "models/config";
 
 const collectionRef = collection(db, "meta");
 
@@ -55,7 +56,7 @@ export function MetaProvider({ children }: PropsWithChildren) {
               : doc.data())
         );
 
-        devOnly(() => console.log("Got metaData", data))();
+        if (IS_DEV) console.log("Got metaData", data);
 
         setMetaData(data);
       },

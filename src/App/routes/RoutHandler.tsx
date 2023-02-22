@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useStudentEnrollContext, useTeacherEnrollContext } from "context";
+import { IS_DEV } from "models/config";
 import { Admin, SignIn } from "pages/Admin";
 import { CourseList, CourseProfile, Courses } from "pages/Courses";
 import { NotFound, Unauthorized } from "pages/Fallback";
@@ -18,7 +19,7 @@ import {
   TeacherProfile,
 } from "pages/Teachers";
 import { FormUI, MainUI, SandboxUI } from "pages/UI";
-import { devOnly, pass } from "utils";
+import { pass } from "utils";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guard";
 // import AdminView from "./AdminView";
@@ -115,7 +116,7 @@ export default function RoutHandler() {
       </Route>
 
       {/* Dev Space */}
-      <Route path="ui" element={<FetchGuard fetcher={devOnly(pass(true))} />}>
+      <Route path="ui" element={<FetchGuard fetcher={pass(IS_DEV)} />}>
         <Route index element={<MainUI />} />
         <Route path="form" element={<FormUI />} />
         <Route path="sandbox" element={<SandboxUI />} />
