@@ -11,7 +11,7 @@ export type Tabs = [Tab, ...Tab[]];
 
 interface UseTabsProps {
   tabs: Tabs;
-  defaultTab?: Tabs[number]["key"];
+  defaultTab?: Tab["key"];
   renderHeader?: FunctionOrChain<string, ReactNode>;
 }
 
@@ -20,7 +20,9 @@ export default function useTabs({
   defaultTab,
   renderHeader = identity,
 }: UseTabsProps) {
+  const [isPending, startTransition] = useTransition();
   const [selectedTab, setSelectedTab] = useState(defaultTab || tabs[0].key);
+  const [nextTab, setNextTab] = useState<string>();
 
   const render = applyInOrder(renderHeader);
 
@@ -29,8 +31,17 @@ export default function useTabs({
       {tabs.map(({ key }) => (
         <button
           key={key}
-          className={cn("tabButton", { selected: key === selectedTab })}
-          onClick={() => setSelectedTab(key)}
+          className={cn("tabButton", {
+            selected: key === selectedTab,
+            next: key === nextTab && isPending,
+          })}
+          onClick={() => {
+            setNextTab(key);
+            startTransition(() => {
+              setSelectedTab(key);
+              setNextTab(undefined);
+            });
+          }}
         >
           {render(key)}
         </button>
