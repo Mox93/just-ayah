@@ -1,22 +1,8 @@
-import { HTMLAttributes, useEffect, useReducer } from "react";
+import { HTMLAttributes, useEffect, useRef } from "react";
 
 import { ReactComponent as Angle } from "assets/icons/angle-up-svgrepo-com.svg";
 import { cn } from "utils";
 import { useDirT } from "hooks";
-
-type State = { wasOpen: boolean; action?: "opening" | " closing" };
-type Action = { isOpen?: boolean };
-
-const reduce = ({ wasOpen, action }: State, { isOpen }: Action): State => {
-  switch (isOpen) {
-    case undefined:
-      return { wasOpen: false };
-    case wasOpen:
-      return { wasOpen, action };
-    default:
-      return { wasOpen: isOpen, action: isOpen ? "opening" : " closing" };
-  }
-};
 
 interface DropdownArrowProps extends HTMLAttributes<HTMLDivElement> {
   isOpen?: boolean;
@@ -29,9 +15,11 @@ export default function DropdownArrow({
   ...props
 }: DropdownArrowProps) {
   const dirT = useDirT();
+  const wasOpen = useRef(isOpen);
 
-  const [{ action }, dispatch] = useReducer(reduce, { wasOpen: !!isOpen });
-  useEffect(() => dispatch({ isOpen }), [isOpen]);
+  useEffect(() => {
+    wasOpen.current = isOpen;
+  }, [isOpen]);
 
   return (
     <div
@@ -39,7 +27,13 @@ export default function DropdownArrow({
       className={cn("DropdownArrow", className)}
       dir={dir || dirT}
     >
-      <Angle className={cn("icon", { isOpen }, action)} />
+      <Angle
+        className={cn("icon", {
+          isOpen,
+          opening: isOpen && !wasOpen.current,
+          closing: wasOpen.current && !isOpen,
+        })}
+      />
     </div>
   );
 }
