@@ -51,7 +51,9 @@ function App() {
           {/* Page Content */}
           <>
             <RoutHandler />
-            <PopupOutlet />
+            <Await>
+              <PopupOutlet />
+            </Await>
           </>
         </Nest>
         <Network />

@@ -9,7 +9,6 @@ import { AddDataFunc } from "models";
 import { capitalize } from "utils";
 
 import { UserVariant } from "../NewUser.type";
-import { Await } from "components/Await";
 
 const EnrollsViewer = lazy(() => import("../EnrollsViewer"));
 
@@ -54,22 +53,16 @@ export function useNewUserTabs<TUser, TUserForm extends {}>({
     () => [
       {
         key: "links",
-        body: (
-          <Await>
-            <EnrollsViewer variant={variant} />
-          </Await>
-        ),
+        body: <EnrollsViewer variant={variant} />,
       },
       {
         key: "form",
         body: (
-          <Await>
-            <UserForm
-              onSubmit={(data) =>
-                addUser(new UserClass(data), { onFulfilled, onRejected })
-              }
-            />
-          </Await>
+          <UserForm
+            onSubmit={(data) =>
+              addUser(new UserClass(data), { onFulfilled, onRejected })
+            }
+          />
         ),
       },
     ],

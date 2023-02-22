@@ -2,7 +2,6 @@ import { deleteField } from "firebase/firestore";
 import { lazy, useMemo } from "react";
 
 import { ReactComponent as Info } from "assets/icons/info-svgrepo-com.svg";
-import { Await } from "components/Await";
 import { Button } from "components/Buttons";
 import { SelectionMenu } from "components/DropdownMenu";
 import Ellipsis from "components/Ellipsis";
@@ -46,23 +45,13 @@ export function useTableFields() {
   const { openModal } = usePopupContext();
 
   const showNotesPopup = (id: string) => () =>
-    openModal(
-      <Await>
-        <StudentNotes id={id} />
-      </Await>,
-      { closable: true, dismissible: true }
-    );
+    openModal(<StudentNotes id={id} />, { closable: true, dismissible: true });
 
   const showSchedulePopup = (id: string) => () =>
-    openModal(
-      <Await>
-        <StudentSchedule id={id} />
-      </Await>,
-      {
-        closable: true,
-        dismissible: true,
-      }
-    );
+    openModal(<StudentSchedule id={id} />, {
+      closable: true,
+      dismissible: true,
+    });
 
   const { updateStudent } = useStudentContext();
 

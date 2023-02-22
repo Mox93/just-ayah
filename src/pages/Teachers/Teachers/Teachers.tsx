@@ -2,7 +2,6 @@ import { get } from "lodash";
 import { lazy, useMemo } from "react";
 
 import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
-import { Await } from "components/Await";
 import { Button } from "components/Buttons";
 import { MainLayout } from "components/Layouts";
 import SearchBar from "components/SearchBar";
@@ -54,16 +53,7 @@ export default function Teachers() {
           <Button
             variant="primary-outline"
             iconButton
-            onClick={() =>
-              openModal(
-                <Await>
-                  <NewTeacher />
-                </Await>,
-                {
-                  closable: true,
-                }
-              )
-            }
+            onClick={() => openModal(<NewTeacher />, { closable: true })}
           >
             <PlusIcon className="icon" />
           </Button>
