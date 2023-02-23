@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
 
 import Logo from "assets/icons/logo.svg";
+import LanguageSelector from "components/LanguageSelector";
 import { useDirT } from "hooks";
 import { cn, toTitle } from "utils";
 
@@ -16,7 +17,12 @@ export default function Header({ className, title, children }: HeaderProps) {
     <div className={cn("Header", className)} dir={dirT}>
       <div className="wrapper">
         {title && <h2 className="title followSidebar">{toTitle(title)}</h2>}
-        {children && <div className="actions">{children}</div>}
+        {children && (
+          <div className="actions">
+            {children}
+            <LanguageSelector />
+          </div>
+        )}
       </div>
       <img src={Logo} alt="just ayah logo" className="logo" />
     </div>

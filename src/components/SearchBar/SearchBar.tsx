@@ -49,9 +49,9 @@ const SearchBar = <TIndex,>({
 }: SearchBarProps<TIndex> = {}) => {
   const glb = useGlobalT();
   const [results, setResults] = useState<TIndex[]>();
-  const { driverRef, drivenRef, dropdownAction, dropdownWrapper } = useDropdown(
-    { overflowDir }
-  );
+  const { driverRef, drivenRef, dropdownWrapper, open, close } = useDropdown({
+    overflowDir,
+  });
   const formProps = useSmartForm<Search>({
     onSubmit: (data) => {
       console.log(data);
@@ -65,16 +65,18 @@ const SearchBar = <TIndex,>({
 
       const searchResults = applySearch(searchKey);
 
-      dropdownAction(searchResults?.length ? "open" : "close");
+      if (searchResults?.length) {
+        open();
+      } else {
+        close();
+      }
+
       setResults(searchResults);
     },
-    [applySearch, dropdownAction]
+    [applySearch]
   );
 
-  const openMenu = useCallback(
-    () => results?.length && dropdownAction("open"),
-    [results, dropdownAction]
-  );
+  const openMenu = useCallback(() => results?.length && open(), [results]);
 
   const searchField = useMemo(
     () => (

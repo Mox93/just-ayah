@@ -49,10 +49,12 @@ export default forwardRef(function Menu<TItem>(
       variant="menu"
       {...{ dir, ref }}
       header={
-        <>
-          {header}
-          {searchBar}
-        </>
+        (header || searchBar) && (
+          <>
+            {header}
+            {searchBar}
+          </>
+        )
       }
       className={cn("Menu", className)}
     >

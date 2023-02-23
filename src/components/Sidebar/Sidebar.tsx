@@ -5,7 +5,6 @@ import { ReactComponent as StudentsIcon } from "assets/icons/group-of-students-s
 import { ReactComponent as TeachersIcon } from "assets/icons/teacher-svgrepo-com.svg";
 import { ReactComponent as CoursesIcon } from "assets/icons/closed-book-svgrepo-com.svg";
 import { Button } from "components/Buttons";
-import LanguageSelector from "components/LanguageSelector";
 import { useAuthContext } from "context";
 import { useDirT, useGlobalT, useNavT } from "hooks";
 import { cn } from "utils";
@@ -41,7 +40,6 @@ export default function Sidebar() {
         </NavLink>
       </div>
       <div className="settingsSection">
-        <LanguageSelector />
         <Button variant="danger-solid" className="signOut" onClick={signOut}>
           {glb("signOut")}
         </Button>

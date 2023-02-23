@@ -41,13 +41,12 @@ export default forwardRef(function MenuInput<TOption>(
   }: MenuInputPropsInternal<TOption>,
   ref: Ref<HTMLInputElement>
 ) {
-  const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
-    useDropdown({
-      className: cn("MenuInput", className),
-      dir,
-      overflowDir,
-      onClick: "toggle",
-    });
+  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown({
+    className: cn("MenuInput", className),
+    dir,
+    overflowDir,
+    onClick: "toggle",
+  });
 
   const hasSelection = !oneOf(selected, ["", null, undefined]);
 
@@ -77,7 +76,7 @@ export default forwardRef(function MenuInput<TOption>(
         renderElement={renderElement}
         onSelect={(option) => {
           setValue?.(option);
-          dropdownAction("close");
+          close();
         }}
         withCheckMark
       />

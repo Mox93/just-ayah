@@ -1,21 +1,29 @@
-import { useLanguage } from "hooks";
-import { languages } from "models/blocks";
-import { cn, pass } from "utils";
+import { SelectionMenu } from "components/DropdownMenu";
+import { OverflowDir, useLanguage } from "hooks";
+import { Language, languages } from "models/blocks";
 
-export default function LanguageSelector() {
+interface LanguageSelectorProps {
+  dir?: string;
+  overflowDir?: OverflowDir;
+}
+
+export default function LanguageSelector({
+  dir,
+  overflowDir = "start",
+}: LanguageSelectorProps) {
   const [language, setLanguage] = useLanguage();
 
   return (
-    <div className="LanguageSelector">
-      {Object.keys(languages).map((lng) => (
-        <button
-          key={lng}
-          className={cn({ selected: language === lng }, lng, "element")}
-          onClick={pass(setLanguage, lng)}
-        >
-          {languages[lng].nativeName}
-        </button>
-      ))}
-    </div>
+    <SelectionMenu
+      className="LanguageSelector"
+      dir={dir}
+      overflowDir={overflowDir}
+      options={Object.keys(languages) as Language[]}
+      selected={language as Language}
+      onOptionSelect={setLanguage}
+      renderElement={(value) => (
+        <span className={value}>{languages[value].nativeName}</span>
+      )}
+    />
   );
 }

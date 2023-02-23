@@ -45,13 +45,12 @@ export default forwardRef(function SelectionMenu<TOption>(
   }: SelectionMenuProps<TOption>,
   ref: Ref<HTMLButtonElement>
 ) {
-  const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
-    useDropdown({
-      className: cn("SelectionMenu", className),
-      dir,
-      overflowDir,
-      onClick: "toggle",
-    });
+  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown({
+    className: cn("SelectionMenu", className),
+    dir,
+    overflowDir,
+    onClick: "toggle",
+  });
 
   const render = applyInOrder(renderElement);
 
@@ -83,7 +82,7 @@ export default forwardRef(function SelectionMenu<TOption>(
           if (!checkIsSelected(option, selected)) onOptionChange?.(option);
 
           onOptionSelect?.(option);
-          dropdownAction("close");
+          close();
         }}
         renderElement={render}
         withCheckMark={!noCheckmark}

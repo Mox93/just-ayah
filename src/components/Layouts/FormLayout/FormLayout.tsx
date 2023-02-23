@@ -18,7 +18,7 @@ export default function FormLayout({ children, name, title }: FormLayoutProps) {
   return (
     <main className={cn("FormLayout", name)}>
       <img className="banner" src={justAyahBG} alt="just ayah" />
-      <LanguageSelector />
+      <LanguageSelector dir="rtl" overflowDir="end" />
       <Container variant="form" header={<h2 className="title">{title}</h2>}>
         {children}
       </Container>

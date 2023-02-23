@@ -1,44 +1,17 @@
-import {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-} from "react";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
-import { cn } from "utils";
+import { cn, oneOf } from "utils";
 
 import { useDirT } from "../Translation";
 
 export type OverflowDir = "start" | "end";
 
-const useOverflowDir = (direction?: OverflowDir, fallback?: string) => {
-  const dirT = useDirT();
-
-  if (dirT === "rtl" && direction === "start") return "ltr";
-  if (dirT === "rtl" && direction === "end") return "rtl";
-  if (dirT === "ltr" && direction === "start") return "rtl";
-  if (dirT === "ltr" && direction === "end") return "ltr";
-  return fallback;
-};
-
-type DropdownState = { isOpen: boolean };
-export type DropdownAction = "open" | "close" | "toggle";
-
-const reduce = (
-  state: DropdownState,
-  action: DropdownAction
-): DropdownState => {
-  switch (action) {
-    case "open":
-      return { ...state, isOpen: true };
-    case "close":
-      return { ...state, isOpen: false };
-    case "toggle":
-      return { ...state, isOpen: !state.isOpen };
-    default:
-      return state;
-  }
+const getOverflowDir = (dir: string, overflow?: OverflowDir) => {
+  if (dir === "rtl" && overflow === "start") return "ltr";
+  if (dir === "rtl" && overflow === "end") return "rtl";
+  if (dir === "ltr" && overflow === "start") return "rtl";
+  if (dir === "ltr" && overflow === "end") return "ltr";
+  return dir;
 };
 
 interface UseDropdownProps {
@@ -54,20 +27,25 @@ export default function useDropdown({
   overflowDir,
   onClick,
 }: UseDropdownProps = {}) {
-  const [{ isOpen }, dispatch] = useReducer(reduce, { isOpen: false });
+  const [isOpen, setIsOpen] = useState(false);
 
   const driverRef = useRef<any>(null);
   const drivenRef = useRef<any>(null);
+  const dirT = useDirT();
+
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
+  const toggle = useCallback(() => setIsOpen((state) => !state), []);
 
   useEffect(() => {
     const handleWentOutside = (event: Event) =>
       event.target instanceof Node &&
       !driverRef?.current?.contains(event.target) &&
       !drivenRef.current?.contains(event.target) &&
-      dispatch("close");
+      close();
 
     const handelCancelButtons = (event: KeyboardEvent) =>
-      ["Escape"].includes(event.key) && dispatch("close");
+      oneOf(event.key, ["Escape"]) && close();
 
     const events = {
       mouseup: handleWentOutside,
@@ -93,20 +71,24 @@ export default function useDropdown({
       );
     };
 
-    isOpen ? addEvents() : RemoveEvents();
+    if (isOpen) {
+      addEvents();
+    } else {
+      RemoveEvents();
+    }
 
     return RemoveEvents;
   }, [isOpen]);
 
   useEffect(() => {
-    if (!onClick) return;
-
     const driver = driverRef.current;
 
-    if (driver) driver.onclick = () => dispatch(onClick);
+    if (driver)
+      driver.onclick =
+        onClick === "open" ? open : onClick === "toggle" ? toggle : undefined;
   }, [onClick]);
 
-  const oDir = useOverflowDir(overflowDir, dir);
+  const oDir = getOverflowDir(dir || dirT, overflowDir);
 
   // FIXME issue with dropdown keyboard control
   // const handleToggleButtons = useCallback((event: KeyboardEvent) => {
@@ -121,29 +103,22 @@ export default function useDropdown({
   const wrapper = useCallback(
     (driver: ReactElement, driven: () => ReactElement) => {
       return (
-        <div
-          className={cn("DropdownWrapper", className)}
-          dir={oDir}
-          // onFocus={() =>
-          //   document.addEventListener("keyup", handleToggleButtons)
-          // }
-          // onBlur={() =>
-          //   document.removeEventListener("keyup", handleToggleButtons)
-          // }
-        >
+        <div className={cn("DropdownWrapper", className)} dir={oDir}>
           {driver}
           {isOpen && <div className="buffer">{driven()}</div>}
         </div>
       );
     },
-    [className, oDir, isOpen] // , handleToggleButtons]
+    [className, oDir, isOpen]
   );
 
   return {
     driverRef,
     drivenRef,
     isOpen,
-    dropdownAction: dispatch,
+    open,
+    close,
+    toggle,
     dropdownWrapper: wrapper,
   };
 }

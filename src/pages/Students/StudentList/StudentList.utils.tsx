@@ -36,13 +36,12 @@ export function useTableFields() {
   const swd = useDateTimeT("weekDay.short");
   const dt = useDateTimeT();
 
+  const { openModal } = usePopupContext();
   const {
     data: { courses },
   } = useCourseContext();
-
   const { teacherIndex } = useMetaContext();
-
-  const { openModal } = usePopupContext();
+  const { updateStudent } = useStudentContext();
 
   const showNotesPopup = (id: string) => () =>
     openModal(<StudentNotes id={id} />, { closable: true, dismissible: true });
@@ -52,8 +51,6 @@ export function useTableFields() {
       closable: true,
       dismissible: true,
     });
-
-  const { updateStudent } = useStudentContext();
 
   const updateField =
     <TKey extends Path<Student>>(name: TKey, id: string) =>
@@ -229,6 +226,6 @@ export function useTableFields() {
         fit: true,
       },
     ],
-    [teacherIndex, courses]
+    [pi, glb, gov, courses, teacherIndex, swd, dt]
   );
 }
