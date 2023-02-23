@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function useSelect(getAllIds: () => string[]) {
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [selected, setSelected] = useState(new Set<string>());
 
   const toggleSelect = (checked: boolean, id?: string) =>
     id

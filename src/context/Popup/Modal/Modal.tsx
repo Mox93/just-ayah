@@ -2,7 +2,7 @@ import { ReactElement, useEffect } from "react";
 
 import { CloseButton } from "components/Buttons";
 import { useDirT } from "hooks";
-import { cn, pass } from "utils";
+import { cn, documentEventFactory, oneOf, pass } from "utils";
 
 export type ModalProps = {
   children: ReactElement;
@@ -24,12 +24,13 @@ export default function Modal({
   useEffect(() => {
     if (!dismissible) return;
 
-    const handelEscape = (event: KeyboardEvent) =>
-      event.key === "Escape" && close!();
+    const [addEvents, removeEvents] = documentEventFactory({
+      keyup: ({ key }) => oneOf(key, ["Escape"]) && close?.(),
+    });
 
-    close && document.addEventListener("keyup", handelEscape);
+    addEvents();
 
-    return () => close && document.removeEventListener("keyup", handelEscape);
+    return removeEvents;
   }, [dismissible, close]);
 
   return (

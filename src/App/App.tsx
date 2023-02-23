@@ -17,12 +17,15 @@ import {
 } from "context";
 
 import { Nest, Network } from "./components";
+import { usePageSync } from "./hooks";
 import { RoutHandler } from "./routes";
 
 import "services/i18n";
 import "styles/index.scss";
 
 function App() {
+  usePageSync();
+
   return (
     <Nest>
       <StrictMode />

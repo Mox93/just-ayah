@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
-import { cn, oneOf } from "utils";
+import { cn, documentEventFactory, oneOf } from "utils";
 
 import { useDirT } from "../Translation";
 
@@ -38,46 +38,30 @@ export default function useDropdown({
   const toggle = useCallback(() => setIsOpen((state) => !state), []);
 
   useEffect(() => {
-    const handleWentOutside = (event: Event) =>
+    const handleWentOutside = (event: Event) => {
       event.target instanceof Node &&
-      !driverRef?.current?.contains(event.target) &&
-      !drivenRef.current?.contains(event.target) &&
-      close();
+        !driverRef?.current?.contains(event.target) &&
+        !drivenRef.current?.contains(event.target) &&
+        close();
+    };
 
-    const handelCancelButtons = (event: KeyboardEvent) =>
+    const handelCancelButtons = (event: KeyboardEvent) => {
       oneOf(event.key, ["Escape"]) && close();
+    };
 
-    const events = {
+    const [addEvents, removeEvents] = documentEventFactory({
       mouseup: handleWentOutside,
       focusin: handleWentOutside,
       keyup: handelCancelButtons,
-    };
-
-    const addEvents = () => {
-      Object.entries(events).forEach(([type, callback]) =>
-        document.addEventListener(
-          type as keyof DocumentEventMap,
-          callback as EventListenerOrEventListenerObject
-        )
-      );
-    };
-
-    const RemoveEvents = () => {
-      Object.entries(events).forEach(([type, callback]) =>
-        document.removeEventListener(
-          type as keyof DocumentEventMap,
-          callback as EventListenerOrEventListenerObject
-        )
-      );
-    };
+    });
 
     if (isOpen) {
       addEvents();
     } else {
-      RemoveEvents();
+      removeEvents();
     }
 
-    return RemoveEvents;
+    return removeEvents;
   }, [isOpen]);
 
   useEffect(() => {

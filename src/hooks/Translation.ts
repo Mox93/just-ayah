@@ -1,15 +1,11 @@
-import { Callback, TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
 import { identity } from "utils";
 
-export const useLanguage = (): [
-  string,
-  (lng?: string, callback?: Callback) => Promise<TFunction>
-] => {
+export function useLanguage() {
   const { i18n } = useTranslation();
-  return [i18n.resolvedLanguage, i18n.changeLanguage];
-};
+  return [i18n.resolvedLanguage, i18n.changeLanguage] as const;
+}
 
 /**Namespaced T */
 export const useNST = (ns: string) => {

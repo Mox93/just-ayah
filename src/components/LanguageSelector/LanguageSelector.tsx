@@ -20,7 +20,7 @@ export default function LanguageSelector({
       overflowDir={overflowDir}
       options={Object.keys(languages) as Language[]}
       selected={language as Language}
-      onOptionSelect={setLanguage}
+      onOptionChange={setLanguage}
       renderElement={(value) => (
         <span className={value}>{languages[value].nativeName}</span>
       )}
