@@ -54,7 +54,7 @@ export default function StudentForm({
       key: "studentForm" + (formId ? `/${formId}` : ""),
       filter: { type: "omit", fields: ["meta.termsOfService"] },
     },
-    resetOnSubmit: true,
+    // resetOnSubmit: true,
   });
 
   const workStatus = useWorkStatus(control);

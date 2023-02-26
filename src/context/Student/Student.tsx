@@ -27,6 +27,7 @@ import Student, {
 } from "models/student";
 import { assert } from "utils";
 import { db } from "services/firebase";
+import { changeDateUpdated } from "models/blocks";
 
 const COLLECTION_NAME = "students";
 
@@ -64,7 +65,11 @@ export function StudentProvider({ children }: PropsWithChildren) {
 
   const getStudent = useGetDoc({ collectionRef: studentRef });
 
-  const updateStudent = useUpdateDoc({ collectionRef, setData: setStudents });
+  const updateStudent = useUpdateDoc({
+    collectionRef,
+    setData: setStudents,
+    processUpdates: changeDateUpdated("meta"),
+  });
 
   const addNote = useCallback<AddCommentFunc>(
     (id, note) => {

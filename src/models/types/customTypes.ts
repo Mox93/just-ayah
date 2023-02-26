@@ -64,7 +64,7 @@ export interface FetchDataOptions<
   TData,
   TPath extends Path<TData> = Path<TData>
 > extends RequestCallback {
-  filters?: [TPath, WhereFilterOp, PathValue<TData, TPath>][];
+  filters?: [TPath | FieldPath, WhereFilterOp, PathValue<TData, TPath>][];
   size?: number;
   sort?: { by: TPath | FieldPath; direction?: OrderByDirection };
 }

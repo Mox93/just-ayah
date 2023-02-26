@@ -31,7 +31,7 @@ export default function TeacherForm({
     onSubmit,
     defaultValues,
     storage: { key: "teacherForm" + (formId ? `/${formId}` : "") },
-    resetOnSubmit: true,
+    // resetOnSubmit: true,
   });
 
   return (

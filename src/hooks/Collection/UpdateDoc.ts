@@ -1,8 +1,13 @@
-import { CollectionReference, doc, updateDoc } from "firebase/firestore";
+import {
+  CollectionReference,
+  doc,
+  UpdateData,
+  updateDoc,
+} from "firebase/firestore";
 import { useCallback } from "react";
 
-import { GenericObject, DataModel, UpdateDataFunc } from "models";
-import { devOnly } from "utils";
+import { GenericObject, DataModel, UpdateDataFunc, Converter } from "models";
+import { devOnly, identity } from "utils";
 
 import {
   BaseCollectionProps,
@@ -14,12 +19,17 @@ import {
 interface UseUpdateDocProps<U extends GenericObject, T>
   extends Pick<BaseCollectionProps<T>, "setData"> {
   collectionRef: CollectionReference<U>;
+  processUpdates?: Converter<UpdateData<U>>;
 }
 
 export default function useUpdateDoc<
   U extends GenericObject,
   T extends DataModel
->({ collectionRef, setData }: UseUpdateDocProps<U, T>) {
+>({
+  collectionRef,
+  setData,
+  processUpdates = identity,
+}: UseUpdateDocProps<U, T>) {
   return useCallback<UpdateDataFunc<U>>(
     (
       id,
@@ -32,6 +42,7 @@ export default function useUpdateDoc<
         applyLocally,
       } = {}
     ) => {
+      updates = processUpdates(updates);
       updateDoc(doc(collectionRef, id), updates)
         .then((...args) => {
           if (applyLocally)
@@ -47,6 +58,6 @@ export default function useUpdateDoc<
         .catch(onFailed)
         .finally(onCompleted);
     },
-    [collectionRef, setData]
+    []
   );
 }

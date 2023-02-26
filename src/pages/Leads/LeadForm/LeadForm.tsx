@@ -16,7 +16,7 @@ export default function LeadForm({ onSubmit }: LeadFormProps) {
 
   const formProps = useSmartForm({
     onSubmit,
-    resetOnSubmit: true,
+    // resetOnSubmit: true,
   });
 
   return (

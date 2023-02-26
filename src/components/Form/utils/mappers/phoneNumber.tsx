@@ -62,7 +62,8 @@ export default function phoneNumberMapper<TFieldValues extends {}>() {
           },
           number: register(NUMBER, {
             ...rules,
-            setValueAs: (v: string) => setValueAs?.(v?.trim()),
+            setValueAs: (v: string) =>
+              setValueAs ? setValueAs(v?.trim()) : v?.trim(),
             pattern: {
               value: /^[0-9]{5,16}$/g,
               message: "wrongPhoneNumber",
@@ -104,10 +105,7 @@ export default function phoneNumberMapper<TFieldValues extends {}>() {
         name,
         isInvalid: !!fieldWithError,
         errorMessage: !noErrorMessage && (
-          <ErrorMessage
-            name={`${name}.${fieldWithError}` as any}
-            errors={errors}
-          />
+          <ErrorMessage name={fieldWithError as any} errors={errors} />
         ),
       };
     }

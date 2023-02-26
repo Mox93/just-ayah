@@ -1,4 +1,3 @@
-import { deleteField } from "firebase/firestore";
 import {
   createContext,
   PropsWithChildren,
@@ -24,6 +23,7 @@ import {
   GetDataFunc,
   SetDataFunc,
 } from "models";
+import { changeDateUpdated, sealEnroll } from "models/blocks";
 import {
   StudentDB,
   StudentEnroll,
@@ -58,10 +58,13 @@ export function StudentEnrollProvider({ children }: PropsWithChildren) {
     DataClass: StudentEnroll,
   });
 
-  const fetchEnrolls = useGetDocs({
+  const fetchEnrolls = useGetDocs<StudentEnroll, EnrollUser>({
     collectionRef: studentEnrollRef,
     setData: setEnrolls,
-    fetchDefaults: { sort: { by: "enroll.dateCreated", direction: "desc" } },
+    fetchDefaults: {
+      filters: [["enroll.awaiting", "==", true]],
+      sort: { by: "enroll.dateCreated", direction: "desc" },
+    },
   });
 
   const getStudentEnroll = useGetDoc({ collectionRef: studentEnrollRef });
@@ -71,14 +74,14 @@ export function StudentEnrollProvider({ children }: PropsWithChildren) {
     setData: setEnrolls,
   });
 
-  const updateStudent = useUpdateDoc({ collectionRef, setData: setEnrolls });
+  const updateStudent = useUpdateDoc({
+    collectionRef,
+    setData: setEnrolls,
+    processUpdates: sealEnroll,
+  });
 
   const submitEnroll = useCallback<SetDataFunc<StudentDB>>(
-    (id, { data }, options) => {
-      Object.assign(data, { enroll: deleteField() });
-      // data.meta.notes is incompatible because UpdateData<StudentDB> injects FieldValue inside of {[x: string]: Comment}
-      updateStudent(id, data as any, options);
-    },
+    (id, { data }, options) => updateStudent(id, data as any, options),
     [updateStudent]
   );
 
@@ -86,6 +89,7 @@ export function StudentEnrollProvider({ children }: PropsWithChildren) {
     useUpdateDoc({
       collectionRef: studentEnrollRef,
       setData: setEnrolls,
+      processUpdates: changeDateUpdated("enroll"),
     })
   );
 

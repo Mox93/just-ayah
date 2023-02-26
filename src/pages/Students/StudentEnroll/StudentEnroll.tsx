@@ -27,8 +27,8 @@ export default function StudentEnroll() {
         onSubmit={(data: StudentFormData) =>
           submitEnroll(id!, new Student.DB(data), {
             onFulfilled: () => openModal(<EnrolledMessage />, { center: true }),
-            onRejected: (reason) =>
-              openModal(<ErrorMessage error={reason} />, {
+            onRejected: (error) =>
+              openModal(<ErrorMessage error={error} />, {
                 center: true,
                 closable: true,
               }),

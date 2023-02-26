@@ -21,6 +21,7 @@ import {
   timezoneCodeSchema,
   timezoneSchema,
   trackableSchema,
+  userRefSchema,
 } from "./blocks";
 import { dateSchema } from "./blocks";
 
@@ -28,7 +29,8 @@ const metaSchema = trackableSchema.merge(
   z
     .object({
       schedule: scheduleSchema,
-      dailyHours: z.number().int(),
+      dailyHours: z.number().int().positive(),
+      students: z.array(userRefSchema),
       leads: z.string(),
       termsOfService: z.string(),
       notes: commentListSchema,
@@ -54,7 +56,7 @@ const teacherSchema = z.object({
   nationality: countrySchema.optional(), // TODO make required once all data is valid in the DB
   country: countrySchema.optional(), // TODO make required once all data is valid in the DB
   nationalID: z.string().optional(),
-  timezone: z.optional(timezoneSchema),
+  timezone: timezoneSchema.optional(),
   phoneNumber: phoneNumberListSchema,
   meta: metaSchema.default({}),
 });

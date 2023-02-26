@@ -71,8 +71,8 @@ export default function formAtoms<TFieldValues extends FieldValues>() {
     Form: transformer(Form as FC<PropsWithChildren>, smartFormMod),
     MiniForm: transformer(
       MiniForm as FC<PropsWithChildren>,
-      smartFormMod,
-      miniFormMapper
+      miniFormMapper,
+      smartFormMod
     ),
     InputGroup: formChild(InputGroup),
 

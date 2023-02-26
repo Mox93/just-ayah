@@ -91,6 +91,7 @@ export default function useSmartForm<TFieldValues extends FieldValues>({
   return {
     formHook,
     onSubmit: handleSubmit(
+      // FIXME handleReset should only happen when submit is successful
       mergeCallbacks(onSubmit, resetOnSubmit && handleReset()) as NonNullable<
         typeof onSubmit
       >,

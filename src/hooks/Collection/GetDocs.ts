@@ -19,7 +19,7 @@ import {
   REJECTED,
 } from "./Collection.types";
 
-interface UseGetDocsProps<T extends DataModel, D = T["data"]>
+interface UseGetDocsProps<T extends DataModel, D>
   extends Required<BaseCollectionProps<T>> {
   fetchDefaults?: FetchDataOptions<D>;
 }
