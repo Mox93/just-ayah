@@ -22,7 +22,7 @@ import {
   timezoneSchema,
   trackableSchema,
 } from "./blocks";
-import { dateSchema } from "./_blocks";
+import { dateSchema } from "./blocks";
 
 const metaSchema = trackableSchema.merge(
   z

@@ -17,7 +17,7 @@ import {
   countrySelectorProps,
   SimplePhoneNumber,
 } from "models/blocks";
-import { fromDateInfo } from "models/_blocks";
+import { fromDateInfo, shiftDate } from "models/_blocks";
 
 interface TestData {
   name: string;
@@ -83,10 +83,7 @@ export default function FormUI() {
           <DateInput
             innerProps={{ ...register("dateOfBirth") }}
             label="date of birth"
-            yearsRange={{
-              start: now.getFullYear(),
-              end: now.getFullYear() - 150,
-            }}
+            range={{ start: now, end: shiftDate(now, { year: -150 }) }}
             setValue={(date) => setValue("dateOfBirth", fromDateInfo(date))}
             // selected={toDateInfo(watch("dateOfBirth"))}
           />

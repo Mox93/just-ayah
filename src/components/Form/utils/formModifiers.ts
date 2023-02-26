@@ -1,13 +1,12 @@
 import {
   Children,
-  createElement,
+  cloneElement,
   InputHTMLAttributes,
   ReactElement,
   ReactNode,
   Ref,
 } from "react";
 import {
-  FieldValues,
   FieldPath,
   get,
   RegisterOptions,
@@ -17,8 +16,8 @@ import {
   useFormState,
 } from "react-hook-form";
 
-import { Converter, Merge } from "models";
-import { cn, identity, mergeCallbacks, mergeRefs, pass } from "utils";
+import { Merge } from "models";
+import { cn, identity, mergeCallbacks, mergeRefs } from "utils";
 import { createModifier, Transformer, transformer } from "utils/transformer";
 
 import ErrorMessage from "../ErrorMessage";
@@ -28,24 +27,12 @@ import { FormProps } from "../Form";
 |***** From Modifier *****|
 \*************************/
 
-export type FormHook<TFieldValues extends FieldValues> = Omit<
+export type FormHook<TFieldValues extends {}> = Omit<
   UseFormReturn<TFieldValues>,
   "handleSubmit"
 >;
 
-type GenerateExtraProps<
-  TFieldValues extends FieldValues,
-  TProps extends {} = {}
-> = (
-  props: Merge<
-    TProps,
-    {
-      formHook: FormHook<TFieldValues>;
-    }
-  >
-) => Record<string, any>;
-
-type SmartFormProps<TFieldValues extends FieldValues> = Merge<
+type SmartFormProps<TFieldValues extends {}> = Merge<
   FormProps,
   {
     formHook: FormHook<TFieldValues>;
@@ -53,9 +40,7 @@ type SmartFormProps<TFieldValues extends FieldValues> = Merge<
   }
 >;
 
-export const smartForm = <TFieldValues extends FieldValues>(
-  extraProps: GenerateExtraProps<TFieldValues> = pass({})
-) =>
+export const smartForm = <TFieldValues extends {}>() =>
   createModifier<SmartFormProps<TFieldValues>>(
     ({
       formHook,
@@ -75,7 +60,6 @@ export const smartForm = <TFieldValues extends FieldValues>(
           formHook,
           noErrorMessage,
         }),
-        ...extraProps({ formHook }),
       };
     }
   );
@@ -110,7 +94,7 @@ export const passPropsToFormChildren = (
 ): ReactNode => {
   return Children.map(children, (child) => {
     return isFormChild(child)
-      ? createElement(child.type, {
+      ? cloneElement(child, {
           ...props,
           ...child.props,
           key: child.props.name,
@@ -136,7 +120,7 @@ const COMMON_RULES = [
 export type DefaultInputProps = InputHTMLAttributes<HTMLInputElement>;
 
 export type WithFormHook<
-  TFieldValues extends FieldValues,
+  TFieldValues extends {},
   TExtraProps extends {} = {}
 > = Merge<
   TExtraProps,
@@ -145,18 +129,13 @@ export type WithFormHook<
   }
 >;
 
-type ProcessedProps<
-  TProps extends {},
-  TFieldValues extends FieldValues
-> = Partial<
-  Merge<
-    TProps,
-    {
-      isRequired: boolean;
-      formHook: FormHook<TFieldValues>;
-      rules: RegisterOptions<TFieldValues>;
-    }
-  >
+export type ProcessedProps<TProps extends {}, TFieldValues extends {}> = Merge<
+  TProps,
+  {
+    isRequired: boolean;
+    formHook: FormHook<TFieldValues>;
+    rules: RegisterOptions<TFieldValues>;
+  }
 >;
 
 export type RegisterMap<TFieldValues> = {
@@ -164,7 +143,7 @@ export type RegisterMap<TFieldValues> = {
 };
 
 export interface NamedChildProps<
-  TFieldValues extends FieldValues,
+  TFieldValues extends {},
   TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > {
   name: TFieldName;
@@ -173,31 +152,12 @@ export interface NamedChildProps<
   ref?: Ref<HTMLInputElement>;
 }
 
-type WithExtraProps<
-  TFieldValues extends FieldValues,
-  TProps extends {} = {},
-  TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = Merge<
-  TProps,
-  {
-    extraProps?: GenerateExtraProps<TFieldValues, { name: TFieldName }>;
-  }
->;
+interface SelectorHandlers {
+  toValue?: Function;
+  toSelected?: Function;
+}
 
-type SelectorHandlers<TFieldValues extends FieldValues> = WithExtraProps<
-  TFieldValues,
-  {
-    toValue?: Function;
-    toSelected?: Function;
-  }
->;
-
-export const processProps = <TFieldValues extends FieldValues>(
-  convert: Converter<
-    ProcessedProps<DefaultInputProps, TFieldValues>,
-    ProcessedProps<DefaultInputProps, TFieldValues>
-  > = identity
-) =>
+export const processProps = <TFieldValues extends {}>() =>
   createModifier<NamedChildProps<TFieldValues>>(
     ({
       formHook,
@@ -234,11 +194,11 @@ export const processProps = <TFieldValues extends FieldValues>(
       if (value !== undefined && processedRules.value === undefined)
         processedRules.value = value as any;
 
-      return convert(processedProps);
+      return processedProps;
     }
   );
 
-export const trimWhitespace = <TFieldValues extends FieldValues>() =>
+export const trimWhitespace = <TFieldValues extends {}>() =>
   createModifier<NamedChildProps<TFieldValues> & { keepWhitespace?: boolean }>(
     ({
       keepWhitespace,
@@ -255,11 +215,10 @@ export const trimWhitespace = <TFieldValues extends FieldValues>() =>
     })
   );
 
-export const menu = <TFieldValues extends FieldValues>({
+export const menu = <TFieldValues extends {}>({
   toValue = identity,
   toSelected = identity,
-  extraProps = pass({}),
-}: SelectorHandlers<TFieldValues> = {}) =>
+}: SelectorHandlers = {}) =>
   createModifier<NamedChildProps<TFieldValues>>(
     ({
       formHook,
@@ -285,12 +244,11 @@ export const menu = <TFieldValues extends FieldValues>({
         formHook,
         setValue,
         selected: toSelected(selected),
-        ...extraProps({ name, formHook }),
       };
     }
   );
 
-export const registerField = <TFieldValues extends FieldValues>(
+export const registerField = <TFieldValues extends {}>(
   convert: Function = identity
 ) =>
   createModifier<NamedChildProps<TFieldValues>>(

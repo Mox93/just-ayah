@@ -12,6 +12,7 @@ import {
 import { StudentFormData } from "models/student";
 
 import { useWorkStatus } from "./StudentForm.utils";
+import { shiftDate } from "models/_blocks";
 
 const {
   CountrySelectorInput,
@@ -91,10 +92,7 @@ export default function StudentForm({
           name="dateOfBirth"
           label={pi("dateOfBirth")}
           rules={{ required: "noDateOfBirth" }}
-          yearsRange={{
-            start: now.getFullYear(),
-            end: now.getFullYear() - 151,
-          }}
+          range={{ start: now, end: shiftDate(now, { year: -150 }) }}
         />
 
         <SelectionInput

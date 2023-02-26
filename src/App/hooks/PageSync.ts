@@ -4,7 +4,7 @@ import { useLanguage } from "hooks";
 import { windowEventFactory } from "utils";
 
 export default function usePageSync() {
-  const [_, setLanguage] = useLanguage();
+  const [, setLanguage] = useLanguage();
 
   useEffect(() => {
     const [addEvents, removeEvents] = windowEventFactory({

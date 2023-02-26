@@ -20,8 +20,8 @@ const FIELDS = {
   TAGS: "tags",
 } as const;
 
-const phoneNumberMapper = <TFieldValues extends {}>() =>
-  createModifier<NamedChildProps<TFieldValues>>(
+export default function phoneNumberMapper<TFieldValues extends {}>() {
+  return createModifier<NamedChildProps<TFieldValues>>(
     ({
       formHook,
       rules: { setValueAs, ...rules } = {},
@@ -112,5 +112,4 @@ const phoneNumberMapper = <TFieldValues extends {}>() =>
       };
     }
   );
-
-export default phoneNumberMapper;
+}

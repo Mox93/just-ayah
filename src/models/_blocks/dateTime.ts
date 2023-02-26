@@ -1,6 +1,5 @@
 import { Timestamp } from "firebase/firestore";
 import { RequireAtLeastOne } from "type-fest";
-import { z } from "zod";
 
 import { identity, range, addZeros } from "utils";
 
@@ -37,18 +36,6 @@ export interface TimeInfo12H {
 
 export const hours = (h24?: boolean) => (h24 ? range(24) : range(1, 13));
 export const minutes = (interval = 1) => range(0, 60, interval);
-
-export const weekDaySchema = z.enum([
-  "Fri",
-  "Sat",
-  "Sun",
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-]);
-
-export type WeekDay = z.infer<typeof weekDaySchema>;
 
 export const getAge = (date: string | number | Date) => {
   const today = new Date();
@@ -248,9 +235,3 @@ export const toDate = (value: unknown) => {
     if (!isNaN(date.getTime())) return date;
   }
 };
-
-export const dateSchema = z
-  .union([z.coerce.date(), z.instanceof(Timestamp)])
-  .transform((value) => (value instanceof Timestamp ? value.toDate() : value));
-
-export type DateValue = z.input<typeof dateSchema>;

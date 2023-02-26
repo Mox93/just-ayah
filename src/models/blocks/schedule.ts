@@ -3,7 +3,8 @@ import { z } from "zod";
 import { identity } from "utils";
 
 import { Converter } from "../types";
-import { fromTimeInfo, to12H, weekDaySchema } from "../_blocks/dateTime";
+import { fromTimeInfo, to12H } from "../_blocks/dateTime";
+import { weekDaySchema } from "./dateTime";
 
 export const scheduleSchema = z
   .object({

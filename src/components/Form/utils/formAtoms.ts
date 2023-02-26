@@ -2,13 +2,8 @@ import { FieldValues } from "react-hook-form";
 import { FC, PropsWithChildren } from "react";
 
 import { Country } from "models/blocks";
-import {
-  fromDateInfo,
-  toDateInfo,
-  WeekDay,
-  weekDaySchema,
-} from "models/_blocks";
-import { Timezone } from "models/blocks";
+import { fromDateInfo, toDateInfo } from "models/_blocks";
+import { Timezone, WeekDay } from "models/blocks";
 import { StudentFormData } from "models/student";
 import { TeacherFormData } from "models/teacher";
 import { transformer } from "utils/transformer";
@@ -40,9 +35,11 @@ import {
   countryMapper,
   governorateMapper,
   phoneNumberMapper,
+  termsOfServiceMapper,
   timezoneMapper,
   weekDayMapper,
 } from "./mappers";
+import miniFormMapper from "./mappers/miniForm";
 
 const selectionInput = {
   Student: formChild(
@@ -62,26 +59,20 @@ const selectionInput = {
  *  - Investigate the possibility of using overload to pass a namespace and get back the correct type
  */
 
-const formAtoms = <TFieldValues extends FieldValues>() => {
+export default function formAtoms<TFieldValues extends FieldValues>() {
   const registerFieldMod = registerField<TFieldValues>();
   const processPropsMod = processProps<TFieldValues>();
   const menuMod = menu<TFieldValues>();
   const trimWhitespaceMod = trimWhitespace<TFieldValues>();
+  const smartFormMod = smartForm<TFieldValues>();
 
   return {
     // Wrapper Components
-    Form: transformer(Form as FC<PropsWithChildren>, smartForm<TFieldValues>()),
+    Form: transformer(Form as FC<PropsWithChildren>, smartFormMod),
     MiniForm: transformer(
       MiniForm as FC<PropsWithChildren>,
-      smartForm<TFieldValues>(
-        ({
-          formHook: {
-            formState: { errors },
-          },
-        }) => ({
-          isInvalid: Object.keys(errors || {}).length > 0,
-        })
-      )
+      smartFormMod,
+      miniFormMapper
     ),
     InputGroup: formChild(InputGroup),
 
@@ -130,9 +121,7 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
     WeekDayInput: formChild(
       MenuInput as FC<MenuInputProps<WeekDay>>,
       processPropsMod,
-      menu<TFieldValues>({
-        extraProps: () => ({ options: weekDaySchema.optional }),
-      }),
+      menuMod,
       weekDayMapper,
       registerFieldMod
     ),
@@ -144,17 +133,8 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
     ),
     TermsOfService: formChild(
       TermsOfService,
-      processProps<TFieldValues>(
-        ({ isRequired, rules: { required, ...rules } = {}, ...props }) => {
-          const { name, formHook: { setValue } = {} } = props;
-          return {
-            ...props,
-            rules: { required: required || true, ...rules },
-            noErrorMessage: true,
-            onAccept: (url: string) => setValue?.(name as any, url as any),
-          };
-        }
-      ),
+      processPropsMod,
+      termsOfServiceMapper,
       registerFieldMod
     ),
 
@@ -168,6 +148,4 @@ const formAtoms = <TFieldValues extends FieldValues>() => {
     // Generic Components
     SelectionInput: selectionInput,
   };
-};
-
-export default formAtoms;
+}

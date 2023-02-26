@@ -9,7 +9,7 @@ import {
   externalUserSchema,
   BaseModel,
 } from "./abstract";
-import { dateSchema } from "./_blocks";
+import { dateSchema } from "./blocks";
 import {
   booleanSchema,
   commentListSchema,

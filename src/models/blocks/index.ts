@@ -1,7 +1,7 @@
 export * from "./boolean";
 export * from "./comment";
 export * from "./country";
-// export * from "./dateTime";
+export * from "./dateTime";
 export * from "./enroll";
 export * from "./gender";
 export * from "./governorate";

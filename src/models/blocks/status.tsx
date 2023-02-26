@@ -4,7 +4,8 @@ import { z } from "zod";
 import { formAtoms } from "components/Form";
 import { identity } from "utils";
 
-import { dateSchema, shortDateRep } from "../_blocks/dateTime";
+import { shiftDate, shortDateRep } from "../_blocks/dateTime";
+import { dateSchema } from "./dateTime";
 
 const { Input, DateInput } = formAtoms();
 
@@ -32,9 +33,9 @@ const statusMap = {
         <DateInput
           name="postponed"
           className="statusField"
-          yearsRange={{
-            start: new Date().getFullYear(),
-            end: new Date().getFullYear() + 10,
+          range={{
+            start: new Date(),
+            end: shiftDate(new Date(), { year: 10 }),
           }}
           rules={{
             required: true,
