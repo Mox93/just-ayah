@@ -1,9 +1,9 @@
 import { isEqual } from "lodash";
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { DropdownArrow } from "components/Icons";
+import { SpinningArrow } from "components/Icons";
 import Menu from "components/Menu";
-import { OverflowDir, useDropdown } from "hooks";
+import { AnchorPoint, useDropdown } from "hooks";
 import { GetKey, Merge, Path } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, oneOf } from "utils";
 import { after, before } from "utils/position";
@@ -13,7 +13,7 @@ import Input, { InputProps } from "../Input";
 export type MenuInputProps<TOption> = Merge<
   InputProps,
   {
-    overflowDir?: OverflowDir;
+    anchorPoint?: AnchorPoint;
     setValue?: (option?: TOption) => void;
   }
 >;
@@ -31,7 +31,7 @@ export default forwardRef(function MenuInput<TOption>(
     className,
     options,
     dir,
-    overflowDir,
+    anchorPoint,
     selected,
     searchFields,
     getKey = identity,
@@ -41,10 +41,13 @@ export default forwardRef(function MenuInput<TOption>(
   }: MenuInputPropsInternal<TOption>,
   ref: Ref<HTMLInputElement>
 ) {
-  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown({
+  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown<
+    HTMLDivElement,
+    HTMLDivElement
+  >({
     className: cn("MenuInput", className),
     dir,
-    overflowDir,
+    anchorPoint,
     onClick: "toggle",
   });
 
@@ -66,7 +69,7 @@ export default forwardRef(function MenuInput<TOption>(
             </div>
           )
         : null}
-      {after("input", <DropdownArrow {...{ isOpen, dir }} />)}
+      {after("input", <SpinningArrow {...{ isOpen, dir }} />)}
     </Input>,
     () => (
       <Menu

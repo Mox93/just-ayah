@@ -20,6 +20,7 @@ import {
   FetchDataFunc,
   UpdateDataFunc,
 } from "models";
+import { changeDateUpdated } from "models/blocks";
 import Teacher, {
   teacherConverter,
   TeacherDB,
@@ -27,7 +28,6 @@ import Teacher, {
 } from "models/teacher";
 import { assert } from "utils";
 import { db } from "services/firebase";
-import { changeDateUpdated } from "models/blocks";
 
 const COLLECTION_NAME = "teachers";
 
@@ -75,7 +75,8 @@ export function TeacherProvider({ children }: PropsWithChildren) {
     (id, note) => {
       const { dateCreated } = note;
       updateTeacher(id, {
-        [`meta.notes.${dateCreated.getTime()}`]: note,
+        // HACK: TS is unable to identify this key as `meta.notes.${string}`
+        [`meta.notes.${dateCreated.getTime()}` as any]: note,
       });
     },
     [updateTeacher]

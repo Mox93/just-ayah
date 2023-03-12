@@ -16,5 +16,5 @@ export default function useHeader({ title }: HeaderHookProps) {
     return () => {
       document.title = justAyah;
     };
-  }, [title]);
+  }, [glb, title]);
 }

@@ -67,7 +67,7 @@ export default function phoneNumberMapper<TFieldValues extends {}>() {
             pattern: {
               value: /^[0-9]{5,16}$/g,
               message: "wrongPhoneNumber",
-            } as any, // for some reason the type is throwing an error
+            } as any, // HACK: TS is trying to assign the inferred type to undefined
           }),
           tags: register(TAGS, {
             ...(rules?.required && {

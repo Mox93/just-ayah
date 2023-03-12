@@ -1,4 +1,4 @@
-import { UserRef, userRefSchema } from "./blocks/user";
+import { UserIndex, userIndexSchema } from "./blocks/user";
 
 interface ShortList {
   teachers?: string[];
@@ -14,7 +14,7 @@ interface UserIndexMap {
   [id: string]: UserSearchFields;
 }
 
-export type UserIndexList = UserRef[];
+export type UserIndexList = UserIndex[];
 
 export interface MetaData {
   shortList: ShortList;
@@ -27,12 +27,3 @@ export const META_DATA_DOCS: (keyof MetaData)[] = [
   "studentIndex",
   "teacherIndex",
 ];
-
-export const userIndexFromDB = (userIndex?: UserIndexMap): UserIndexList =>
-  Object.entries(userIndex || {}).flatMap(([id, data]) => {
-    const result = userRefSchema.safeParse({ id, ...data });
-
-    // console.log(result, data);
-
-    return result.success ? result.data : [];
-  });

@@ -13,7 +13,7 @@ export default function SignIn() {
 
   return (
     <div className="SignIn" style={{ backgroundImage: `url(${justAyahBG})` }}>
-      <LanguageSelector dir="rtl" overflowDir="end" />
+      <LanguageSelector dir="rtl" anchorPoint="top-start" />
       <Button
         variant="secondary-outline"
         size="large"

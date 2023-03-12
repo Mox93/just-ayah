@@ -4,16 +4,19 @@ import { ReactComponent as Angle } from "assets/icons/angle-up-svgrepo-com.svg";
 import { cn } from "utils";
 import { useDirT } from "hooks";
 
-interface DropdownArrowProps extends HTMLAttributes<HTMLDivElement> {
+export type SpinningArrowVariant = "dropdown" | "expand";
+interface SpinningArrowProps extends HTMLAttributes<HTMLDivElement> {
   isOpen?: boolean;
+  variant?: SpinningArrowVariant;
 }
 
-export default function DropdownArrow({
+export default function SpinningArrow({
   isOpen,
   className,
   dir,
+  variant = "dropdown",
   ...props
-}: DropdownArrowProps) {
+}: SpinningArrowProps) {
   const dirT = useDirT();
   const wasOpen = useRef(isOpen);
 
@@ -24,7 +27,7 @@ export default function DropdownArrow({
   return (
     <div
       {...props}
-      className={cn("DropdownArrow", className)}
+      className={cn("SpinningArrow", className, variant)}
       dir={dir || dirT}
     >
       <Angle

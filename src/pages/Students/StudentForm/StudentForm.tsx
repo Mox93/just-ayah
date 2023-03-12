@@ -118,7 +118,7 @@ export default function StudentForm({
           label={pi("residence")}
           renderSections={["emoji", "native"]}
           rules={{ required: "noResidence" }}
-          overflowDir="start"
+          anchorPoint="top-end"
         />
       </InputGroup>
 
@@ -133,7 +133,7 @@ export default function StudentForm({
         <TimezoneSelectorInput
           name="timezone"
           label={pi("timezone")}
-          overflowDir="start"
+          anchorPoint="top-end"
         />
       </InputGroup>
 

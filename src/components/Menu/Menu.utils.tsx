@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useMemo, useState } from "react";
+import { ChangeEventHandler, useEffect, useMemo, useState } from "react";
 
 import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.svg";
 import { Input } from "components/Form";
@@ -19,6 +19,10 @@ export function useListFilter<TOption>({
   dir,
 }: UseListFilterProps<TOption>) {
   const [optionList, setOptionList] = useState(options);
+
+  useEffect(() => {
+    setOptionList(options);
+  }, [options]);
 
   const applyFilter = useMemo<ChangeEventHandler<HTMLInputElement> | undefined>(
     () =>

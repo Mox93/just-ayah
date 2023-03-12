@@ -10,10 +10,11 @@ import { ReactComponent as AcceptedIcon } from "assets/icons/success-svgrepo-com
 import { ReactComponent as IdleIcon } from "assets/icons/minus-circle-svgrepo-com.svg";
 import { ReactComponent as InvalidIcon } from "assets/icons/block-svgrepo-com.svg";
 import { Button } from "components/Buttons";
-import Container from "components/Container";
 import { usePopupContext } from "context";
-import { useGlobalT, useMessageT } from "hooks";
-import { cn } from "utils";
+import { useMessageT } from "hooks";
+import { cn, mergeCallbacks, pass } from "utils";
+
+import TermsOfServicePopup from "./TermsOfServicePopup";
 
 const icons = {
   invalid: InvalidIcon,
@@ -32,18 +33,17 @@ export default forwardRef(function TermsOfService(
   { url, isInvalid, onAccept, ...props }: TermsOfServiceProps,
   ref: Ref<HTMLInputElement>
 ) {
+  const msg = useMessageT();
+
   const [status, setStatus] = useState<"idle" | "invalid" | "accepted">("idle");
 
   useEffect(() => {
     if (isInvalid) setStatus("invalid");
   }, [isInvalid]);
 
-  const Icon = icons[status];
-
-  const glb = useGlobalT();
-  const msg = useMessageT();
-
   const { openModal, closeModal } = usePopupContext();
+
+  const Icon = icons[status];
 
   return (
     <>
@@ -54,20 +54,14 @@ export default forwardRef(function TermsOfService(
         iconButton
         onClick={() =>
           openModal(
-            <Container className="TermsOfService modal">
-              {/* eslint-disable-next-line jsx-a11y/iframe-has-title */}
-              <iframe src={url} allow="autoplay" />
-              <Button
-                variant="success-solid"
-                onClick={() => {
-                  setStatus("accepted");
-                  onAccept?.(url);
-                  closeModal();
-                }}
-              >
-                {glb("acceptTermsOfService")}
-              </Button>
-            </Container>,
+            <TermsOfServicePopup
+              url={url}
+              onAccept={mergeCallbacks(
+                pass(setStatus, "accepted"),
+                pass(onAccept, url),
+                closeModal
+              )}
+            />,
             {
               center: true,
               closable: true,

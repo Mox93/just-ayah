@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 
-import { useLanguage } from "hooks";
+import { useDirT, useLanguage } from "hooks";
 import { windowEventFactory } from "utils";
 
 export default function usePageSync() {
   const [, setLanguage] = useLanguage();
+  const dirT = useDirT();
 
   useEffect(() => {
     const [addEvents, removeEvents] = windowEventFactory({
@@ -16,5 +17,9 @@ export default function usePageSync() {
     addEvents();
 
     return removeEvents;
-  }, []);
+  }, [setLanguage]);
+
+  useEffect(() => {
+    document.body.setAttribute("dir", dirT);
+  }, [dirT]);
 }

@@ -24,7 +24,7 @@ import {
   timezoneCodeSchema,
   timezoneSchema,
   trackableSchema,
-  userRefSchema,
+  userIndexSchema,
   workStatusSchema,
 } from "./blocks";
 
@@ -32,9 +32,9 @@ const metaSchema = trackableSchema.merge(
   z
     .object({
       course: z.string(),
-      teacher: userRefSchema,
+      teacher: userIndexSchema,
       schedule: scheduleSchema,
-      sessions: z.number().int(),
+      sessions: z.number().int().positive(),
       lead: z.string(),
       termsOfService: z.string(),
       progress: progressSchema,
@@ -49,9 +49,7 @@ const metaSchema = trackableSchema.merge(
     .partial()
 );
 
-const metaDBSchema = metaSchema.merge(
-  z.object({ notes: commentMapSchema }).partial()
-);
+const metaDBSchema = metaSchema.extend({ notes: commentMapSchema }).partial();
 
 const studentSchema = z.object({
   firstName: z.string(),
@@ -79,8 +77,8 @@ const simpleFields = {
 };
 
 const studentDBSchema = studentSchema.extend({
-  meta: metaDBSchema.default({}),
   ...simpleFields,
+  meta: metaDBSchema.default({}),
 });
 
 const studentFormSchema = studentSchema.extend(simpleFields);

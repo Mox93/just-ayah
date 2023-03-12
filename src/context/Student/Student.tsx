@@ -20,6 +20,7 @@ import {
   FetchDataFunc,
   UpdateDataFunc,
 } from "models";
+import { changeDateUpdated } from "models/blocks";
 import Student, {
   studentConverter,
   StudentDB,
@@ -27,7 +28,6 @@ import Student, {
 } from "models/student";
 import { assert } from "utils";
 import { db } from "services/firebase";
-import { changeDateUpdated } from "models/blocks";
 
 const COLLECTION_NAME = "students";
 
@@ -74,9 +74,11 @@ export function StudentProvider({ children }: PropsWithChildren) {
   const addNote = useCallback<AddCommentFunc>(
     (id, note) => {
       const { dateCreated } = note;
-      updateStudent(id, {
-        [`meta.notes.${dateCreated.getTime()}`]: note,
-      });
+      updateStudent(
+        id,
+        { [`meta.notes.${dateCreated.getTime()}`]: note },
+        { applyLocally: true }
+      );
     },
     [updateStudent]
   );

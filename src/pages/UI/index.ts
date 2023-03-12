@@ -1,3 +1,5 @@
+import "./UI.style.scss";
+
 import { lazy } from "react";
 
 export const MainUI = lazy(() => import("./Main"));

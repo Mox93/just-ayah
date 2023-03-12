@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, To } from "react-router-dom";
 
 import { useStudentEnrollContext, useTeacherEnrollContext } from "context";
 import { IS_DEV } from "models/config";
@@ -22,6 +22,7 @@ import { FormUI, MainUI, SandboxUI } from "pages/UI";
 import { pass } from "utils";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guard";
+import { useLocalStorage } from "hooks";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
@@ -38,14 +39,16 @@ export default function RoutHandler() {
   const { getStudentEnroll } = useStudentEnrollContext();
   const { getTeacherEnroll } = useTeacherEnrollContext();
 
+  const signInSession = useLocalStorage<{ from?: To }>("signInSession");
+
   return (
     <Routes>
       {/* Admin */}
       <Route element={<UserGuard redirect="/sign-in" />}>
-        <Route path="admin" element={<Admin />}>
-          <Route element={<AuthGuard />}>
+        <Route element={<AuthGuard />}>
+          <Route path="admin" element={<Admin />}>
             {/* Home */}
-            <Route index />
+            <Route index element={<h1>Dashboard</h1>} />
 
             {/* Courses */}
             <Route path="courses" element={<Courses />}>
@@ -75,7 +78,14 @@ export default function RoutHandler() {
       </Route>
 
       {/* Public */}
-      <Route element={<UserGuard redirect="/admin" guestOnly />}>
+      <Route
+        element={
+          <UserGuard
+            redirect={signInSession.data?.from || "/admin"}
+            guestOnly
+          />
+        }
+      >
         <Route path="sign-in" element={<SignIn />} />
       </Route>
 

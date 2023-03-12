@@ -1,3 +1,4 @@
+import { userIndexMapSchema } from "./blocks/user";
 import { z } from "zod";
 
 import { dbConverter } from "utils";
@@ -21,7 +22,7 @@ import {
   timezoneCodeSchema,
   timezoneSchema,
   trackableSchema,
-  userRefSchema,
+  userIndexListSchema,
 } from "./blocks";
 import { dateSchema } from "./blocks";
 
@@ -29,8 +30,8 @@ const metaSchema = trackableSchema.merge(
   z
     .object({
       schedule: scheduleSchema,
-      dailyHours: z.number().int().positive(),
-      students: z.array(userRefSchema),
+      dailyHours: z.number().positive(),
+      students: userIndexListSchema,
       leads: z.string(),
       termsOfService: z.string(),
       notes: commentListSchema,
@@ -42,7 +43,12 @@ const metaSchema = trackableSchema.merge(
     .partial()
 );
 
-const metaDBSchema = metaSchema.extend({ notes: commentMapSchema.optional() });
+const metaDBSchema = metaSchema
+  .extend({
+    notes: commentMapSchema.optional(),
+    students: userIndexMapSchema,
+  })
+  .partial();
 
 const teacherSchema = z.object({
   firstName: z.string(),
@@ -69,8 +75,8 @@ const simpleFields = {
 };
 
 const teacherDBSchema = teacherSchema.extend({
-  meta: metaDBSchema.default({}),
   ...simpleFields,
+  meta: metaDBSchema.default({}),
 });
 
 const teacherFormSchema = teacherSchema.extend(simpleFields);

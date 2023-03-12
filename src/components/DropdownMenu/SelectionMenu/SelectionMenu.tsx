@@ -3,15 +3,17 @@ import { forwardRef, ReactNode, Ref } from "react";
 
 import { Button, ButtonProps, DropdownButton } from "components/Buttons";
 import Menu from "components/Menu";
-import { OverflowDir, useDropdown } from "hooks";
+import { useDropdown } from "hooks";
 import { GetKey, Path } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, mergeRefs } from "utils";
+import { UseDropdownProps } from "hooks/Dropdown";
 
-interface SelectionMenuProps<TOption> extends Omit<ButtonProps, "children"> {
+interface SelectionMenuProps<TOption>
+  extends Omit<ButtonProps, "children">,
+    Omit<UseDropdownProps, "onClick"> {
   options: TOption[];
   selected?: TOption;
   renderElement?: FunctionOrChain<TOption, ReactNode>;
-  overflowDir?: OverflowDir;
   placeholder?: string;
   noCheckmark?: boolean;
   noArrow?: boolean;
@@ -26,7 +28,8 @@ export default forwardRef(function SelectionMenu<TOption>(
   {
     className,
     dir,
-    overflowDir,
+    anchorPoint,
+    sideMounted,
     options,
     selected,
     variant = "plain-text",
@@ -45,10 +48,14 @@ export default forwardRef(function SelectionMenu<TOption>(
   }: SelectionMenuProps<TOption>,
   ref: Ref<HTMLButtonElement>
 ) {
-  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown({
+  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown<
+    HTMLButtonElement,
+    HTMLDivElement
+  >({
     className: cn("SelectionMenu", className),
     dir,
-    overflowDir,
+    anchorPoint,
+    sideMounted,
     onClick: "toggle",
   });
 

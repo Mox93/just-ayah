@@ -10,8 +10,8 @@ interface StudentScheduleProps {
 export default function StudentSchedule({ id }: StudentScheduleProps) {
   const { students, updateStudent } = useStudentContext();
   const schedule = useMemo(
-    () => students.find(({ id: studentId }) => id === studentId)?.meta.schedule,
-    [students, id]
+    () => students.find(({ id: _id }) => id === _id)?.meta.schedule,
+    [id, students]
   );
 
   return (

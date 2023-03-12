@@ -90,7 +90,10 @@ export default forwardRef(function StatusMenu<TVariant extends StatusVariants>(
 ) {
   const glb = useGlobalT();
 
-  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown({
+  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown<
+    HTMLButtonElement,
+    HTMLDivElement
+  >({
     className: cn("StatusMenu", className),
     onClick: "toggle",
   });

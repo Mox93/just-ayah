@@ -1,7 +1,7 @@
 export { default as useApplyOnce } from "./ApplyOnce";
 export { default as useCountdown } from "./Countdown";
 export { default as useDropdown } from "./Dropdown";
-export type { OverflowDir } from "./Dropdown";
+export type { AnchorPoint } from "./Dropdown";
 export { default as useDynamicList } from "./DynamicList";
 export { default as useHeader } from "./Header";
 export { default as useLoading } from "./Loading";

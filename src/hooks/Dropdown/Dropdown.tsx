@@ -1,53 +1,49 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
-import { cn, documentEventFactory, oneOf } from "utils";
+import { cn, documentEventFactory, oneOf, refEventFactory } from "utils";
 
-import { useDirT } from "../Translation";
+export type AnchorPoint = `${"top" | "bottom"}-${"start" | "end"}`;
 
-export type OverflowDir = "start" | "end";
-
-const getOverflowDir = (dir: string, overflow?: OverflowDir) => {
-  if (dir === "rtl" && overflow === "start") return "ltr";
-  if (dir === "rtl" && overflow === "end") return "rtl";
-  if (dir === "ltr" && overflow === "start") return "rtl";
-  if (dir === "ltr" && overflow === "end") return "ltr";
-  return dir;
-};
-
-interface UseDropdownProps {
+export interface UseDropdownProps {
   className?: string;
   dir?: string;
-  overflowDir?: OverflowDir;
+  anchorPoint?: AnchorPoint;
+  sideMounted?: boolean;
   onClick?: "open" | "toggle";
 }
 
-export default function useDropdown({
+export default function useDropdown<
+  T1 extends HTMLElement,
+  T2 extends HTMLElement
+>({
   className,
   dir,
-  overflowDir,
+  anchorPoint = "top-start",
+  sideMounted,
   onClick,
 }: UseDropdownProps = {}) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const driverRef = useRef<any>(null);
-  const drivenRef = useRef<any>(null);
-  const dirT = useDirT();
+  const driverRef = useRef<T1>(null);
+  const drivenRef = useRef<T2>(null);
 
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
-  const toggle = useCallback(() => setIsOpen((state) => !state), []);
+  const open = useRef(() => setIsOpen(true));
+  const close = useRef(() => setIsOpen(false));
+  const toggle = useRef(() => setIsOpen((state) => !state));
 
   useEffect(() => {
-    const handleWentOutside = (event: Event) => {
-      event.target instanceof Node &&
-        !driverRef?.current?.contains(event.target) &&
-        !drivenRef.current?.contains(event.target) &&
-        close();
-    };
+    function handleWentOutside(event: Event) {
+      if (
+        event.target instanceof Node &&
+        !driverRef.current?.contains(event.target) &&
+        !drivenRef.current?.contains(event.target)
+      )
+        close.current();
+    }
 
-    const handelCancelButtons = (event: KeyboardEvent) => {
-      oneOf(event.key, ["Escape"]) && close();
-    };
+    function handelCancelButtons(event: KeyboardEvent) {
+      if (oneOf(event.key, ["Escape"])) close.current();
+    }
 
     const [addEvents, removeEvents] = documentEventFactory({
       mouseup: handleWentOutside,
@@ -65,14 +61,16 @@ export default function useDropdown({
   }, [isOpen]);
 
   useEffect(() => {
-    const driver = driverRef.current;
+    if (driverRef.current && onClick) {
+      const [addEvents, removeEvents] = refEventFactory(driverRef, {
+        click: onClick === "open" ? open.current : toggle.current,
+      });
 
-    if (driver)
-      driver.onclick =
-        onClick === "open" ? open : onClick === "toggle" ? toggle : undefined;
+      addEvents();
+
+      return removeEvents;
+    }
   }, [onClick]);
-
-  const oDir = getOverflowDir(dir || dirT, overflowDir);
 
   // FIXME issue with dropdown keyboard control
   // const handleToggleButtons = useCallback((event: KeyboardEvent) => {
@@ -84,25 +82,36 @@ export default function useDropdown({
   //   }
   // }, []);
 
+  const isOpenRef = useRef(isOpen);
+  isOpenRef.current = isOpen;
+
   const wrapper = useCallback(
-    (driver: ReactElement, driven: () => ReactElement) => {
-      return (
-        <div className={cn("DropdownWrapper", className)} dir={oDir}>
-          {driver}
-          {isOpen && <div className="buffer">{driven()}</div>}
-        </div>
-      );
-    },
-    [className, oDir, isOpen]
+    (driver: ReactElement, driven: () => ReactElement) => (
+      <div className={cn("DropdownWrapper", className)} dir={dir}>
+        {driver}
+        {isOpenRef.current && (
+          <div
+            className={cn(
+              "buffer",
+              ...anchorPoint.split("-").map((x) => `ap-${x}`),
+              { sideMounted }
+            )}
+          >
+            {driven()}
+          </div>
+        )}
+      </div>
+    ),
+    [anchorPoint, className, dir, sideMounted]
   );
 
   return {
     driverRef,
     drivenRef,
     isOpen,
-    open,
-    close,
-    toggle,
+    open: open.current,
+    close: close.current,
+    toggle: toggle.current,
     dropdownWrapper: wrapper,
   };
 }

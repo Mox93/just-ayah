@@ -7,7 +7,7 @@ interface Tab {
   body: ReactElement;
 }
 
-export type Tabs = [Tab, ...Tab[]];
+export type Tabs = [Tab, Tab, ...Tab[]];
 
 interface UseTabsProps {
   tabs: Tabs;

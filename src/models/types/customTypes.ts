@@ -18,6 +18,9 @@ import { Path, PathValue } from "./path";
 
 export const UNKNOWN = "unknown";
 export const OTHER = "other";
+export const FULFILLED = "FULFILLED";
+export const REJECTED = "REJECTED";
+export const ERROR = "ERROR";
 
 export type GenericObject = Record<PropertyKey, any>;
 

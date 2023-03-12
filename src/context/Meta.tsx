@@ -13,12 +13,14 @@ import {
   useState,
 } from "react";
 
-import { MetaData, META_DATA_DOCS, userIndexFromDB } from "models/metaData";
+import { MetaData, META_DATA_DOCS } from "models/metaData";
 import { db } from "services/firebase";
 import { oneOf } from "utils";
 
 import { useAuthContext } from ".";
 import { IS_DEV } from "models/config";
+import { userIndexListSchema } from "models/blocks";
+import { ERROR } from "models";
 
 const collectionRef = collection(db, "meta");
 
@@ -46,15 +48,19 @@ export function MetaProvider({ children }: PropsWithChildren) {
     return onSnapshot(q, {
       next: (snapshot) => {
         const data: any = {};
-        snapshot.forEach(
-          (doc) =>
-            (data[doc.id as keyof MetaData] = oneOf(doc.id, [
-              "studentIndex",
-              "teacherIndex",
-            ])
-              ? userIndexFromDB(doc.data())
-              : doc.data())
-        );
+        snapshot.forEach((doc) => {
+          if (oneOf(doc.id, ["studentIndex", "teacherIndex"])) {
+            const result = userIndexListSchema.safeParse(doc.data());
+
+            if (IS_DEV && !result.success) {
+              console.log(ERROR, result.error);
+            }
+
+            data[doc.id] = result.success ? result.data : [];
+          } else {
+            data[doc.id] = doc.data();
+          }
+        });
 
         if (IS_DEV) console.log("Got metaData", data);
 

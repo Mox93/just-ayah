@@ -2,9 +2,10 @@ import { ReactElement } from "react";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import Container from "components/Container";
-import LanguageSelector from "components/LanguageSelector";
 import { useHeader } from "hooks";
 import { cn } from "utils";
+
+import LanguageSelector from "../LanguageSelector";
 
 interface FormLayoutProps {
   children: ReactElement;
@@ -18,7 +19,7 @@ export default function FormLayout({ children, name, title }: FormLayoutProps) {
   return (
     <main className={cn("FormLayout", name)}>
       <img className="banner" src={justAyahBG} alt="just ayah" />
-      <LanguageSelector dir="rtl" overflowDir="end" />
+      <LanguageSelector dir="rtl" anchorPoint="top-start" />
       <Container variant="form" header={<h2 className="title">{title}</h2>}>
         {children}
       </Container>
