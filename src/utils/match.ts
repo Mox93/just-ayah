@@ -11,7 +11,7 @@ type MatchRecord<
   [key in TFieldName]+?: { substrings: string[]; score: number };
 };
 
-interface MatchResult<TFieldValues> {
+export interface MatchResult<TFieldValues> {
   value: TFieldValues;
   matches: MatchRecord<TFieldValues>;
   score: number;
@@ -44,12 +44,11 @@ const calculateScore = (matchedSubstring: RegExpMatchArray) =>
     0
   );
 
-export const substringMatch =
-  <TFieldValues>(
-    indexData: TFieldValues[],
-    { filter, substringMinLength = 2 }: SubstringMatchOptions<TFieldValues> = {}
-  ) =>
-  (searchKey: string) => {
+export function substringMatch<TFieldValues>(
+  indexData: TFieldValues[],
+  { filter, substringMinLength = 2 }: SubstringMatchOptions<TFieldValues> = {}
+) {
+  return (searchKey: string) => {
     substringMinLength = Math.max(
       Math.min(substringMinLength, searchKey.length),
       1
@@ -98,3 +97,4 @@ export const substringMatch =
 
     return results.sort((a, b) => b.score - a.score);
   };
+}
