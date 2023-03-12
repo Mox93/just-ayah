@@ -149,30 +149,30 @@
 }
 
 @mixin large {
-  padding: 1em 2em;
+  padding: var(--spacing-l) var(--spacing-xl);
   font-weight: bold;
-  border-radius: 0.375em;
+  border-radius: var(--radius-m);
 
   &.iconButton {
-    padding-inline: 1em;
+    padding-inline: var(--spacing-l);
   }
 }
 
 @mixin medium {
-  padding: 0.5em 1em;
-  border-radius: 0.25em;
+  padding: var(--spacing-m) var(--spacing-l);
+  border-radius: var(--radius-s);
 
   &.iconButton {
-    padding-inline: 0.5em;
+    padding-inline: var(--spacing-m);
   }
 }
 
 @mixin small {
-  padding: 0.25em 0.5em;
-  border-radius: 0.25em;
+  padding: var(--spacing-s) var(--spacing-m);
+  border-radius: var(--radius-xs);
 
   &.iconButton {
-    padding-inline: 0.25em;
+    padding-inline: var(--spacing-s);
   }
 }
 

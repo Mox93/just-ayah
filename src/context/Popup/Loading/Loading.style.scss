@@ -14,8 +14,8 @@
   .body {
     background-color: var(--c-white);
     padding: var(--spacing-l);
-    border-radius: 0.75rem;
-    box-shadow: 4px 4px 16px var(--c-shadow-200);
+    border-radius: var(--radius-s);
+    box-shadow: var(--drop-shadow-l);
     display: flex;
     align-items: center;
     gap: var(--spacing-l);

@@ -25,22 +25,4 @@
       cursor: text;
     }
   }
-
-  .menu {
-    .list {
-      list-style-type: none;
-
-      .element {
-        padding-inline: 0.75rem;
-        border-radius: 0.25rem;
-        cursor: pointer;
-
-        @include menuItem();
-
-        &:hover {
-          background-color: var(--c-shadow-200);
-        }
-      }
-    }
-  }
 }

@@ -28,6 +28,30 @@ h6 {
   line-height: normal;
 }
 
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+h4 {
+  font-size: 1rem;
+}
+
+h5 {
+  font-size: 0.9rem;
+}
+
+h6 {
+  font-size: 0.7rem;
+}
+
 html {
   /* scrollbar-gutter: stable; */
   // min-width: 800px;
@@ -47,7 +71,7 @@ button {
     cursor: default;
   }
 
-  &:focus {
+  &:not(.keepFocusOutline):focus {
     outline: none;
   }
 }
@@ -99,7 +123,7 @@ table {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--c-gray-200);
+  background: var(--c-gray-100);
 }
 
 ::-webkit-scrollbar-thumb {

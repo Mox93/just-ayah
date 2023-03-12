@@ -1,3 +1,5 @@
+@use "styles/abstracts/mixins" as *;
+
 .LoadingDots {
   --dot-size: 0.5rem;
   --dot-color: var(--fill-color);
@@ -9,11 +11,9 @@
   .dot1,
   .dot2,
   .dot3 {
-    width: var(--dot-size);
-    height: var(--dot-size);
-    border-radius: 100%;
-    background-color: var(--dot-color);
     animation: load 1s infinite;
+
+    @include circle(var(--dot-size), var(--dot-color));
   }
 
   .dot2 {

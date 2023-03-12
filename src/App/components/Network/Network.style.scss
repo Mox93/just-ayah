@@ -9,7 +9,7 @@
   color: var(--c-white);
   background-color: var(--bg-color);
   padding: var(--spacing-m) var(--spacing-l);
-  border-radius: var(--spacing-s);
+  border-radius: var(--radius-s);
   opacity: 0;
   transition: opacity 0.3s ease-in-out, transform 0.5s ease-in-out;
   z-index: 1000;

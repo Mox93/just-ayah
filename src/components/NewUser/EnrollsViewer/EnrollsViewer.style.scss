@@ -16,10 +16,10 @@
     position: relative;
 
     .headsUp {
-      background-color: var(--c-gray-300);
-      color: var(--c-white);
+      background-color: var(--c-gray-100);
+      color: var(--c-gray-300);
       padding: var(--spacing-s) var(--spacing-m);
-      border-radius: var(--spacing-s);
+      border-radius: var(--radius-xs);
       opacity: 0;
       transition: opacity 0.2s;
 

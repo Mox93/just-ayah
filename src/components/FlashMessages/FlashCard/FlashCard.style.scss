@@ -30,7 +30,7 @@
     .hero {
       width: var(--hero-size);
       border-radius: 50%;
-      box-shadow: 4px 4px 16px var(--c-shadow-200);
+      box-shadow: var(--drop-shadow-l);
 
       @include positioning($blockDir: end, $block: 0, $y: 0);
     }
@@ -44,7 +44,7 @@
   .code {
     text-align: left;
     border: 1px solid var(--c-gray-200);
-    border-radius: 0.25rem;
+    border-radius: var(--radius-xs);
     margin-block-start: var(--spacing-l);
     padding: var(--spacing-m);
   }

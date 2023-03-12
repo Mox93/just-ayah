@@ -1,3 +1,8 @@
 .NewUserTabs {
   width: var(--width-m);
+
+  .Tabs {
+    width: 12rem;
+    margin-inline: auto;
+  }
 }
