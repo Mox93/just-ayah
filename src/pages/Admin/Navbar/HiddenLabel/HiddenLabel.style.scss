@@ -1,0 +1,16 @@
+.HiddenLabel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--spacing-s);
+
+  & > :first-child:not(:only-child) {
+    width: var(--fixed-width);
+    max-width: var(--fixed-width);
+    min-width: var(--fixed-width);
+  }
+
+  &:not(.showLabel) > .label:not(:only-child) {
+    display: none;
+  }
+}

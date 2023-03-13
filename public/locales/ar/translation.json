@@ -3,7 +3,9 @@
   "globals": {
     "googleSignIn": "الدخول بحساب جوجل",
     "joinInitiative": "انضم إلى المبادرة",
-    "signOut": "تسجيل الخروج",
+    "logout": "تسجيل الخروج",
+    "settings": "الاعدادات",
+    "myAccount": "حسابي",
     "yes": "نعم",
     "no": "ﻻ",
     "dateCreated": "تاريخ الانشاء",
@@ -87,9 +89,12 @@
   },
   "nav": {
     "home": "الرئيسية",
-    "students": "الطلاب",
-    "teachers": "المعلمون",
-    "courses": "البرامج"
+    "students": "الطُلاب",
+    "teachers": "المُعلمون",
+    "leads": "العُملاء",
+    "staff": "الموظفون",
+    "courses": "البرامج",
+    "users": "المستخدمون"
   },
   "personalInfo": {
     "fullName": "الاسم الثلاثي",

@@ -1,14 +1,13 @@
 import { Outlet } from "react-router-dom";
 
 import { Await } from "components/Await";
-import Sidebar from "components/Sidebar";
-import { useApplyOnce, useDirT } from "hooks";
+import { useApplyOnce } from "hooks";
 import { usePopupContext } from "context";
 import { IS_PROD } from "models/config";
 
-export default function Admin() {
-  const dirT = useDirT();
+import Navbar from "../Navbar/Navbar";
 
+export default function Admin() {
   const { openToast } = usePopupContext();
 
   useApplyOnce(
@@ -30,11 +29,9 @@ export default function Admin() {
   );
 
   return (
-    <div className="Admin" dir={dirT}>
-      <Sidebar />
-      <Await>
-        <Outlet />
-      </Await>
-    </div>
+    <Await>
+      <Navbar />
+      <Outlet />
+    </Await>
   );
 }

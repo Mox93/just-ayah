@@ -3,7 +3,9 @@
   "globals": {
     "googleSignIn": "enter with Google",
     "joinInitiative": "join the initiative",
-    "signOut": "sign out",
+    "logout": "logout",
+    "settings": "settings",
+    "myAccount": "my account",
     "yes": "yes",
     "no": "no",
     "dateCreated": "date created",
@@ -89,7 +91,10 @@
     "home": "home",
     "students": "students",
     "teachers": "teachers",
-    "courses": "programs"
+    "leads": "leads",
+    "staff": "staff",
+    "courses": "programs",
+    "users": "users"
   },
   "personalInfo": {
     "fullName": "full name",
@@ -196,11 +201,11 @@
     "fieldRequired": "this field is required",
     "noComments": "no comments found to display",
     "noNotes": "no notes found to display",
-    "copied": "copied to clipboard",
+    "copied": "copied",
     "selectAvailable": "select all available contact methods for this number",
     "termsOfService": "I've read and accepted the terms of service",
-    "online": "Network connection is back",
-    "offline": "Network connection is lost",
+    "online": "Network connection back",
+    "offline": "Network connection lost",
     "flash": {
       "joined": "<0><0>Thank You</0> <1>for Joining!</1></0><1>We'll contact you soon.</1>",
       "error": "<0>Something Went Wrong!</0><1>Please try again later.</1>"

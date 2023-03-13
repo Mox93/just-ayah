@@ -1,15 +1,15 @@
 import { SelectionMenu } from "components/DropdownMenu";
-import { OverflowDir, useLanguage } from "hooks";
+import { AnchorPoint, useLanguage } from "hooks";
 import { Language, languages } from "models/blocks";
 
 interface LanguageSelectorProps {
   dir?: string;
-  overflowDir?: OverflowDir;
+  anchorPoint?: AnchorPoint;
 }
 
 export default function LanguageSelector({
   dir,
-  overflowDir = "start",
+  anchorPoint = "top-end",
 }: LanguageSelectorProps) {
   const [language, setLanguage] = useLanguage();
 
@@ -17,7 +17,7 @@ export default function LanguageSelector({
     <SelectionMenu
       className="LanguageSelector"
       dir={dir}
-      overflowDir={overflowDir}
+      anchorPoint={anchorPoint}
       options={Object.keys(languages) as Language[]}
       selected={language as Language}
       onOptionChange={setLanguage}

@@ -5,3 +5,4 @@ export * from "./Lead";
 export * from "./Popup";
 export * from "./Student";
 export * from "./Teacher";
+export * from "./Sidebar";

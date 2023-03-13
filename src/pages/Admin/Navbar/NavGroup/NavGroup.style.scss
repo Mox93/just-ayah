@@ -1,0 +1,68 @@
+@use "styles/abstracts/mixins" as *;
+
+@use "../NavItem/NavItem.style" as *;
+@use "../HiddenLabel/HiddenLabel.style" as *;
+
+.NavGroup {
+  --icon-space: 2rem;
+  --spacing: calc(var(--icon-space) / 2);
+  --nav-item-height: 2.5rem;
+
+  & > .HiddenLabel {
+    position: relative;
+
+    @extend .NavItem;
+
+    &.showLabel {
+      padding-inline-end: var(--icon-space);
+    }
+
+    .SpinningArrow {
+      @include positioning($inlineDir: end, $inline: var(--spacing));
+    }
+  }
+
+  .subitemsMenu {
+    --bg-color: transparent;
+    --fg-color: var(--c-gray-400);
+
+    .navChild {
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-m) var(--spacing-l);
+      border-radius: var(--radius-xs);
+      min-height: var(--nav-item-height);
+      background-color: var(--bg-color);
+
+      * {
+        color: var(--fg-color);
+      }
+
+      &:hover {
+        --bg-color: var(--c-gray-100);
+      }
+
+      &.isActive {
+        --bg-color: var(--c-primary-100);
+        --fg-color: var(--c-primary-400);
+      }
+    }
+  }
+
+  & + .subitems {
+    margin-inline-start: calc(
+      var(--closed-sidebar-width) / 2 - var(--navbar-padding)
+    );
+    padding-inline-start: var(--spacing-s);
+    border-inline-start: 1px solid var(--fg-idle-color);
+    display: grid;
+    gap: var(--spacing-s);
+
+    .navChild {
+      @extend .NavItem;
+      @extend .HiddenLabel;
+
+      min-height: var(--nav-item-height);
+    }
+  }
+}

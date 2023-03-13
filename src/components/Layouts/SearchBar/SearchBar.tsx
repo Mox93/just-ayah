@@ -4,7 +4,7 @@ import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.sv
 import { formAtoms } from "components/Form"; // can't use formAtoms because of circular input
 import Highlight from "components/Highlight";
 import Menu from "components/Menu";
-import { OverflowDir, useDropdown, useGlobalT, useSmartForm } from "hooks";
+import { AnchorPoint, useDropdown, useGlobalT, useSmartForm } from "hooks";
 import { Converter, GetKey } from "models";
 import { identity, pass } from "utils";
 import { before } from "utils/position";
@@ -29,7 +29,7 @@ export type RenderSections<TIndex> = Converter<
 interface SearchBarProps<TIndex> {
   showButton?: boolean;
   showResults?: boolean;
-  overflowDir?: OverflowDir;
+  anchorPoint?: AnchorPoint;
   onChange?: (searchKey: string) => TIndex[];
   onSubmit?: (results?: TIndex[]) => void;
   onSelect?: (result: TIndex) => void;
@@ -40,7 +40,7 @@ interface SearchBarProps<TIndex> {
 const SearchBar = <TIndex,>({
   showButton,
   showResults,
-  overflowDir,
+  anchorPoint,
   onChange: applySearch = pass([]),
   onSubmit,
   onSelect,
@@ -49,9 +49,10 @@ const SearchBar = <TIndex,>({
 }: SearchBarProps<TIndex> = {}) => {
   const glb = useGlobalT();
   const [results, setResults] = useState<TIndex[]>();
-  const { driverRef, drivenRef, dropdownWrapper, open, close } = useDropdown({
-    overflowDir,
-  });
+  const { driverRef, drivenRef, dropdownWrapper, open, close } = useDropdown<
+    HTMLDivElement,
+    HTMLDivElement
+  >({ anchorPoint });
   const formProps = useSmartForm<Search>({
     onSubmit: (data) => {
       console.log(data);

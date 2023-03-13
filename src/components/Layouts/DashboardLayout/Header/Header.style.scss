@@ -7,13 +7,6 @@
 
   @include positioning($position: sticky, $block: 0, $inline: 0, $y: 0, $x: 0);
 
-  .logo {
-    width: 3rem;
-    height: 3rem;
-
-    @include positioning();
-  }
-
   .wrapper {
     height: var(--header-height);
     border-block-end: 1px solid var(--c-gray-200);
@@ -24,11 +17,7 @@
     position: relative;
 
     .title {
-      &.followSidebar {
-        margin-inline-start: var(--sidebar-offset);
-
-        @include sidebarAnimation(margin-inline-start, 75ms);
-      }
+      margin-inline-start: var(--spacing-xl);
     }
 
     .actions {
