@@ -45,7 +45,7 @@ const calculateScore = (matchedSubstring: RegExpMatchArray) =>
   );
 
 export function substringMatch<TFieldValues>(
-  indexData: TFieldValues[],
+  indexData: TFieldValues[] | (() => TFieldValues[]),
   { filter, substringMinLength = 2 }: SubstringMatchOptions<TFieldValues> = {}
 ) {
   return (searchKey: string) => {
@@ -53,7 +53,7 @@ export function substringMatch<TFieldValues>(
       Math.min(substringMinLength, searchKey.length),
       1
     );
-    const results: MatchResult<typeof indexData[number]>[] = [];
+    const results: MatchResult<TFieldValues>[] = [];
 
     const substrings = searchKey
       .toLowerCase()
@@ -76,24 +76,26 @@ export function substringMatch<TFieldValues>(
       "g"
     );
 
-    indexData.forEach((obj) => {
-      const filteredObj = filter ? applyFilters(obj, filter) : obj;
+    (typeof indexData === "function" ? indexData() : indexData).forEach(
+      (obj) => {
+        const filteredObj = filter ? applyFilters(obj, filter) : obj;
 
-      const fields = nestedPaths(filteredObj, { includeAll: true });
-      const matches: MatchRecord<TFieldValues> = {};
-      let score = 0;
+        const fields = nestedPaths(filteredObj, { includeAll: true });
+        const matches: MatchRecord<TFieldValues> = {};
+        let score = 0;
 
-      fields.forEach((field) => {
-        const value = get(filteredObj, field);
-        const matchedSubstring =
-          typeof value === "string" && value.toLowerCase().match(parts);
-        if (!matchedSubstring) return;
-        const matchScore = calculateScore(matchedSubstring);
-        if (matchScore > score) score = matchScore;
-        matches[field] = { substrings: matchedSubstring, score };
-      });
-      if (!isEmpty(matches)) results.push({ value: obj, matches, score });
-    });
+        fields.forEach((field) => {
+          const value = get(filteredObj, field);
+          const matchedSubstring =
+            typeof value === "string" && value.toLowerCase().match(parts);
+          if (!matchedSubstring) return;
+          const matchScore = calculateScore(matchedSubstring);
+          if (matchScore > score) score = matchScore;
+          matches[field] = { substrings: matchedSubstring, score };
+        });
+        if (!isEmpty(matches)) results.push({ value: obj, matches, score });
+      }
+    );
 
     return results.sort((a, b) => b.score - a.score);
   };

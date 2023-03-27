@@ -19,8 +19,12 @@ export default function TermsOfServicePopup({
 
   return (
     <Container className="TermsOfServicePopup">
-      {/* eslint-disable-next-line jsx-a11y/iframe-has-title */}
-      <iframe src={url} allow="autoplay" onLoad={() => setIsLoading(false)} />
+      <iframe
+        title={glb("termsOfService")}
+        src={url}
+        allow="autoplay"
+        onLoad={() => setIsLoading(false)}
+      />
       <Button isLoading={isLoading} variant="success-solid" onClick={onAccept}>
         {glb("acceptTermsOfService")}
       </Button>

@@ -1,23 +1,20 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { Button, SizeVariant, ButtonVariant } from "components/Buttons";
+import { Button, ButtonProps } from "components/Buttons";
 import Container from "components/Container";
-import { CheckMark } from "components/Icons";
-import { Converter, GetKey, Path } from "models";
+import { CheckMark, LoadingDots } from "components/Icons";
+import { Converter, GetKey } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, pass } from "utils";
 
-import { useListFilter } from "./Menu.utils";
+import { useListFilter, UseListFilterProps } from "./Menu.utils";
 
-interface MenuProps<TOption> {
-  options: TOption[];
+export interface MenuProps<TOption>
+  extends UseListFilterProps<TOption>,
+    Pick<ButtonProps, "variant" | "size" | "isLoading"> {
   header?: ReactNode;
   className?: string;
-  dir?: string;
   withCheckMark?: boolean;
   renderElement?: FunctionOrChain<TOption, ReactNode>;
-  variant?: ButtonVariant | null;
-  size?: SizeVariant | null;
-  searchFields?: Path<TOption>[];
   checkIsSelected?: Converter<TOption, boolean>;
   getKey?: GetKey<TOption>;
   onSelect?: (item: TOption) => void;
@@ -34,6 +31,7 @@ export default forwardRef(function Menu<TItem>(
     withCheckMark,
     searchFields,
     renderElement = identity,
+    isLoading,
     checkIsSelected = pass(false),
     getKey = identity,
     onSelect,
@@ -58,24 +56,28 @@ export default forwardRef(function Menu<TItem>(
       }
       className={cn("Menu", className)}
     >
-      {optionList.map((option) => {
-        const isSelected = checkIsSelected(option);
+      {isLoading ? (
+        <LoadingDots />
+      ) : (
+        optionList.map((option) => {
+          const isSelected = checkIsSelected(option);
 
-        return (
-          <Button
-            key={getKey(option)}
-            className={cn("item", {
-              withCheckMark,
-              selected: isSelected,
-            })}
-            onClick={pass(onSelect, option)}
-            {...{ variant, size, dir }}
-          >
-            {render(option)}
-            {withCheckMark && isSelected && <CheckMark dir={dir} />}
-          </Button>
-        );
-      })}
+          return (
+            <Button
+              key={getKey(option)}
+              className={cn("item", {
+                withCheckMark,
+                selected: isSelected,
+              })}
+              onClick={pass(onSelect, option)}
+              {...{ variant, size, dir }}
+            >
+              {render(option)}
+              {withCheckMark && isSelected && <CheckMark dir={dir} />}
+            </Button>
+          );
+        })
+      )}
     </Container>
   );
 });

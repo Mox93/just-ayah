@@ -47,7 +47,6 @@ export default forwardRef(function Button(
   const dirT = useDirT();
 
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const blur = () => keepFocused || buttonRef.current?.blur();
 
   return (
     <button
@@ -62,11 +61,14 @@ export default forwardRef(function Button(
         { isLoading, iconButton, noDisableStyle: isLoading },
         className
       )}
-      onClick={mergeCallbacks(onClick, blur)}
+      onClick={mergeCallbacks(
+        onClick,
+        () => keepFocused || buttonRef.current?.blur()
+      )}
       disabled={isLoading || disabled}
     >
       {Children.map(children, (child) =>
-        typeof keepFormat ? child : capitalize(child)
+        keepFormat ? child : capitalize(child)
       )}
       {isLoading && <LoadingDots className="loadingIndicator" />}
     </button>

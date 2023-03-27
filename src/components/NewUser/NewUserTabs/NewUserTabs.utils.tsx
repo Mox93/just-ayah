@@ -30,25 +30,6 @@ export function useNewUserTabs<TUser, TUserForm extends {}>({
 
   const { openToast } = usePopupContext();
 
-  const onFulfilled = () =>
-    openToast(
-      <Trans t={msg} i18nKey={`new${capitalize(variant)}`}>
-        <b>Success:</b> a new {variant} was added!
-      </Trans>,
-      { variant: "success" }
-    );
-
-  const onRejected = (error: any) =>
-    openToast(
-      <>
-        <Trans t={msg} i18nKey="error">
-          <b>Error:</b> something went wrong!
-        </Trans>
-        <code>{error}</code>
-      </>,
-      { variant: "danger" }
-    );
-
   const tabs = useMemo<Tabs>(
     () => [
       {
@@ -60,13 +41,31 @@ export function useNewUserTabs<TUser, TUserForm extends {}>({
         body: (
           <UserForm
             onSubmit={(data) =>
-              addUser(new UserClass(data), { onFulfilled, onRejected })
+              addUser(new UserClass(data), {
+                onFulfilled: () =>
+                  openToast(
+                    <Trans t={msg} i18nKey={`new${capitalize(variant)}`}>
+                      <b>Success:</b> a new {variant} was added!
+                    </Trans>,
+                    { variant: "success" }
+                  ),
+                onRejected: (error: any) =>
+                  openToast(
+                    <>
+                      <Trans t={msg} i18nKey="error">
+                        <b>Error:</b> something went wrong!
+                      </Trans>
+                      <code>{error}</code>
+                    </>,
+                    { variant: "danger" }
+                  ),
+              })
             }
           />
         ),
       },
     ],
-    [UserClass, UserForm, addUser, variant]
+    [UserClass, UserForm, addUser, msg, openToast, variant]
   );
 
   return useTabs({ tabs, renderHeader: glb });

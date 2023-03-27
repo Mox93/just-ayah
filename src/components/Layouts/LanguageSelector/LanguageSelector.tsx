@@ -16,6 +16,7 @@ export default function LanguageSelector({
   return (
     <SelectionMenu
       className="LanguageSelector"
+      size="small"
       dir={dir}
       anchorPoint={anchorPoint}
       options={Object.keys(languages) as Language[]}

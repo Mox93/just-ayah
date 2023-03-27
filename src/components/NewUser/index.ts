@@ -1,1 +1,3 @@
-export { default as NewUserTabs } from "./NewUserTabs";
+import { lazy } from "react";
+
+export const NewUserTabs = lazy(() => import("./NewUserTabs"));

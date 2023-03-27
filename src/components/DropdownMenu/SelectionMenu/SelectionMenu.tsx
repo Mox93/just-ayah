@@ -1,24 +1,23 @@
 import { isEqual } from "lodash";
-import { forwardRef, ReactNode, Ref } from "react";
+import { forwardRef, Ref } from "react";
 
 import { Button, ButtonProps, DropdownButton } from "components/Buttons";
-import Menu from "components/Menu";
+import Menu, { MenuProps } from "components/Menu";
 import { useDropdown } from "hooks";
-import { GetKey, Path } from "models";
-import { applyInOrder, cn, FunctionOrChain, identity, mergeRefs } from "utils";
+import { applyInOrder, cn, identity, mergeRefs } from "utils";
 import { UseDropdownProps } from "hooks/Dropdown";
 
-interface SelectionMenuProps<TOption>
+export interface SelectionMenuProps<TOption>
   extends Omit<ButtonProps, "children">,
-    Omit<UseDropdownProps, "onClick"> {
-  options: TOption[];
+    Omit<UseDropdownProps, "onClick">,
+    Pick<
+      MenuProps<TOption>,
+      "options" | "getKey" | "searchFields" | "renderElement"
+    > {
   selected?: TOption;
-  renderElement?: FunctionOrChain<TOption, ReactNode>;
   placeholder?: string;
   noCheckmark?: boolean;
   noArrow?: boolean;
-  searchFields?: Path<TOption>[];
-  getKey?: GetKey<TOption>;
   checkIsSelected?: (option: TOption, selected?: TOption) => boolean;
   onOptionSelect?: (option: TOption) => void;
   onOptionChange?: (option: TOption) => void;
@@ -44,6 +43,7 @@ export default forwardRef(function SelectionMenu<TOption>(
     getKey = identity,
     checkIsSelected = isEqual,
     renderElement = identity,
+    isLoading,
     ...props
   }: SelectionMenuProps<TOption>,
   ref: Ref<HTMLButtonElement>
@@ -82,7 +82,7 @@ export default forwardRef(function SelectionMenu<TOption>(
     </ButtonComponent>,
     () => (
       <Menu
-        {...{ variant, size, getKey, dir, searchFields, options }}
+        {...{ variant, size, getKey, dir, searchFields, options, isLoading }}
         ref={drivenRef}
         checkIsSelected={(option) => checkIsSelected(option, selected)}
         onSelect={(option) => {

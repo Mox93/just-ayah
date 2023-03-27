@@ -7,8 +7,8 @@ import { hasAtLeastOne } from "utils";
 import { substringMatch } from "utils/match";
 import { before } from "utils/position";
 
-interface UseListFilterProps<TOption> {
-  options: TOption[];
+export interface UseListFilterProps<TOption> {
+  options: TOption[] | (() => TOption[]);
   searchFields?: Path<TOption>[];
   dir?: string;
 }
@@ -18,11 +18,11 @@ export function useListFilter<TOption>({
   searchFields,
   dir,
 }: UseListFilterProps<TOption>) {
-  const [optionList, setOptionList] = useState(options);
+  const [optionList, setOptionList] = useState<TOption[]>(
+    Array.isArray(options) ? options : []
+  );
 
-  useEffect(() => {
-    setOptionList(options);
-  }, [options]);
+  useEffect(() => setOptionList(options), [options]);
 
   const applyFilter = useMemo<ChangeEventHandler<HTMLInputElement> | undefined>(
     () =>

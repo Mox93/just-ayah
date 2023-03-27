@@ -1,11 +1,12 @@
 @use "styles/abstracts/mixins" as *;
 
 .LoadingDots {
-  --dot-size: 0.5rem;
+  --dot-size: 0.375rem;
   --dot-color: var(--fill-color);
 
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: calc(var(--dot-size) / 2);
 
   .dot1,

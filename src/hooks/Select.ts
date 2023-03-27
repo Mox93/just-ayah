@@ -6,11 +6,9 @@ export default function useSelect(getAllIds: () => string[]) {
   const toggleSelect = (checked: boolean, id?: string) =>
     id
       ? setSelected((state) => {
-          if (checked) return new Set(state.add(id));
+          if (checked) return state.has(id) ? state : new Set(state.add(id));
 
-          if (state.delete(id)) return new Set(state);
-
-          return state;
+          return state.delete(id) ? new Set(state) : state;
         })
       : setSelected(checked ? new Set(getAllIds()) : new Set());
 

@@ -182,3 +182,17 @@ $desktopSize: 35.01rem;
     background-color: var(--c-female);
   }
 }
+
+@mixin searchField {
+  .searchField {
+    --fill-color: var(--c-gray-300);
+
+    &:focus-within {
+      --fill-color: var(--c-primary-300);
+    }
+
+    .FieldWrapper {
+      gap: var(--spacing-m);
+    }
+  }
+}

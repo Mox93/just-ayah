@@ -9,16 +9,15 @@ interface AvatarProps {
 }
 
 export default function Avatar({ url, className }: AvatarProps) {
-  const [show, setShow] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   return (
     <div className={cn("Avatar", className)}>
       <img
         className={cn("photo")}
-        src={show && url ? url : UserProfile}
+        src={url && !failed ? url : UserProfile}
         alt=""
-        onLoad={() => setShow(true)}
-        onError={() => setShow(false)}
+        onError={() => setFailed(true)}
       />
     </div>
   );

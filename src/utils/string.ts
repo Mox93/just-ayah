@@ -1,22 +1,23 @@
 import { identity } from "utils";
 
-interface Capitalize {
-  (value: string): string;
-  <T>(value: T): T;
-}
-
-export const capitalize: Capitalize = <T>(value: T) =>
-  typeof value === "string"
+/**
+ * Makes the fist letter of a string uppercase,
+ * unlike the css `text-transform: capitalize;`
+ * which makes the first letter of every word uppercase.
+ */
+function capitalize(value: string): string;
+function capitalize<T>(value: T): T;
+function capitalize<T>(value: T) {
+  return typeof value === "string"
     ? `${value.charAt(0).toUpperCase()}${value.slice(1)}`
     : value;
+}
 
-export const toTitle = (value: string) =>
-  value.split(" ").map(capitalize).join(" ");
+export function concat(...values: (string | undefined)[]) {
+  return values.filter(identity).join(" ");
+}
 
-export const concat = (...values: (string | undefined)[]) =>
-  values.filter(identity).join(" ");
-
-export const addZeros = (x = 0, length = 2) => {
+export function addZeros(x = 0, length = 2) {
   const actualLength = `${x}`.length;
 
   return actualLength < length
@@ -24,4 +25,6 @@ export const addZeros = (x = 0, length = 2) => {
         .fill("0")
         .join()}${x}`
     : `${x}`;
-};
+}
+
+export { capitalize };

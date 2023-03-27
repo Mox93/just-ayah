@@ -116,7 +116,7 @@ export type AddCommentFunc = (id: string, comment: Comment) => void;
 |****** FUNCTION DEFINITION ******|
 \*********************************/
 
-export type Converter<TInput, TOutput = TInput> = (obj: TInput) => TOutput;
+export type Converter<TInput, TOutput = TInput> = (value: TInput) => TOutput;
 export type GetKey<TInput> = Converter<TInput, string | number>;
 export type DBConverter<DataFrom, DataTo> = {
   (id: string, data: DataFrom): DataTo & { id: string };
