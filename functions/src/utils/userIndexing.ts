@@ -1,18 +1,13 @@
+import { DOC_ID_VAR } from "../config";
 import { db, FieldValue } from "../lib";
 import { DBEventHandler } from "../types";
-import { getFullName } from "./functions";
+import { getFullName, parsePhoneNumber } from "./stringify";
 
-interface PhoneNumber {
-  code: string;
-  number: string;
-}
-
-const parsePhoneNumber = ({ code, number }: PhoneNumber) => `${code}-${number}`;
-
-export const indexing =
-  (indexingPath: string): DBEventHandler =>
-  (change, context) => {
-    const id = context.params.documentId;
+export function userIndexing<P extends string>(
+  indexingPath: P
+): DBEventHandler {
+  return (change, context) => {
+    const id = context.params[DOC_ID_VAR];
 
     // Checks for a delete
     if (!change.after.exists) {
@@ -36,15 +31,14 @@ export const indexing =
         oldData?.middleName === newData.middleName &&
         oldData?.lastName === newData.lastName &&
         oldPhoneNumber.size === newPhoneNumber.size &&
-        Array.from(oldPhoneNumber)?.every((number) =>
-          newPhoneNumber.has(number)
-        ))
+        [...oldPhoneNumber].every((number) => newPhoneNumber.has(number)))
     ) {
       return null;
     }
 
     const name = getFullName(newData);
-    const phoneNumber = Array.from(newPhoneNumber);
+    const phoneNumber = [...newPhoneNumber];
 
     return db.doc(indexingPath).update({ [id]: { name, phoneNumber } });
   };
+}

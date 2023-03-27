@@ -13,3 +13,8 @@ export interface UserName {
   lastName?: string;
   fullName?: string;
 }
+
+export interface PhoneNumber {
+  code: string;
+  number: string;
+}

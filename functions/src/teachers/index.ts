@@ -1,7 +1,7 @@
-import { TEACHER_DOC_PATH, TEACHER_INDEX_PATH } from "../config";
+import { DOC_ID_CARD, TEACHER_DOC_PATH, TEACHER_INDEX_PATH } from "../config";
 import { document } from "../lib";
-import { indexing, merge } from "../utils";
+import { userIndexing, merge } from "../utils";
 
 export const onTeacherDocWrite = document(
-  TEACHER_DOC_PATH("{documentId}")
-).onWrite(merge(indexing(TEACHER_INDEX_PATH)));
+  TEACHER_DOC_PATH(DOC_ID_CARD)
+).onWrite(merge(userIndexing(TEACHER_INDEX_PATH)));

@@ -1,4 +1,4 @@
-import { DBEventHandler, EventType, UserName } from "../types";
+import { DBEventHandler, EventType } from "../types";
 
 export const merge =
   (...handlers: DBEventHandler[]): DBEventHandler =>
@@ -27,12 +27,3 @@ export const exclude =
 
     return handler(change, context);
   };
-
-export const getFullName = ({
-  firstName,
-  middleName,
-  lastName,
-  fullName,
-}: UserName) =>
-  fullName ||
-  [firstName, middleName, lastName].filter((val) => !!val).join(" ");

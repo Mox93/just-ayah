@@ -3,7 +3,7 @@ import { db, FieldValue } from "../lib";
 import { DBEventHandler } from "../types";
 import { getFullName } from "../utils";
 
-export const studentTeacherUpdate: DBEventHandler = (change, context) => {
+export const studentTeacherSync: DBEventHandler = (change, context) => {
   const oldData = change.before.data();
   const newData = change.after.data();
 

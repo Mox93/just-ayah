@@ -1,2 +1,3 @@
 export * from "./functions";
-export * from "./indexing";
+export * from "./stringify";
+export * from "./userIndexing";
