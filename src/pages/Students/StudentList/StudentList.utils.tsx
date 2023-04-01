@@ -1,18 +1,12 @@
 import { deleteField } from "firebase/firestore";
-import { lazy, useMemo } from "react";
+import { lazy, useCallback, useMemo } from "react";
 
 import { ReactComponent as Info } from "assets/icons/info-svgrepo-com.svg";
 import { Button } from "components/Buttons";
-import { SelectionMenu } from "components/DropdownMenu";
 import Ellipsis from "components/Ellipsis";
-import { StatusMenu } from "components/DropdownMenu";
+import { CourseMenu, StatusMenu, TeacherMenu } from "components/DropdownMenu";
 import { FieldProps } from "components/Table";
-import {
-  useCourseContext,
-  useMetaContext,
-  usePopupContext,
-  useStudentContext,
-} from "context";
+import { usePopupContext, useStudentContext } from "context";
 import { useDateTimeT, useGlobalT, useGovT, usePersonalInfoT } from "hooks";
 import { Path, PathValue } from "models";
 import { getAge, historyRep } from "models/_blocks";
@@ -37,31 +31,38 @@ export function useTableFields() {
   const dt = useDateTimeT();
 
   const { openModal } = usePopupContext();
-  const {
-    data: { courses },
-  } = useCourseContext();
-  const { teacherIndex } = useMetaContext();
   const { updateStudent } = useStudentContext();
 
-  const showNotesPopup = (id: string) => () =>
-    openModal(<StudentNotes id={id} />, { closable: true, dismissible: true });
+  const showNotesPopup = useCallback(
+    (id: string) => () =>
+      openModal(<StudentNotes id={id} />, {
+        closable: true,
+        dismissible: true,
+      }),
+    [openModal]
+  );
 
-  const showSchedulePopup = (id: string) => () =>
-    openModal(<StudentSchedule id={id} />, {
-      closable: true,
-      dismissible: true,
-    });
+  const showSchedulePopup = useCallback(
+    (id: string) => () =>
+      openModal(<StudentSchedule id={id} />, {
+        closable: true,
+        dismissible: true,
+      }),
+    [openModal]
+  );
 
-  const updateField =
+  const updateField = useCallback(
     <TKey extends Path<Student>>(name: TKey, id: string) =>
-    (value?: PathValue<Student, TKey>) =>
-      updateStudent(
-        id,
-        {
-          [name]: value || (deleteField() as any),
-        },
-        { applyLocally: true }
-      );
+      (value?: PathValue<Student, TKey>) =>
+        updateStudent(
+          id,
+          {
+            [name]: value || (deleteField() as any),
+          },
+          { applyLocally: true }
+        ),
+    [updateStudent]
+  );
 
   return useMemo<FieldProps<Student>[]>(
     () => [
@@ -154,12 +155,9 @@ export function useTableFields() {
         header: glb("course"),
         className: "buttonCell",
         getValue: ({ id, meta: { course } }) => (
-          <SelectionMenu
+          <CourseMenu
             selected={course}
-            options={courses}
-            size="small"
             onOptionChange={updateField("meta.course", id)}
-            renderElement={(value) => <Ellipsis>{value}</Ellipsis>}
           />
         ),
       },
@@ -168,16 +166,9 @@ export function useTableFields() {
         header: glb("teacher"),
         className: "buttonCell name",
         getValue: ({ id, meta: { teacher } }) => (
-          <SelectionMenu
+          <TeacherMenu
             selected={teacher}
-            options={teacherIndex.sort(({ name: a }, { name: b }) =>
-              a > b ? 1 : -1
-            )}
-            size="small"
             onOptionChange={updateField("meta.teacher", id)}
-            getKey={({ id }) => id}
-            renderElement={({ name }) => <Ellipsis>{name}</Ellipsis>}
-            searchFields={["name"]}
           />
         ),
       },
@@ -226,6 +217,6 @@ export function useTableFields() {
         fit: true,
       },
     ],
-    [pi, glb, gov, courses, teacherIndex, swd, dt]
+    [dt, glb, gov, pi, showNotesPopup, showSchedulePopup, swd, updateField]
   );
 }

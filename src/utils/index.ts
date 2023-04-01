@@ -8,5 +8,6 @@ export * from "./functionChain";
 export * from "./merge";
 export * from "./nestedPaths";
 export * from "./range";
+export * from "./array";
 export * from "./string";
 export { default as cn } from "classnames";

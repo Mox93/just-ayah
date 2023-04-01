@@ -31,13 +31,14 @@ export default function TeacherList() {
   const fields = UseTableFields();
 
   return (
-    <div className="TeacherList">
+    <>
       {selected.size > 0 && (
         <div className="selectionCounter">
           {tch("counter", { count: selected.size })}
         </div>
       )}
       <Table
+        className="TeacherList"
         fields={fields}
         data={teachers}
         selected={selected}
@@ -54,6 +55,6 @@ export default function TeacherList() {
           </Button>
         }
       />
-    </div>
+    </>
   );
 }

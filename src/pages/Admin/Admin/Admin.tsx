@@ -2,10 +2,11 @@ import { Outlet } from "react-router-dom";
 
 import { Await } from "components/Await";
 import { useApplyOnce } from "hooks";
-import { usePopupContext } from "context";
+import { useHeaderProps, usePopupContext } from "context";
 import { IS_PROD } from "models/config";
 
 import Navbar from "../Navbar/Navbar";
+import Header from "../Header/Header";
 
 export default function Admin() {
   const { openToast } = usePopupContext();
@@ -29,9 +30,14 @@ export default function Admin() {
   );
 
   return (
-    <Await>
+    <>
       <Navbar />
-      <Outlet />
-    </Await>
+      <Header {...useHeaderProps()} />
+      <main className="Admin followSidebar">
+        <Await>
+          <Outlet />
+        </Await>
+      </main>
+    </>
   );
 }

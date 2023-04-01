@@ -10,6 +10,7 @@ import {
   BaseModel,
 } from "./abstract";
 import { dateSchema } from "./blocks";
+import { courseIndexSchema } from "./course";
 import {
   booleanSchema,
   commentListSchema,
@@ -31,7 +32,7 @@ import {
 const metaSchema = trackableSchema.merge(
   z
     .object({
-      course: z.string(),
+      course: courseIndexSchema,
       teacher: userIndexSchema,
       schedule: scheduleSchema,
       sessions: z.number().int().positive(),

@@ -28,19 +28,18 @@ export default function StudentList() {
 
   useApplyOnce(loadStudents, IS_PROD && !students.length);
 
-  const fields = useTableFields();
-
   return (
-    <div className="StudentList">
+    <>
       {selected.size > 0 && (
         <div className="selectionCounter">
           {stu("counter", { count: selected.size })}
         </div>
       )}
       <Table
-        {...{ fields, selected }}
+        {...{ selected, toggleSelect }}
+        className="StudentList"
+        fields={useTableFields()}
         data={students}
-        toggleSelect={toggleSelect}
         extraProps={({ data: { gender } }) => ({ gender })}
         footer={
           <Button
@@ -53,6 +52,6 @@ export default function StudentList() {
           </Button>
         }
       />
-    </div>
+    </>
   );
 }

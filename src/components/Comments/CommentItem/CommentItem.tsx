@@ -5,7 +5,6 @@ import { historyRep } from "models/_blocks";
 
 interface CommentItemProps {
   comment: Comment;
-  dir?: string;
 }
 
 export default function CommentItem({

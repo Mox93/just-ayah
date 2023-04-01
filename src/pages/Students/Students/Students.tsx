@@ -1,25 +1,26 @@
 import { lazy } from "react";
+import { Outlet } from "react-router-dom";
 
-import { DashboardLayout } from "components/Layouts";
-import { useMetaContext, useStudentContext } from "context";
+import { useStudentIndex, useSetHeaderProps, useStudentContext } from "context";
 import { usePageT } from "hooks";
 
 const NewStudent = lazy(() => import("../NewStudent"));
 
 export default function Students() {
-  const stu = usePageT("student");
-  const { studentIndex } = useMetaContext();
-  const { getStudent } = useStudentContext();
+  const pgT = usePageT("student");
 
-  return (
-    <DashboardLayout
-      className="Students"
-      title={stu("title")}
-      dataIndex={studentIndex}
-      onSearchSelect={({ value: { id } }) =>
-        getStudent(id).then((data) => console.log(data))
-      } // TODO Redirect to profile page
-      newEntityElement={<NewStudent />}
-    />
-  );
+  const { getStudent } = useStudentContext();
+  const [dataIndex, indexState] = useStudentIndex();
+
+  useSetHeaderProps({
+    title: pgT("title"),
+    dataIndex,
+    indexState,
+    onSearchSelect: ({ value: { id } }) =>
+      // TODO Redirect to profile page
+      getStudent(id).then((data) => console.log(data)),
+    newEntityButton: <NewStudent />,
+  });
+
+  return <Outlet />;
 }

@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import Container from "components/Container";
-import { useHeader } from "hooks";
+import { useSetHeaderProps } from "context";
 import { cn } from "utils";
 
 import LanguageSelector from "../LanguageSelector";
@@ -14,7 +14,7 @@ interface FormLayoutProps {
 }
 
 export default function FormLayout({ children, name, title }: FormLayoutProps) {
-  useHeader({ title });
+  useSetHeaderProps({ title });
 
   return (
     <main className={cn("FormLayout", name)}>

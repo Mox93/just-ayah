@@ -1,29 +1,12 @@
-import { UserIndex, userIndexSchema } from "./blocks/user";
+import { z } from "zod";
 
-interface ShortList {
-  teachers?: string[];
-  courses?: string[];
-}
+import { userIndexSchema } from "./blocks/user";
+import { courseIndexSchema } from "./course";
 
-interface UserSearchFields {
-  name: string;
-  phoneNumber: string[];
-}
+export const metaDataSchema = z.object({
+  studentIndex: z.array(userIndexSchema),
+  teacherIndex: z.array(userIndexSchema),
+  courseIndex: z.array(courseIndexSchema),
+});
 
-interface UserIndexMap {
-  [id: string]: UserSearchFields;
-}
-
-export type UserIndexList = UserIndex[];
-
-export interface MetaData {
-  shortList: ShortList;
-  studentIndex: UserIndexList;
-  teacherIndex: UserIndexList;
-}
-
-export const META_DATA_DOCS: (keyof MetaData)[] = [
-  "shortList",
-  "studentIndex",
-  "teacherIndex",
-];
+export type MetaData = z.infer<typeof metaDataSchema>;

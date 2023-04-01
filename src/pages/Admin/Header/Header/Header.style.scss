@@ -1,13 +1,18 @@
 @use "styles/abstracts/mixins" as *;
 
 .Header {
-  width: 100%;
-  padding-inline: var(--spacing-l);
+  padding-inline: var(--spacing-m);
   z-index: 80;
 
   @include positioning($position: sticky, $block: 0, $inline: 0, $y: 0, $x: 0);
 
-  .wrapper {
+  &.followSidebar {
+    & > .wrapper {
+      padding-inline-start: calc(var(--spacing-xl) + var(--spacing-m));
+    }
+  }
+
+  & > .wrapper {
     height: var(--header-height);
     border-block-end: 1px solid var(--c-gray-200);
     display: flex;
@@ -17,11 +22,14 @@
     position: relative;
 
     .title {
-      margin-inline-start: var(--spacing-xl);
+      text-transform: capitalize;
     }
 
     .actions {
+      flex: 1;
       display: flex;
+      justify-content: flex-end;
+      align-items: center;
       gap: var(--spacing-l);
     }
   }

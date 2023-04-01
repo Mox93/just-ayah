@@ -1,10 +1,15 @@
+import { memo } from "react";
 import { Outlet } from "react-router-dom";
 
-export default function Courses() {
-  return (
-    <div>
-      <h1>Courses</h1>
-      <Outlet />
-    </div>
-  );
-}
+import { useSetHeaderProps } from "context";
+import { usePageT } from "hooks";
+
+import NewCourse from "../NewCourse";
+
+export default memo(function Courses() {
+  const pgT = usePageT("course");
+
+  useSetHeaderProps({ title: pgT("title"), newEntityButton: <NewCourse /> });
+
+  return <Outlet />;
+});

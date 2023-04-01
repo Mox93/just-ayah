@@ -3,7 +3,6 @@ export { default as useCountdown } from "./Countdown";
 export { default as useDropdown } from "./Dropdown";
 export type { AnchorPoint } from "./Dropdown";
 export { default as useDynamicList } from "./DynamicList";
-export { default as useHeader } from "./Header";
 export { default as useLoading } from "./Loading";
 export * from "./LocalStorage";
 export { default as useLocalStorage } from "./LocalStorage";

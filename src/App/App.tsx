@@ -5,9 +5,7 @@ import { Await } from "components/Await";
 import LoadingPopup from "components/LoadingPopup";
 import {
   AuthProvider,
-  CourseProvider,
   LeadProvider,
-  MetaProvider,
   PopupOutlet,
   PopupProvider,
   StudentProvider,
@@ -41,10 +39,8 @@ function App() {
 
           {/* Role Specific Providers */}
           <AuthProvider />
-          <MetaProvider />
 
           {/* System Data Providers */}
-          <CourseProvider />
           <LeadProvider />
           <StudentProvider />
           <StudentEnrollProvider />

@@ -2,7 +2,7 @@ import { Navigate, Route, Routes, To } from "react-router-dom";
 
 import { useStudentEnrollContext, useTeacherEnrollContext } from "context";
 import { IS_DEV } from "models/config";
-import { Admin, SignIn } from "pages/Admin";
+import { Admin, Home, SignIn } from "pages/Admin";
 import { CourseList, CourseProfile, Courses } from "pages/Courses";
 import { NotFound, Unauthorized } from "pages/Fallback";
 import { LeadList, LeadProfile, Leads, NewLead } from "pages/Leads";
@@ -48,7 +48,7 @@ export default function RoutHandler() {
         <Route element={<AuthGuard />}>
           <Route path="admin" element={<Admin />}>
             {/* Home */}
-            <Route index element={<h1>Dashboard</h1>} />
+            <Route index element={<Home />} />
 
             {/* Courses */}
             <Route path="courses" element={<Courses />}>

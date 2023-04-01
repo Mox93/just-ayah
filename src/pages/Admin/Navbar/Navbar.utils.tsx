@@ -1,5 +1,6 @@
 import { ReactElement, useEffect, useMemo, useRef } from "react";
 
+import { ReactComponent as CoursesIcon } from "assets/icons/book-svgrepo-com.svg";
 import { ReactComponent as HomeIcon } from "assets/icons/home-svgrepo-com.svg";
 import { ReactComponent as UsersIcon } from "assets/icons/users-svgrepo-com.svg";
 import { Merge } from "models";
@@ -28,6 +29,7 @@ export function useNavTree() {
 const icons = {
   home: <HomeIcon className="icon" />,
   users: <UsersIcon className="icon" />,
+  courses: <CoursesIcon className="icon" />,
 };
 
 const navTree: NavTree = [
@@ -63,6 +65,12 @@ const navTree: NavTree = [
         url: "/admin/staff",
       },
     ],
+  },
+  {
+    icon: icons.courses,
+    name: "courses",
+    label: "courses",
+    url: "/admin/courses",
   },
 ];
 

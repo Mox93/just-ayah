@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useLanguage } from "hooks";
+import { useTitle } from "context";
+import { useGlobalT, useLanguage } from "hooks";
 import { windowEventFactory } from "utils";
 
 export default function usePageSync() {
@@ -29,4 +30,17 @@ export default function usePageSync() {
   useEffect(() => {
     document.dir = dir;
   }, [dir]);
+
+  // TITLE
+  const title = useTitle();
+  const glb = useGlobalT();
+
+  useEffect(() => {
+    const justAyah = glb("justAyah");
+    document.title = justAyah + (title ? ` - ${title}` : "");
+
+    return () => {
+      document.title = justAyah;
+    };
+  }, [glb, title]);
 }
