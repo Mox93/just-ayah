@@ -42,18 +42,16 @@
   --page-min-height: 40rem;
 
   // Header
-  --header-height: 4rem;
-  --current-header-height: var(--header-height);
+  --header-height: 3rem;
+  --occupied-top-space: var(--header-height);
 
   // Body
-  --body-height: calc(100vh - var(--current-header-height));
+  --body-height: calc(100vh - var(--occupied-top-space));
 
   //Typography
-  --input-line-height: 2rem;
-  --line-height: 1.5rem;
-}
+  --input-line-height: 2em;
+  --line-height: 1.5em;
 
-body {
   // SHADOWS
   --drop-shadow-s: -2px 2px 3px 1px var(--c-shadow-200);
   --drop-shadow-l: -4px 4px 16px var(--c-shadow-200);

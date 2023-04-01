@@ -17,9 +17,9 @@ import { cn, mergeCallbacks, pass } from "utils";
 import TermsOfServicePopup from "./TermsOfServicePopup";
 
 const icons = {
-  invalid: InvalidIcon,
-  accepted: AcceptedIcon,
-  idle: IdleIcon,
+  invalid: <InvalidIcon className="icon" />,
+  accepted: <AcceptedIcon className="icon" />,
+  idle: <IdleIcon className="icon" />,
 };
 
 interface TermsOfServiceProps
@@ -42,8 +42,6 @@ export default forwardRef(function TermsOfService(
   }, [isInvalid]);
 
   const { openModal, closeModal } = usePopupContext();
-
-  const Icon = icons[status];
 
   return (
     <>
@@ -71,7 +69,7 @@ export default forwardRef(function TermsOfService(
           )
         }
       >
-        <Icon className="status" />
+        {icons[status]}
         {msg("termsOfService")}
       </Button>
     </>

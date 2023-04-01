@@ -2,6 +2,7 @@
 
 .Toast {
   --fill-color: var(--toast-fg-color);
+  --icon-spacing: 1.33rem;
 
   max-width: var(--width-m);
   min-width: var(--width-xs);
@@ -19,7 +20,7 @@
   &.floating {
     z-index: 1000;
 
-    @include positioning($position: fixed, $block: 0.5rem, $y: 0);
+    @include positioning($position: fixed, $block: var(--spacing-m), $y: 0);
   }
 
   &.success {
@@ -47,7 +48,10 @@
   }
 
   .toastIcon {
-    @include positioning($inline: 1.33rem, $block: 1.33rem);
+    @include positioning(
+      $inline: var(--icon-spacing),
+      $block: var(--icon-spacing)
+    );
   }
 
   .message {
@@ -64,7 +68,11 @@
   .CloseButton {
     --fill-color: var(--toast-fg-color);
 
-    @include positioning($inlineDir: end, $inline: 1.33rem, $block: 1.33rem);
+    @include positioning(
+      $inlineDir: end,
+      $inline: var(--icon-spacing),
+      $block: var(--icon-spacing)
+    );
 
     &:hover {
       --fill-color: var(--toast-bg-color);

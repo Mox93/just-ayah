@@ -13,7 +13,8 @@
     --c-foreground: var(--c-success-300);
   }
 
-  .status {
+  .icon {
     fill: var(--fg-color);
+    flex: unset;
   }
 }

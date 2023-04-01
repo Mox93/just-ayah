@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import Container from "components/Container";
 import { SpinningArrow } from "components/Icons";
-import { useSidebar } from "context";
+import { useSidebarStore } from "context";
 import { useDropdown, useNavT } from "hooks";
 import { cn } from "utils";
 
@@ -19,7 +19,7 @@ interface NavGroupProps {
 export default function NavGroup({ icon, label, subitems }: NavGroupProps) {
   const navT = useNavT();
 
-  const isFullyExpanded = useSidebar((state) => state.isFullyExpanded);
+  const isFullyExpanded = useSidebarStore((state) => state.isFullyExpanded);
 
   const [hasActivePath, setHasActivePath] = useState(false);
 
@@ -73,6 +73,7 @@ export default function NavGroup({ icon, label, subitems }: NavGroupProps) {
             ref={drivenRef}
             className={cn("subitemsMenu")}
             variant="menu"
+            header={<h4 className="label">{navT(label)}</h4>}
           >
             {navLinks()}
           </Container>

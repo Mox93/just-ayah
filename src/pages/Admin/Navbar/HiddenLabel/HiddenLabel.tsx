@@ -1,4 +1,4 @@
-import { useSidebar } from "context";
+import { useSidebarStore } from "context";
 import {
   cloneElement,
   forwardRef,
@@ -25,7 +25,7 @@ export default forwardRef(function HiddenLabel(
   { className, children, label, Component = "div", ...props }: HiddenLabelProps,
   ref: Ref<HTMLElement>
 ) {
-  const showLabel = useSidebar((state) => state.isFullyExpanded);
+  const showLabel = useSidebarStore((state) => state.isFullyExpanded);
 
   return (
     <Component

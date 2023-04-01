@@ -1,6 +1,5 @@
 import { ButtonHTMLAttributes, Children, forwardRef, Ref, useRef } from "react";
 
-import { useDirT } from "hooks";
 import { cn, mergeCallbacks, mergeRefs, capitalize } from "utils";
 import { LoadingDots } from "components/Icons";
 
@@ -44,15 +43,13 @@ export default forwardRef(function Button(
   }: ButtonProps,
   ref: Ref<HTMLButtonElement>
 ) {
-  const dirT = useDirT();
-
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <button
       {...props}
       type={type}
-      dir={dir || dirT}
+      dir={dir}
       ref={mergeRefs(buttonRef, ref)}
       className={cn(
         "Button",

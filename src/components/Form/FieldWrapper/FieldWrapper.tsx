@@ -1,6 +1,5 @@
 import { Children, forwardRef, PropsWithChildren, ReactNode, Ref } from "react";
 
-import { useDirT } from "hooks";
 import { cn, oneOf } from "utils";
 
 type Partition = (ket: string | number) => ReactNode;
@@ -44,8 +43,6 @@ export default forwardRef(function FieldWrapper(
   }: FieldWrapperProps,
   ref: Ref<HTMLDivElement>
 ) {
-  const dirT = useDirT();
-
   return (
     <div
       ref={ref}
@@ -54,7 +51,7 @@ export default forwardRef(function FieldWrapper(
         { invalid: isInvalid, contentFullWidth, alwaysVisible, expandable },
         className
       )}
-      dir={dir || dirT}
+      dir={dir}
     >
       {addPartitions ? injectPartitions(children, partition) : children}
     </div>

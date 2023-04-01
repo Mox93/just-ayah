@@ -1,3 +1,5 @@
+@use "styles/abstracts/mixins" as *;
+
 .SpinningArrow {
   $kf1: 0%;
   $kf2: 60%;
@@ -18,7 +20,7 @@
     --open-overshoot-angle: -20deg;
     --close-overshoot-angle: 200deg;
 
-    &[dir="rtl"] {
+    @include rtlDir {
       --closed-angle: -180deg;
       --open-overshoot-angle: 20deg;
       --close-overshoot-angle: -200deg;
@@ -32,7 +34,7 @@
     --open-overshoot-angle: 205deg;
     --close-overshoot-angle: 65deg;
 
-    &[dir="rtl"] {
+    @include rtlDir {
       --opened-angle: -180deg;
       --closed-angle: -90deg;
       --open-overshoot-angle: -205deg;

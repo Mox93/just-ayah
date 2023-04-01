@@ -1,6 +1,5 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { useDirT } from "hooks";
 import { cn } from "utils";
 
 interface ContainerProps {
@@ -17,28 +16,15 @@ export default forwardRef(function Container(
   { className, children, variant, dir, header, footer, flat }: ContainerProps,
   ref: Ref<HTMLDivElement>
 ) {
-  const dirT = useDirT();
-  dir = dir || dirT;
-
   return (
     <div
       ref={ref}
       className={cn("Container", variant, className, { flat })}
       dir={dir}
     >
-      {header && (
-        <div className="header" dir={dir}>
-          {header}
-        </div>
-      )}
-      <div className="body" dir={dir}>
-        {children}
-      </div>
-      {footer && (
-        <div className="footer" dir={dir}>
-          {footer}
-        </div>
-      )}
+      {header && <div className="header">{header}</div>}
+      <div className="body">{children}</div>
+      {footer && <div className="footer">{footer}</div>}
     </div>
   );
 });

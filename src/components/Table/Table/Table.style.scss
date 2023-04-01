@@ -101,7 +101,6 @@
     }
 
     &.clip {
-      width: 1%;
       max-width: var(--cell-max-width);
 
       &:not(.buttonCell) {

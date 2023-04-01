@@ -18,6 +18,22 @@ $desktopSize: 35.01rem;
   }
 }
 
+@mixin ltrDir {
+  [dir="ltr"] &:not([dir]),
+  [dir="ltr"] &[dir="auto"],
+  &[dir="ltr"] {
+    @content;
+  }
+}
+
+@mixin rtlDir {
+  [dir="rtl"] &:not([dir]),
+  [dir="rtl"] &[dir="auto"],
+  &[dir="rtl"] {
+    @content;
+  }
+}
+
 @mixin positioning(
   $position: absolute,
   $blockDir: start,
@@ -33,40 +49,73 @@ $desktopSize: 35.01rem;
   position: $position;
   transform: translate(var(--x-displacement), var(--y-displacement));
 
-  @if $blockDir == start {
-    top: $block;
-  } @else if $blockDir == end {
-    bottom: $block;
-  }
+  inset-block-#{$blockDir}: $block;
+  inset-inline-#{$inlineDir}: $inline;
 
-  @if $inlineDir == start {
-    &[dir="ltr"],
-    &:not([dir]) {
-      left: $inline;
-    }
-
-    &[dir="rtl"] {
-      @if $x != 0 {
+  @if $x != 0 {
+    @if $inlineDir == "end" {
+      @include ltrDir {
         --x-displacement: calc(#{$x} * -1);
       }
-
-      right: $inline;
     }
-  } @else if $inlineDir == end {
-    &[dir="ltr"],
-    &:not([dir]) {
-      @if $x != 0 {
+
+    @if $inlineDir == "start" {
+      @include rtlDir {
         --x-displacement: calc(#{$x} * -1);
       }
-
-      right: $inline;
-    }
-
-    &[dir="rtl"] {
-      left: $inline;
     }
   }
 }
+
+// @mixin positioning(
+//   $position: absolute,
+//   $blockDir: start,
+//   $inlineDir: start,
+//   $x: -50%,
+//   $y: -50%,
+//   $inline: 50%,
+//   $block: 50%
+// ) {
+//   --x-displacement: #{$x};
+//   --y-displacement: #{$y};
+
+//   position: $position;
+//   transform: translate(var(--x-displacement), var(--y-displacement));
+
+//   @if $blockDir == start {
+//     top: $block;
+//   } @else if $blockDir == end {
+//     bottom: $block;
+//   }
+
+//   @if $inlineDir == start {
+//     &[dir="ltr"],
+//     &:not([dir]) {
+//       left: $inline;
+//     }
+
+//     &[dir="rtl"] {
+//       @if $x != 0 {
+//         --x-displacement: calc(#{$x} * -1);
+//       }
+
+//       right: $inline;
+//     }
+//   } @else if $inlineDir == end {
+//     &[dir="ltr"],
+//     &:not([dir]) {
+//       @if $x != 0 {
+//         --x-displacement: calc(#{$x} * -1);
+//       }
+
+//       right: $inline;
+//     }
+
+//     &[dir="rtl"] {
+//       left: $inline;
+//     }
+//   }
+// }
 
 @mixin withoutBorder($borderRadius: none) {
   --r-border: #{$borderRadius};

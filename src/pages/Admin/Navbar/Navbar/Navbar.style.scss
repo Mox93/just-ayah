@@ -52,6 +52,12 @@
       --sidebar-width: var(--closed-sidebar-width);
       --sidebar-offset: 0;
     }
+
+    &.followSidebar {
+      margin-inline-start: var(--sidebar-width);
+
+      @include sidebarAnimation(margin-inline-start);
+    }
   }
 
   &.isExpanded {
@@ -78,7 +84,7 @@
     .SpinningArrow {
       transform: rotate(-90deg);
 
-      &[dir="rtl"] {
+      @include rtlDir {
         transform: rotate(90deg);
       }
     }

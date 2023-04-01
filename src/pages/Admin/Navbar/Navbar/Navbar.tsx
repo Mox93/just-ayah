@@ -1,7 +1,7 @@
 import Logo from "assets/icons/logo-dark-bg.svg";
 import { DropdownButton } from "components/Buttons";
-import { useSidebar } from "context";
-import { useDirT, useGlobalT } from "hooks";
+import { useSidebarStore } from "context";
+import { useGlobalT } from "hooks";
 import { cn } from "utils";
 
 import HiddenLabel from "../HiddenLabel";
@@ -11,22 +11,20 @@ import NavItem from "../NavItem";
 import UserMenu from "../UserMenu";
 
 export default function Navbar() {
-  const dirT = useDirT();
   const glb = useGlobalT();
 
-  const isExpanded = useSidebar((state) => state.isExpanded);
-  const toggleExpand = useSidebar((state) => state.toggleExpand);
+  const isExpanded = useSidebarStore((state) => state.isExpanded);
+  const toggleExpand = useSidebarStore((state) => state.toggleExpand);
 
   const navTree = useNavTree();
 
   return (
-    <nav className={cn("Navbar", { isExpanded })} dir={dirT}>
+    <nav className={cn("Navbar", { isExpanded })}>
       <DropdownButton
         size={null}
         variant={"primary-ghost"}
         className="navController"
         onClick={toggleExpand}
-        dir={dirT}
         isOpen={isExpanded}
         iconButton
       />

@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export interface SidebarStore {
+interface SidebarStore {
   isExpanded: boolean;
   isFullyExpanded: boolean;
   toggleExpand: VoidFunction;
 }
 
-export const useSidebar = create(
+const useSidebarStore = create(
   persist<SidebarStore>(
     (set) => {
       let timeout: NodeJS.Timeout | null;
@@ -38,3 +38,5 @@ export const useSidebar = create(
     }
   )
 );
+
+export default useSidebarStore;

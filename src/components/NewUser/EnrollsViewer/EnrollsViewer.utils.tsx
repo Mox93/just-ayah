@@ -159,6 +159,15 @@ export function useTableFields({
         fit: true,
       },
     ],
-    [editing, copied]
+    [
+      glb,
+      editing,
+      updateEnrollName,
+      copied,
+      msg,
+      copyToClipboard,
+      refreshEnroll,
+      deleteEnroll,
+    ]
   );
 }

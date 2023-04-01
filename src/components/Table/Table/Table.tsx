@@ -3,7 +3,6 @@ import { ReactNode } from "react";
 
 import Container from "components/Container";
 import { cn, pass } from "utils";
-import { useDirT } from "hooks";
 
 interface DataWithId {
   id: string;
@@ -43,11 +42,9 @@ const Table = <T extends DataWithId>({
   toggleSelect,
   extraProps = pass({}),
 }: TableProps<T>) => {
-  const dirT = useDirT();
-
   return (
     <Container className={cn("Table", className)} {...{ footer, dir, flat }}>
-      <table className="prefix" dir={dir || dirT}>
+      <table className="prefix">
         <thead>
           <tr>
             {noCheckbox || (

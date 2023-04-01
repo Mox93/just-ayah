@@ -4,7 +4,6 @@ import { Button } from "components/Buttons";
 import { StatusMenu } from "components/DropdownMenu";
 import { LoadingSpinner } from "components/Icons";
 import LoadingPopup from "components/LoadingPopup";
-import { useDirT } from "hooks";
 import { mapStatusType, mapStatusVariant } from "models/blocks";
 import Toast from "context/Popup/Toast";
 
@@ -42,12 +41,10 @@ const sectionHeaderStyle: any = {
 };
 
 export default function MainUI() {
-  const dirT = useDirT();
-
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <main style={{ margin: "2rem 2rem 20rem" }} dir={dirT}>
+    <main style={{ margin: "2rem 2rem 20rem" }}>
       {sizes.map((size) =>
         fillVariants.map((fill) => (
           <div key={`${size}-${fill}`}>

@@ -16,10 +16,11 @@
 
   @include positioning(
     $position: fixed,
-    $block: var(--spacing-m),
-    $y: 0,
     $blockDir: end,
+    $inlineDir: end,
+    $block: var(--spacing-m),
     $inline: var(--spacing-m),
+    $y: 0,
     $x: var(--x-offset)
   );
 

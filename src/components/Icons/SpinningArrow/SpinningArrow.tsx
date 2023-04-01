@@ -2,7 +2,6 @@ import { HTMLAttributes, useEffect, useRef } from "react";
 
 import { ReactComponent as Angle } from "assets/icons/angle-up-svgrepo-com.svg";
 import { cn } from "utils";
-import { useDirT } from "hooks";
 
 export type SpinningArrowVariant = "dropdown" | "expand";
 interface SpinningArrowProps extends HTMLAttributes<HTMLDivElement> {
@@ -17,7 +16,6 @@ export default function SpinningArrow({
   variant = "dropdown",
   ...props
 }: SpinningArrowProps) {
-  const dirT = useDirT();
   const wasOpen = useRef(isOpen);
 
   useEffect(() => {
@@ -28,7 +26,7 @@ export default function SpinningArrow({
     <div
       {...props}
       className={cn("SpinningArrow", className, variant)}
-      dir={dir || dirT}
+      dir={dir}
     >
       <Angle
         className={cn("icon", {

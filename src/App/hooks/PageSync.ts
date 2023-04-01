@@ -1,13 +1,16 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-import { useDirT, useLanguage } from "hooks";
+import { useLanguage } from "hooks";
 import { windowEventFactory } from "utils";
 
 export default function usePageSync() {
-  const [, setLanguage] = useLanguage();
-  const dirT = useDirT();
+  // LANGUAGE
+  const [language, setLanguage] = useLanguage();
 
   useEffect(() => {
+    document.documentElement.setAttribute("lang", language);
+
     const [addEvents, removeEvents] = windowEventFactory({
       storage: ({ key, newValue }) => {
         if (key === "i18nextLng" && newValue) setLanguage(newValue);
@@ -17,9 +20,13 @@ export default function usePageSync() {
     addEvents();
 
     return removeEvents;
-  }, [setLanguage]);
+  }, [language, setLanguage]);
+
+  // DIR
+  const { t } = useTranslation();
+  const dir = t("dir");
 
   useEffect(() => {
-    document.body.setAttribute("dir", dirT);
-  }, [dirT]);
+    document.dir = dir;
+  }, [dir]);
 }

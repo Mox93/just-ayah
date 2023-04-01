@@ -1,8 +1,9 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
+import { ReactComponent as CheckMarkIcon } from "assets/icons/checkmark-svgrepo-com.svg";
 import { Button, ButtonProps } from "components/Buttons";
 import Container from "components/Container";
-import { CheckMark, LoadingDots } from "components/Icons";
+import { LoadingDots } from "components/Icons";
 import { Converter, GetKey } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, pass } from "utils";
 
@@ -73,7 +74,9 @@ export default forwardRef(function Menu<TItem>(
               {...{ variant, size, dir }}
             >
               {render(option)}
-              {withCheckMark && isSelected && <CheckMark dir={dir} />}
+              {withCheckMark && isSelected && (
+                <CheckMarkIcon className="CheckMark icon" />
+              )}
             </Button>
           );
         })

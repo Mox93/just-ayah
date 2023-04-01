@@ -8,7 +8,7 @@ import {
   useRef,
 } from "react";
 
-import { useDirT, useUniqueId } from "hooks";
+import { useUniqueId } from "hooks";
 import { cn, mergeRefs } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
 
@@ -49,7 +49,6 @@ export default forwardRef(function Textarea(
   }: TextareaProps,
   ref: Ref<HTMLTextAreaElement>
 ) {
-  const dirT = useDirT();
   const innerRef = useRef(null);
   const _id = useUniqueId(name || "textarea");
 
@@ -58,7 +57,7 @@ export default forwardRef(function Textarea(
   }, [innerRef]);
 
   return (
-    <div className={cn("Textarea", className)} dir={dir || dirT}>
+    <div className={cn("Textarea", className)} dir={dir}>
       <FieldHeader
         htmlFor={id || _id}
         {...{ label, required, isRequired, isInvalid }}
@@ -68,7 +67,7 @@ export default forwardRef(function Textarea(
 
       {before("field", children)}
       <FieldWrapper
-        {...{ isInvalid, dir }}
+        isInvalid={isInvalid}
         alwaysVisible={visibleBorder}
         ref={fieldRef}
         expandable

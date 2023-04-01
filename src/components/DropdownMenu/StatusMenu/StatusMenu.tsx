@@ -7,9 +7,9 @@ import {
   useReducer,
 } from "react";
 
+import { ReactComponent as CheckMarkIcon } from "assets/icons/checkmark-svgrepo-com.svg";
 import { Button, DropdownButton } from "components/Buttons";
 import Container from "components/Container";
-import { CheckMark } from "components/Icons";
 import { useDropdown, useGlobalT } from "hooks";
 import { UNKNOWN } from "models";
 import {
@@ -169,7 +169,7 @@ export default forwardRef(function StatusMenu<TVariant extends StatusVariants>(
               }
             >
               {capitalize(glb(statusOption.type))}
-              {isSelected && <CheckMark />}
+              {isSelected && <CheckMarkIcon className="CheckMark icon" />}
             </Button>
           );
         })}

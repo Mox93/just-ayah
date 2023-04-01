@@ -1,8 +1,7 @@
 import { FormHTMLAttributes, ReactElement } from "react";
 
+import { ReactComponent as CheckMarkIcon } from "assets/icons/checkmark-svgrepo-com.svg";
 import { Button } from "components/Buttons";
-import { CheckMark } from "components/Icons";
-import { useDirT } from "hooks";
 import { cn } from "utils";
 
 import { FormButton } from "../Form";
@@ -17,32 +16,29 @@ interface MiniFormProps extends FormHTMLAttributes<HTMLFormElement> {
 export default function MiniForm({
   children,
   className,
-  dir,
   isInvalid,
   submitProps,
   resetProps,
   ...props
 }: MiniFormProps) {
-  const dirT = useDirT();
-
   return (
-    <form {...props} className={cn("MiniForm", className)} dir={dir || dirT}>
+    <form {...props} className={cn("MiniForm", className)}>
       {children}
 
       <Button
         variant="success-solid"
-        dir={dir}
         {...submitProps}
         className={cn("submit", submitProps?.className)}
         type="submit"
         disabled={isInvalid}
-        children={submitProps?.children || <CheckMark />}
+        children={
+          submitProps?.children || <CheckMarkIcon className="CheckMark icon" />
+        }
       />
       {resetProps && (
         // TODO add popup for reset confirmation.
         <Button
           variant="danger-text"
-          dir={dir}
           {...resetProps}
           className={cn("reset", resetProps?.className)}
           type="reset"

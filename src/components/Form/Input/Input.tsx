@@ -1,6 +1,6 @@
 import { forwardRef, InputHTMLAttributes, ReactNode, Ref } from "react";
 
-import { useDirT, useUniqueId } from "hooks";
+import { useUniqueId } from "hooks";
 import { cn } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
 
@@ -41,11 +41,10 @@ export default forwardRef(function Input(
   }: InputProps,
   ref: Ref<HTMLInputElement>
 ) {
-  const dirT = useDirT();
   const _id = useUniqueId(name || "input");
 
   return (
-    <div className={cn("Input", className)} dir={dir || dirT}>
+    <div className={cn("Input", className)} dir={dir}>
       <FieldHeader
         htmlFor={id || _id}
         {...{ label, required, isRequired, isInvalid }}
@@ -55,7 +54,7 @@ export default forwardRef(function Input(
 
       {before("field", children)}
       <FieldWrapper
-        {...{ isInvalid, dir }}
+        isInvalid={isInvalid}
         alwaysVisible={visibleBorder}
         ref={fieldRef}
       >

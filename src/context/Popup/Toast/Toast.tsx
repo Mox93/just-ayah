@@ -1,4 +1,4 @@
-import { FC, ReactElement, SVGProps } from "react";
+import { ReactElement } from "react";
 
 import { ReactComponent as DangerIcon } from "assets/icons/block-svgrepo-com.svg";
 import { ReactComponent as InfoIcon } from "assets/icons/info-svgrepo-com.svg";
@@ -6,19 +6,14 @@ import { ReactComponent as SuccessIcon } from "assets/icons/success-svgrepo-com.
 import { ReactComponent as WarningIcon } from "assets/icons/warning-svgrepo-com.svg";
 import { CloseButton } from "components/Buttons";
 import { cn } from "utils";
-import { useDirT } from "hooks";
 
 export type ToastVariant = "success" | "info" | "warning" | "danger";
 
-interface ExtraProps {
-  dir: string;
-}
-
-const icons: Record<ToastVariant, FC<SVGProps<SVGSVGElement> & ExtraProps>> = {
-  success: SuccessIcon,
-  info: InfoIcon,
-  warning: WarningIcon,
-  danger: DangerIcon,
+const icons: Record<ToastVariant, ReactElement> = {
+  success: <SuccessIcon className="toastIcon iconL" />,
+  info: <InfoIcon className="toastIcon iconL" />,
+  warning: <WarningIcon className="toastIcon iconL" />,
+  danger: <DangerIcon className="toastIcon iconL" />,
 };
 
 export interface ToastProps {
@@ -36,14 +31,11 @@ export default function Toast({
   dir,
   close,
 }: ToastProps) {
-  const dirT = useDirT();
-  const Icon = icons[variant];
-
   return (
-    <div className={cn("Toast", variant, { floating })} dir={dir || dirT}>
-      {<Icon className="toastIcon iconL" dir={dir || dirT} />}
+    <div className={cn("Toast", variant, { floating })} dir={dir}>
+      {icons[variant]}
       <p className="message">{message}</p>
-      <CloseButton onClick={close} dir={dir || dirT} />
+      <CloseButton onClick={close} />
     </div>
   );
 }

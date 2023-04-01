@@ -1,3 +1,5 @@
+@use "styles/abstracts/mixins" as *;
+
 .Ellipsis {
   position: relative;
   max-width: 100%;
@@ -35,11 +37,11 @@
 
   &.end,
   & > .end {
-    &[dir="rtl"] {
+    @include rtlDir {
       direction: ltr;
     }
 
-    &[dir="ltr"] {
+    @include ltrDir {
       direction: rtl;
     }
   }

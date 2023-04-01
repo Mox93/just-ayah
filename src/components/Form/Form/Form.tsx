@@ -1,7 +1,7 @@
 import { FormHTMLAttributes } from "react";
 
 import { Button, ButtonProps } from "components/Buttons";
-import { useDirT, useGlobalT } from "hooks";
+import { useGlobalT } from "hooks";
 import { cn } from "utils";
 
 import InputGroup from "../InputGroup";
@@ -25,11 +25,10 @@ export default function Form({
   dir,
   ...props
 }: FormProps) {
-  const dirT = useDirT();
   const glb = useGlobalT();
 
   return (
-    <form {...props} className={cn("Form", className)} dir={dir || dirT}>
+    <form {...props} className={cn("Form", className)} dir={dir}>
       {children}
 
       <InputGroup className="actions">

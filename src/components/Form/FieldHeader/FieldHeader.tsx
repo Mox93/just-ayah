@@ -1,4 +1,3 @@
-import { useDirT } from "hooks";
 import { cn, capitalize } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
 
@@ -23,10 +22,8 @@ export default function FieldHeader({
   isRequired,
   children,
 }: FieldHeaderProps) {
-  const dirT = useDirT();
-
   return label ? (
-    <label className="FieldHeader" dir={dirT} htmlFor={htmlFor}>
+    <label className="FieldHeader" htmlFor={htmlFor}>
       {before("header", children as PositionalElement<Location>)}
       <h4
         className={cn(

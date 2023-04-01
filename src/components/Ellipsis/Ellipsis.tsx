@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 
-import { useDirT } from "hooks";
 import { cn } from "utils";
 
 interface EllipsisProps extends HTMLAttributes<HTMLElement> {
@@ -29,7 +28,6 @@ export default function Ellipsis({
   dir,
   ...props
 }: EllipsisProps) {
-  const dirT = useDirT();
   const outerRef = useRef<HTMLElement>(null);
   const innerRef = useRef<HTMLElement>(null);
 
@@ -46,7 +44,7 @@ export default function Ellipsis({
         <>
           <span className="start">{part1}</span>
           <span>{". . ."}</span>
-          <span className="end" dir={dir || dirT}>
+          <span className="end" dir={dir}>
             {part2}
           </span>
         </>
@@ -54,14 +52,14 @@ export default function Ellipsis({
     } else {
       setParts(children);
     }
-  }, [children, dir, dirT, position]);
+  }, [children, dir, position]);
 
   return (
     <Component
       {...props}
       ref={outerRef}
       className={cn("Ellipsis", className, position)}
-      dir={dir || dirT}
+      dir={dir}
     >
       {position === "center" && (
         <span className="sizeMeasure" ref={innerRef}>

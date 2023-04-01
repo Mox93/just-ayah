@@ -20,7 +20,6 @@ export const useNST = (ns: string) => {
 const createHook = (root: string) => (ns?: string) =>
   useNST([root, ns].filter(identity).join("."));
 
-export const useDirT = () => useTranslation().t("dir");
 export const usePageT = createHook("pages");
 export const useGlobalT = createHook("globals");
 export const useNavT = createHook("nav");
