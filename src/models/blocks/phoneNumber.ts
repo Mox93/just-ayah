@@ -42,7 +42,7 @@ const _simplePhoneNumberSchema = _phoneNumberSchema.merge(
   z.object({
     tags: z.union([
       phoneNumberTagListSchema,
-      phoneNumberTagSetSchema.transform((value) => Array.from(value.keys())),
+      phoneNumberTagSetSchema.transform((value) => [...value.keys()]),
     ]),
   })
 );

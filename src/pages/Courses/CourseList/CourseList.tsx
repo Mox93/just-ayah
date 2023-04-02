@@ -41,7 +41,7 @@ export default memo(function CourseList() {
     fetchCourses({ onCompleted: stopLoading });
   });
 
-  useApplyOnce(loadCourses, IS_PROD && !courses.length);
+  useApplyOnce(loadCourses, IS_PROD && !courses.size);
 
   return (
     <Table

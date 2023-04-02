@@ -18,23 +18,53 @@ $desktopSize: 35.01rem;
   }
 }
 
-@mixin ltrDir {
-  [dir="ltr"] &:not([dir]),
-  [dir="ltr"] &[dir="auto"],
+@mixin ltrDir($parent: null, $child: null) {
   &[dir="ltr"] {
     @content;
   }
+
+  @if ($child) {
+    @at-root [dir="ltr"] #{$child}:not([dir="rtl"]) {
+      @content;
+    }
+
+    @if ($parent) {
+      @at-root #{$parent}[dir="ltr"] #{$child}:not([dir="rtl"]) {
+        @content;
+      }
+    }
+  } @else {
+    [dir="ltr"] &:not([dir="rtl"]) {
+      @content;
+    }
+  }
 }
 
-@mixin rtlDir {
-  [dir="rtl"] &:not([dir]),
-  [dir="rtl"] &[dir="auto"],
+@mixin rtlDir($parent: null, $child: null) {
   &[dir="rtl"] {
     @content;
+  }
+
+  @if ($child) {
+    @at-root [dir="rtl"] #{$child}:not([dir="ltr"]) {
+      @content;
+    }
+
+    @if ($parent) {
+      @at-root #{$parent}[dir="rtl"] #{$child}:not([dir="ltr"]) {
+        @content;
+      }
+    }
+  } @else {
+    [dir="rtl"] &:not([dir="ltr"]) {
+      @content;
+    }
   }
 }
 
 @mixin positioning(
+  $parent: null,
+  $child: null,
   $position: absolute,
   $blockDir: start,
   $inlineDir: start,
@@ -46,6 +76,9 @@ $desktopSize: 35.01rem;
   --x-displacement: #{$x};
   --y-displacement: #{$y};
 
+  @debug "$parent: #{$parent}";
+  @debug "$child: #{$child}";
+
   position: $position;
   transform: translate(var(--x-displacement), var(--y-displacement));
 
@@ -53,14 +86,22 @@ $desktopSize: 35.01rem;
   inset-inline-#{$inlineDir}: $inline;
 
   @if $x != 0 {
-    @if $inlineDir == "end" {
-      @include ltrDir {
+    @if $inlineDir == start {
+      @include ltrDir($parent, $child) {
+        --x-displacement: #{$x};
+      }
+
+      @include rtlDir($parent, $child) {
         --x-displacement: calc(#{$x} * -1);
       }
     }
 
-    @if $inlineDir == "start" {
-      @include rtlDir {
+    @if $inlineDir == end {
+      @include rtlDir($parent, $child) {
+        --x-displacement: #{$x};
+      }
+
+      @include ltrDir($parent, $child) {
         --x-displacement: calc(#{$x} * -1);
       }
     }

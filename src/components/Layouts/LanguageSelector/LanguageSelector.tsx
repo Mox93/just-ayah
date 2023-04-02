@@ -1,6 +1,7 @@
 import { SelectionMenu } from "components/DropdownMenu";
 import { AnchorPoint, useLanguage } from "hooks";
 import { Language, languages } from "models/blocks";
+import { cn } from "utils";
 
 interface LanguageSelectorProps {
   dir?: string;
@@ -23,7 +24,7 @@ export default function LanguageSelector({
       selected={language as Language}
       onOptionChange={setLanguage}
       renderElement={(value) => (
-        <span className={value}>{languages[value].nativeName}</span>
+        <span className={cn("lang", value)}>{languages[value].nativeName}</span>
       )}
     />
   );

@@ -38,7 +38,7 @@ export default function EnrollsViewer({ variant }: EnrollsViewerProps) {
 
   return (
     <div className="EnrollsViewer">
-      <NewEnroll addEnroll={addEnroll} DBClass={DBClass} />
+      <NewEnroll {...{ addEnroll, DBClass, variant }} />
       <Table
         fields={fields}
         data={enrolls}

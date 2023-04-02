@@ -35,7 +35,7 @@ const getUniqueSubstrings = (
     }
   }
 
-  return Array.from(results).filter(identity);
+  return [...results].filter(identity);
 };
 
 const calculateScore = (matchedSubstring: RegExpMatchArray) =>

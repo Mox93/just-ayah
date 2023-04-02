@@ -1,10 +1,10 @@
 import { lazy, useMemo, FC } from "react";
 import { SubmitHandler } from "react-hook-form";
-import { Trans } from "react-i18next";
 import { Class } from "type-fest";
 
+import { ErrorToast, SuccessToast } from "components/FlashMessages";
 import { usePopupContext } from "context";
-import { Tabs, useGlobalT, useMessageT, useTabs } from "hooks";
+import { Tabs, useGlobalT, useTabs } from "hooks";
 import { AddDataFunc } from "models";
 import { capitalize } from "utils";
 
@@ -26,7 +26,6 @@ export function useNewUserTabs<TUser, TUserForm extends {}>({
   UserClass,
 }: UseNewUserTabsProps<TUser, TUserForm>) {
   const glb = useGlobalT();
-  const msg = useMessageT("toast");
 
   const { openToast } = usePopupContext();
 
@@ -44,28 +43,23 @@ export function useNewUserTabs<TUser, TUserForm extends {}>({
               addUser(new UserClass(data), {
                 onFulfilled: () =>
                   openToast(
-                    <Trans t={msg} i18nKey={`new${capitalize(variant)}`}>
-                      <b>Success:</b> a new {variant} was added!
-                    </Trans>,
+                    <SuccessToast
+                      i18nKey={`new${capitalize(variant)}`}
+                      message={`a new ${variant} was added!`}
+                    />,
                     { variant: "success" }
                   ),
                 onRejected: (error: any) =>
-                  openToast(
-                    <>
-                      <Trans t={msg} i18nKey="error">
-                        <b>Error:</b> something went wrong!
-                      </Trans>
-                      <code>{error}</code>
-                    </>,
-                    { variant: "danger" }
-                  ),
+                  openToast(<ErrorToast error={error} />, {
+                    variant: "danger",
+                  }),
               })
             }
           />
         ),
       },
     ],
-    [UserClass, UserForm, addUser, msg, openToast, variant]
+    [UserClass, UserForm, addUser, openToast, variant]
   );
 
   return useTabs({ tabs, renderHeader: glb });

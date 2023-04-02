@@ -1,17 +1,20 @@
 @use "styles/abstracts/mixins" as *;
 
 .Toast {
+  $parent: &;
+
   --fill-color: var(--toast-fg-color);
-  --icon-spacing: 1.33rem;
+  --icon-spacing: 2.66rem;
+  --icon-center: calc(var(--icon-spacing) / 2);
 
   max-width: var(--width-m);
   min-width: var(--width-xs);
-  width: calc(100vw - 1rem);
+  width: fit-content;
   min-height: 3rem;
   display: flex;
   align-items: center;
   background-color: var(--toast-bg-color);
-  padding: var(--spacing-s) 2.66rem;
+  padding: var(--spacing-s) var(--icon-spacing);
   position: relative;
   box-shadow: var(--drop-shadow-s);
 
@@ -47,10 +50,12 @@
     --toast-bg-color: var(--c-danger-100);
   }
 
-  .toastIcon {
+  @at-root .toastIcon {
     @include positioning(
-      $inline: var(--icon-spacing),
-      $block: var(--icon-spacing)
+      $parent,
+      $child: &,
+      $inline: var(--icon-center),
+      $block: var(--icon-center)
     );
   }
 
@@ -68,15 +73,19 @@
   .CloseButton {
     --fill-color: var(--toast-fg-color);
 
-    @include positioning(
-      $inlineDir: end,
-      $inline: var(--icon-spacing),
-      $block: var(--icon-spacing)
-    );
-
     &:hover {
       --fill-color: var(--toast-bg-color);
       --bg-color: var(--toast-fg-color);
     }
+  }
+
+  @at-root .CloseButton {
+    @include positioning(
+      $parent,
+      $child: &,
+      $inlineDir: end,
+      $inline: var(--icon-center),
+      $block: var(--icon-center)
+    );
   }
 }

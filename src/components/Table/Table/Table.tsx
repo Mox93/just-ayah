@@ -1,5 +1,5 @@
 import { get } from "lodash";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 
 import Container from "components/Container";
 import { cn, pass } from "utils";
@@ -17,11 +17,11 @@ export interface FieldProps<T> {
   getValue?: (data: T, index: number) => ReactNode;
 }
 
-interface TableProps<T> {
+interface TableProps<T, D> {
   className?: string;
   dir?: string;
   fields: FieldProps<T>[];
-  data: T[];
+  data: D | (() => D);
   selected?: Set<string>;
   footer?: ReactNode;
   noCheckbox?: boolean;
@@ -30,7 +30,9 @@ interface TableProps<T> {
   extraProps?: (data: T, index: number) => Record<string, any>;
 }
 
-const Table = <T extends DataWithId>({
+type List<T> = { map: T[]["map"] } & ({ length: number } | { size: number });
+
+const Table = <T extends DataWithId, D extends List<T>>({
   className,
   dir,
   fields,
@@ -41,7 +43,14 @@ const Table = <T extends DataWithId>({
   flat,
   toggleSelect,
   extraProps = pass({}),
-}: TableProps<T>) => {
+}: TableProps<T, D>) => {
+  data = useMemo<D>(() => (typeof data === "function" ? data() : data), [data]);
+  const size = Array.isArray(data)
+    ? data.length
+    : data instanceof Map
+    ? data.size
+    : NaN;
+
   return (
     <Container className={cn("Table", className)} {...{ footer, dir, flat }}>
       <table className="prefix">
@@ -54,7 +63,7 @@ const Table = <T extends DataWithId>({
                   name="selectAll"
                   id={"all"}
                   onChange={(e) => toggleSelect?.(e.target.checked)}
-                  checked={data.length > 0 && selected?.size === data.length}
+                  checked={size > 0 && selected?.size === size}
                 />
               </th>
             )}

@@ -35,6 +35,6 @@ export function UseTableFields() {
         fit: true,
       },
     ],
-    []
+    [glb, pi]
   );
 }

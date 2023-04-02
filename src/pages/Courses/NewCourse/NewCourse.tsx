@@ -1,6 +1,7 @@
 import Container from "components/Container";
+import { ErrorToast, SuccessToast } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
-import { useCourseStore } from "context";
+import { useCourseStore, usePopupContext } from "context";
 import { useGlobalT, useMessageT, usePageT, useSmartForm } from "hooks";
 import { Course, CourseFormData } from "models/course";
 
@@ -11,10 +12,27 @@ export default function NewCourse() {
   const pgT = usePageT("course");
   const msg = useMessageT();
 
+  const { closeModal, openToast } = usePopupContext();
+
   const addCourse = useCourseStore((state) => state.add);
 
   const formProps = useSmartForm<CourseFormData>({
-    onSubmit: (data) => addCourse(new Course.DB(data), { applyLocally: true }),
+    onSubmit: (data) =>
+      addCourse(new Course.DB(data), {
+        applyLocally: true,
+        onFulfilled: () => {
+          closeModal();
+          openToast(
+            <SuccessToast
+              i18nKey="newCourse"
+              message="a new course was added!"
+            />,
+            { variant: "success" }
+          );
+        },
+        onRejected: (error) =>
+          openToast(<ErrorToast error={error} />, { variant: "danger" }),
+      }),
     resetOnSubmit: true,
   });
 

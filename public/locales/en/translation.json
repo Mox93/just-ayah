@@ -227,7 +227,10 @@
     "toast": {
       "error": "<0>Error:</0> something went wrong!",
       "newStudent": "<0>Success:</0> a new student was added!",
-      "newTeacher": "<0>Success:</0> a new teacher was added!"
+      "newTeacher": "<0>Success:</0> a new teacher was added!",
+      "newCourse": "<0>Success:</0> a new program was added!",
+      "newStudentEnroll": "<0>Success:</0> a new student enroll was added!",
+      "newTeacherEnroll": "<0>Success:</0> a new teacher enroll was added!"
     }
   }
 }
