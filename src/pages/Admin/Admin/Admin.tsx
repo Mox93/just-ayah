@@ -16,10 +16,10 @@ export default function Admin() {
       openToast(
         <>
           <span>
-            This app is still in its development phase so there will be a lot
-            changes in the future. I'd appreciate your feedback and ideas to
-            improve the app. If you're facing any issues, please contact me
-            right away.
+            This app is still under development so it's expected things will
+            change along the way. Your feedback and ideas to improve the app
+            would be greatly appreciated. If you're facing any issues, don't
+            hesitate to get in touch right away.
           </span>
           <br />
           <b>email: mohamed.ragaiy.saleh@gmail.com</b>

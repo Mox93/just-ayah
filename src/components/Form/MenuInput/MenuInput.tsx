@@ -19,7 +19,7 @@ export type MenuInputProps<TOption> = Merge<
 >;
 
 interface MenuInputPropsInternal<TOption> extends MenuInputProps<TOption> {
-  options: TOption[];
+  options: TOption[] | (() => TOption[]);
   selected?: TOption;
   renderElement?: FunctionOrChain<TOption, ReactNode>;
   searchFields?: Path<TOption>[];

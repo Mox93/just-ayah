@@ -23,12 +23,12 @@ $desktopSize: 35.01rem;
     @content;
   }
 
-  @if ($child) {
+  @if $child {
     @at-root [dir="ltr"] #{$child}:not([dir="rtl"]) {
       @content;
     }
 
-    @if ($parent) {
+    @if $parent {
       @at-root #{$parent}[dir="ltr"] #{$child}:not([dir="rtl"]) {
         @content;
       }
@@ -45,12 +45,12 @@ $desktopSize: 35.01rem;
     @content;
   }
 
-  @if ($child) {
+  @if $child {
     @at-root [dir="rtl"] #{$child}:not([dir="ltr"]) {
       @content;
     }
 
-    @if ($parent) {
+    @if $parent {
       @at-root #{$parent}[dir="rtl"] #{$child}:not([dir="ltr"]) {
         @content;
       }
@@ -75,9 +75,6 @@ $desktopSize: 35.01rem;
 ) {
   --x-displacement: #{$x};
   --y-displacement: #{$y};
-
-  @debug "$parent: #{$parent}";
-  @debug "$child: #{$child}";
 
   position: $position;
   transform: translate(var(--x-displacement), var(--y-displacement));

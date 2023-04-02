@@ -109,6 +109,7 @@ export default function MainUI() {
               </>
             }
             variant={variant}
+            duration={2e4}
           />
         ))}
       </div>

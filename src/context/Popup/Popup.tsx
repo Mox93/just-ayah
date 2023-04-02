@@ -1,12 +1,12 @@
 import {
   createContext,
   PropsWithChildren,
-  useCallback,
   useContext,
   useReducer,
+  useRef,
 } from "react";
 
-import { assert, mergeCallbacks } from "utils";
+import { assert } from "utils";
 
 import Loading, { LoadingProps } from "./Loading";
 import Modal, { ModalProps } from "./Modal";
@@ -56,55 +56,47 @@ export function PopupProvider({ children }: PropsWithChildren) {
     loading: { isOpen: false },
   });
 
-  const closeModal = useCallback(() => dispatch({ type: "closeModal" }), []);
+  const closeModal = useRef(() => dispatch({ type: "closeModal" }));
 
-  const openModal = useCallback<OpenModal>(
-    (children, { closable, ...props } = {}) =>
-      dispatch({
-        type: "openModal",
-        payload: {
-          ...props,
-          children,
-          ...(closable && { close: closeModal }),
-        },
-      }),
-    []
+  const openModal = useRef<OpenModal>((children, { closable, ...props } = {}) =>
+    dispatch({
+      type: "openModal",
+      payload: {
+        ...props,
+        children,
+        ...(closable && { close: closeModal.current }),
+      },
+    })
   );
 
-  const closeToast = useCallback(() => dispatch({ type: "closeToast" }), []);
+  const closeToast = useRef(() => dispatch({ type: "closeToast" }));
 
-  const openToast = useCallback<OpenToast>(
-    (message, { duration = 7e3, ...props } = {}) => {
-      const timeoutId = setTimeout(closeToast, duration);
+  const openToast = useRef<OpenToast>((message, props) => {
+    dispatch({
+      type: "openToast",
+      payload: {
+        ...props,
+        message,
+        close: closeToast.current,
+      },
+    });
+  });
 
-      dispatch({
-        type: "openToast",
-        payload: {
-          ...props,
-          message,
-          close: mergeCallbacks(closeToast, () => clearTimeout(timeoutId)),
-        },
-      });
-    },
-    []
+  const startLoading = useRef<StartLoading>((message) =>
+    dispatch({ type: "startLoading", payload: { message } })
   );
 
-  const startLoading = useCallback<StartLoading>(
-    (message) => dispatch({ type: "startLoading", payload: { message } }),
-    []
-  );
-
-  const stopLoading = useCallback(() => dispatch({ type: "stopLoading" }), []);
+  const stopLoading = useRef(() => dispatch({ type: "stopLoading" }));
 
   return (
     <popupContext.Provider
       value={{
-        openModal,
-        closeModal,
-        openToast,
-        closeToast,
-        startLoading,
-        stopLoading,
+        openModal: openModal.current,
+        closeModal: closeModal.current,
+        openToast: openToast.current,
+        closeToast: closeToast.current,
+        startLoading: startLoading.current,
+        stopLoading: stopLoading.current,
       }}
     >
       <popupOutletContext.Provider value={outletValue}>
