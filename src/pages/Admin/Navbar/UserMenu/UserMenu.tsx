@@ -29,27 +29,25 @@ export default function UserMenu() {
 
   const avatar = <Avatar url={photoURL} />;
 
-  const label = (e1 = "h5", e2 = "h6") => (
-    <div>
-      {displayName && (
-        <Ellipsis className="displayName" Component={e1} dir="auto">
-          {displayName}
-        </Ellipsis>
-      )}
-      {email && (
-        <Ellipsis className="email" Component={e2} dir="ltr">
-          {email}
-        </Ellipsis>
-      )}
-    </div>
-  );
-
   return dropdownWrapper(
     <HiddenLabel
       ref={driverRef}
       Component="button"
       className="keepFocusOutline"
-      label={label()}
+      label={
+        <div className="userInfo">
+          {displayName && (
+            <Ellipsis className="displayName" Component="h5" dir="auto">
+              {displayName}
+            </Ellipsis>
+          )}
+          {email && (
+            <Ellipsis className="email" Component="h6" dir="ltr">
+              {email}
+            </Ellipsis>
+          )}
+        </div>
+      }
     >
       {avatar}
     </HiddenLabel>,
@@ -59,7 +57,14 @@ export default function UserMenu() {
       header={
         <>
           {avatar}
-          {label("h3", "h5")}
+          <div className="userInfo">
+            <h3 className="displayName">{displayName}</h3>
+            {email && (
+              <Ellipsis className="email" Component="h5" dir="ltr">
+                {email}
+              </Ellipsis>
+            )}
+          </div>
         </>
       }
     >

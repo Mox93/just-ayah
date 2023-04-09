@@ -9,6 +9,10 @@
 
   margin: var(--avatar-margin);
 
+  .userInfo {
+    overflow: hidden;
+  }
+
   .HiddenLabel {
     cursor: pointer;
     border-radius: calc(var(--fixed-width) / 2);
@@ -25,10 +29,6 @@
       --offset-size: var(--spacing-m);
     }
 
-    .label {
-      overflow: hidden;
-    }
-
     .displayName {
       color: var(--c-gray-100);
       text-transform: capitalize;
@@ -40,13 +40,14 @@
   }
 
   .Container {
-    padding: var(--spacing-l);
+    width: var(--width-xs);
 
     & > .header {
       display: flex;
       align-items: center;
       gap: var(--spacing-l);
-      padding: var(--spacing-l);
+      padding-block: var(--spacing-l);
+      margin-inline: var(--spacing-l);
       border-block-end: 1px solid var(--c-gray-100);
 
       .Avatar {
@@ -56,6 +57,7 @@
       .displayName {
         color: var(--c-gray-500);
         text-transform: capitalize;
+        text-align: center;
       }
 
       .email {
