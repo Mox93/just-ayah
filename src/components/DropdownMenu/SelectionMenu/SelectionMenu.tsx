@@ -1,37 +1,33 @@
 import { isEqual } from "lodash";
-import { forwardRef, ReactNode, Ref } from "react";
+import { forwardRef, Ref } from "react";
 
 import { Button, ButtonProps, DropdownButton } from "components/Buttons";
-import Menu from "components/Menu";
-import { OverflowDir, useDropdown } from "hooks";
-import { GetKey } from "models";
-import {
-  applyInOrder,
-  capitalize,
-  cn,
-  FunctionOrChain,
-  identity,
-  mergeRefs,
-} from "utils";
+import Menu, { MenuProps } from "components/Menu";
+import { useDropdown, UseDropdownProps } from "hooks";
+import { applyInOrder, cn, identity, mergeRefs } from "utils";
 
-interface SelectionMenuProps<TOption> extends Omit<ButtonProps, "children"> {
-  options: TOption[];
+export interface SelectionMenuProps<TOption>
+  extends Omit<ButtonProps, "children">,
+    Omit<UseDropdownProps, "onClick">,
+    Pick<
+      MenuProps<TOption>,
+      "options" | "getKey" | "searchFields" | "renderElement"
+    > {
   selected?: TOption;
-  renderElement?: FunctionOrChain<TOption, ReactNode>;
-  overflowDir?: OverflowDir;
   placeholder?: string;
   noCheckmark?: boolean;
   noArrow?: boolean;
-  getKey?: GetKey<TOption>;
   checkIsSelected?: (option: TOption, selected?: TOption) => boolean;
-  setValue?: (option: TOption) => void;
+  onOptionSelect?: (option: TOption) => void;
+  onOptionChange?: (option: TOption) => void;
 }
 
-const SelectionMenu = <TOption,>(
+export default forwardRef(function SelectionMenu<TOption>(
   {
     className,
     dir,
-    overflowDir,
+    anchorPoint,
+    sideMounted,
     options,
     selected,
     variant = "plain-text",
@@ -40,27 +36,29 @@ const SelectionMenu = <TOption,>(
     keepFormat,
     noCheckmark,
     noArrow,
-    onClick,
-    setValue,
+    searchFields,
+    onOptionSelect,
+    onOptionChange,
     getKey = identity,
     checkIsSelected = isEqual,
     renderElement = identity,
+    isLoading,
     ...props
   }: SelectionMenuProps<TOption>,
   ref: Ref<HTMLButtonElement>
-) => {
-  const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
-    useDropdown({
-      className: cn("SelectionMenu", className),
-      dir,
-      overflowDir,
-      onClick: "toggle",
-    });
+) {
+  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown<
+    HTMLButtonElement,
+    HTMLDivElement
+  >({
+    className: cn("SelectionMenu", className),
+    dir,
+    anchorPoint,
+    sideMounted,
+    onClick: "toggle",
+  });
 
-  const render = applyInOrder([
-    (element) => (keepFormat ? element : capitalize(element)),
-    renderElement,
-  ]);
+  const render = applyInOrder(renderElement);
 
   const ButtonComponent = noArrow ? Button : DropdownButton;
 
@@ -77,26 +75,23 @@ const SelectionMenu = <TOption,>(
       className={cn("driver", {
         empty: selected === undefined && placeholder === undefined,
       })}
-      onClick={onClick}
       ref={mergeRefs(ref, driverRef)}
     >
       {selected ? render(selected) : placeholder || ". . ."}
     </ButtonComponent>,
-    () => (
-      <Menu
-        {...{ variant, size, getKey, dir }}
-        ref={drivenRef}
-        items={options}
-        checkIsSelected={(item) => checkIsSelected(item, selected)}
-        onSelect={(item) => {
-          setValue?.(item);
-          dropdownAction("close");
-        }}
-        renderElement={render}
-        withCheckMark={!noCheckmark}
-      />
-    )
-  );
-};
 
-export default forwardRef(SelectionMenu);
+    <Menu
+      {...{ variant, size, getKey, dir, searchFields, options, isLoading }}
+      ref={drivenRef}
+      checkIsSelected={(option) => checkIsSelected(option, selected)}
+      onSelect={(option) => {
+        if (!checkIsSelected(option, selected)) onOptionChange?.(option);
+
+        onOptionSelect?.(option);
+        close();
+      }}
+      renderElement={render}
+      withCheckMark={!noCheckmark}
+    />
+  );
+});

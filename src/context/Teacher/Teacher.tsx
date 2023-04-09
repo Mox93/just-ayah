@@ -1,5 +1,11 @@
 import { collection, CollectionReference } from "firebase/firestore";
-import { createContext, FC, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 import {
   useAddDoc,
@@ -14,6 +20,7 @@ import {
   FetchDataFunc,
   UpdateDataFunc,
 } from "models";
+import { changeDateUpdated } from "models/blocks";
 import Teacher, {
   teacherConverter,
   TeacherDB,
@@ -41,9 +48,7 @@ interface TeacherContext {
 
 const teacherContext = createContext<TeacherContext | null>(null);
 
-interface TeacherProviderProps {}
-
-export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
+export function TeacherProvider({ children }: PropsWithChildren) {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
 
   const addTeacher = useAddDoc({
@@ -60,13 +65,18 @@ export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
 
   const getTeacher = useGetDoc({ collectionRef: teacherRef });
 
-  const updateTeacher = useUpdateDoc({ collectionRef, setData: setTeachers });
+  const updateTeacher = useUpdateDoc({
+    collectionRef,
+    setData: setTeachers,
+    processUpdates: changeDateUpdated("meta"),
+  });
 
   const addNote = useCallback<AddCommentFunc>(
     (id, note) => {
       const { dateCreated } = note;
       updateTeacher(id, {
-        [`meta.notes.${dateCreated.getTime()}`]: note,
+        // HACK: TS is unable to identify this key as `meta.notes.${string}`
+        [`meta.notes.${dateCreated.getTime()}` as any]: note,
       });
     },
     [updateTeacher]
@@ -86,7 +96,7 @@ export const TeacherProvider: FC<TeacherProviderProps> = ({ children }) => {
       {children}
     </teacherContext.Provider>
   );
-};
+}
 
 export function useTeacherContext() {
   const context = useContext(teacherContext);

@@ -1,0 +1,11 @@
+.LanguageSelector {
+  .driver {
+    --c-background: var(--c-white);
+
+    width: 3.75rem;
+  }
+
+  .lang {
+    flex: 1;
+  }
+}

@@ -1,15 +1,13 @@
 import { Constructor } from "type-fest";
 import { z, ZodError, ZodTypeDef } from "zod";
 
-import { applyUpdates, devOnly, identity } from "utils";
+import { applyUpdates, devOnly } from "utils";
 
 import { DeepUnion, UpdateObject } from "../types";
 
 export default function DataModel<DataIn extends {}, DataOut extends {}>(
   schema: z.Schema<DataOut, ZodTypeDef, DataIn>,
-  onUpdate: (
-    newData: DeepUnion<DataIn, DataOut>
-  ) => DeepUnion<DataIn, DataOut> = identity
+  onUpdate?: (newData: DeepUnion<DataIn, DataOut>) => void
 ) {
   return class DataModel {
     readonly id!: string;
@@ -31,6 +29,8 @@ export default function DataModel<DataIn extends {}, DataOut extends {}>(
       if (result.success) {
         Object.defineProperty(this, "data", { value: result.data });
       } else {
+        console.log(data);
+
         onFailure(result.error, data, this);
       }
     }
@@ -40,9 +40,11 @@ export default function DataModel<DataIn extends {}, DataOut extends {}>(
     }
 
     update(updates: UpdateObject<DataIn>) {
+      const newData: any = applyUpdates(this.data, updates);
+      onUpdate?.(newData);
       return new (this.constructor as Constructor<this, [string, DataIn]>)(
         this.id,
-        onUpdate(applyUpdates(this.data, updates) as any) as any
+        newData
       );
     }
   };

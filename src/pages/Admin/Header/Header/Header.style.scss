@@ -1,0 +1,36 @@
+@use "styles/abstracts/mixins" as *;
+
+.Header {
+  padding-inline: var(--spacing-m);
+  z-index: 80;
+
+  @include positioning($position: sticky, $block: 0, $inline: 0, $y: 0, $x: 0);
+
+  &.followSidebar {
+    & > .wrapper {
+      padding-inline-start: calc(var(--spacing-xl) + var(--spacing-m));
+    }
+  }
+
+  & > .wrapper {
+    height: var(--header-height);
+    border-block-end: 1px solid var(--c-gray-200);
+    display: flex;
+    gap: var(--spacing-l);
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    .title {
+      text-transform: capitalize;
+    }
+
+    .actions {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--spacing-l);
+    }
+  }
+}

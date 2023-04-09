@@ -1,0 +1,124 @@
+@use "styles/abstracts/mixins" as *;
+
+.Navbar {
+  --navbar-width: var(--closed-sidebar-width);
+  --navbar-padding: var(--spacing-m);
+  --fixed-width: calc(var(--closed-sidebar-width) - 2 * var(--navbar-padding));
+
+  // Gradient
+  --bg-gradient-color-1: var(--c-primary-400);
+  --bg-gradient-color-2: var(--c-primary-500);
+
+  // Active
+  --bg-active-color: var(--c-primary-300);
+  --fg-active-color: var(--c-white);
+
+  // Idle
+  --bg-idle-color: transparent;
+  --fg-idle-color: var(--c-gray-200);
+
+  // Hover
+  --bg-hover-color: var(--c-shadow-300);
+  --fg-hover-color: var(--c-gray-200);
+
+  width: var(--navbar-width);
+  min-height: 100vh;
+  padding-block-end: var(--spacing-xl);
+  padding-inline: var(--navbar-padding);
+  background-image: linear-gradient(
+    var(--bg-gradient-color-1),
+    var(--bg-gradient-color-2)
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--spacing-xl);
+  z-index: 90;
+
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include sidebarAnimation(width);
+  @include positioning($position: fixed, $inline: 0, $block: 0, $x: 0, $y: 0);
+
+  & ~ * {
+    &.followSidebar,
+    .followSidebar {
+      --sidebar-width: var(--closed-sidebar-width);
+      --sidebar-offset: 0;
+    }
+
+    &.followSidebar {
+      margin-inline-start: var(--sidebar-width);
+
+      @include sidebarAnimation(margin-inline-start);
+    }
+  }
+
+  &.isExpanded {
+    --navbar-width: var(--opened-sidebar-width);
+
+    & ~ * {
+      &.followSidebar,
+      .followSidebar {
+        --sidebar-width: var(--opened-sidebar-width);
+        --sidebar-offset: var(--sidebar-delta);
+      }
+    }
+  }
+
+  & > .navController {
+    @include circle(2rem);
+    @include positioning(
+      $inlineDir: end,
+      $inline: 0,
+      $block: calc(var(--header-height) / 2),
+      $x: calc(-100% - var(--navbar-padding))
+    );
+
+    .SpinningArrow {
+      @include rtlDir {
+        transform: rotate(90deg);
+      }
+
+      @include ltrDir {
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  .companyLogo {
+    padding-block: var(--spacing-m);
+
+    .companyName {
+      color: var(--fg-active-color);
+    }
+  }
+
+  .navigation {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--spacing-s);
+  }
+
+  .NavGroup {
+    &.DropdownWrapper {
+      --dropdown-gap: calc(var(--spacing-m) + var(--spacing-s));
+    }
+  }
+
+  .UserMenu {
+    margin-block-end: var(--spacing-l);
+
+    &.DropdownWrapper {
+      --dropdown-gap: var(--spacing-l);
+    }
+  }
+}

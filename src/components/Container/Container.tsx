@@ -1,9 +1,9 @@
-import { forwardRef, PropsWithChildren, ReactNode, Ref } from "react";
+import { forwardRef, ReactNode } from "react";
 
-import { useDirT } from "hooks";
 import { cn } from "utils";
 
 interface ContainerProps {
+  children: ReactNode;
   className?: string;
   variant?: "menu" | "card" | "form";
   dir?: string;
@@ -12,42 +12,19 @@ interface ContainerProps {
   flat?: boolean;
 }
 
-const Container = (
-  {
-    className,
-    children,
-    variant,
-    dir,
-    header,
-    footer,
-    flat,
-  }: PropsWithChildren<ContainerProps>,
-  ref: Ref<HTMLDivElement>
-) => {
-  const dirT = useDirT();
-  dir = dir || dirT;
-
+export default forwardRef<HTMLDivElement, ContainerProps>(function Container(
+  { className, children, variant, dir, header, footer, flat },
+  ref
+) {
   return (
     <div
       ref={ref}
       className={cn("Container", variant, className, { flat })}
       dir={dir}
     >
-      {header && (
-        <div className="header" dir={dir}>
-          {header}
-        </div>
-      )}
-      <div className="body" dir={dir}>
-        {children}
-      </div>
-      {footer && (
-        <div className="footer" dir={dir}>
-          {footer}
-        </div>
-      )}
+      {header && <div className="header">{header}</div>}
+      <div className="body">{children}</div>
+      {footer && <div className="footer">{footer}</div>}
     </div>
   );
-};
-
-export default forwardRef(Container);
+});

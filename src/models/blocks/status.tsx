@@ -4,7 +4,8 @@ import { z } from "zod";
 import { formAtoms } from "components/Form";
 import { identity } from "utils";
 
-import { dateSchema, shortDateRep } from "../_blocks/dateTime";
+import { shiftDate, shortDateRep } from "../_blocks/dateTime";
+import { dateSchema } from "./dateTime";
 
 const { Input, DateInput } = formAtoms();
 
@@ -22,8 +23,6 @@ const statusMap = {
   progress: [
     "pending",
     "active",
-    "finished",
-    "canceled",
     {
       name: "postponed",
       type: "date",
@@ -34,9 +33,9 @@ const statusMap = {
         <DateInput
           name="postponed"
           className="statusField"
-          yearsRange={{
-            start: new Date().getFullYear(),
-            end: new Date().getFullYear() + 10,
+          range={{
+            start: new Date(),
+            end: shiftDate(new Date(), { year: 10 }),
           }}
           rules={{
             required: true,
@@ -51,10 +50,11 @@ const statusMap = {
         />
       ),
     },
+    "finished",
+    "canceled",
   ],
   subscription: [
     "fullPay",
-    "noPay",
     {
       name: "partialPay",
       type: "number",
@@ -72,6 +72,7 @@ const statusMap = {
         />
       ),
     },
+    "noPay",
   ],
 } as const;
 
@@ -197,7 +198,10 @@ export const mapStatusString = <TVariant extends StatusVariants>(
 
 export const progressSchema = z.discriminatedUnion("type", [
   z.object({ type: z.enum(["pending", "active", "finished", "canceled"]) }),
-  z.object({ type: z.literal("postponed"), value: dateSchema }),
+  z.object({
+    type: z.literal("postponed"),
+    value: dateSchema.default(new Date()),
+  }),
 ]);
 
 export const subscriptionSchema = z.discriminatedUnion("type", [

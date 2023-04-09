@@ -1,29 +1,18 @@
 @use "styles/abstracts/mixins" as *;
 
 .Avatar {
-  border: 0.125rem solid var(--c-primary-200);
-  position: relative;
+  --border-width: 0.125rem;
+  --circle-size: 3rem;
+  --bg-color: var(--c-gray-200);
+  --border-color: var(--c-primary-200);
+
+  border: var(--border-width) solid var(--border-color);
   overflow: hidden;
 
-  @include circle(3rem, var(--c-primary-100));
+  @include circle(var(--circle-size), var(--bg-color));
 
   .photo {
     width: 100%;
     height: 100%;
-    position: relative;
-  }
-
-  .head {
-    border: 0.125rem solid var(--c-primary-100);
-
-    @include circle(1.625rem, var(--c-white));
-    @include positioning($block: 0.125rem, $y: 0);
-  }
-
-  .body {
-    border: 0.125rem solid var(--c-primary-100);
-
-    @include circle(3rem, var(--c-white));
-    @include positioning($block: 1.5rem, $y: 0);
   }
 }

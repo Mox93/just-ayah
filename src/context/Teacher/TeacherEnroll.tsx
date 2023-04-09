@@ -1,5 +1,10 @@
-import { deleteField } from "firebase/firestore";
-import { createContext, FC, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 import {
   useAddDoc,
@@ -18,6 +23,7 @@ import {
   GetDataFunc,
   SetDataFunc,
 } from "models";
+import { changeDateUpdated, sealEnroll } from "models/blocks";
 import {
   TeacherDB,
   TeacherEnroll,
@@ -43,11 +49,7 @@ export const teacherEnrollContext = createContext<TeacherEnrollContext | null>(
   null
 );
 
-interface TeacherEnrollProviderProps {}
-
-export const TeacherEnrollProvider: FC<TeacherEnrollProviderProps> = ({
-  children,
-}) => {
+export function TeacherEnrollProvider({ children }: PropsWithChildren) {
   const [enrolls, setEnrolls] = useState<TeacherEnroll[]>([]);
 
   const addEnroll = useAddDoc({
@@ -56,10 +58,13 @@ export const TeacherEnrollProvider: FC<TeacherEnrollProviderProps> = ({
     DataClass: TeacherEnroll,
   });
 
-  const fetchEnrolls = useGetDocs({
+  const fetchEnrolls = useGetDocs<TeacherEnroll, EnrollUser>({
     collectionRef: teacherEnrollRef,
     setData: setEnrolls,
-    fetchDefaults: { sort: { by: "enroll.dateCreated", direction: "desc" } },
+    fetchDefaults: {
+      filters: [["enroll.awaiting", "==", true]],
+      sort: { by: "enroll.dateCreated", direction: "desc" },
+    },
   });
 
   const getTeacherEnroll = useGetDoc({ collectionRef: teacherEnrollRef });
@@ -69,14 +74,14 @@ export const TeacherEnrollProvider: FC<TeacherEnrollProviderProps> = ({
     setData: setEnrolls,
   });
 
-  const updateTeacher = useUpdateDoc({ collectionRef, setData: setEnrolls });
+  const updateTeacher = useUpdateDoc({
+    collectionRef,
+    setData: setEnrolls,
+    processUpdates: sealEnroll,
+  });
 
   const submitEnroll = useCallback<SetDataFunc<TeacherDB>>(
-    (id, { data }, options) => {
-      Object.assign(data, { enroll: deleteField() });
-      // data.meta.notes is incompatible because UpdateData<TeacherDB> injects FieldValue inside of {[x: string]: Comment}
-      updateTeacher(id, data as any, options);
-    },
+    (id, { data }, options) => updateTeacher(id, data as any, options),
     [updateTeacher]
   );
 
@@ -84,6 +89,7 @@ export const TeacherEnrollProvider: FC<TeacherEnrollProviderProps> = ({
     useUpdateDoc({
       collectionRef: teacherEnrollRef,
       setData: setEnrolls,
+      processUpdates: changeDateUpdated("enroll"),
     })
   );
 
@@ -103,7 +109,7 @@ export const TeacherEnrollProvider: FC<TeacherEnrollProviderProps> = ({
       {children}
     </teacherEnrollContext.Provider>
   );
-};
+}
 
 export function useTeacherEnrollContext() {
   const context = useContext(teacherEnrollContext);

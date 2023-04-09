@@ -1,0 +1,13 @@
+@use "styles/abstracts/mixins" as *;
+
+.Sandbox {
+  display: grid;
+  gap: 21rem;
+  margin-block-start: 14rem;
+  margin-inline: 7rem;
+
+  .row {
+    display: flex;
+    gap: 14rem;
+  }
+}

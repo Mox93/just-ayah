@@ -1,4 +1,5 @@
-export * from "./Admin";
-export { default as Admin } from "./Admin";
-export * from "./SignIn";
-export { default as SignIn } from "./SignIn";
+import { lazy } from "react";
+
+export const Admin = lazy(() => import("./Admin"));
+export const Home = lazy(() => import("./Home"));
+export const SignIn = lazy(() => import("./SignIn"));

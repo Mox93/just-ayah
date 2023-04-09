@@ -1,9 +1,10 @@
-import { VFC } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, To } from "react-router-dom";
 
 import { useStudentEnrollContext, useTeacherEnrollContext } from "context";
-import { Admin, SignIn } from "pages/Admin";
+import { IS_DEV } from "models/config";
+import { Admin, Home, SignIn } from "pages/Admin";
 import { CourseList, CourseProfile, Courses } from "pages/Courses";
+import { NotFound, Unauthorized } from "pages/Fallback";
 import { LeadList, LeadProfile, Leads, NewLead } from "pages/Leads";
 import {
   Students,
@@ -11,22 +12,21 @@ import {
   StudentProfile,
   StudentEnroll,
 } from "pages/Students";
-import NotFound from "pages/NotFound";
-import { TeacherList, TeacherProfile, Teachers } from "pages/Teachers";
-import MainUI from "pages/UI/Main";
-import FormUI from "pages/UI/Form";
-import SandboxUI from "pages/UI/Sandbox";
+import {
+  Teachers,
+  TeacherEnroll,
+  TeacherList,
+  TeacherProfile,
+} from "pages/Teachers";
+import { FormUI, MainUI, SandboxUI } from "pages/UI";
+import { pass } from "utils";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guard";
-import Unauthorized from "pages/Unauthorized";
-import TeacherEnroll from "pages/Teachers/TeacherEnroll";
-import { devOnly, pass } from "utils";
+import { useLocalStorage } from "hooks";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
-interface RoutHandlerProps {}
-
-const RoutHandler: VFC<RoutHandlerProps> = () => {
+export default function RoutHandler() {
   // const parts = window.location.hostname.split(".");
   // const subdomain = parts.length > 1 ? parts[0] : null;
 
@@ -39,14 +39,16 @@ const RoutHandler: VFC<RoutHandlerProps> = () => {
   const { getStudentEnroll } = useStudentEnrollContext();
   const { getTeacherEnroll } = useTeacherEnrollContext();
 
+  const signInSession = useLocalStorage<{ from?: To }>("signInSession");
+
   return (
     <Routes>
       {/* Admin */}
       <Route element={<UserGuard redirect="/sign-in" />}>
-        <Route path="admin" element={<Admin />}>
-          <Route element={<AuthGuard />}>
+        <Route element={<AuthGuard />}>
+          <Route path="admin" element={<Admin />}>
             {/* Home */}
-            <Route index />
+            <Route index element={<Home />} />
 
             {/* Courses */}
             <Route path="courses" element={<Courses />}>
@@ -76,7 +78,14 @@ const RoutHandler: VFC<RoutHandlerProps> = () => {
       </Route>
 
       {/* Public */}
-      <Route element={<UserGuard redirect="/admin" guestOnly />}>
+      <Route
+        element={
+          <UserGuard
+            redirect={signInSession.data?.from || "/admin"}
+            guestOnly
+          />
+        }
+      >
         <Route path="sign-in" element={<SignIn />} />
       </Route>
 
@@ -117,7 +126,7 @@ const RoutHandler: VFC<RoutHandlerProps> = () => {
       </Route>
 
       {/* Dev Space */}
-      <Route path="ui" element={<FetchGuard fetcher={devOnly(pass(true))} />}>
+      <Route path="ui" element={<FetchGuard fetcher={pass(IS_DEV)} />}>
         <Route index element={<MainUI />} />
         <Route path="form" element={<FormUI />} />
         <Route path="sandbox" element={<SandboxUI />} />
@@ -132,6 +141,4 @@ const RoutHandler: VFC<RoutHandlerProps> = () => {
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
-};
-
-export default RoutHandler;
+}

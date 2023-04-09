@@ -4,7 +4,7 @@ import { useFormState, useWatch } from "react-hook-form";
 
 import ErrorMessage from "components/Form/ErrorMessage";
 import { SimplePhoneNumber } from "models/blocks";
-import { cn, identity } from "utils";
+import { cn } from "utils";
 import { createModifier } from "utils/transformer";
 
 import {
@@ -20,8 +20,8 @@ const FIELDS = {
   TAGS: "tags",
 } as const;
 
-const phoneNumberMapper = <TFieldValues extends {}>() =>
-  createModifier<NamedChildProps<TFieldValues>>(
+export default function phoneNumberMapper<TFieldValues extends {}>() {
+  return createModifier<NamedChildProps<TFieldValues>>(
     ({
       formHook,
       rules: { setValueAs, ...rules } = {},
@@ -62,12 +62,12 @@ const phoneNumberMapper = <TFieldValues extends {}>() =>
           },
           number: register(NUMBER, {
             ...rules,
-
-            setValueAs: (v: string) => (setValueAs || identity)(v?.trim()),
+            setValueAs: (v: string) =>
+              setValueAs ? setValueAs(v?.trim()) : v?.trim(),
             pattern: {
               value: /^[0-9]{5,16}$/g,
               message: "wrongPhoneNumber",
-            },
+            } as any, // HACK: TS is trying to assign the inferred type to undefined
           }),
           tags: register(TAGS, {
             ...(rules?.required && {
@@ -105,13 +105,9 @@ const phoneNumberMapper = <TFieldValues extends {}>() =>
         name,
         isInvalid: !!fieldWithError,
         errorMessage: !noErrorMessage && (
-          <ErrorMessage
-            name={`${name}.${fieldWithError}` as any}
-            errors={errors}
-          />
+          <ErrorMessage name={fieldWithError as any} errors={errors} />
         ),
       };
     }
   );
-
-export default phoneNumberMapper;
+}

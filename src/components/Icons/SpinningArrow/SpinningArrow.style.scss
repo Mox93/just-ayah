@@ -1,0 +1,93 @@
+@use "styles/abstracts/mixins" as *;
+
+.SpinningArrow {
+  $kf1: 0%;
+  $kf2: 60%;
+  $kf3: 100%;
+
+  --timing-function: ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition-property: transform;
+  transition-delay: var(--duration);
+
+  &.dropdown {
+    --duration: 0.35s;
+    --opened-angle: 0deg;
+
+    @include rtlDir {
+      --closed-angle: -180deg;
+      --open-overshoot-angle: 20deg;
+      --close-overshoot-angle: -200deg;
+    }
+
+    @include ltrDir {
+      --closed-angle: 180deg;
+      --open-overshoot-angle: -20deg;
+      --close-overshoot-angle: 200deg;
+    }
+  }
+
+  &.expand {
+    --duration: 0.2s;
+
+    @include rtlDir {
+      --opened-angle: -180deg;
+      --closed-angle: -90deg;
+      --open-overshoot-angle: -205deg;
+      --close-overshoot-angle: -65deg;
+    }
+
+    @include ltrDir {
+      --opened-angle: 180deg;
+      --closed-angle: 90deg;
+      --open-overshoot-angle: 205deg;
+      --close-overshoot-angle: 65deg;
+    }
+  }
+
+  .icon {
+    &.opening {
+      animation: openMotion var(--duration) var(--timing-function);
+    }
+
+    &.closing {
+      animation: closeMotion var(--duration) var(--timing-function);
+    }
+
+    &.isOpen {
+      transform: rotate(var(--opened-angle));
+    }
+
+    &:not(.isOpen) {
+      transform: rotate(var(--closed-angle));
+    }
+  }
+
+  @keyframes openMotion {
+    #{$kf1} {
+      transform: rotate(var(--closed-angle));
+    }
+    #{$kf2} {
+      transform: rotate(var(--open-overshoot-angle));
+    }
+    #{$kf3} {
+      transform: rotate(var(--opened-angle));
+    }
+  }
+
+  @keyframes closeMotion {
+    #{$kf1} {
+      transform: rotate(var(--opened-angle));
+    }
+    #{$kf2} {
+      transform: rotate(var(--close-overshoot-angle));
+    }
+
+    #{$kf3} {
+      transform: rotate(var(--closed-angle));
+    }
+  }
+}

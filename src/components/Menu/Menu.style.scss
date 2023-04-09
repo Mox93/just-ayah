@@ -3,6 +3,10 @@
 .Menu {
   --icon-space: 2em;
 
+  .LoadingDots {
+    --fill-color: var(--c-gray-300);
+  }
+
   .item {
     &.withCheckMark {
       padding-inline-end: var(--icon-space);
@@ -14,4 +18,6 @@
       @include positioning($inline: var(--spacing), $inlineDir: "end");
     }
   }
+
+  @include searchField;
 }

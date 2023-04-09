@@ -1,20 +1,20 @@
-import {
-  forwardRef,
-  InputHTMLAttributes,
-  Ref,
-  useEffect,
-  useState,
-  VFC,
-} from "react";
+import { forwardRef, InputHTMLAttributes, useEffect, useState } from "react";
 
 import { ReactComponent as AcceptedIcon } from "assets/icons/success-svgrepo-com.svg";
 import { ReactComponent as IdleIcon } from "assets/icons/minus-circle-svgrepo-com.svg";
 import { ReactComponent as InvalidIcon } from "assets/icons/block-svgrepo-com.svg";
 import { Button } from "components/Buttons";
-import Container from "components/Container";
 import { usePopupContext } from "context";
-import { useGlobalT, useMessageT } from "hooks";
-import { cn } from "utils";
+import { useMessageT } from "hooks";
+import { cn, mergeCallbacks, pass } from "utils";
+
+import TermsOfServicePopup from "./TermsOfServicePopup";
+
+const icons = {
+  invalid: <InvalidIcon className="icon" />,
+  accepted: <AcceptedIcon className="icon" />,
+  idle: <IdleIcon className="icon" />,
+};
 
 interface TermsOfServiceProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "type"> {
@@ -23,64 +23,50 @@ interface TermsOfServiceProps
   onAccept?: (url: string) => void;
 }
 
-const TermsOfService: VFC<TermsOfServiceProps> = (
-  { url, isInvalid, onAccept, ...props },
-  ref: Ref<HTMLInputElement>
-) => {
-  const [status, setStatus] = useState<"invalid" | "accepted">();
+export default forwardRef<HTMLInputElement, TermsOfServiceProps>(
+  function TermsOfService({ url, isInvalid, onAccept, ...props }, ref) {
+    const msg = useMessageT();
 
-  useEffect(() => {
-    if (isInvalid) setStatus("invalid");
-  }, [isInvalid]);
+    const [status, setStatus] = useState<"idle" | "invalid" | "accepted">(
+      "idle"
+    );
 
-  const Icon =
-    status === "invalid"
-      ? InvalidIcon
-      : status === "accepted"
-      ? AcceptedIcon
-      : IdleIcon;
+    useEffect(() => {
+      if (isInvalid) setStatus("invalid");
+    }, [isInvalid]);
 
-  const glb = useGlobalT();
-  const msg = useMessageT();
+    const { openModal, closeModal } = usePopupContext();
 
-  const { openModal, closeModal } = usePopupContext();
-
-  return (
-    <>
-      <input {...props} value={url} type="checkbox" ref={ref} hidden />
-      <Button
-        variant="plain-text"
-        className={cn("TermsOfService", status || "idle")}
-        iconButton
-        onClick={() =>
-          openModal(
-            <Container className="TermsOfService modal">
-              {/* eslint-disable-next-line jsx-a11y/iframe-has-title */}
-              <iframe src={url} allow="autoplay" />
-              <Button
-                variant="success-solid"
-                onClick={() => {
-                  setStatus("accepted");
-                  onAccept?.(url);
-                  closeModal();
-                }}
-              >
-                {glb("acceptTermsOfService")}
-              </Button>
-            </Container>,
-            {
-              center: true,
-              closable: true,
-              dismissible: true,
-            }
-          )
-        }
-      >
-        <Icon className="status" />
-        {msg("termsOfService")}
-      </Button>
-    </>
-  );
-};
-
-export default forwardRef(TermsOfService);
+    return (
+      <>
+        <input {...props} value={url} type="checkbox" ref={ref} hidden />
+        <Button
+          variant="plain-text"
+          className={cn("TermsOfService", status)}
+          iconButton
+          onClick={() =>
+            openModal(
+              <TermsOfServicePopup
+                url={url}
+                onAccept={mergeCallbacks(
+                  pass(setStatus, "accepted"),
+                  pass(onAccept, url),
+                  closeModal
+                )}
+              />,
+              {
+                center: true,
+                closable: true,
+                dismissible: true,
+                dir: "rtl",
+              }
+            )
+          }
+        >
+          {icons[status]}
+          {msg("termsOfService")}
+        </Button>
+      </>
+    );
+  }
+);

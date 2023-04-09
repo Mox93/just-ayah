@@ -1,25 +1,65 @@
 @use "styles/abstracts/mixins" as *;
 
 .Toast {
+  $parent: &;
+
+  --toast-countdown: 100%;
+  --toast-lifetime: 7s;
   --fill-color: var(--toast-fg-color);
+  --icon-spacing: 2.66rem;
+  --icon-center: calc(var(--icon-spacing) / 2);
 
   max-width: var(--width-m);
   min-width: var(--width-xs);
-  width: calc(100vw - 1rem);
+  width: fit-content;
   min-height: 3rem;
   display: flex;
   align-items: center;
   background-color: var(--toast-bg-color);
-  padding: var(--spacing-s) 2.66rem;
+  padding: var(--spacing-s) var(--icon-spacing);
   position: relative;
-  box-shadow: 2px 2px 3px 1px var(--c-shadow-200);
+  box-shadow: var(--drop-shadow-s);
+  overflow: hidden;
 
   @include withBorder($borderColor: var(--toast-fg-color));
 
+  // :hover can't be nested under ::after
+  &:hover::after {
+    --toast-countdown-bar-color: var(--c-shadow-500);
+
+    width: var(--toast-countdown);
+  }
+
+  // :not(:hover) can't be nested under ::after
+  &:not(:hover)::after {
+    animation: countdownAnimation var(--toast-lifetime) linear;
+
+    @keyframes countdownAnimation {
+      from {
+        width: var(--toast-countdown);
+      }
+      to {
+        width: 0;
+      }
+    }
+  }
+
+  &::after {
+    --toast-countdown-bar-color: var(--toast-fg-color);
+
+    content: "";
+    height: var(--spacing-xs);
+    background-color: var(--toast-countdown-bar-color);
+
+    @include positioning($blockDir: end, $block: 0, $inline: 0, $x: 0, $y: 0);
+  }
+
   &.floating {
+    --x-idle: var(--x-displacement);
+
     z-index: 1000;
 
-    @include positioning($position: fixed, $block: 0.5rem, $y: 0);
+    @include positioning($position: fixed, $block: var(--spacing-m), $y: 0);
   }
 
   &.success {
@@ -46,13 +86,18 @@
     --toast-bg-color: var(--c-danger-100);
   }
 
-  .toastIcon {
-    @include positioning($inline: 1.33rem, $block: 1.33rem);
+  @at-root .toastIcon {
+    @include positioning(
+      $parent,
+      $child: &,
+      $inline: var(--icon-center),
+      $block: var(--icon-center)
+    );
   }
 
   .message {
     border-inline-start: 1px solid var(--toast-fg-color);
-    padding-inline-start: 0.4rem;
+    padding-inline-start: var(--spacing-m);
     padding-block: var(--spacing-s);
 
     &,
@@ -64,11 +109,19 @@
   .CloseButton {
     --fill-color: var(--toast-fg-color);
 
-    @include positioning($inlineDir: end, $inline: 1.33rem, $block: 1.33rem);
-
     &:hover {
       --fill-color: var(--toast-bg-color);
       --bg-color: var(--toast-fg-color);
     }
+  }
+
+  @at-root .CloseButton {
+    @include positioning(
+      $parent,
+      $child: &,
+      $inlineDir: end,
+      $inline: var(--icon-center),
+      $block: var(--icon-center)
+    );
   }
 }

@@ -1,1 +1,3 @@
-export { default as CommentsViewer } from "./CommentsViewer";
+import { lazy } from "react";
+
+export const CommentsViewer = lazy(() => import("./CommentsViewer"));

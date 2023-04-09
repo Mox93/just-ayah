@@ -1,7 +1,7 @@
 import { Constructor } from "type-fest";
 import { z, ZodError, ZodTypeDef } from "zod";
 
-import { applyUpdates, devOnly, identity } from "utils";
+import { applyUpdates, devOnly } from "utils";
 
 import { enrollSchema } from "../blocks";
 import { DeepUnion, UpdateObject } from "../types";
@@ -15,9 +15,7 @@ export const externalUserSchema = z
 export default function ExternalUser<DataIn extends {}, DataOut extends {}>(
   schema: z.Schema<DataOut, ZodTypeDef, DataIn>,
   urlPath: string,
-  onUpdate: (
-    newData: DeepUnion<DataIn, DataOut>
-  ) => DeepUnion<DataIn, DataOut> = identity
+  onUpdate?: (newData: DeepUnion<DataIn, DataOut>) => void
 ) {
   return class ExternalUser {
     readonly id!: string;
@@ -54,9 +52,11 @@ export default function ExternalUser<DataIn extends {}, DataOut extends {}>(
     }
 
     update(updates: UpdateObject<DataIn>) {
+      const newData: any = applyUpdates(this.data, updates);
+      onUpdate?.(newData);
       return new (this.constructor as Constructor<this, [string, DataIn]>)(
         this.id,
-        onUpdate(applyUpdates(this.data, updates) as any) as any
+        newData
       );
     }
   };

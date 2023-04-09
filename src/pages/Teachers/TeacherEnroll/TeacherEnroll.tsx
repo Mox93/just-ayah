@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { PartialDeep } from "type-fest";
 
@@ -11,9 +10,7 @@ import Teacher, { TeacherFormData } from "models/teacher";
 
 import TeacherForm from "../TeacherForm";
 
-interface TeacherEnrollProps {}
-
-const TeacherEnroll: VFC<TeacherEnrollProps> = () => {
+export default function TeacherEnroll() {
   const tch = usePageT("teacher");
 
   const { openModal } = usePopupContext();
@@ -42,6 +39,4 @@ const TeacherEnroll: VFC<TeacherEnrollProps> = () => {
       />
     </FormLayout>
   );
-};
-
-export default TeacherEnroll;
+}

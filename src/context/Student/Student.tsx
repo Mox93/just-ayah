@@ -1,5 +1,11 @@
 import { collection, CollectionReference } from "firebase/firestore";
-import { createContext, FC, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 import {
   useAddDoc,
@@ -14,6 +20,7 @@ import {
   FetchDataFunc,
   UpdateDataFunc,
 } from "models";
+import { changeDateUpdated } from "models/blocks";
 import Student, {
   studentConverter,
   StudentDB,
@@ -41,9 +48,7 @@ interface StudentContext {
 
 const studentContext = createContext<StudentContext | null>(null);
 
-interface StudentProviderProps {}
-
-export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
+export function StudentProvider({ children }: PropsWithChildren) {
   const [students, setStudents] = useState<Student[]>([]);
 
   const addStudent = useAddDoc({
@@ -60,14 +65,20 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
 
   const getStudent = useGetDoc({ collectionRef: studentRef });
 
-  const updateStudent = useUpdateDoc({ collectionRef, setData: setStudents });
+  const updateStudent = useUpdateDoc({
+    collectionRef,
+    setData: setStudents,
+    processUpdates: changeDateUpdated("meta"),
+  });
 
   const addNote = useCallback<AddCommentFunc>(
     (id, note) => {
       const { dateCreated } = note;
-      updateStudent(id, {
-        [`meta.notes.${dateCreated.getTime()}`]: note,
-      });
+      updateStudent(
+        id,
+        { [`meta.notes.${dateCreated.getTime()}`]: note },
+        { applyLocally: true }
+      );
     },
     [updateStudent]
   );
@@ -86,7 +97,7 @@ export const StudentProvider: FC<StudentProviderProps> = ({ children }) => {
       {children}
     </studentContext.Provider>
   );
-};
+}
 
 export function useStudentContext() {
   const context = useContext(studentContext);

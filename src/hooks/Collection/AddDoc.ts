@@ -2,7 +2,7 @@ import { addDoc } from "firebase/firestore";
 import { useCallback } from "react";
 import { Class } from "type-fest";
 
-import { AddDataFunc, BaseModel } from "models";
+import { AddDataFunc, DataModel } from "models";
 import { devOnly } from "utils";
 
 import {
@@ -13,10 +13,10 @@ import {
 } from "./Collection.types";
 
 interface UseAddDocProps<T> extends BaseCollectionProps<T> {
-  DataClass?: Class<T>;
+  DataClass: Class<T>;
 }
 
-export default function useAddDoc<T extends BaseModel>({
+export default function useAddDoc<T extends DataModel>({
   collectionRef,
   setData,
   DataClass,
@@ -36,9 +36,7 @@ export default function useAddDoc<T extends BaseModel>({
         .then((docRef, ...args) => {
           if (applyLocally)
             setData?.((state) => [
-              DataClass
-                ? new DataClass(docRef.id, data.data)
-                : { ...data, id: docRef.id },
+              new DataClass(docRef.id, data.data),
               ...state,
             ]);
           onFulfilled(docRef, ...args);

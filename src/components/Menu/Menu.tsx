@@ -1,69 +1,86 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { Button, SizeVariant, ButtonVariant } from "components/Buttons";
+import { ReactComponent as CheckMarkIcon } from "assets/icons/checkmark-svgrepo-com.svg";
+import { Button, ButtonProps } from "components/Buttons";
 import Container from "components/Container";
-import { CheckMark } from "components/Icons";
+import { LoadingDots } from "components/Icons";
 import { Converter, GetKey } from "models";
 import { applyInOrder, cn, FunctionOrChain, identity, pass } from "utils";
 
-interface MenuProps<TItem> {
-  items: TItem[];
+import { useListFilter, UseListFilterProps } from "./Menu.utils";
+
+export interface MenuProps<TOption>
+  extends UseListFilterProps<TOption>,
+    Pick<ButtonProps, "variant" | "size" | "isLoading"> {
   header?: ReactNode;
   className?: string;
-  dir?: string;
   withCheckMark?: boolean;
-  renderElement?: FunctionOrChain<TItem, ReactNode>;
-  variant?: ButtonVariant | null;
-  size?: SizeVariant | null;
-  checkIsSelected?: Converter<TItem, boolean>;
-  getKey?: GetKey<TItem>;
-  onSelect?: (item: TItem) => void;
+  renderElement?: FunctionOrChain<TOption, ReactNode>;
+  checkIsSelected?: Converter<TOption, boolean>;
+  getKey?: GetKey<TOption>;
+  onSelect?: (item: TOption) => void;
 }
 
-const Menu = <TItem,>(
+export default forwardRef(function Menu<TItem>(
   {
-    items,
+    options,
     className,
     dir,
     header,
     variant = "plain-text",
     size = "small",
     withCheckMark,
-    checkIsSelected = pass(false),
+    searchFields,
     renderElement = identity,
+    isLoading,
+    checkIsSelected = pass(false),
     getKey = identity,
     onSelect,
   }: MenuProps<TItem>,
   ref: Ref<HTMLDivElement>
-) => {
+) {
+  const [optionList, searchBar] = useListFilter({ options, searchFields, dir });
+
   const render = applyInOrder(renderElement);
 
   return (
     <Container
       variant="menu"
-      {...{ dir, header, ref }}
+      {...{ dir, ref }}
+      header={
+        (header || searchBar) && (
+          <>
+            {header}
+            {searchBar}
+          </>
+        )
+      }
       className={cn("Menu", className)}
     >
-      {items.map((item) => {
-        const isSelected = checkIsSelected(item);
+      {isLoading ? (
+        <LoadingDots />
+      ) : (
+        optionList.map((option) => {
+          const isSelected = checkIsSelected(option);
 
-        return (
-          <Button
-            key={getKey(item)}
-            className={cn("item", {
-              withCheckMark,
-              selected: isSelected,
-            })}
-            onClick={onSelect && pass(onSelect, item)}
-            {...{ variant, size, dir }}
-          >
-            {render(item)}
-            {withCheckMark && isSelected && <CheckMark dir={dir} />}
-          </Button>
-        );
-      })}
+          return (
+            <Button
+              key={getKey(option)}
+              className={cn("item", {
+                withCheckMark,
+                selected: isSelected,
+              })}
+              onClick={pass(onSelect, option)}
+              {...{ variant, size, dir }}
+            >
+              {render(option)}
+              {withCheckMark && isSelected && (
+                <CheckMarkIcon className="CheckMark icon" />
+              )}
+            </Button>
+          );
+        })
+      )}
     </Container>
   );
-};
-
-export default forwardRef(Menu);
+});

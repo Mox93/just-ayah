@@ -1,16 +1,18 @@
-import { useEffect, VFC } from "react";
-
 import { Button } from "components/Buttons";
 import { Table } from "components/Table";
 import { useStudentContext } from "context";
-import { useGlobalT, useLoading, usePageT, useSelect } from "hooks";
-import { prodOnly } from "utils";
+import {
+  useApplyOnce,
+  useGlobalT,
+  useLoading,
+  usePageT,
+  useSelect,
+} from "hooks";
+import { IS_PROD } from "models/config";
 
 import { useTableFields } from "./StudentList.utils";
 
-interface StudentListProps {}
-
-const StudentList: VFC<StudentListProps> = () => {
+export default function StudentList() {
   const glb = useGlobalT();
   const stu = usePageT("student");
 
@@ -24,26 +26,20 @@ const StudentList: VFC<StudentListProps> = () => {
     fetchStudents({ onCompleted: stopLoading });
   });
 
-  useEffect(
-    prodOnly(() => {
-      if (!students.length) loadStudents();
-    }),
-    []
-  );
-
-  const fields = useTableFields();
+  useApplyOnce(loadStudents, IS_PROD && !students.length);
 
   return (
-    <div className="StudentList">
+    <>
       {selected.size > 0 && (
         <div className="selectionCounter">
           {stu("counter", { count: selected.size })}
         </div>
       )}
       <Table
-        {...{ fields, selected }}
+        {...{ selected, toggleSelect }}
+        className="StudentList"
+        fields={useTableFields()}
         data={students}
-        toggleSelect={toggleSelect}
         extraProps={({ data: { gender } }) => ({ gender })}
         footer={
           <Button
@@ -56,8 +52,6 @@ const StudentList: VFC<StudentListProps> = () => {
           </Button>
         }
       />
-    </div>
+    </>
   );
-};
-
-export default StudentList;
+}

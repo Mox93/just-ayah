@@ -1,29 +1,16 @@
-import { useEffect, VFC } from "react";
+import { useEffect } from "react";
 
-import { LoadingSpinner } from "components/Icons";
 import { usePopupContext } from "context";
-import Container from "components/Container";
+import { LoadingProps } from "context/Popup/Loading";
 
-interface LoadingPopupProps {
-  message?: string;
-}
-
-const LoadingPopup: VFC<LoadingPopupProps> = ({ message }) => {
-  const { openModal, closeModal } = usePopupContext();
+export default function LoadingPopup({ message }: LoadingProps) {
+  const { startLoading, stopLoading } = usePopupContext();
 
   useEffect(() => {
-    openModal(
-      <Container variant="card" className="LoadingPopup">
-        {message}
-        <LoadingSpinner />
-      </Container>,
-      { center: true }
-    );
+    startLoading(message);
 
-    return closeModal;
-  }, []);
+    return stopLoading;
+  }, [message]);
 
   return null;
-};
-
-export default LoadingPopup;
+}

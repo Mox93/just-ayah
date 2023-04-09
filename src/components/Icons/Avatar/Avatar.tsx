@@ -1,17 +1,24 @@
-import { VFC } from "react";
+import { useState } from "react";
+
+import UserProfile from "assets/icons/user-profile.svg";
+import { cn } from "utils";
 
 interface AvatarProps {
-  url?: string;
+  url: string | undefined | null;
+  className?: string;
 }
 
-const Avatar: VFC<AvatarProps> = ({ url }) => {
+export default function Avatar({ url, className }: AvatarProps) {
+  const [failed, setFailed] = useState(false);
+
   return (
-    <div className="Avatar">
-      <div className="body" />
-      <div className="head" />
-      {url && <img className="photo" src={url} alt="avatar" />}
+    <div className={cn("Avatar", className)}>
+      <img
+        className={cn("photo")}
+        src={url && !failed ? url : UserProfile}
+        alt=""
+        onError={() => setFailed(true)}
+      />
     </div>
   );
-};
-
-export default Avatar;
+}

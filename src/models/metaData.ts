@@ -1,47 +1,12 @@
-import { CountryCode, getCountry } from "./blocks";
+import { z } from "zod";
 
-interface ShortList {
-  teachers?: string[];
-  courses?: string[];
-}
+import { userIndexSchema } from "./blocks/user";
+import { courseIndexSchema } from "./course";
 
-interface StudentSearchFields {
-  name: string;
-  phoneNumber: string[];
-}
+export const metaDataSchema = z.object({
+  studentIndex: z.array(userIndexSchema),
+  teacherIndex: z.array(userIndexSchema),
+  courseIndex: z.array(courseIndexSchema),
+});
 
-interface PersonIndexInDB {
-  [id: string]: StudentSearchFields;
-}
-
-export type PersonIndex = (StudentSearchFields & {
-  id: string;
-})[];
-
-export interface MetaDataInDB {
-  shortList?: ShortList;
-  studentIndex?: PersonIndexInDB;
-  teacherIndex?: PersonIndexInDB;
-}
-
-export interface MetaData {
-  shortList: ShortList;
-  studentIndex: PersonIndex;
-  teacherIndex: PersonIndex;
-}
-
-export const metaDataDocs: (keyof MetaData)[] = ["shortList", "studentIndex"];
-
-export const personIndexFromDB = (
-  studentIndex?: PersonIndexInDB
-): PersonIndex =>
-  Object.entries(studentIndex || {}).map(([id, { phoneNumber, ...data }]) => ({
-    id,
-    phoneNumber: phoneNumber.map((value) => {
-      const [code, ...number] = value.split("-", 1);
-      return [getCountry(code as CountryCode)?.phone ?? code, ...number].join(
-        ""
-      );
-    }),
-    ...data,
-  }));
+export type MetaData = z.infer<typeof metaDataSchema>;

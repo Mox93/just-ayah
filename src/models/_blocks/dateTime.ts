@@ -1,6 +1,5 @@
 import { Timestamp } from "firebase/firestore";
 import { RequireAtLeastOne } from "type-fest";
-import { z } from "zod";
 
 import { identity, range, addZeros } from "utils";
 
@@ -23,6 +22,7 @@ export const timeDeltaUnits = [
   "day",
   "hour",
   "minute",
+  "second",
 ] as const;
 
 export type TimeDeltaUnits = typeof timeDeltaUnits[number];
@@ -37,18 +37,6 @@ export interface TimeInfo12H {
 
 export const hours = (h24?: boolean) => (h24 ? range(24) : range(1, 13));
 export const minutes = (interval = 1) => range(0, 60, interval);
-
-export const weekDaySchema = z.enum([
-  "Fri",
-  "Sat",
-  "Sun",
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-]);
-
-export type WeekDay = z.infer<typeof weekDaySchema>;
 
 export const getAge = (date: string | number | Date) => {
   const today = new Date();
@@ -158,28 +146,48 @@ const millisecondsPerUnit: {
   month: 2.628e9,
   day: 8.64e7,
   hour: 3.6e6,
-  minute: 60000,
+  minute: 6e4,
+  second: 1e3,
 };
 
-interface GetTimeDelta {
-  (date1: Date, date2: Date, maxUnit?: "year"): Required<TimeDelta>;
-  (date1: Date, date2: Date, maxUnit?: "month"): Required<
-    Omit<TimeDelta, "year">
-  >;
-  (date1: Date, date2: Date, maxUnit?: "day"): Required<
-    Omit<TimeDelta, "year" | "month">
-  >;
-  (date1: Date, date2: Date, maxUnit?: "hour"): Required<
-    Omit<TimeDelta, "year" | "month" | "day">
-  >;
-  (date1: Date, date2: Date, maxUnit?: "minute"): Required<
-    Omit<TimeDelta, "year" | "month" | "day" | "hour">
-  >;
-  (date1: Date, date2: Date, maxUnit?: TimeDeltaUnits): TimeDelta;
+function getTimeDelta(
+  date1: Date,
+  date2: Date,
+  maxUnit?: "year"
+): Required<TimeDelta>;
+function getTimeDelta(
+  date1: Date,
+  date2: Date,
+  maxUnit?: "month"
+): Required<Omit<TimeDelta, "year">>;
+function getTimeDelta(
+  date1: Date,
+  date2: Date,
+  maxUnit?: "day"
+): Required<Omit<TimeDelta, "year" | "month">>;
+function getTimeDelta(
+  date1: Date,
+  date2: Date,
+  maxUnit?: "hour"
+): Required<Omit<TimeDelta, "year" | "month" | "day">>;
+function getTimeDelta(
+  date1: Date,
+  date2: Date,
+  maxUnit?: "minute"
+): Required<Omit<TimeDelta, "year" | "month" | "day" | "hour">>;
+function getTimeDelta(
+  date1: Date,
+  date2: Date,
+  maxUnit?: "second"
+): Required<Omit<TimeDelta, "year" | "month" | "day" | "hour" | "minute">>;
+function getTimeDelta(
+  date1: Date,
+  date2: Date,
+  maxUnit?: TimeDeltaUnits
+): TimeDelta;
+function getTimeDelta(date1: Date, date2: Date, maxUnit?: TimeDeltaUnits) {
+  return msToTd(Math.abs(date1.getTime() - date2.getTime()), maxUnit);
 }
-
-export const getTimeDelta: GetTimeDelta = (date1, date2, maxUnit = "year") =>
-  msToTd(Math.abs(date1.getTime() - date2.getTime()), maxUnit) as any;
 
 export const msToTd = (
   milliseconds: number,
@@ -249,8 +257,4 @@ export const toDate = (value: unknown) => {
   }
 };
 
-export const dateSchema = z
-  .union([z.coerce.date(), z.instanceof(Timestamp)])
-  .transform((value) => (value instanceof Timestamp ? value.toDate() : value));
-
-export type DateValue = z.input<typeof dateSchema>;
+export { getTimeDelta };

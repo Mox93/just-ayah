@@ -1,3 +1,4 @@
+import { countryCodeSchema } from "./blocks/country";
 import { z } from "zod";
 
 import { dbConverter } from "utils";
@@ -8,7 +9,8 @@ import {
   externalUserSchema,
   BaseModel,
 } from "./abstract";
-import { dateSchema } from "./_blocks";
+import { dateSchema } from "./blocks";
+import { courseIndexSchema } from "./course";
 import {
   booleanSchema,
   commentListSchema,
@@ -20,18 +22,20 @@ import {
   scheduleSchema,
   simplePhoneNumberListSchema,
   subscriptionSchema,
+  timezoneCodeSchema,
   timezoneSchema,
   trackableSchema,
+  userIndexSchema,
   workStatusSchema,
 } from "./blocks";
 
 const metaSchema = trackableSchema.merge(
   z
     .object({
-      course: z.string(),
-      teacher: z.string(),
+      course: courseIndexSchema,
+      teacher: userIndexSchema,
       schedule: scheduleSchema,
-      sessions: z.number().int(),
+      sessions: z.number().int().positive(),
       lead: z.string(),
       termsOfService: z.string(),
       progress: progressSchema,
@@ -46,13 +50,11 @@ const metaSchema = trackableSchema.merge(
     .partial()
 );
 
-const metaDBSchema = metaSchema.merge(
-  z.object({ notes: commentMapSchema }).partial()
-);
+const metaDBSchema = metaSchema.extend({ notes: commentMapSchema }).partial();
 
 const studentSchema = z.object({
   firstName: z.string(),
-  middleName: z.string(),
+  middleName: z.string().optional(), // TODO make required once all data is valid in the DB
   lastName: z.string(),
   gender: genderSchema,
   governorate: z.string().optional(),
@@ -62,20 +64,25 @@ const studentSchema = z.object({
   dateOfBirth: dateSchema,
   nationality: countrySchema,
   country: countrySchema,
-  timezone: z.optional(timezoneSchema),
+  timezone: timezoneSchema.optional(),
   phoneNumber: phoneNumberListSchema,
   workStatus: workStatusSchema,
   meta: metaSchema.default({}),
 });
 
-const studentDBSchema = studentSchema.extend({
-  meta: metaDBSchema.default({}),
+const simpleFields = {
   phoneNumber: simplePhoneNumberListSchema,
+  nationality: countryCodeSchema,
+  country: countryCodeSchema,
+  timezone: timezoneCodeSchema.optional(),
+};
+
+const studentDBSchema = studentSchema.extend({
+  ...simpleFields,
+  meta: metaDBSchema.default({}),
 });
 
-const studentFormSchema = studentSchema.extend({
-  phoneNumber: simplePhoneNumberListSchema,
-});
+const studentFormSchema = studentSchema.extend(simpleFields);
 
 export default class Student extends DataModel(studentSchema) {
   static DB = BaseModel(studentDBSchema);

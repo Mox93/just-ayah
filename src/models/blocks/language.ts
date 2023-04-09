@@ -1,6 +1,6 @@
-export const languages: { [id: string]: { nativeName: string } } = {
+export const languages = {
   ar: { nativeName: "ع" },
   en: { nativeName: "En" },
-} as const;
+};
 
-export type Languages = keyof typeof languages;
+export type Language = keyof typeof languages;

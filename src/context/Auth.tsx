@@ -9,13 +9,13 @@ import {
 } from "firebase/auth";
 import {
   createContext,
-  FC,
+  PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
   useState,
 } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { To, useLocation } from "react-router-dom";
 
 import LoadingPopup from "components/LoadingPopup";
 import { useGlobalT, useLanguage, useLocalStorage } from "hooks";
@@ -25,16 +25,12 @@ import { pass } from "utils";
 
 const googleAuthProvider = new GoogleAuthProvider();
 
-export interface LocationState {
-  from?: Location;
-}
-
 interface AuthContext {
   user: User | null;
   signIn: VoidFunction;
   signOut: VoidFunction;
-  authenticated: (path?: string) => boolean;
-  authorized: (path?: string) => boolean;
+  authenticated: (path?: To) => boolean;
+  authorized: (path?: To) => boolean;
 }
 
 interface Claims extends ParsedToken {
@@ -59,16 +55,13 @@ const authContext = createContext(initialState);
 
 export const useAuthContext = () => useContext(authContext);
 
-interface AuthProviderProps {}
-
-export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
+export function AuthProvider({ children }: PropsWithChildren) {
   const glb = useGlobalT();
   // TODO move this into a reducer
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [claims, setClaims] = useState<Claims>({});
-  const { state } = useLocation() as Location<LocationState | undefined>;
-  const navigate = useNavigate();
+  const { state } = useLocation() as Location<{ from: To } | undefined>;
   const [language] = useLanguage();
   auth.languageCode = language;
 
@@ -80,7 +73,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const authorized = useCallback(() => !!user, [user]);
   // claims.roles?.admin;
 
-  const signInSession = useLocalStorage<LocationState>("signInSession");
+  const signInSession = useLocalStorage<{ from: To }>("signInSession");
 
   const signIn = useCallback(() => {
     if (state) signInSession.set(state);
@@ -94,10 +87,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     getRedirectResult(auth).then((result) => {
       if (!result) return;
 
-      const { from } = signInSession.data ?? {};
       signInSession.clear();
-
-      if (from) navigate(from);
     });
     /*
       .then((result) => {
@@ -134,7 +124,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       },
       (error) => console.log("onAuthStateChanged.ERROR", error)
     );
-  }, [navigate, signInSession]);
+  }, [signInSession]);
 
   return (
     <authContext.Provider
@@ -143,4 +133,4 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       {ready ? children : <LoadingPopup message={glb("loading")} />}
     </authContext.Provider>
   );
-};
+}

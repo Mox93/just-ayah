@@ -1,16 +1,16 @@
 import { MutableRefObject, Ref } from "react";
 
-export const mergeRefs =
-  <T>(...refs: (Ref<T> | undefined)[]) =>
-  (node: T) => {
+export function mergeRefs<T>(...refs: (Ref<T | null> | undefined)[]) {
+  return (instance: T | null) => {
     refs.forEach((ref) => {
       if (typeof ref === "function") {
-        ref(node);
+        ref(instance);
       } else if (ref) {
-        (ref as MutableRefObject<T>).current = node;
+        (ref as MutableRefObject<T | null>).current = instance;
       }
     });
   };
+}
 
 export const mergeCallbacks = (...callbacks: any[]) => {
   const validCallbacks = callbacks.filter(

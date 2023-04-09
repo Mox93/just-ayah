@@ -1,38 +1,43 @@
-import { useEffect, VFC } from "react";
 import { Outlet } from "react-router-dom";
 
-import Sidebar from "components/Sidebar";
-import { useDirT } from "hooks";
-import { usePopupContext } from "context";
+import { Await } from "components/Await";
+import { useApplyOnce } from "hooks";
+import { useHeaderProps, usePopupContext } from "context";
+import { IS_PROD } from "models/config";
 
-interface AdminProps {}
+import Navbar from "../Navbar/Navbar";
+import Header from "../Header/Header";
 
-const Admin: VFC<AdminProps> = () => {
-  const dirT = useDirT();
-
+export default function Admin() {
   const { openToast } = usePopupContext();
 
-  useEffect(() => {
-    openToast(
-      <>
-        <p>
-          This app is still in its development phase so there will be a lot
-          changes in the future. I'd appreciate your feedback and ideas to
-          improve the app. If you're facing any issues, please contact me right
-          away.
-        </p>
-        <b>email: mohamed.ragaiy.saleh@gmail.com</b>
-      </>,
-      { dir: "ltr" }
-    );
-  }, []);
+  useApplyOnce(
+    () =>
+      openToast(
+        <>
+          <span>
+            This app is still under development so it's expected things will
+            change along the way. Your feedback and ideas to improve the app
+            would be greatly appreciated. If you're facing any issues, don't
+            hesitate to get in touch right away.
+          </span>
+          <br />
+          <b>email: mohamed.ragaiy.saleh@gmail.com</b>
+        </>,
+        { dir: "ltr" }
+      ),
+    IS_PROD
+  );
 
   return (
-    <div className="Admin" dir={dirT}>
-      <Sidebar />
-      <Outlet />
-    </div>
+    <>
+      <Navbar />
+      <Header {...useHeaderProps()} />
+      <main className="Admin followSidebar">
+        <Await>
+          <Outlet />
+        </Await>
+      </main>
+    </>
   );
-};
-
-export default Admin;
+}

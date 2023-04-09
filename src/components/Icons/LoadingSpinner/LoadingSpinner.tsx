@@ -1,18 +1,18 @@
-import { VFC } from "react";
-
 import { ReactComponent as Spinner } from "assets/icons/loading-spinner.svg";
 import { cn } from "utils";
 
 interface LoadingSpinnerProps {
   className?: string;
+  icon?: boolean;
 }
 
-const LoadingSpinner: VFC<LoadingSpinnerProps> = ({ className }) => {
+export default function LoadingSpinner({
+  className,
+  icon,
+}: LoadingSpinnerProps) {
   return (
-    <div className={cn("LoadingSpinner", className)}>
-      <Spinner className="icon" />
+    <div className={cn("LoadingSpinner", className, { icon })}>
+      <Spinner className="spinner" />
     </div>
   );
-};
-
-export default LoadingSpinner;
+}

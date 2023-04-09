@@ -1,0 +1,36 @@
+.NavItem {
+  --nav-element-padding: var(--spacing-m);
+  --fixed-width: calc(
+    var(--closed-sidebar-width) - (2 * var(--navbar-padding)) -
+      (2 * var(--nav-element-padding))
+  );
+  --fg-color: var(--fg-idle-color);
+  --bg-color: var(--bg-idle-color);
+  --fill-color: var(--fg-color);
+  --stroke-color: none;
+
+  background-color: var(--bg-color);
+  padding: var(--nav-element-padding);
+  border-radius: var(--radius-s);
+  text-transform: capitalize;
+
+  .HiddenLabel {
+    align-items: end;
+  }
+
+  &:hover {
+    --bg-color: var(--bg-hover-color);
+  }
+
+  &.isActive {
+    --fg-color: var(--fg-active-color);
+    --bg-color: var(--bg-active-color);
+  }
+
+  .label {
+    &,
+    * {
+      color: var(--fg-color);
+    }
+  }
+}

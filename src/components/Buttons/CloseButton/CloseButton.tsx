@@ -1,23 +1,14 @@
-import { HTMLAttributes, VFC } from "react";
+import { HTMLAttributes } from "react";
 
 import { ReactComponent as Cross } from "assets/icons/close-svgrepo-com.svg";
-import { useDirT } from "hooks";
 import { cn } from "utils";
 
 interface CloseButtonProps extends HTMLAttributes<HTMLButtonElement> {}
 
-const CloseButton: VFC<CloseButtonProps> = ({ className, dir, ...props }) => {
-  const dirT = useDirT();
-
+export default function CloseButton({ className, ...props }: CloseButtonProps) {
   return (
-    <button
-      {...props}
-      className={cn("CloseButton", className)}
-      dir={dir || dirT}
-    >
+    <button {...props} className={cn("CloseButton", className)}>
       <Cross className="icon" />
     </button>
   );
-};
-
-export default CloseButton;
+}

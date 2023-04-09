@@ -18,7 +18,53 @@ $desktopSize: 35.01rem;
   }
 }
 
+@mixin ltrDir($parent: null, $child: null) {
+  &[dir="ltr"] {
+    @content;
+  }
+
+  @if $child {
+    @at-root [dir="ltr"] #{$child}:not([dir="rtl"]) {
+      @content;
+    }
+
+    @if $parent {
+      @at-root #{$parent}[dir="ltr"] #{$child}:not([dir="rtl"]) {
+        @content;
+      }
+    }
+  } @else {
+    [dir="ltr"] &:not([dir="rtl"]) {
+      @content;
+    }
+  }
+}
+
+@mixin rtlDir($parent: null, $child: null) {
+  &[dir="rtl"] {
+    @content;
+  }
+
+  @if $child {
+    @at-root [dir="rtl"] #{$child}:not([dir="ltr"]) {
+      @content;
+    }
+
+    @if $parent {
+      @at-root #{$parent}[dir="rtl"] #{$child}:not([dir="ltr"]) {
+        @content;
+      }
+    }
+  } @else {
+    [dir="rtl"] &:not([dir="ltr"]) {
+      @content;
+    }
+  }
+}
+
 @mixin positioning(
+  $parent: null,
+  $child: null,
   $position: absolute,
   $blockDir: start,
   $inlineDir: start,
@@ -33,36 +79,81 @@ $desktopSize: 35.01rem;
   position: $position;
   transform: translate(var(--x-displacement), var(--y-displacement));
 
-  @if $blockDir == start {
-    top: $block;
-  } @else if $blockDir == end {
-    bottom: $block;
-  }
+  inset-block-#{$blockDir}: $block;
+  inset-inline-#{$inlineDir}: $inline;
 
-  @if $inlineDir == start {
-    &[dir="ltr"],
-    &:not([dir]) {
-      left: $inline;
+  @if $x != 0 {
+    @if $inlineDir == start {
+      @include ltrDir($parent, $child) {
+        --x-displacement: #{$x};
+      }
+
+      @include rtlDir($parent, $child) {
+        --x-displacement: calc(#{$x} * -1);
+      }
     }
 
-    &[dir="rtl"] {
-      --x-displacement: calc(#{$x} * -1);
+    @if $inlineDir == end {
+      @include rtlDir($parent, $child) {
+        --x-displacement: #{$x};
+      }
 
-      right: $inline;
-    }
-  } @else if $inlineDir == end {
-    &[dir="ltr"],
-    &:not([dir]) {
-      --x-displacement: calc(#{$x} * -1);
-
-      right: $inline;
-    }
-
-    &[dir="rtl"] {
-      left: $inline;
+      @include ltrDir($parent, $child) {
+        --x-displacement: calc(#{$x} * -1);
+      }
     }
   }
 }
+
+// @mixin positioning(
+//   $position: absolute,
+//   $blockDir: start,
+//   $inlineDir: start,
+//   $x: -50%,
+//   $y: -50%,
+//   $inline: 50%,
+//   $block: 50%
+// ) {
+//   --x-displacement: #{$x};
+//   --y-displacement: #{$y};
+
+//   position: $position;
+//   transform: translate(var(--x-displacement), var(--y-displacement));
+
+//   @if $blockDir == start {
+//     top: $block;
+//   } @else if $blockDir == end {
+//     bottom: $block;
+//   }
+
+//   @if $inlineDir == start {
+//     &[dir="ltr"],
+//     &:not([dir]) {
+//       left: $inline;
+//     }
+
+//     &[dir="rtl"] {
+//       @if $x != 0 {
+//         --x-displacement: calc(#{$x} * -1);
+//       }
+
+//       right: $inline;
+//     }
+//   } @else if $inlineDir == end {
+//     &[dir="ltr"],
+//     &:not([dir]) {
+//       @if $x != 0 {
+//         --x-displacement: calc(#{$x} * -1);
+//       }
+
+//       right: $inline;
+//     }
+
+//     &[dir="rtl"] {
+//       left: $inline;
+//     }
+//   }
+// }
 
 @mixin withoutBorder($borderRadius: none) {
   --r-border: #{$borderRadius};
@@ -83,7 +174,7 @@ $desktopSize: 35.01rem;
 
 @mixin withBorder(
   $states: none,
-  $borderRadius: 0.25rem,
+  $borderRadius: var(--radius-s),
   $borderColor: var(--c-gray-300)
 ) {
   --c-border: #{$borderColor};
@@ -108,18 +199,6 @@ $desktopSize: 35.01rem;
       --c-outline: var(--c-border);
     }
   }
-}
-
-// deprecated
-@mixin mainButton {
-  height: 3rem;
-  padding: 1rem 2rem;
-  border-radius: 0.25rem;
-  background-color: var(--c-success);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--c-white);
-  text-transform: capitalize;
 }
 
 @mixin menuItem {
@@ -160,19 +239,25 @@ $desktopSize: 35.01rem;
 }
 
 @mixin sidebarAnimation($property, $delay: 0) {
-  transition-delay: $delay;
+  @if $delay != 0 {
+    transition-delay: $delay;
+  }
+
   transition-property: $property;
   transition-duration: 100ms;
   transition-timing-function: ease-in-out;
 }
 
-@mixin circle($size, $color) {
-  min-width: $size;
-  min-height: $size;
+@mixin circle($size, $color: auto) {
   width: $size;
-  height: $size;
-  background-color: $color;
+  min-width: $size;
+  max-width: $size;
+  aspect-ratio: 1;
   border-radius: 50%;
+
+  @if $color != auto {
+    background-color: $color;
+  }
 }
 
 @mixin genderColorCoding {
@@ -182,5 +267,19 @@ $desktopSize: 35.01rem;
 
   &[gender="female"] {
     background-color: var(--c-female);
+  }
+}
+
+@mixin searchField {
+  .searchField {
+    --fill-color: var(--c-gray-300);
+
+    &:focus-within {
+      --fill-color: var(--c-primary-300);
+    }
+
+    .FieldWrapper {
+      gap: var(--spacing-m);
+    }
   }
 }

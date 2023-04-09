@@ -1,5 +1,4 @@
 import {
-  FC,
   HTMLAttributes,
   InputHTMLAttributes,
   ReactNode,
@@ -60,7 +59,7 @@ interface TimeInputProps extends HTMLAttributes<HTMLDivElement> {
   setValue?: (value: TimeInfo) => void;
 }
 
-const TimeInput: FC<TimeInputProps> = ({
+export default function TimeInput({
   label,
   isRequired,
   isInvalid,
@@ -73,7 +72,7 @@ const TimeInput: FC<TimeInputProps> = ({
   minutesInterval,
   setValue,
   ...props
-}) => {
+}: TimeInputProps) {
   const dts = useDateTimeT("symbols");
   const dtt = useDateTimeT();
 
@@ -140,6 +139,4 @@ const TimeInput: FC<TimeInputProps> = ({
       {errorMessage}
     </div>
   );
-};
-
-export default TimeInput;
+}

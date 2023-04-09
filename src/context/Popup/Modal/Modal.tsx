@@ -1,50 +1,48 @@
-import { FC, useEffect } from "react";
+import { ReactElement, Ref, useEffect } from "react";
 
 import { CloseButton } from "components/Buttons";
-import { useDirT } from "hooks";
-import { cn } from "utils";
+import { cn, documentEventFactory, oneOf, pass } from "utils";
 
 export type ModalProps = {
+  children: ReactElement;
+  className?: string;
   dismissible?: boolean;
   center?: boolean;
   dir?: string;
   close?: VoidFunction;
+  bodyRef?: Ref<HTMLDivElement>;
 };
 
-const Modal: FC<ModalProps> = ({
+export default function Modal({
   children,
   close,
   dismissible,
   center,
   dir,
-}) => {
-  const dirT = useDirT();
-
+  bodyRef,
+  className,
+}: ModalProps) {
   useEffect(() => {
     if (!dismissible) return;
 
-    const handelEscape = (event: KeyboardEvent) =>
-      event.key === "Escape" && close!();
+    const [addEvents, removeEvents] = documentEventFactory({
+      keyup: ({ key }) => oneOf(key, ["Escape"]) && close?.(),
+    });
 
-    close && document.addEventListener("keyup", handelEscape);
+    addEvents();
 
-    return () => close && document.removeEventListener("keyup", handelEscape);
+    return removeEvents;
   }, [dismissible, close]);
 
   return (
-    <div className="Modal" dir={dir || dirT}>
-      <div
-        className="background"
-        onClick={() => dismissible && close && close()}
-      />
+    <div className={cn("Modal", className)} dir={dir}>
+      <div className="background" onClick={pass(dismissible && close)} />
       <div className={cn("foreground", { center })}>
-        <div className="body">
+        <div className="body" ref={bodyRef}>
           {children}
-          {close && <CloseButton onClick={close} dir={dir || dirT} />}
+          {close && <CloseButton onClick={close} />}
         </div>
       </div>
     </div>
   );
-};
-
-export default Modal;
+}

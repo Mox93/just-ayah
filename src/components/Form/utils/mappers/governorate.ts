@@ -4,13 +4,13 @@ import { createModifier } from "utils/transformer";
 
 import { NamedChildProps, WithFormHook } from "../formModifiers";
 
-type GovernorateMapperProps<TFieldValues extends {}> =
-  NamedChildProps<TFieldValues> & {
-    countryField?: FieldPath<TFieldValues>;
-  };
+interface GovernorateMapperProps<TFieldValues extends {}>
+  extends NamedChildProps<TFieldValues> {
+  countryField?: FieldPath<TFieldValues>;
+}
 
-const governorateMapper = <TFieldValues extends {}>() =>
-  createModifier<GovernorateMapperProps<TFieldValues>>(
+export default function governorateMapper<TFieldValues extends {}>() {
+  return createModifier<GovernorateMapperProps<TFieldValues>>(
     ({
       formHook,
       name,
@@ -39,5 +39,4 @@ const governorateMapper = <TFieldValues extends {}>() =>
       };
     }
   );
-
-export default governorateMapper;
+}

@@ -1,0 +1,22 @@
+.TermsOfServicePopup {
+  --modal-height: calc(100vh - 4rem);
+
+  width: 50rem;
+  height: var(--modal-height);
+  padding-block-end: var(--spacing-l);
+
+  & > .body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-l);
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+  }
+}

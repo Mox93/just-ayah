@@ -1,16 +1,48 @@
 .DropdownWrapper {
+  --dropdown-gap: var(--spacing-s);
+  --x-gap: 0;
+  --y-gap: calc(100% + var(--dropdown-gap));
+  --buffer-size: var(--spacing-xl);
+
   position: relative;
 
-  & > * {
-    min-width: 100%;
+  & > :first-child {
+    width: 100%;
   }
 
   .buffer {
-    padding-block-end: 2rem;
     position: absolute;
-    top: calc(100% + 0.375rem);
-    z-index: 50;
     pointer-events: none;
+    z-index: 50;
+
+    &.sideMounted {
+      --x-gap: calc(100% + var(--dropdown-gap));
+      --y-gap: 0;
+    }
+
+    &:not(.sideMounted) {
+      min-width: 100%;
+    }
+
+    &.ap- {
+      &top {
+        padding-block-end: var(--buffer-size);
+        inset-block-start: var(--y-gap);
+      }
+
+      &bottom {
+        padding-block-start: var(--buffer-size);
+        inset-block-end: var(--y-gap);
+      }
+
+      &start {
+        inset-inline-start: var(--x-gap);
+      }
+
+      &end {
+        inset-inline-end: var(--x-gap);
+      }
+    }
 
     * {
       pointer-events: auto;

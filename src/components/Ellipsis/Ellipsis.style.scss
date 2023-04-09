@@ -1,3 +1,5 @@
+@use "styles/abstracts/mixins" as *;
+
 .Ellipsis {
   position: relative;
   max-width: 100%;
@@ -8,30 +10,21 @@
     align-items: center;
     justify-content: center;
 
-    span {
-      --ellipsis-width: 1.375rem;
-
-      &:first-child,
-      &:last-child {
+    & > span {
+      &.start,
+      &.end {
         display: inline-block;
-        max-width: calc(50% - var(--ellipsis-width) / 2);
+        flex: 1;
         overflow-x: hidden;
         white-space: nowrap;
         text-overflow: "";
       }
 
-      &:nth-child(2) {
-        width: var(--ellipsis-width);
-      }
-
-      &:last-child {
-        &[dir="rtl"] {
-          direction: ltr;
-        }
-
-        &[dir="ltr"] {
-          direction: rtl;
-        }
+      &.sizeMeasure {
+        white-space: nowrap;
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
       }
     }
   }
@@ -40,5 +33,16 @@
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  &.end,
+  & > .end {
+    @include rtlDir {
+      direction: ltr;
+    }
+
+    @include ltrDir {
+      direction: rtl;
+    }
   }
 }

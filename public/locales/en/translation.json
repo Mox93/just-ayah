@@ -3,7 +3,9 @@
   "globals": {
     "googleSignIn": "enter with Google",
     "joinInitiative": "join the initiative",
-    "signOut": "sign out",
+    "logout": "logout",
+    "settings": "settings",
+    "myAccount": "my account",
     "yes": "yes",
     "no": "no",
     "dateCreated": "date created",
@@ -47,7 +49,11 @@
     "status": "status",
     "subscription": "subscription",
     "justAyah": "Just Ayah",
-    "acceptTermsOfService": "accept terms of service"
+    "acceptTermsOfService": "accept terms of service",
+    "termsOfService": "terms of service",
+    "name": "name",
+    "numberOfSessions": "number of sessions",
+    "add": "add"
   },
   "dateTime": {
     "day": "day",
@@ -89,7 +95,10 @@
     "home": "home",
     "students": "students",
     "teachers": "teachers",
-    "courses": "programs"
+    "leads": "leads",
+    "staff": "staff",
+    "courses": "programs",
+    "users": "users"
   },
   "personalInfo": {
     "fullName": "full name",
@@ -127,6 +136,9 @@
     "leaveQuestion": "if you have any questions or comments leave them here"
   },
   "pages": {
+    "admin": {
+      "title": "home"
+    },
     "student": {
       "title": "students",
       "counter_one": "1 student selected",
@@ -136,6 +148,7 @@
       "newEnroll": "new enroll link name"
     },
     "lead": {
+      "title": "leads",
       "formTitle": "reach out"
     },
     "teacher": {
@@ -144,6 +157,9 @@
       "newTeachers": "new teachers",
       "counter_one": "1 teacher selected",
       "counter_other": "{{count}} teachers selected"
+    },
+    "course": {
+      "title": "programs"
     }
   },
   "governorate": {
@@ -196,11 +212,14 @@
     "fieldRequired": "this field is required",
     "noComments": "no comments found to display",
     "noNotes": "no notes found to display",
-    "copied": "copied to clipboard",
+    "copied": "copied",
     "selectAvailable": "select all available contact methods for this number",
     "termsOfService": "I've read and accepted the terms of service",
-    "online": "Network connection is back",
-    "offline": "Network connection is lost",
+    "online": "Network connection back",
+    "offline": "Network connection lost",
+    "notLtOne": "the number must be at least one",
+    "noCourseName": "please enter the course name",
+    "noSessionCount": "please enter the number of sessions",
     "flash": {
       "joined": "<0><0>Thank You</0> <1>for Joining!</1></0><1>We'll contact you soon.</1>",
       "error": "<0>Something Went Wrong!</0><1>Please try again later.</1>"
@@ -208,7 +227,10 @@
     "toast": {
       "error": "<0>Error:</0> something went wrong!",
       "newStudent": "<0>Success:</0> a new student was added!",
-      "newTeacher": "<0>Success:</0> a new teacher was added!"
+      "newTeacher": "<0>Success:</0> a new teacher was added!",
+      "newCourse": "<0>Success:</0> a new program was added!",
+      "newStudentEnroll": "<0>Success:</0> a new student enroll was added!",
+      "newTeacherEnroll": "<0>Success:</0> a new teacher enroll was added!"
     }
   }
 }

@@ -1,17 +1,32 @@
 .Tabs {
   display: flex;
-  justify-content: center;
 
   .tabButton {
-    width: 10rem;
+    flex: 1;
     font-size: 1rem;
     color: var(--c-gray-300);
     border-block-end: 2px solid transparent;
+    padding: var(--spacing-s) var(--spacing-l);
+    border-start-start-radius: var(--spacing-s);
+    border-start-end-radius: var(--spacing-s);
+
+    &:hover {
+      background-color: var(--c-shadow-100);
+    }
 
     &.selected {
       color: var(--c-primary-300);
       font-weight: 600;
       border-block-end: 2px solid var(--c-primary-300);
+    }
+
+    &.next {
+      font-weight: 600;
+    }
+
+    &,
+    * {
+      text-transform: capitalize;
     }
   }
 }

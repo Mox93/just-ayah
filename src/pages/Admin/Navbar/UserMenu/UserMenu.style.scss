@@ -1,0 +1,96 @@
+.UserMenu {
+  --avatar-margin: var(--spacing-s);
+  --fixed-width: calc(
+    var(--closed-sidebar-width) - (2 * var(--navbar-padding)) -
+      (2 * var(--avatar-margin))
+  );
+  --bg-color: var(--bg-idle-color);
+  --offset-size: 0;
+
+  margin: var(--avatar-margin);
+
+  .HiddenLabel {
+    cursor: pointer;
+    border-radius: calc(var(--fixed-width) / 2);
+    background-color: var(--bg-color);
+    outline: var(--offset-size) solid var(--bg-color);
+    transition: (
+      outline-width 0.1s ease,
+      outline-color 0.2s ease,
+      background-color 0.2s ease
+    );
+
+    &:hover {
+      --bg-color: var(--bg-hover-color);
+      --offset-size: var(--spacing-m);
+    }
+
+    .label {
+      overflow: hidden;
+    }
+
+    .displayName {
+      color: var(--c-gray-100);
+      text-transform: capitalize;
+    }
+
+    .email {
+      color: var(--c-gray-200);
+    }
+  }
+
+  .Container {
+    padding: var(--spacing-l);
+
+    & > .header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-l);
+      padding: var(--spacing-l);
+      border-block-end: 1px solid var(--c-gray-100);
+
+      .Avatar {
+        --circle-size: 5rem;
+      }
+
+      .displayName {
+        color: var(--c-gray-500);
+        text-transform: capitalize;
+      }
+
+      .email {
+        color: var(--c-gray-300);
+      }
+    }
+
+    & > .body {
+      --bg-color: transparent;
+      --fg-color: var(--c-gray-300);
+      --fill-color: var(--fg-color);
+
+      .Button,
+      .navLink {
+        justify-content: flex-start;
+        align-items: end;
+        gap: var(--spacing-m);
+        text-transform: capitalize;
+      }
+
+      .navLink {
+        display: flex;
+        padding: var(--spacing-m) var(--spacing-l);
+        background-color: var(--bg-color);
+        border-radius: var(--radius-s);
+
+        &,
+        * {
+          color: var(--fg-color);
+        }
+
+        &:hover {
+          --bg-color: var(--c-gray-100);
+        }
+      }
+    }
+  }
+}

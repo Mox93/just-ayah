@@ -1,5 +1,6 @@
-export { default as StudentEnroll } from "./StudentEnroll";
-export { default as StudentFormType } from "./StudentForm";
-export { default as StudentList } from "./StudentList";
-export { default as StudentProfile } from "./StudentProfile";
-export { default as Students } from "./Students";
+import { lazy } from "react";
+
+export const Students = lazy(() => import("./Students"));
+export const StudentEnroll = lazy(() => import("./StudentEnroll"));
+export const StudentList = lazy(() => import("./StudentList"));
+export const StudentProfile = lazy(() => import("./StudentProfile"));

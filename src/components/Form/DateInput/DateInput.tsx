@@ -1,5 +1,4 @@
 import {
-  FC,
   HTMLAttributes,
   InputHTMLAttributes,
   ReactNode,
@@ -10,12 +9,13 @@ import {
 
 import { useDateTimeT } from "hooks";
 import { DateInfo, clampDate, toDateInfo } from "models/_blocks";
-import { addZeros, cn, range } from "utils";
+import { addZeros, cn } from "utils";
 import { PositionalElement } from "utils/position";
 
 import MenuInput from "../MenuInput";
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
+import { DateRange, useDateRanges as useDateRange } from "./DateInput.utils";
 
 type State = Partial<DateInfo>;
 type Action = {
@@ -46,26 +46,25 @@ interface DateInputProps extends HTMLAttributes<HTMLDivElement> {
   isRequired?: boolean;
   children?: PositionalElement<string>;
   errorMessage?: ReactNode;
-  // FIXME instead of a range for years only, we should pass a start and end dates.
-  yearsRange?: { start?: number; end?: number };
+  range?: DateRange;
   innerProps?: InputHTMLAttributes<HTMLInputElement>;
   selected?: DateInfo;
   setValue?: (value: DateInfo) => void;
 }
 
-const DateInput: FC<DateInputProps> = ({
+export default function DateInput({
   label,
   isRequired,
   isInvalid,
   children,
   errorMessage,
   className,
-  yearsRange = {},
+  range,
   innerProps,
   selected,
   setValue,
   ...props
-}) => {
+}: DateInputProps) {
   const dts = useDateTimeT("symbols");
 
   const [{ day, month, year }, dispatch] = useReducer(
@@ -89,14 +88,7 @@ const DateInput: FC<DateInputProps> = ({
     [setValue]
   );
 
-  // TODO move these to a reducer init
-  const now = new Date();
-  const {
-    start: startYear = now.getFullYear() - 100,
-    end: endYear = now.getFullYear() + 101,
-  } = yearsRange;
-
-  const daysRange = clampDate({ day: 31, month, year }).day! + 1;
+  const { days, months, years } = useDateRange({ ...range, day, month, year });
 
   return (
     <div {...props} className={cn("DateInput", className)}>
@@ -108,7 +100,7 @@ const DateInput: FC<DateInputProps> = ({
       <FieldWrapper isInvalid={isInvalid} addPartitions contentFullWidth>
         <MenuInput
           className="day"
-          options={range(1, daysRange)}
+          options={days}
           selected={day}
           setValue={update("day")}
           placeholder={dts("day")}
@@ -116,7 +108,7 @@ const DateInput: FC<DateInputProps> = ({
         />
         <MenuInput
           className="month"
-          options={range(1, 13)}
+          options={months}
           selected={month}
           setValue={update("month")}
           placeholder={dts("month")}
@@ -124,7 +116,7 @@ const DateInput: FC<DateInputProps> = ({
         />
         <MenuInput
           className="year"
-          options={range(startYear, endYear)}
+          options={years}
           selected={year}
           setValue={update("year")}
           placeholder={dts("year")}
@@ -134,6 +126,4 @@ const DateInput: FC<DateInputProps> = ({
       {errorMessage}
     </div>
   );
-};
-
-export default DateInput;
+}

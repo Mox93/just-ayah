@@ -1,9 +1,3 @@
-import { VFC } from "react";
-
-interface LeadProfileProps {}
-
-const LeadProfile: VFC<LeadProfileProps> = () => {
+export default function LeadProfile() {
   return <h1>Lead Profile</h1>;
-};
-
-export default LeadProfile;
+}

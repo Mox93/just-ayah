@@ -1,4 +1,4 @@
-import { VFC, useEffect, useState } from "react";
+import { useMemo } from "react";
 
 import { CommentsViewer } from "components/Comments";
 import { useStudentContext } from "context";
@@ -9,19 +9,16 @@ interface StudentNotesProps {
   id: string;
 }
 
-const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
-  const { students, addNote } = useStudentContext();
-  const [notes, setNotes] = useState<Comment[] | undefined>(
-    () => students.find(({ id: studentId }) => id === studentId)?.meta.notes
-  );
+export default function StudentNotes({ id }: StudentNotesProps) {
   const msg = useMessageT();
   const glb = useGlobalT();
 
-  useEffect(() => {
-    setNotes(
-      students.find(({ id: studentId }) => id === studentId)?.meta.notes
-    );
-  }, [students, id]);
+  const { students, addNote } = useStudentContext();
+
+  const notes = useMemo<Comment[] | undefined>(
+    () => students.find(({ id: _id }) => id === _id)?.meta.notes,
+    [id, students]
+  );
 
   return (
     <CommentsViewer
@@ -31,6 +28,4 @@ const StudentNotes: VFC<StudentNotesProps> = ({ id }) => {
       header={glb("notes")}
     />
   );
-};
-
-export default StudentNotes;
+}

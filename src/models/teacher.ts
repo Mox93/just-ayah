@@ -1,3 +1,4 @@
+import { userIndexMapSchema } from "./blocks/user";
 import { z } from "zod";
 
 import { dbConverter } from "utils";
@@ -12,21 +13,25 @@ import {
   booleanSchema,
   commentListSchema,
   commentMapSchema,
+  countryCodeSchema,
   countrySchema,
   genderSchema,
   phoneNumberListSchema,
   scheduleSchema,
   simplePhoneNumberListSchema,
+  timezoneCodeSchema,
   timezoneSchema,
   trackableSchema,
+  userIndexListSchema,
 } from "./blocks";
-import { dateSchema } from "./_blocks";
+import { dateSchema } from "./blocks";
 
 const metaSchema = trackableSchema.merge(
   z
     .object({
       schedule: scheduleSchema,
-      dailyHours: z.number().int(),
+      dailyHours: z.number().positive(),
+      students: userIndexListSchema,
       leads: z.string(),
       termsOfService: z.string(),
       notes: commentListSchema,
@@ -38,7 +43,12 @@ const metaSchema = trackableSchema.merge(
     .partial()
 );
 
-const metaDBSchema = metaSchema.extend({ notes: commentMapSchema.optional() });
+const metaDBSchema = metaSchema
+  .extend({
+    notes: commentMapSchema.optional(),
+    students: userIndexMapSchema,
+  })
+  .partial();
 
 const teacherSchema = z.object({
   firstName: z.string(),
@@ -46,27 +56,30 @@ const teacherSchema = z.object({
   lastName: z.string(),
   gender: genderSchema,
   governorate: z.string().optional(),
-  email: z.string().email().optional(),
-  facebook: z.string().url().optional(),
-  dateOfBirth: dateSchema,
-  nationality: countrySchema,
-  country: countrySchema,
+  email: z.union([z.string().email().optional(), z.literal("")]), // FIXME empty fields come from form as empty strings not undefined;
+  facebook: z.union([z.string().url().optional(), z.literal("")]), // FIXME empty fields come from form as empty strings not undefined;
+  dateOfBirth: dateSchema.optional(), // TODO make required once all data is valid in the DB
+  nationality: countrySchema.optional(), // TODO make required once all data is valid in the DB
+  country: countrySchema.optional(), // TODO make required once all data is valid in the DB
   nationalID: z.string().optional(),
-  timezone: z.optional(timezoneSchema),
+  timezone: timezoneSchema.optional(),
   phoneNumber: phoneNumberListSchema,
   meta: metaSchema.default({}),
 });
 
-const teacherDBSchema = teacherSchema.merge(
-  z.object({
-    meta: metaDBSchema.default({}),
-    phoneNumber: simplePhoneNumberListSchema,
-  })
-);
-
-const teacherFormSchema = teacherSchema.extend({
+const simpleFields = {
   phoneNumber: simplePhoneNumberListSchema,
+  nationality: countryCodeSchema.optional(), // TODO make required once all data is valid in the DB
+  country: countryCodeSchema.optional(), // TODO make required once all data is valid in the DB
+  timezone: timezoneCodeSchema.optional(),
+};
+
+const teacherDBSchema = teacherSchema.extend({
+  ...simpleFields,
+  meta: metaDBSchema.default({}),
 });
+
+const teacherFormSchema = teacherSchema.extend(simpleFields);
 
 export default class Teacher extends DataModel(teacherSchema) {
   static DB = BaseModel(teacherDBSchema);

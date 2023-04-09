@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { Trans } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -6,9 +5,7 @@ import { useMessageT } from "hooks";
 
 import FlashCard from "../FlashCard";
 
-interface ReachOutMessageProps {}
-
-const ReachOutMessage: VFC<ReachOutMessageProps> = () => {
+export default function ReachOutMessage() {
   const msg = useMessageT("flash");
   return (
     <FlashCard state="success">
@@ -22,6 +19,4 @@ const ReachOutMessage: VFC<ReachOutMessageProps> = () => {
       </Trans>
     </FlashCard>
   );
-};
-
-export default ReachOutMessage;
+}

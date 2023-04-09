@@ -1,25 +1,26 @@
-import { ReactElement, useEffect, useState, VFC } from "react";
+import { ReactElement, useState } from "react";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 
+import { Await } from "components/Await";
 import LoadingPopup from "components/LoadingPopup";
-import { useGlobalT } from "hooks";
-import NotFound from "pages/NotFound";
-import { devOnly, omit } from "utils";
+import { useApplyOnce, useGlobalT } from "hooks";
 import { Location } from "models";
+import { IS_DEV } from "models/config";
+import { NotFound } from "pages/Fallback";
 
 interface FetchGuardProps {
-  fetcher?: Function;
+  fetcher: Function;
   loading?: ReactElement;
   notFound?: ReactElement;
   failed?: ReactElement;
 }
 
-const FetchGuard: VFC<FetchGuardProps> = ({
-  fetcher = omit,
+export default function FetchGuard({
+  fetcher,
   loading,
   notFound = <NotFound />,
   failed = <NotFound />,
-}) => {
+}: FetchGuardProps) {
   const glb = useGlobalT();
   const [fetchState, setFetchState] = useState<
     "loading" | "success" | "failed" | "notFound"
@@ -27,24 +28,28 @@ const FetchGuard: VFC<FetchGuardProps> = ({
   const params = useParams();
   const location = useLocation() as Location<{} | undefined>;
 
-  useEffect(() => {
+  useApplyOnce(() => {
     Promise.resolve(fetcher(params))
       .then((data: any) => {
         if (data) location.state = { ...location.state, data };
         setFetchState(data ? "success" : "notFound");
-        devOnly(() => console.log("Fetch Succeeded", data))();
+        if (IS_DEV) console.log("Fetch Succeeded", data);
       })
       .catch((error) => {
-        devOnly(() => console.log("Fetch Failed", error))();
+        if (IS_DEV) console.log("Fetch Failed", error);
         setFetchState("failed");
       });
-  }, []);
+  });
 
   switch (fetchState) {
     case "loading":
       return loading ?? <LoadingPopup message={glb("loading")} />;
     case "success":
-      return <Outlet />;
+      return (
+        <Await>
+          <Outlet />
+        </Await>
+      );
     case "notFound":
       return notFound;
     case "failed":
@@ -52,6 +57,4 @@ const FetchGuard: VFC<FetchGuardProps> = ({
     default:
       return <>Something went wrong!</>;
   }
-};
-
-export default FetchGuard;
+}

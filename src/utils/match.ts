@@ -11,7 +11,7 @@ type MatchRecord<
   [key in TFieldName]+?: { substrings: string[]; score: number };
 };
 
-interface MatchResult<TFieldValues> {
+export interface MatchResult<TFieldValues> {
   value: TFieldValues;
   matches: MatchRecord<TFieldValues>;
   score: number;
@@ -35,7 +35,7 @@ const getUniqueSubstrings = (
     }
   }
 
-  return Array.from(results).filter(identity);
+  return [...results].filter(identity);
 };
 
 const calculateScore = (matchedSubstring: RegExpMatchArray) =>
@@ -44,17 +44,16 @@ const calculateScore = (matchedSubstring: RegExpMatchArray) =>
     0
   );
 
-export const substringMatch =
-  <TFieldValues>(
-    indexData: TFieldValues[],
-    { filter, substringMinLength = 2 }: SubstringMatchOptions<TFieldValues> = {}
-  ) =>
-  (searchKey: string) => {
+export function substringMatch<TFieldValues>(
+  indexData: TFieldValues[] | (() => TFieldValues[]),
+  { filter, substringMinLength = 2 }: SubstringMatchOptions<TFieldValues> = {}
+) {
+  return (searchKey: string) => {
     substringMinLength = Math.max(
       Math.min(substringMinLength, searchKey.length),
       1
     );
-    const results: MatchResult<typeof indexData[number]>[] = [];
+    const results: MatchResult<TFieldValues>[] = [];
 
     const substrings = searchKey
       .toLowerCase()
@@ -77,24 +76,27 @@ export const substringMatch =
       "g"
     );
 
-    indexData.forEach((obj) => {
-      const filteredObj = filter ? applyFilters(obj, filter) : obj;
+    (typeof indexData === "function" ? indexData() : indexData).forEach(
+      (obj) => {
+        const filteredObj = filter ? applyFilters(obj, filter) : obj;
 
-      const fields = nestedPaths(filteredObj, { includeAll: true });
-      const matches: MatchRecord<TFieldValues> = {};
-      let score = 0;
+        const fields = nestedPaths(filteredObj, { includeAll: true });
+        const matches: MatchRecord<TFieldValues> = {};
+        let score = 0;
 
-      fields.forEach((field) => {
-        const value = get(filteredObj, field);
-        const matchedSubstring =
-          typeof value === "string" && value.toLowerCase().match(parts);
-        if (!matchedSubstring) return;
-        const matchScore = calculateScore(matchedSubstring);
-        if (matchScore > score) score = matchScore;
-        matches[field] = { substrings: matchedSubstring, score };
-      });
-      if (!isEmpty(matches)) results.push({ value: obj, matches, score });
-    });
+        fields.forEach((field) => {
+          const value = get(filteredObj, field);
+          const matchedSubstring =
+            typeof value === "string" && value.toLowerCase().match(parts);
+          if (!matchedSubstring) return;
+          const matchScore = calculateScore(matchedSubstring);
+          if (matchScore > score) score = matchScore;
+          matches[field] = { substrings: matchedSubstring, score };
+        });
+        if (!isEmpty(matches)) results.push({ value: obj, matches, score });
+      }
+    );
 
     return results.sort((a, b) => b.score - a.score);
   };
+}

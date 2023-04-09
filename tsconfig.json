@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": "src",
     "target": "es5",
+    "downlevelIteration": true,
     "lib": [
       "dom",
       "dom.iterable",
@@ -19,9 +20,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "react-jsx"
   },
   "include": [
     "src"
-, "src/models/blocks/schemas.ts"  ]
+  ]
 }

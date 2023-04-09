@@ -1,5 +1,3 @@
-import { VFC } from "react";
-
 import { ErrorMessage, ReachOutMessage } from "components/FlashMessages";
 import { FormLayout } from "components/Layouts";
 import { useLeadContext, usePopupContext } from "context";
@@ -8,9 +6,7 @@ import Lead, { LeadFormData } from "models/lead";
 
 import LeadForm from "../LeadForm";
 
-interface NewLeadProps {}
-
-const NewLead: VFC<NewLeadProps> = () => {
+export default function NewLead() {
   const ldt = usePageT("lead");
 
   const { openModal } = usePopupContext();
@@ -33,6 +29,4 @@ const NewLead: VFC<NewLeadProps> = () => {
       />
     </FormLayout>
   );
-};
-
-export default NewLead;
+}

@@ -5,7 +5,7 @@ import { PathsOrConverters, renderAttributes } from "utils/render";
 
 export type Timezone = typeof timezones[number];
 
-const _tzCodeSchema = z
+const _timezoneCodeSchema = z
   .string()
   .refine((value) => Object.hasOwn(getTimezone(value) || {}, "tzCode"));
 
@@ -16,14 +16,14 @@ const _timezoneSchema: ZodType<Timezone> = z.object({
   utc: z.string(),
 });
 
-export const tzCodeSchema = z.union([
-  _tzCodeSchema,
+export const timezoneCodeSchema = z.union([
+  _timezoneCodeSchema,
   _timezoneSchema.transform((value) => value.tzCode),
 ]);
 
 export const timezoneSchema = z.union([
   _timezoneSchema,
-  _tzCodeSchema.transform((value) => getTimezone(value)!),
+  _timezoneCodeSchema.transform((value) => getTimezone(value)!),
 ]);
 
 const timezoneMap: Record<string, Timezone> = timezones.reduce(
@@ -39,7 +39,7 @@ export const timezoneSelectorProps = (
   renderSections: PathsOrConverters<Timezone>,
   selectedTimezone: string
 ) => ({
-  renderElement: renderAttributes<Timezone>(renderSections),
+  renderElement: renderAttributes(renderSections),
   options: timezones,
   getKey: (option: Timezone) => option.tzCode,
   selected: getTimezone(selectedTimezone),

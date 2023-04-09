@@ -5,7 +5,7 @@ import { PathsOrConverters, renderAttributes } from "utils/render";
 
 export type CountryCode = Exclude<keyof typeof countries, "IL">;
 
-const countryCodeList = Object.keys(countries).filter(
+export const countryCodeList = Object.keys(countries).filter(
   (code) => code !== "IL"
 ) as [CountryCode, ...CountryCode[]];
 

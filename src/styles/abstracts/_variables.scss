@@ -2,7 +2,7 @@
 @use "sizes" as *;
 
 :root {
-  // COLOR SCHEMA
+  // COLORS
   --c-white: white;
   --c-black: black;
 
@@ -22,13 +22,17 @@
     --spacing-#{$size}: #{$value};
   }
 
+  @each $size, $value in $radius {
+    --radius-#{$size}: #{$value};
+  }
+
   @each $size, $value in $width {
     --width-#{$size}: #{$value};
   }
 
   // Sidebar
   --closed-sidebar-width: 4rem;
-  --opened-sidebar-width: 9rem;
+  --opened-sidebar-width: 12rem;
   --sidebar-delta: calc(
     var(--opened-sidebar-width) - var(--closed-sidebar-width)
   );
@@ -38,13 +42,22 @@
   --page-min-height: 40rem;
 
   // Header
-  --header-height: 4rem;
-  --current-header-height: var(--header-height);
+  --header-height: 3rem;
+  --occupied-top-space: var(--header-height);
 
   // Body
-  --body-height: calc(100vh - var(--current-header-height));
+  --body-height: calc(100vh - var(--occupied-top-space));
 
   //Typography
-  --input-line-height: 2rem;
-  --line-height: 1.5rem;
+  --input-line-height: 2em;
+  --line-height: 1.5em;
+
+  // SHADOWS
+  --drop-shadow-s: -2px 2px 3px 1px var(--c-shadow-200);
+  --drop-shadow-l: -4px 4px 16px var(--c-shadow-200);
+
+  &[dir="rtl"] {
+    --drop-shadow-s: 2px 2px 3px 1px var(--c-shadow-200);
+    --drop-shadow-l: 4px 4px 16px var(--c-shadow-200);
+  }
 }

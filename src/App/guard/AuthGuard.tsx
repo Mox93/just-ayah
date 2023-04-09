@@ -1,14 +1,12 @@
-import { VFC } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
+import { Await } from "components/Await";
 import { useAuthContext } from "context";
-import Unauthorized from "pages/Unauthorized";
+import { Unauthorized } from "pages/Fallback";
 
-const AuthGuard: VFC = () => {
+export default function AuthGuard() {
   const { authorized } = useAuthContext();
   const { pathname } = useLocation();
 
-  return authorized(pathname) ? <Outlet /> : <Unauthorized />;
-};
-
-export default AuthGuard;
+  return <Await>{authorized(pathname) ? <Outlet /> : <Unauthorized />}</Await>;
+}

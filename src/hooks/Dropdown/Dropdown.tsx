@@ -1,112 +1,79 @@
-import {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-} from "react";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
-import { cn } from "utils";
+import { useFader } from "components/Animation";
+import { cn, documentEventFactory, oneOf, refEventFactory } from "utils";
 
-import { useDirT } from "../Translation";
+export type AnchorPoint = `${"top" | "bottom"}-${"start" | "end"}`;
 
-export type OverflowDir = "start" | "end";
-
-const useOverflowDir = (direction?: OverflowDir, fallback?: string) => {
-  const dirT = useDirT();
-
-  if (dirT === "rtl" && direction === "start") return "ltr";
-  if (dirT === "rtl" && direction === "end") return "rtl";
-  if (dirT === "ltr" && direction === "start") return "rtl";
-  if (dirT === "ltr" && direction === "end") return "ltr";
-  return fallback;
-};
-
-type DropdownState = { isOpen: boolean };
-export type DropdownAction = "open" | "close" | "toggle";
-
-const reduce = (
-  state: DropdownState,
-  action: DropdownAction
-): DropdownState => {
-  switch (action) {
-    case "open":
-      return { ...state, isOpen: true };
-    case "close":
-      return { ...state, isOpen: false };
-    case "toggle":
-      return { ...state, isOpen: !state.isOpen };
-    default:
-      return state;
-  }
-};
-
-interface UseDropdownProps {
+export interface UseDropdownProps {
   className?: string;
   dir?: string;
-  overflowDir?: OverflowDir;
+  anchorPoint?: AnchorPoint;
+  sideMounted?: boolean;
   onClick?: "open" | "toggle";
 }
 
-export default function useDropdown({
+export default function useDropdown<
+  T1 extends HTMLElement,
+  T2 extends HTMLElement
+>({
   className,
   dir,
-  overflowDir,
+  anchorPoint = "top-start",
+  sideMounted,
   onClick,
 }: UseDropdownProps = {}) {
-  const [{ isOpen }, dispatch] = useReducer(reduce, { isOpen: false });
+  const [isOpen, setIsOpen] = useState(false);
 
-  const driverRef = useRef<any>(null);
-  const drivenRef = useRef<any>(null);
+  const driverRef = useRef<T1>(null);
+  const internalDrivenRef = useRef<T2>(null);
+
+  const open = useRef(() => setIsOpen(true));
+  const close = useRef(() => setIsOpen(false));
+  const toggle = useRef(() => setIsOpen((state) => !state));
 
   useEffect(() => {
-    const handleWentOutside = (event: Event) =>
-      event.target instanceof Node &&
-      !driverRef?.current?.contains(event.target) &&
-      !drivenRef.current?.contains(event.target) &&
-      dispatch("close");
+    function handleWentOutside(event: Event) {
+      if (!driverRef.current || !internalDrivenRef.current) return;
 
-    const handelCancelButtons = (event: KeyboardEvent) =>
-      ["Escape"].includes(event.key) && dispatch("close");
+      if (
+        event.target instanceof Node &&
+        !driverRef.current?.contains(event.target) &&
+        !internalDrivenRef.current?.contains(event.target)
+      )
+        close.current();
+    }
 
-    const events = {
+    function handelCancelButtons(event: KeyboardEvent) {
+      if (oneOf(event.key, ["Escape"])) close.current();
+    }
+
+    const [addEvents, removeEvents] = documentEventFactory({
       mouseup: handleWentOutside,
       focusin: handleWentOutside,
       keyup: handelCancelButtons,
-    };
+    });
 
-    const addEvents = () => {
-      Object.entries(events).forEach(([type, callback]) =>
-        document.addEventListener(
-          type as keyof DocumentEventMap,
-          callback as EventListenerOrEventListenerObject
-        )
-      );
-    };
+    if (isOpen) {
+      addEvents();
+    } else {
+      removeEvents();
+    }
 
-    const RemoveEvents = () => {
-      Object.entries(events).forEach(([type, callback]) =>
-        document.removeEventListener(
-          type as keyof DocumentEventMap,
-          callback as EventListenerOrEventListenerObject
-        )
-      );
-    };
-
-    isOpen ? addEvents() : RemoveEvents();
-
-    return RemoveEvents;
+    return removeEvents;
   }, [isOpen]);
 
   useEffect(() => {
-    if (!onClick) return;
+    if (driverRef.current && onClick) {
+      const [addEvents, removeEvents] = refEventFactory(driverRef, {
+        click: onClick === "open" ? open.current : toggle.current,
+      });
 
-    const driver = driverRef.current;
+      addEvents();
 
-    if (driver) driver.onclick = () => dispatch(onClick);
+      return removeEvents;
+    }
   }, [onClick]);
-
-  const oDir = useOverflowDir(overflowDir, dir);
 
   // FIXME issue with dropdown keyboard control
   // const handleToggleButtons = useCallback((event: KeyboardEvent) => {
@@ -118,32 +85,40 @@ export default function useDropdown({
   //   }
   // }, []);
 
+  const [drivenRef, isVisible] = useFader({
+    isOpen,
+    anchorPoint: (sideMounted ? anchorPoint : anchorPoint.split("-")[0]) as any,
+    expand: true,
+    ref: internalDrivenRef,
+  });
+
   const wrapper = useCallback(
-    (driver: ReactElement, driven: () => ReactElement) => {
-      return (
-        <div
-          className={cn("DropdownWrapper", className)}
-          dir={oDir}
-          // onFocus={() =>
-          //   document.addEventListener("keyup", handleToggleButtons)
-          // }
-          // onBlur={() =>
-          //   document.removeEventListener("keyup", handleToggleButtons)
-          // }
-        >
-          {driver}
-          {isOpen && <div className="buffer">{driven()}</div>}
-        </div>
-      );
-    },
-    [className, oDir, isOpen] // , handleToggleButtons]
+    (driver: ReactElement, driven: ReactElement) => (
+      <div className={cn("DropdownWrapper", className)} dir={dir}>
+        {driver}
+        {isVisible && (
+          <div
+            className={cn(
+              "buffer",
+              ...anchorPoint.split("-").map((x) => `ap-${x}`),
+              { sideMounted }
+            )}
+          >
+            {driven}
+          </div>
+        )}
+      </div>
+    ),
+    [anchorPoint, className, dir, isVisible, sideMounted]
   );
 
   return {
     driverRef,
     drivenRef,
     isOpen,
-    dropdownAction: dispatch,
+    open: open.current,
+    close: close.current,
+    toggle: toggle.current,
     dropdownWrapper: wrapper,
   };
 }

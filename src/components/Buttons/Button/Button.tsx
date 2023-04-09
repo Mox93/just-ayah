@@ -1,6 +1,5 @@
-import { ButtonHTMLAttributes, Children, forwardRef, Ref, useRef } from "react";
+import { ButtonHTMLAttributes, Children, forwardRef, useRef } from "react";
 
-import { useDirT } from "hooks";
 import { cn, mergeCallbacks, mergeRefs, capitalize } from "utils";
 import { LoadingDots } from "components/Icons";
 
@@ -26,7 +25,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconButton?: boolean;
 }
 
-const Button = (
+export default forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     children,
     className,
@@ -41,19 +40,16 @@ const Button = (
     disabled,
     onClick,
     ...props
-  }: ButtonProps,
-  ref: Ref<HTMLButtonElement>
-) => {
-  const dirT = useDirT();
-
+  },
+  ref
+) {
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const blur = () => keepFocused || buttonRef.current?.blur();
 
   return (
     <button
       {...props}
       type={type}
-      dir={dir || dirT}
+      dir={dir}
       ref={mergeRefs(buttonRef, ref)}
       className={cn(
         "Button",
@@ -62,15 +58,16 @@ const Button = (
         { isLoading, iconButton, noDisableStyle: isLoading },
         className
       )}
-      onClick={mergeCallbacks(onClick, blur)}
+      onClick={mergeCallbacks(
+        onClick,
+        () => keepFocused || buttonRef.current?.blur()
+      )}
       disabled={isLoading || disabled}
     >
       {Children.map(children, (child) =>
-        typeof child !== "string" || keepFormat ? child : capitalize(child)
+        keepFormat ? child : capitalize(child)
       )}
       {isLoading && <LoadingDots className="loadingIndicator" />}
     </button>
   );
-};
-
-export default forwardRef(Button);
+});

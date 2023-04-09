@@ -1,4 +1,4 @@
-export { default as CheckMark } from "./CheckMark";
-export { default as DropdownArrow } from "./DropdownArrow";
+export { default as Avatar } from "./Avatar";
+export { default as SpinningArrow } from "./SpinningArrow";
 export { default as LoadingDots } from "./LoadingDots";
 export { default as LoadingSpinner } from "./LoadingSpinner";

@@ -1,69 +1,161 @@
 rules_version = '2';
 
-function isSuperAdmin () {
-	return (
-    	request.auth.token.roles.admin
-      && request.auth.token.roles.super
-  );
-}
-
-function canEnroll() {
-	return (
-  	resource.data.awaitEnroll == true &&
-    resource.data.openedAt is timestamp &&
-    request.time - resource.data.openedAt < duration.value(48, "h")
-    );
-}
-
-function validEnroll() {
-	return (
-    !request.resource.data.keys().hasAny(["awaitEnroll", "openedAt"]) &&
-    request.resource.data.keys().hasOnly([
-      "firstName",
-      "middleName",
-      "lastName",
-      "dateOfBirth",
-      "gender",
-      "nationality",
-      "country",
-      "governorate",
-      "timezone",
-      "phoneNumber",
-      "email",
-      "facebook",
-      "education",
-      "workStatus",
-      "Quran",
-      "Zoom",
-      "meta",
-    ]) &&
-    request.resource.data.keys().hasAll([
-      "firstName",
-      "middleName",
-      "lastName",
-      "dateOfBirth",
-      "gender",
-      "nationality",
-      "country",
-      "governorate",
-      "phoneNumber",
-      "education",
-      "workStatus",
-      "Quran",
-      "Zoom",
-      "meta",
-    ])
-  );
-}
-
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
       allow read, write: if isSuperAdmin();
     }
+
     match /students/{studentId} {
     	allow get: if canEnroll();
-      allow update: if canEnroll() && validEnroll();
+      allow update: if canEnroll() && validStudentEnroll();
+    }
+
+    match /teachers/{teacherId} {
+    	allow get: if canEnroll();
+      allow update: if canEnroll() && validTeacherEnroll();
     }
   }
+}
+
+function isSuperAdmin () {
+	return (
+  	request.auth != null &&
+    request.auth.token.roles.admin &&
+    request.auth.token.roles.super
+  );
+}
+
+function canEnroll() {
+	return (
+  	resource.data.enroll.awaiting &&
+    resource.data.enroll.expiresAt is timestamp &&
+    resource.data.enroll.expiresAt > request.time
+  );
+}
+
+function validEnroll(allFields, requiredFields, requiredMetaFields) {
+	return (
+    request.resource.data.enroll.awaiting == false &&
+    request.resource.data.keys().hasOnly(allFields) &&
+    request.resource.data.keys().hasAll(requiredFields) &&
+    request.resource.data.meta.keys().hasAll(requiredMetaFields)
+  );
+}
+
+function validStudentEnroll() {
+	return validEnroll(
+  	getStudentFields("all"),
+    getStudentFields("required"),
+    getStudentFields("meta-required"),
+  );
+}
+
+function validTeacherEnroll() {
+	return validEnroll(
+  	getTeacherFields("all"),
+  	getTeacherFields("required"),
+  	getTeacherFields("meta-required"),
+  );
+}
+
+function getStudentFields(variant) {
+	return {
+  	"all": [
+      "firstName",
+      "middleName",
+      "lastName",
+      "gender",
+      "governorate",
+      "email",
+      "facebook",
+      "education",
+      "dateOfBirth",
+      "nationality",
+      "country",
+      "timezone",
+      "phoneNumber",
+      "workStatus",
+      "meta",
+      "enroll",
+    ],
+    "required": [
+      "firstName",
+      "middleName",
+      "lastName",
+      "dateOfBirth",
+      "gender",
+      "nationality",
+      "country",
+      "governorate",
+      "phoneNumber",
+      "education",
+      "workStatus",
+      "meta",
+    ],
+    "meta-all": [
+      "dateCreated",
+      "dateUpdated",
+      "course",
+      "teacher",
+      "schedule",
+      "sessions",
+      "lead",
+      "termsOfService",
+      "progress",
+      "subscription",
+      "notes",
+      "useTelegram",
+      "quran",
+      "zoom",
+    ],
+    "meta-required": [
+      "dateCreated",
+    ]
+  }[variant];
+}
+
+function getTeacherFields(variant) {
+  return {
+    "all": [
+      "firstName",
+      "middleName",
+      "lastName",
+      "gender",
+      "governorate",
+      "email",
+      "facebook",
+      "dateOfBirth",
+      "nationality",
+      "country",
+      "nationalID",
+      "timezone",
+      "phoneNumber",
+      "meta",
+      "enroll",
+    ],
+    "required": [
+      "firstName",
+      "middleName",
+      "lastName",
+      "gender",
+      "phoneNumber",
+      "meta",
+    ],
+    "meta-all": [
+      "dateCreated",
+      "dateUpdated",
+      "schedule",
+      "dailyHours",
+      "students",
+      "leads",
+      "termsOfService",
+      "notes",
+      "useTelegram",
+      "zoom",
+    ],
+    "meta-required": [
+      "dateCreated",
+    ]
+  }[variant];
 }

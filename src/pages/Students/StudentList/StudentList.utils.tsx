@@ -1,18 +1,12 @@
 import { deleteField } from "firebase/firestore";
-import { useMemo } from "react";
+import { lazy, useCallback, useMemo } from "react";
 
 import { ReactComponent as Info } from "assets/icons/info-svgrepo-com.svg";
 import { Button } from "components/Buttons";
-import { SelectionMenu } from "components/DropdownMenu";
-import Ellipsis, { ellipsis } from "components/Ellipsis";
-import { StatusMenu } from "components/DropdownMenu";
+import Ellipsis from "components/Ellipsis";
+import { CourseMenu, StatusMenu, TeacherMenu } from "components/DropdownMenu";
 import { FieldProps } from "components/Table";
-import {
-  useCourseContext,
-  useMetaContext,
-  usePopupContext,
-  useStudentContext,
-} from "context";
+import { usePopupContext, useStudentContext } from "context";
 import { useDateTimeT, useGlobalT, useGovT, usePersonalInfoT } from "hooks";
 import { Path, PathValue } from "models";
 import { getAge, historyRep } from "models/_blocks";
@@ -26,8 +20,8 @@ import {
 import Student from "models/student";
 import { cn, concat } from "utils";
 
-import StudentNotes from "../StudentNotes";
-import StudentSchedule from "../StudentSchedule";
+const StudentNotes = lazy(() => import("../StudentNotes"));
+const StudentSchedule = lazy(() => import("../StudentSchedule"));
 
 export function useTableFields() {
   const glb = useGlobalT();
@@ -36,37 +30,39 @@ export function useTableFields() {
   const swd = useDateTimeT("weekDay.short");
   const dt = useDateTimeT();
 
-  const {
-    data: { courses },
-  } = useCourseContext();
-
-  const {
-    shortList: { teachers = [] },
-  } = useMetaContext();
-
   const { openModal } = usePopupContext();
-
-  const showNotesPopup = (id: string) => () =>
-    openModal(<StudentNotes id={id} />, { closable: true, dismissible: true });
-
-  const showSchedulePopup = (id: string) => () =>
-    openModal(<StudentSchedule id={id} />, {
-      closable: true,
-      dismissible: true,
-    });
-
   const { updateStudent } = useStudentContext();
 
-  const updateField =
+  const showNotesPopup = useCallback(
+    (id: string) => () =>
+      openModal(<StudentNotes id={id} />, {
+        closable: true,
+        dismissible: true,
+      }),
+    [openModal]
+  );
+
+  const showSchedulePopup = useCallback(
+    (id: string) => () =>
+      openModal(<StudentSchedule id={id} />, {
+        closable: true,
+        dismissible: true,
+      }),
+    [openModal]
+  );
+
+  const updateField = useCallback(
     <TKey extends Path<Student>>(name: TKey, id: string) =>
-    (value?: PathValue<Student, TKey>) =>
-      updateStudent(
-        id,
-        {
-          [name]: value || (deleteField() as any),
-        },
-        { applyLocally: true }
-      );
+      (value?: PathValue<Student, TKey>) =>
+        updateStudent(
+          id,
+          {
+            [name]: value || (deleteField() as any),
+          },
+          { applyLocally: true }
+        ),
+    [updateStudent]
+  );
 
   return useMemo<FieldProps<Student>[]>(
     () => [
@@ -112,7 +108,6 @@ export function useTableFields() {
         header: pi("phoneNumber"),
         className: "phoneNumber",
         getValue: ({ data: { phoneNumber } }) =>
-          // phoneNumberString(phoneNumber[0]),
           phoneNumberString(findPhoneNumberByTags(phoneNumber, ["whatsapp"])),
         fit: true,
       },
@@ -160,26 +155,20 @@ export function useTableFields() {
         header: glb("course"),
         className: "buttonCell",
         getValue: ({ id, meta: { course } }) => (
-          <SelectionMenu
+          <CourseMenu
             selected={course}
-            options={courses}
-            size="small"
-            setValue={updateField("meta.course", id)}
-            renderElement={ellipsis()}
+            onOptionChange={updateField("meta.course", id)}
           />
         ),
       },
       {
         name: "teacher",
         header: glb("teacher"),
-        className: "buttonCell",
+        className: "buttonCell name",
         getValue: ({ id, meta: { teacher } }) => (
-          <SelectionMenu
+          <TeacherMenu
             selected={teacher}
-            options={teachers}
-            size="small"
-            setValue={updateField("meta.teacher", id)}
-            renderElement={ellipsis()}
+            onOptionChange={updateField("meta.teacher", id)}
           />
         ),
       },
@@ -228,6 +217,6 @@ export function useTableFields() {
         fit: true,
       },
     ],
-    [teachers, courses]
+    [dt, glb, gov, pi, showNotesPopup, showSchedulePopup, swd, updateField]
   );
 }

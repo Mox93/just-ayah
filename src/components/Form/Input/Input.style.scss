@@ -1,3 +1,5 @@
+@use "styles/abstracts/mixins" as *;
+
 .Input {
   .FieldWrapper {
     &,
@@ -8,19 +10,7 @@
     }
   }
 
-  &[dir="ltr"] {
-    .field {
-      &::placeholder {
-        text-align: left;
-      }
-
-      &:placeholder-shown {
-        direction: ltr;
-      }
-    }
-  }
-
-  &[dir="rtl"] {
+  @include rtlDir {
     .field {
       &::placeholder {
         text-align: right;
@@ -28,6 +18,18 @@
 
       &:placeholder-shown {
         direction: rtl;
+      }
+    }
+  }
+
+  @include ltrDir {
+    .field {
+      &::placeholder {
+        text-align: left;
+      }
+
+      &:placeholder-shown {
+        direction: ltr;
       }
     }
   }

@@ -1,7 +1,7 @@
-import { FC, FormHTMLAttributes } from "react";
+import { FormHTMLAttributes } from "react";
 
 import { Button, ButtonProps } from "components/Buttons";
-import { useDirT, useGlobalT } from "hooks";
+import { useGlobalT } from "hooks";
 import { cn } from "utils";
 
 import InputGroup from "../InputGroup";
@@ -13,7 +13,7 @@ export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
   resetProps?: FormButton;
 }
 
-const Form: FC<FormProps> = ({
+export default function Form({
   children,
   className,
   submitProps: {
@@ -24,12 +24,11 @@ const Form: FC<FormProps> = ({
   resetProps,
   dir,
   ...props
-}) => {
-  const dirT = useDirT();
+}: FormProps) {
   const glb = useGlobalT();
 
   return (
-    <form {...props} className={cn("Form", className)} dir={dir || dirT}>
+    <form {...props} className={cn("Form", className)} dir={dir}>
       {children}
 
       <InputGroup className="actions">
@@ -56,6 +55,4 @@ const Form: FC<FormProps> = ({
       </InputGroup>
     </form>
   );
-};
-
-export default Form;
+}

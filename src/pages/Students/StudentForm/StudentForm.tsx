@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { PartialDeep } from "type-fest";
 
@@ -13,6 +12,7 @@ import {
 import { StudentFormData } from "models/student";
 
 import { useWorkStatus } from "./StudentForm.utils";
+import { shiftDate } from "models/_blocks";
 
 const {
   CountrySelectorInput,
@@ -34,12 +34,12 @@ interface StudentFormProps {
   onSubmit: SubmitHandler<StudentFormData>;
 }
 
-const StudentForm: VFC<StudentFormProps> = ({
+export default function StudentForm({
   formId,
   defaultValues,
   termsUrl,
   onSubmit,
-}) => {
+}: StudentFormProps) {
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
 
@@ -54,7 +54,7 @@ const StudentForm: VFC<StudentFormProps> = ({
       key: "studentForm" + (formId ? `/${formId}` : ""),
       filter: { type: "omit", fields: ["meta.termsOfService"] },
     },
-    resetOnSubmit: true,
+    // resetOnSubmit: true,
   });
 
   const workStatus = useWorkStatus(control);
@@ -92,10 +92,7 @@ const StudentForm: VFC<StudentFormProps> = ({
           name="dateOfBirth"
           label={pi("dateOfBirth")}
           rules={{ required: "noDateOfBirth" }}
-          yearsRange={{
-            start: now.getFullYear(),
-            end: now.getFullYear() - 151,
-          }}
+          range={{ start: now, end: shiftDate(now, { year: -150 }) }}
         />
 
         <SelectionInput
@@ -121,7 +118,7 @@ const StudentForm: VFC<StudentFormProps> = ({
           label={pi("residence")}
           renderSections={["emoji", "native"]}
           rules={{ required: "noResidence" }}
-          overflowDir="start"
+          anchorPoint="top-end"
         />
       </InputGroup>
 
@@ -136,7 +133,7 @@ const StudentForm: VFC<StudentFormProps> = ({
         <TimezoneSelectorInput
           name="timezone"
           label={pi("timezone")}
-          overflowDir="start"
+          anchorPoint="top-end"
         />
       </InputGroup>
 
@@ -216,6 +213,4 @@ const StudentForm: VFC<StudentFormProps> = ({
       {termsUrl && <TermsOfService name="meta.termsOfService" url={termsUrl} />}
     </Form>
   );
-};
-
-export default StudentForm;
+}

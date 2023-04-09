@@ -1,5 +1,3 @@
-import { VFC } from "react";
-
 import { ReactComponent as CrossIcon } from "assets/icons/close-svgrepo-com.svg";
 import { formAtoms } from "components/Form";
 import { useSmartForm } from "hooks";
@@ -12,11 +10,11 @@ interface EditableCellProps {
   onCancel?: VoidFunction;
 }
 
-const EditableCell: VFC<EditableCellProps> = ({
+export default function EditableCell({
   value,
   onSubmit,
   onCancel,
-}) => {
+}: EditableCellProps) {
   const formProps = useSmartForm<{ value: string }>({
     onSubmit: ({ value }) => onSubmit?.(value),
     defaultValues: { value },
@@ -37,6 +35,4 @@ const EditableCell: VFC<EditableCellProps> = ({
       <Input name="value" />
     </MiniForm>
   );
-};
-
-export default EditableCell;
+}

@@ -1,5 +1,5 @@
 import { isEmpty } from "lodash";
-import { Dispatch, SetStateAction, useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 
 import { Converter, SubsetOf, UpdateObject } from "models";
 import { applyFilters, applyUpdates, Filter } from "utils";
@@ -76,7 +76,7 @@ function useLocalStorage<TData>(
     key ? getItem(key, parse) : undefined
   );
 
-  const set: SetData<TData> = (valueOrFunction) => {
+  const set = useRef<SetData<TData>>((valueOrFunction) => {
     data.current = handleNewState({
       key: key!,
       newState:
@@ -88,9 +88,9 @@ function useLocalStorage<TData>(
       stringify,
       filter,
     });
-  };
+  });
 
-  const update: UpdateData<TData> = (updates) => {
+  const update = useRef<UpdateData<TData>>((updates) => {
     data.current = handleNewState({
       key: key!,
       newState:
@@ -103,20 +103,32 @@ function useLocalStorage<TData>(
       stringify,
       filter,
     });
-  };
+  });
 
-  const refresh = () => {
+  const refresh = useRef(() => {
     data.current = getItem(key!, parse);
 
     return data.current;
-  };
+  });
 
-  const clear = () => {
+  const clear = useRef(() => {
     window.localStorage.removeItem(key!);
     data.current = undefined;
-  };
+  });
 
-  return key ? { data: data.current, set, update, refresh, clear } : undefined;
+  return useMemo(
+    () =>
+      key
+        ? {
+            data: data.current,
+            set: set.current,
+            update: update.current,
+            refresh: refresh.current,
+            clear: clear.current,
+          }
+        : undefined,
+    [key]
+  );
 }
 
 export default useLocalStorage;

@@ -1,75 +1,26 @@
-import { get } from "lodash";
-import { useMemo, VFC } from "react";
+import { lazy } from "react";
+import { Outlet } from "react-router-dom";
 
-import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
-import { Button } from "components/Buttons";
-import { MainLayout } from "components/Layouts";
-import SearchBar from "components/SearchBar";
-import { useMetaContext, usePopupContext, useStudentContext } from "context";
+import { useStudentIndex, useSetHeaderProps, useStudentContext } from "context";
 import { usePageT } from "hooks";
-import { substringMatch } from "utils/match";
 
-import NewStudent from "../NewStudent";
+const NewStudent = lazy(() => import("../NewStudent"));
 
-interface StudentsProps {}
+export default function Students() {
+  const pgT = usePageT("student");
 
-const Students: VFC<StudentsProps> = () => {
-  const stu = usePageT("student");
-  const { studentIndex } = useMetaContext();
   const { getStudent } = useStudentContext();
+  const [dataIndex, indexState] = useStudentIndex();
 
-  const { openModal } = usePopupContext();
+  useSetHeaderProps({
+    title: pgT("title"),
+    dataIndex,
+    indexState,
+    onSearchSelect: ({ value: { id } }) =>
+      // TODO Redirect to profile page
+      getStudent(id).then((data) => console.log(data)),
+    newEntityButton: <NewStudent />,
+  });
 
-  const applySearch = useMemo(
-    () =>
-      substringMatch(studentIndex, {
-        filter: { type: "omit", fields: ["id"] },
-      }),
-    [studentIndex]
-  );
-
-  return (
-    <MainLayout
-      name="Students"
-      title={stu("title")}
-      actions={
-        <>
-          <SearchBar
-            onChange={applySearch}
-            onSelect={({ value: { id } }) =>
-              getStudent(id).then((data) => console.log(data))
-            } // TODO Redirect to profile page
-            getKey={({ value: { id } }) => id}
-            showButton
-            showResults
-            overflowDir="start"
-            renderSections={[
-              ({ value, matches }) => ({
-                value: value.name,
-                matches: matches.name?.substrings,
-              }),
-              ({ value, matches }) =>
-                value.phoneNumber.map((phoneNumber, index) => ({
-                  value: phoneNumber,
-                  matches: get(matches, `phoneNumber.${index}`)?.substrings,
-                })),
-            ]}
-          />
-          <Button
-            variant="primary-outline"
-            iconButton
-            onClick={() =>
-              openModal(<NewStudent />, {
-                closable: true,
-              })
-            }
-          >
-            <PlusIcon className="icon" />
-          </Button>
-        </>
-      }
-    />
-  );
-};
-
-export default Students;
+  return <Outlet />;
+}

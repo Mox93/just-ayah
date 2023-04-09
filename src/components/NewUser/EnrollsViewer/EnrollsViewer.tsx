@@ -1,8 +1,6 @@
-import { useEffect, VFC } from "react";
-
 import { Button } from "components/Buttons";
 import { Table } from "components/Table";
-import { useGlobalT, useLoading } from "hooks";
+import { useApplyOnce, useGlobalT, useLoading } from "hooks";
 
 import NewEnroll from "../NewEnroll";
 import { UserVariant } from "../NewUser.type";
@@ -12,7 +10,7 @@ interface EnrollsViewerProps {
   variant: UserVariant;
 }
 
-const EnrollsViewer: VFC<EnrollsViewerProps> = ({ variant }) => {
+export default function EnrollsViewer({ variant }: EnrollsViewerProps) {
   const glb = useGlobalT();
 
   const { context, DBClass } = ENROLL_CONTEXT[variant];
@@ -26,9 +24,7 @@ const EnrollsViewer: VFC<EnrollsViewerProps> = ({ variant }) => {
     addEnroll,
   } = context();
 
-  useEffect(() => {
-    if (!enrolls.length) fetchEnrolls();
-  }, []);
+  useApplyOnce(fetchEnrolls, !enrolls.length);
 
   const fields = useTableFields({
     refreshEnroll,
@@ -42,7 +38,7 @@ const EnrollsViewer: VFC<EnrollsViewerProps> = ({ variant }) => {
 
   return (
     <div className="EnrollsViewer">
-      <NewEnroll addEnroll={addEnroll} DBClass={DBClass} />
+      <NewEnroll {...{ addEnroll, DBClass, variant }} />
       <Table
         fields={fields}
         data={enrolls}
@@ -61,6 +57,4 @@ const EnrollsViewer: VFC<EnrollsViewerProps> = ({ variant }) => {
       />
     </div>
   );
-};
-
-export default EnrollsViewer;
+}

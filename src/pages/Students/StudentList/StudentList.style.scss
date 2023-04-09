@@ -1,16 +1,7 @@
 @use "styles/abstracts/mixins" as *;
 
 .StudentList {
-  height: var(--body-height);
-  max-height: var(--body-height);
-  padding: var(--spacing-l);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-l);
-
-  .Table {
-    flex-grow: 1;
-  }
+  flex-grow: 1;
 
   td {
     &.phoneNumber {
@@ -19,6 +10,10 @@
 
     &.name {
       text-transform: capitalize;
+
+      * {
+        text-transform: capitalize;
+      }
     }
 
     &.buttonCell {

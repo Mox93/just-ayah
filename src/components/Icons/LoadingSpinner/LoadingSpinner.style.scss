@@ -1,10 +1,19 @@
 .LoadingSpinner {
   --stroke-color: var(--c-primary-200);
+  --spinner-size: 3rem;
 
-  width: 3rem;
-  height: 3rem;
+  width: var(--spinner-size);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  .icon {
+  &.icon {
+    --stroke-color: var(--c-gray-300);
+    --spinner-size: 1.5rem;
+  }
+
+  .spinner {
     animation: rotate 2s linear infinite;
     width: 100%;
 

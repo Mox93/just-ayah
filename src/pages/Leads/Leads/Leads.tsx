@@ -1,14 +1,12 @@
-import { VFC } from "react";
 import { Outlet } from "react-router-dom";
 
-interface LeadsProps {}
+import { useSetHeaderProps } from "context";
+import { usePageT } from "hooks";
 
-const Leads: VFC<LeadsProps> = () => {
-  return (
-    <div className="Leads">
-      <Outlet />
-    </div>
-  );
-};
+export default function Leads() {
+  const pgT = usePageT("lead");
 
-export default Leads;
+  useSetHeaderProps({ title: pgT("title") });
+
+  return <Outlet />;
+}

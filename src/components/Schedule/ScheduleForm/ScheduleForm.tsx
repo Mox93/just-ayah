@@ -1,5 +1,3 @@
-import { VFC } from "react";
-
 import { ReactComponent as CrossIcon } from "assets/icons/close-svgrepo-com.svg";
 import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
 import { Button } from "components/Buttons";
@@ -7,7 +5,7 @@ import { SelectionMenu } from "components/DropdownMenu";
 import { formAtoms } from "components/Form";
 import { useDynamicList, useGlobalT, useSmartForm } from "hooks";
 import { Schedule } from "models/blocks";
-import { range } from "utils";
+import { pass, range } from "utils";
 import Container from "components/Container";
 
 const { Form, Textarea, TimeInput, WeekDayInput, InputGroup } =
@@ -18,7 +16,10 @@ interface ScheduleFormProps {
   onSubmit?: (data: Schedule) => void;
 }
 
-const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
+export default function ScheduleForm({
+  defaultValues,
+  onSubmit,
+}: ScheduleFormProps) {
   const glb = useGlobalT();
   const formProps = useSmartForm({
     onSubmit: ({ entries, notes }) => {
@@ -52,7 +53,7 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
               selected={index + 1}
               className="position"
               noArrow
-              setValue={(to) => moveItem(index, to - 1)}
+              onOptionChange={(to) => moveItem(index, to - 1)}
             />
             <WeekDayInput
               label={index > 0 ? undefined : glb("day")}
@@ -71,7 +72,7 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
               iconButton
               variant="primary-ghost"
               className="action"
-              onClick={() => cloneItem(index)}
+              onClick={pass(cloneItem, index)}
             >
               <PlusIcon className="icon" />
             </Button>
@@ -79,7 +80,7 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
               iconButton
               variant="danger-ghost"
               className="action"
-              onClick={() => removeItem(index)}
+              onClick={pass(removeItem, index)}
             >
               <CrossIcon className="icon" />
             </Button>
@@ -89,6 +90,4 @@ const ScheduleForm: VFC<ScheduleFormProps> = ({ defaultValues, onSubmit }) => {
       </Form>
     </Container>
   );
-};
-
-export default ScheduleForm;
+}

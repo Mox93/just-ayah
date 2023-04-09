@@ -1,4 +1,3 @@
-import { VFC } from "react";
 import { useForm } from "react-hook-form";
 
 import Container from "components/Container";
@@ -18,7 +17,7 @@ import {
   countrySelectorProps,
   SimplePhoneNumber,
 } from "models/blocks";
-import { fromDateInfo } from "models/_blocks";
+import { fromDateInfo, shiftDate } from "models/_blocks";
 
 interface TestData {
   name: string;
@@ -30,9 +29,7 @@ interface TestData {
   dateOfBirth: Date;
 }
 
-interface TestFormProps {}
-
-const FormUI: VFC<TestFormProps> = () => {
+export default function FormUI() {
   const { setValue, register, handleSubmit, reset, watch } =
     useForm<TestData>();
 
@@ -86,10 +83,7 @@ const FormUI: VFC<TestFormProps> = () => {
           <DateInput
             innerProps={{ ...register("dateOfBirth") }}
             label="date of birth"
-            yearsRange={{
-              start: now.getFullYear(),
-              end: now.getFullYear() - 150,
-            }}
+            range={{ start: now, end: shiftDate(now, { year: -150 }) }}
             setValue={(date) => setValue("dateOfBirth", fromDateInfo(date))}
             // selected={toDateInfo(watch("dateOfBirth"))}
           />
@@ -182,6 +176,4 @@ const FormUI: VFC<TestFormProps> = () => {
       </Container>
     </main>
   );
-};
-
-export default FormUI;
+}

@@ -1,0 +1,102 @@
+@use "styles/abstracts/mixins" as *;
+
+@use "../NavItem/NavItem.style" as *;
+@use "../HiddenLabel/HiddenLabel.style" as *;
+
+.NavGroup {
+  --icon-space: 2rem;
+  --spacing: calc(var(--icon-space) / 2);
+  --nav-item-height: 2.5rem;
+
+  & > .HiddenLabel {
+    position: relative;
+
+    @extend .NavItem;
+
+    &.showLabel {
+      padding-inline-end: var(--icon-space);
+    }
+
+    .SpinningArrow {
+      @include positioning($inlineDir: end, $inline: var(--spacing));
+    }
+  }
+
+  .subitemsMenu {
+    --bg-color: transparent;
+    --fg-color: var(--c-gray-400);
+
+    .header {
+      padding-block-end: 0;
+
+      .label {
+        padding: var(--spacing-m) var(--spacing-l);
+        color: var(--c-primary-400);
+        font-weight: 700;
+        text-transform: capitalize;
+      }
+    }
+
+    .navChild {
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-m) var(--spacing-l);
+      border-radius: var(--radius-xs);
+      min-height: var(--nav-item-height);
+      background-color: var(--bg-color);
+
+      * {
+        color: var(--fg-color);
+        text-transform: capitalize;
+      }
+
+      &:hover {
+        --bg-color: var(--c-gray-100);
+      }
+
+      &.isActive {
+        --bg-color: var(--c-primary-100);
+        --fg-color: var(--c-primary-400);
+      }
+    }
+  }
+
+  & + .subitems {
+    margin-inline-start: calc(
+      var(--closed-sidebar-width) / 2 - var(--navbar-padding)
+    );
+    padding-inline-start: var(--spacing-s);
+    display: grid;
+    gap: var(--spacing-s);
+
+    .navChild {
+      --link-width: var(--spacing-m);
+      --link-height: calc(100% + var(--spacing-l));
+      --link-top: calc(var(--link-height) / -2 - var(--spacing-m));
+      --link-color: var(--c-gray-200);
+
+      &:first-child {
+        --link-height: calc(50%);
+        --link-top: 0;
+      }
+
+      @extend .NavItem;
+      @extend .HiddenLabel;
+
+      position: relative;
+      min-height: var(--nav-item-height);
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: var(--link-width);
+        height: var(--link-height);
+        border-end-start-radius: var(--link-width);
+        inset-inline-start: calc(var(--link-width) * -1);
+        inset-block-start: var(--link-top);
+        border-block-end: 2px solid var(--link-color);
+        border-inline-start: 2px solid var(--link-color);
+      }
+    }
+  }
+}

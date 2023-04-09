@@ -25,38 +25,4 @@
       cursor: text;
     }
   }
-
-  .menu {
-    .list {
-      list-style-type: none;
-
-      .element {
-        padding-inline: 0.75rem;
-        border-radius: 0.25rem;
-        cursor: pointer;
-
-        @include menuItem();
-
-        &:hover {
-          background-color: var(--c-shadow-200);
-        }
-      }
-    }
-  }
-
-  .searchField {
-    --fill-color: var(--c-gray-300);
-
-    .icon {
-      width: 1.25rem;
-    }
-
-    &:focus-within {
-      --fill-color: var(--c-gray-400);
-    }
-
-    .FieldWrapper {
-      gap: var(--spacing-m);
-    }
-  }
 }

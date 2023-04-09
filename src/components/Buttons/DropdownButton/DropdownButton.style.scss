@@ -1,13 +1,14 @@
 @use "styles/abstracts/mixins" as *;
 
 .DropdownButton {
-  --icon-space: 2em;
+  --icon-space: 2rem;
+  --spacing: calc(var(--icon-space) / 2);
 
-  padding-inline-end: var(--icon-space) !important;
+  &.withChildren {
+    padding-inline-end: var(--icon-space) !important;
 
-  .DropdownArrow {
-    --spacing: calc(var(--icon-space) / 2);
-
-    @include positioning($inline: var(--spacing), $inlineDir: "end");
+    .SpinningArrow {
+      @include positioning($inline: var(--spacing), $inlineDir: "end");
+    }
   }
 }

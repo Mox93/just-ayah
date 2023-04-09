@@ -1,22 +1,22 @@
-import { VFC, useEffect } from "react";
-
 import { Button } from "components/Buttons";
 import { Table } from "components/Table";
 import { useTeacherContext } from "context";
-import { useGlobalT, useLoading, usePageT, useSelect } from "hooks";
-import { prodOnly } from "utils";
+import {
+  useApplyOnce,
+  useGlobalT,
+  useLoading,
+  usePageT,
+  useSelect,
+} from "hooks";
+import { IS_PROD } from "models/config";
 
 import { UseTableFields } from "./TeacherList.utils";
 
-interface TeacherListProps {}
-
-const TeacherList: VFC<TeacherListProps> = () => {
+export default function TeacherList() {
   const glb = useGlobalT();
   const tch = usePageT("teacher");
 
   const { teachers, fetchTeachers } = useTeacherContext();
-
-  const fields = UseTableFields();
 
   const [selected, toggleSelect] = useSelect(() =>
     teachers.map(({ id }) => id)
@@ -26,20 +26,19 @@ const TeacherList: VFC<TeacherListProps> = () => {
     fetchTeachers({ onCompleted: stopLoading });
   });
 
-  useEffect(() => {
-    prodOnly(() => {
-      if (!teachers.length) loadTeachers();
-    })();
-  }, []);
+  useApplyOnce(loadTeachers, IS_PROD && !teachers.length);
+
+  const fields = UseTableFields();
 
   return (
-    <div className="TeacherList">
+    <>
       {selected.size > 0 && (
         <div className="selectionCounter">
           {tch("counter", { count: selected.size })}
         </div>
       )}
       <Table
+        className="TeacherList"
         fields={fields}
         data={teachers}
         selected={selected}
@@ -56,8 +55,6 @@ const TeacherList: VFC<TeacherListProps> = () => {
           </Button>
         }
       />
-    </div>
+    </>
   );
-};
-
-export default TeacherList;
+}

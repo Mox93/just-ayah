@@ -1,15 +1,15 @@
-import { VFC } from "react";
+import { memo } from "react";
 import { Outlet } from "react-router-dom";
 
-interface CoursesProps {}
+import { useSetHeaderProps } from "context";
+import { usePageT } from "hooks";
 
-const Courses: VFC<CoursesProps> = () => {
-  return (
-    <div>
-      <h1>Courses</h1>
-      <Outlet />
-    </div>
-  );
-};
+import NewCourse from "../NewCourse";
 
-export default Courses;
+export default memo(function Courses() {
+  const pgT = usePageT("course");
+
+  useSetHeaderProps({ title: pgT("title"), newEntityButton: <NewCourse /> });
+
+  return <Outlet />;
+});

@@ -1,4 +1,3 @@
-export * from "./FormLayout";
-export { default as FormLayout } from "./FormLayout";
-export * from "./MainLayout";
-export { default as MainLayout } from "./MainLayout";
+import { lazy } from "react";
+
+export const FormLayout = lazy(() => import("./FormLayout"));

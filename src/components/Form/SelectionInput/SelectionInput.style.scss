@@ -1,44 +1,42 @@
 .SelectionInput {
-  .FieldWrapper {
-    padding: var(--spacing-xs);
+  --bg-color: transparent;
+  --text-color: var(--c-black);
+  --outline-color: transparent;
+  --outline-width: 0;
 
-    .partition {
-      margin-inline: var(--spacing-xs);
-    }
+  .FieldWrapper {
+    padding: var(--spacing-s);
+    gap: var(--spacing-s);
   }
 
   .option {
-    flex-grow: 1;
-    flex-basis: 0;
+    flex: 1;
     height: 100%;
-    border-radius: 0.25rem;
-    overflow: hidden;
     position: relative;
-
-    &:hover {
-      background-color: var(--c-shadow-200);
-    }
 
     & > input {
       opacity: 0;
       position: absolute;
 
-      &:focus + label {
-        background-color: var(--c-shadow-200);
+      &:focus:not(:checked) + label {
+        --bg-color: var(--c-shadow-200);
       }
 
       &:checked {
         & + label {
-          background-color: var(--c-primary-300);
-          color: var(--c-white);
+          --bg-color: var(--c-primary-100);
+          --text-color: var(--c-primary-300);
+          --outline-color: var(--c-primary-200);
+          --outline-width: 1px;
 
           &:hover {
-            background-color: var(--c-primary-200);
+            --bg-color: var(--c-primary-200);
+            --text-color: var(--c-white);
           }
         }
 
         &:focus + label {
-          background-color: var(--c-primary-200);
+          --outline-width: 2px;
         }
       }
     }
@@ -46,6 +44,11 @@
     label {
       width: 100%;
       height: 100%;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      outline: var(--outline-width) solid var(--outline-color);
+      outline-offset: -1px;
+      border-radius: var(--radius-xs);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -53,6 +56,10 @@
       overflow-x: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+
+      &:hover {
+        --bg-color: var(--c-shadow-200);
+      }
 
       * {
         max-height: 2rem;

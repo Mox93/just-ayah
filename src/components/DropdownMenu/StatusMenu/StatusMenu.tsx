@@ -1,5 +1,4 @@
 import {
-  Dispatch,
   forwardRef,
   MouseEventHandler,
   ReactElement,
@@ -8,10 +7,10 @@ import {
   useReducer,
 } from "react";
 
+import { ReactComponent as CheckMarkIcon } from "assets/icons/checkmark-svgrepo-com.svg";
 import { Button, DropdownButton } from "components/Buttons";
 import Container from "components/Container";
-import { CheckMark } from "components/Icons";
-import { DropdownAction, useDropdown, useGlobalT } from "hooks";
+import { useDropdown, useGlobalT } from "hooks";
 import { UNKNOWN } from "models";
 import {
   mapStatusType,
@@ -29,7 +28,7 @@ type State = {
   currentStatus: Status;
   activeStatus?: Status;
   onChange?: Function;
-  dropdownAction?: Dispatch<DropdownAction>;
+  close: VoidFunction;
 };
 type Action = {
   type: "setType" | "awaitValue" | "setValue";
@@ -37,17 +36,17 @@ type Action = {
 };
 
 const reduce = (
-  { currentStatus, onChange, dropdownAction }: State,
+  { currentStatus, onChange, close }: State,
   { type, payload }: Action
 ): State => {
-  const state = { onChange, dropdownAction };
+  const state = { onChange, close };
 
   switch (type) {
     /*********************\
     |*** simple status ***|
     \*********************/
     case "setType":
-      dropdownAction?.("close");
+      close();
       switch (payload.type) {
         case currentStatus.type:
           return { ...state, currentStatus };
@@ -62,7 +61,7 @@ const reduce = (
     case "awaitValue":
       return { ...state, currentStatus, activeStatus: payload };
     case "setValue":
-      dropdownAction?.("close");
+      close();
       onChange?.(payload);
       return { ...state, currentStatus: payload };
     default:
@@ -78,7 +77,7 @@ interface StatusMenuProps<TVariant extends StatusVariants> {
   onClick?: MouseEventHandler;
 }
 
-const StatusMenu = <TVariant extends StatusVariants>(
+export default forwardRef(function StatusMenu<TVariant extends StatusVariants>(
   {
     className,
     variant,
@@ -88,19 +87,21 @@ const StatusMenu = <TVariant extends StatusVariants>(
     ...props
   }: StatusMenuProps<TVariant>,
   ref: Ref<HTMLButtonElement>
-) => {
+) {
   const glb = useGlobalT();
 
-  const { drivenRef, driverRef, isOpen, dropdownWrapper, dropdownAction } =
-    useDropdown({
-      className: cn("StatusMenu", className),
-      onClick: "toggle",
-    });
+  const { drivenRef, driverRef, isOpen, dropdownWrapper, close } = useDropdown<
+    HTMLButtonElement,
+    HTMLDivElement
+  >({
+    className: cn("StatusMenu", className),
+    onClick: "toggle",
+  });
 
   const [{ currentStatus, activeStatus }, dispatch] = useReducer(reduce, {
     currentStatus: status || { type: UNKNOWN },
     onChange,
-    dropdownAction,
+    close,
   });
 
   useEffect(() => {
@@ -122,59 +123,55 @@ const StatusMenu = <TVariant extends StatusVariants>(
         type: (t: string) => capitalize(glb(t)),
       }).join(" | ")}
     </DropdownButton>,
-    () => (
-      <Container variant="menu" ref={drivenRef} className="statusMenu">
-        {mapStatusType(variant, (statusOption: Status) => {
-          const isSelected =
-            (activeStatus?.type || currentStatus.type) === statusOption.type;
-          const customStatus = getCustomStatus(variant, statusOption.type);
+    <Container variant="menu" ref={drivenRef} className="statusMenu">
+      {mapStatusType(variant, (statusOption: Status) => {
+        const isSelected =
+          (activeStatus?.type || currentStatus.type) === statusOption.type;
+        const customStatus = getCustomStatus(variant, statusOption.type);
 
-          const wrapper = (statusButton: ReactElement) =>
-            isSelected && customStatus ? (
-              <div key={statusOption.type} className="customStatusWrapper">
-                {statusButton}
-                <StatusForm
-                  onSubmit={(data) =>
-                    dispatch({
-                      type: "setValue",
-                      payload: {
-                        type: statusOption.type,
-                        value: data[statusOption.type],
-                      },
-                    })
-                  }
-                  defaultValues={{
-                    [statusOption.type]: statusOption.value,
-                    [currentStatus.type]: currentStatus.value,
-                  }}
-                >
-                  {customStatus?.field}
-                </StatusForm>
-              </div>
-            ) : (
-              statusButton
-            );
-
-          return wrapper(
-            <Button
-              {...commonProps}
-              key={statusOption.type}
-              className={cn("option", variant, statusOption.type)}
-              onClick={() =>
-                dispatch({
-                  type: customStatus ? "awaitValue" : "setType",
-                  payload: statusOption,
-                })
-              }
-            >
-              {capitalize(glb(statusOption.type))}
-              {isSelected && <CheckMark />}
-            </Button>
+        const wrapper = (statusButton: ReactElement) =>
+          isSelected && customStatus ? (
+            <div key={statusOption.type} className="customStatusWrapper">
+              {statusButton}
+              <StatusForm
+                onSubmit={(data) =>
+                  dispatch({
+                    type: "setValue",
+                    payload: {
+                      type: statusOption.type,
+                      value: data[statusOption.type],
+                    },
+                  })
+                }
+                defaultValues={{
+                  [statusOption.type]: statusOption.value,
+                  [currentStatus.type]: currentStatus.value,
+                }}
+              >
+                {customStatus?.field}
+              </StatusForm>
+            </div>
+          ) : (
+            statusButton
           );
-        })}
-      </Container>
-    )
-  );
-};
 
-export default forwardRef(StatusMenu);
+        return wrapper(
+          <Button
+            {...commonProps}
+            key={statusOption.type}
+            className={cn("option", variant, statusOption.type)}
+            onClick={() =>
+              dispatch({
+                type: customStatus ? "awaitValue" : "setType",
+                payload: statusOption,
+              })
+            }
+          >
+            {capitalize(glb(statusOption.type))}
+            {isSelected && <CheckMarkIcon className="CheckMark icon" />}
+          </Button>
+        );
+      })}
+    </Container>
+  );
+});

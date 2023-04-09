@@ -1,6 +1,5 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { useDirT } from "hooks";
 import { applyInOrder, capitalize, cn, FunctionOrChain, identity } from "utils";
 
 import FieldHeader from "../FieldHeader";
@@ -21,7 +20,7 @@ export interface SelectionInputProps<TOption>
 
 const { before, after } = filterByPosition<Location>();
 
-const SelectionInput = <TOption,>(
+export default forwardRef(function SelectionInput<TOption>(
   {
     label,
     isRequired,
@@ -39,18 +38,17 @@ const SelectionInput = <TOption,>(
     ...props
   }: SelectionInputProps<TOption>,
   ref: Ref<HTMLInputElement>
-) => {
-  const dirT = useDirT();
+) {
   const render = applyInOrder(renderElement);
 
   return (
-    <div className={cn("SelectionInput", className)} dir={dir || dirT}>
+    <div className={cn("SelectionInput", className)} dir={dir}>
       <FieldHeader {...{ label, isRequired, isInvalid }}>
         {children}
       </FieldHeader>
 
       {before("field", children)}
-      <FieldWrapper addPartitions {...{ isInvalid, dir }}>
+      <FieldWrapper addPartitions isInvalid={isInvalid}>
         {options.map((option) => {
           const key = getKey(option);
           const id = `${name}_${key}`;
@@ -75,6 +73,4 @@ const SelectionInput = <TOption,>(
       {errorMessage}
     </div>
   );
-};
-
-export default forwardRef(SelectionInput);
+});

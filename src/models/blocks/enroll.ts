@@ -1,7 +1,8 @@
 import { z } from "zod";
 
+import { shiftDate } from "../_blocks/dateTime";
 import { booleanSchema } from "./boolean";
-import { dateSchema, shiftDate } from "../_blocks/dateTime";
+import { dateSchema } from "./dateTime";
 import { trackableSchema } from "./trackable";
 
 export const enrollSchema = trackableSchema.extend({
@@ -30,4 +31,8 @@ export function createEnroll<T extends EnrollCreateProps>({
 
 export function refreshEnroll(enroll: Enroll, duration?: number): Enroll {
   return createEnroll({ ...enroll, duration, dateUpdated: new Date() });
+}
+
+export function sealEnroll<T>(updates: T) {
+  return { ...updates, "enroll.awaiting": false };
 }

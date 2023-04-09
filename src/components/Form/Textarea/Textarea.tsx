@@ -8,7 +8,7 @@ import {
   useRef,
 } from "react";
 
-import { useDirT, useUniqueId } from "hooks";
+import { useUniqueId } from "hooks";
 import { cn, mergeRefs } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
 
@@ -30,7 +30,7 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   visibleBorder?: boolean;
 }
 
-const Textarea = (
+export default forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
   {
     className,
     dir,
@@ -46,10 +46,9 @@ const Textarea = (
     name,
     id,
     ...props
-  }: TextareaProps,
-  ref: Ref<HTMLTextAreaElement>
-) => {
-  const dirT = useDirT();
+  },
+  ref
+) {
   const innerRef = useRef(null);
   const _id = useUniqueId(name || "textarea");
 
@@ -58,7 +57,7 @@ const Textarea = (
   }, [innerRef]);
 
   return (
-    <div className={cn("Textarea", className)} dir={dir || dirT}>
+    <div className={cn("Textarea", className)} dir={dir}>
       <FieldHeader
         htmlFor={id || _id}
         {...{ label, required, isRequired, isInvalid }}
@@ -68,7 +67,7 @@ const Textarea = (
 
       {before("field", children)}
       <FieldWrapper
-        {...{ isInvalid, dir }}
+        isInvalid={isInvalid}
         alwaysVisible={visibleBorder}
         ref={fieldRef}
         expandable
@@ -88,6 +87,4 @@ const Textarea = (
       {errorMessage}
     </div>
   );
-};
-
-export default forwardRef(Textarea);
+});

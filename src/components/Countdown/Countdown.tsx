@@ -1,5 +1,3 @@
-import { VFC } from "react";
-
 import { useCountdown, useGlobalT } from "hooks";
 import { TimeDelta, timeDeltaUnits, TimeDeltaUnits } from "models/_blocks";
 import { addZeros } from "utils";
@@ -11,12 +9,12 @@ interface CountdownProps {
   maxUnit?: TimeDeltaUnits;
 }
 
-const Countdown: VFC<CountdownProps> = ({
+export default function Countdown({
   expiresAt,
   interval,
   maxUnit,
   expiredMessage,
-}) => {
+}: CountdownProps) {
   const glb = useGlobalT();
 
   const [countdown, isExpired] = useCountdown(expiresAt, interval, maxUnit);
@@ -31,6 +29,4 @@ const Countdown: VFC<CountdownProps> = ({
         .join(":")}
     </p>
   );
-};
-
-export default Countdown;
+}

@@ -18,6 +18,9 @@ import { Path, PathValue } from "./path";
 
 export const UNKNOWN = "unknown";
 export const OTHER = "other";
+export const FULFILLED = "FULFILLED";
+export const REJECTED = "REJECTED";
+export const ERROR = "ERROR";
 
 export type GenericObject = Record<PropertyKey, any>;
 
@@ -64,7 +67,7 @@ export interface FetchDataOptions<
   TData,
   TPath extends Path<TData> = Path<TData>
 > extends RequestCallback {
-  filters?: [TPath, WhereFilterOp, PathValue<TData, TPath>][];
+  filters?: [TPath | FieldPath, WhereFilterOp, PathValue<TData, TPath>][];
   size?: number;
   sort?: { by: TPath | FieldPath; direction?: OrderByDirection };
 }
@@ -113,7 +116,7 @@ export type AddCommentFunc = (id: string, comment: Comment) => void;
 |****** FUNCTION DEFINITION ******|
 \*********************************/
 
-export type Converter<TInput, TOutput = TInput> = (obj: TInput) => TOutput;
+export type Converter<TInput, TOutput = TInput> = (value: TInput) => TOutput;
 export type GetKey<TInput> = Converter<TInput, string | number>;
 export type DBConverter<DataFrom, DataTo> = {
   (id: string, data: DataFrom): DataTo & { id: string };

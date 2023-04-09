@@ -1,8 +1,7 @@
 .Admin {
-  margin-inline-start: var(--closed-sidebar-width);
-
-  & > main {
-    height: 100vh;
-    overflow: auto;
-  }
+  padding: var(--spacing-m);
+  height: var(--body-height);
+  max-height: var(--body-height);
+  display: grid;
+  gap: var(--spacing-m);
 }

@@ -1,6 +1,3 @@
-import { FC } from "react";
-
-import { useDirT } from "hooks";
 import { cn, capitalize } from "utils";
 import { filterByPosition, PositionalElement } from "utils/position";
 
@@ -17,18 +14,16 @@ interface FieldHeaderProps {
 
 const { before, after } = filterByPosition<Location>();
 
-const FieldHeader: FC<FieldHeaderProps> = ({
+export default function FieldHeader({
   htmlFor,
   label,
   required,
   isInvalid,
   isRequired,
   children,
-}) => {
-  const dirT = useDirT();
-
+}: FieldHeaderProps) {
   return label ? (
-    <label className="FieldHeader" dir={dirT} htmlFor={htmlFor}>
+    <label className="FieldHeader" htmlFor={htmlFor}>
       {before("header", children as PositionalElement<Location>)}
       <h4
         className={cn(
@@ -44,6 +39,4 @@ const FieldHeader: FC<FieldHeaderProps> = ({
       {after("header", children as PositionalElement<Location>)}
     </label>
   ) : null;
-};
-
-export default FieldHeader;
+}

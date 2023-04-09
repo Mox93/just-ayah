@@ -19,7 +19,7 @@ import {
   REJECTED,
 } from "./Collection.types";
 
-interface UseGetDocsProps<T extends DataModel, D = T["data"]>
+interface UseGetDocsProps<T extends DataModel, D>
   extends Required<BaseCollectionProps<T>> {
   fetchDefaults?: FetchDataOptions<D>;
 }
@@ -70,7 +70,8 @@ export default function useGetDocs<T extends DataModel, D = T["data"]>({
               .filter(({ data }) => data),
           ]);
 
-          lastDoc.current = querySnapshot.docs[querySnapshot.size - 1];
+          if (querySnapshot.size > 0)
+            lastDoc.current = querySnapshot.docs[querySnapshot.size - 1];
 
           onFulfilled!(querySnapshot, ...args);
         }, onRejected)
