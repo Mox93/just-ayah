@@ -1,14 +1,16 @@
-import { ReactElement, useEffect } from "react";
+import { ReactElement, Ref, useEffect } from "react";
 
 import { CloseButton } from "components/Buttons";
 import { cn, documentEventFactory, oneOf, pass } from "utils";
 
 export type ModalProps = {
   children: ReactElement;
+  className?: string;
   dismissible?: boolean;
   center?: boolean;
   dir?: string;
   close?: VoidFunction;
+  bodyRef?: Ref<HTMLDivElement>;
 };
 
 export default function Modal({
@@ -17,6 +19,8 @@ export default function Modal({
   dismissible,
   center,
   dir,
+  bodyRef,
+  className,
 }: ModalProps) {
   useEffect(() => {
     if (!dismissible) return;
@@ -31,13 +35,10 @@ export default function Modal({
   }, [dismissible, close]);
 
   return (
-    <div className="Modal" dir={dir}>
-      <div
-        className="background"
-        onClick={pass(dismissible && close && close)}
-      />
+    <div className={cn("Modal", className)} dir={dir}>
+      <div className="background" onClick={pass(dismissible && close)} />
       <div className={cn("foreground", { center })}>
-        <div className="body">
+        <div className="body" ref={bodyRef}>
           {children}
           {close && <CloseButton onClick={close} />}
         </div>

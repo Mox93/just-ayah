@@ -23,10 +23,14 @@
 
   @include withBorder($borderColor: var(--toast-fg-color));
 
+  // :hover can't be nested under ::after
   &:hover::after {
+    --toast-countdown-bar-color: var(--c-shadow-500);
+
     width: var(--toast-countdown);
   }
 
+  // :not(:hover) can't be nested under ::after
   &:not(:hover)::after {
     animation: countdownAnimation var(--toast-lifetime) linear;
 
@@ -41,14 +45,18 @@
   }
 
   &::after {
+    --toast-countdown-bar-color: var(--toast-fg-color);
+
     content: "";
     height: var(--spacing-xs);
-    background-color: var(--toast-fg-color);
+    background-color: var(--toast-countdown-bar-color);
 
     @include positioning($blockDir: end, $block: 0, $inline: 0, $x: 0, $y: 0);
   }
 
   &.floating {
+    --x-idle: var(--x-displacement);
+
     z-index: 1000;
 
     @include positioning($position: fixed, $block: var(--spacing-m), $y: 0);

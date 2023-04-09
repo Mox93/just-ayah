@@ -2,7 +2,6 @@
 
 .Network {
   --fill-color: var(--c-white);
-  --x-offset: -100%;
 
   display: flex;
   gap: var(--spacing-m);
@@ -10,8 +9,6 @@
   background-color: var(--bg-color);
   padding: var(--spacing-m) var(--spacing-l);
   border-radius: var(--radius-s);
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out, transform 0.5s ease-in-out;
   z-index: 1000;
 
   @include positioning(
@@ -21,7 +18,7 @@
     $block: var(--spacing-m),
     $inline: var(--spacing-m),
     $y: 0,
-    $x: var(--x-offset)
+    $x: 0
   );
 
   &.online {
@@ -30,10 +27,5 @@
 
   &.offline {
     --bg-color: var(--c-danger-200);
-  }
-
-  &.isVisible {
-    --x-offset: 0%;
-    opacity: 1;
   }
 }

@@ -3,9 +3,8 @@ import { forwardRef, Ref } from "react";
 
 import { Button, ButtonProps, DropdownButton } from "components/Buttons";
 import Menu, { MenuProps } from "components/Menu";
-import { useDropdown } from "hooks";
+import { useDropdown, UseDropdownProps } from "hooks";
 import { applyInOrder, cn, identity, mergeRefs } from "utils";
-import { UseDropdownProps } from "hooks/Dropdown";
 
 export interface SelectionMenuProps<TOption>
   extends Omit<ButtonProps, "children">,
@@ -80,20 +79,19 @@ export default forwardRef(function SelectionMenu<TOption>(
     >
       {selected ? render(selected) : placeholder || ". . ."}
     </ButtonComponent>,
-    () => (
-      <Menu
-        {...{ variant, size, getKey, dir, searchFields, options, isLoading }}
-        ref={drivenRef}
-        checkIsSelected={(option) => checkIsSelected(option, selected)}
-        onSelect={(option) => {
-          if (!checkIsSelected(option, selected)) onOptionChange?.(option);
 
-          onOptionSelect?.(option);
-          close();
-        }}
-        renderElement={render}
-        withCheckMark={!noCheckmark}
-      />
-    )
+    <Menu
+      {...{ variant, size, getKey, dir, searchFields, options, isLoading }}
+      ref={drivenRef}
+      checkIsSelected={(option) => checkIsSelected(option, selected)}
+      onSelect={(option) => {
+        if (!checkIsSelected(option, selected)) onOptionChange?.(option);
+
+        onOptionSelect?.(option);
+        close();
+      }}
+      renderElement={render}
+      withCheckMark={!noCheckmark}
+    />
   );
 });

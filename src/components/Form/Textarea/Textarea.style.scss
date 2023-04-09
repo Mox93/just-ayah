@@ -22,7 +22,7 @@
     }
   }
 
-  rtlDir {
+  @include rtlDir {
     .field {
       &::placeholder {
         text-align: right;

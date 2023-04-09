@@ -123,57 +123,55 @@ export default forwardRef(function StatusMenu<TVariant extends StatusVariants>(
         type: (t: string) => capitalize(glb(t)),
       }).join(" | ")}
     </DropdownButton>,
-    () => (
-      <Container variant="menu" ref={drivenRef} className="statusMenu">
-        {mapStatusType(variant, (statusOption: Status) => {
-          const isSelected =
-            (activeStatus?.type || currentStatus.type) === statusOption.type;
-          const customStatus = getCustomStatus(variant, statusOption.type);
+    <Container variant="menu" ref={drivenRef} className="statusMenu">
+      {mapStatusType(variant, (statusOption: Status) => {
+        const isSelected =
+          (activeStatus?.type || currentStatus.type) === statusOption.type;
+        const customStatus = getCustomStatus(variant, statusOption.type);
 
-          const wrapper = (statusButton: ReactElement) =>
-            isSelected && customStatus ? (
-              <div key={statusOption.type} className="customStatusWrapper">
-                {statusButton}
-                <StatusForm
-                  onSubmit={(data) =>
-                    dispatch({
-                      type: "setValue",
-                      payload: {
-                        type: statusOption.type,
-                        value: data[statusOption.type],
-                      },
-                    })
-                  }
-                  defaultValues={{
-                    [statusOption.type]: statusOption.value,
-                    [currentStatus.type]: currentStatus.value,
-                  }}
-                >
-                  {customStatus?.field}
-                </StatusForm>
-              </div>
-            ) : (
-              statusButton
-            );
-
-          return wrapper(
-            <Button
-              {...commonProps}
-              key={statusOption.type}
-              className={cn("option", variant, statusOption.type)}
-              onClick={() =>
-                dispatch({
-                  type: customStatus ? "awaitValue" : "setType",
-                  payload: statusOption,
-                })
-              }
-            >
-              {capitalize(glb(statusOption.type))}
-              {isSelected && <CheckMarkIcon className="CheckMark icon" />}
-            </Button>
+        const wrapper = (statusButton: ReactElement) =>
+          isSelected && customStatus ? (
+            <div key={statusOption.type} className="customStatusWrapper">
+              {statusButton}
+              <StatusForm
+                onSubmit={(data) =>
+                  dispatch({
+                    type: "setValue",
+                    payload: {
+                      type: statusOption.type,
+                      value: data[statusOption.type],
+                    },
+                  })
+                }
+                defaultValues={{
+                  [statusOption.type]: statusOption.value,
+                  [currentStatus.type]: currentStatus.value,
+                }}
+              >
+                {customStatus?.field}
+              </StatusForm>
+            </div>
+          ) : (
+            statusButton
           );
-        })}
-      </Container>
-    )
+
+        return wrapper(
+          <Button
+            {...commonProps}
+            key={statusOption.type}
+            className={cn("option", variant, statusOption.type)}
+            onClick={() =>
+              dispatch({
+                type: customStatus ? "awaitValue" : "setType",
+                payload: statusOption,
+              })
+            }
+          >
+            {capitalize(glb(statusOption.type))}
+            {isSelected && <CheckMarkIcon className="CheckMark icon" />}
+          </Button>
+        );
+      })}
+    </Container>
   );
 });

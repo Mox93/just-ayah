@@ -10,18 +10,6 @@
     }
   }
 
-  @include ltrDir {
-    .field {
-      &::placeholder {
-        text-align: left;
-      }
-
-      &:placeholder-shown {
-        direction: ltr;
-      }
-    }
-  }
-
   @include rtlDir {
     .field {
       &::placeholder {
@@ -30,6 +18,18 @@
 
       &:placeholder-shown {
         direction: rtl;
+      }
+    }
+  }
+
+  @include ltrDir {
+    .field {
+      &::placeholder {
+        text-align: left;
+      }
+
+      &:placeholder-shown {
+        direction: ltr;
       }
     }
   }

@@ -2,8 +2,11 @@ import {
   createContext,
   PropsWithChildren,
   useContext,
+  useEffect,
+  useMemo,
   useReducer,
   useRef,
+  useState,
 } from "react";
 
 import { assert } from "utils";
@@ -11,6 +14,7 @@ import { assert } from "utils";
 import Loading, { LoadingProps } from "./Loading";
 import Modal, { ModalProps } from "./Modal";
 import Toast, { ToastProps } from "./Toast";
+import { Fader, useFader } from "components/Animation";
 
 type OpenModal = (
   children: ModalProps["children"],
@@ -108,18 +112,59 @@ export function PopupProvider({ children }: PropsWithChildren) {
 }
 
 export function PopupOutlet() {
-  const context = useContext(popupOutletContext);
+  const { modal, toast } = usePopupOutletContext();
+  const { closeModal, closeToast } = usePopupContext();
 
-  assert(context !== null);
+  const [modalIsOpen, setModalIsOpen] = useState(modal.isOpen);
+  const [toastIsOpen, setToastIsOpen] = useState(toast.isOpen);
 
-  const { modal, toast } = context;
+  useEffect(() => {
+    setModalIsOpen(modal.isOpen);
+  }, [modal.isOpen]);
+
+  useEffect(() => {
+    setToastIsOpen(toast.isOpen);
+  }, [toast.isOpen]);
+
+  const [ref, isVisible] = useFader<HTMLDivElement>({
+    isOpen: modalIsOpen,
+    expand: true,
+    // duration: 1e4,
+    afterFadeOut: closeModal,
+  });
+
+  const modalCloser = useMemo(
+    () => modal.props?.close && (() => setModalIsOpen(false)),
+    [modal.props?.close]
+  );
+  const toastCloser = useMemo(
+    () => toast.props?.close && (() => setToastIsOpen(false)),
+    [toast.props?.close]
+  );
 
   return (
     <>
-      {modal.isOpen && <Modal {...modal.props} />}
-      {toast.isOpen && <Toast {...toast.props} />}
+      {isVisible && (
+        <Modal {...modal.props!} bodyRef={ref} close={modalCloser} />
+      )}
+      <Fader
+        isOpen={toastIsOpen}
+        expand
+        move
+        anchorPoint="top"
+        // duration={1e4}
+        afterFadeOut={closeToast}
+      >
+        <Toast {...toast.props!} close={toastCloser} />
+      </Fader>
     </>
   );
+}
+
+function usePopupOutletContext() {
+  const context = useContext(popupOutletContext);
+  assert(context !== null);
+  return context;
 }
 
 export function usePopupContext() {

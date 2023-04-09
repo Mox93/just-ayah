@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import Container from "components/Container";
@@ -37,17 +37,20 @@ export default function NavGroup({ icon, label, subitems }: NavGroupProps) {
     HTMLDivElement
   >({ className: "NavGroup", sideMounted: true });
 
-  const navLinks = () =>
-    subitems.map(({ url, label, name: child }) => (
-      <NavLink
-        key={child}
-        to={url}
-        className={({ isActive }) => cn("navChild", { isActive })}
-        onClick={close}
-      >
-        <h4 className="label">{navT(label)}</h4>
-      </NavLink>
-    ));
+  const navLinks = useMemo(
+    () =>
+      subitems.map(({ url, label, name: child }) => (
+        <NavLink
+          key={child}
+          to={url}
+          className={({ isActive }) => cn("navChild", { isActive })}
+          onClick={close}
+        >
+          <h4 className="label">{navT(label)}</h4>
+        </NavLink>
+      )),
+    [close, navT, subitems]
+  );
 
   return (
     <>
@@ -68,18 +71,16 @@ export default function NavGroup({ icon, label, subitems }: NavGroupProps) {
         >
           {icon}
         </HiddenLabel>,
-        () => (
-          <Container
-            ref={drivenRef}
-            className={cn("subitemsMenu")}
-            variant="menu"
-            header={<h4 className="label">{navT(label)}</h4>}
-          >
-            {navLinks()}
-          </Container>
-        )
+        <Container
+          ref={drivenRef}
+          className={cn("subitemsMenu")}
+          variant="menu"
+          header={<h4 className="label">{navT(label)}</h4>}
+        >
+          {navLinks}
+        </Container>
       )}
-      {isCollapsed || <div className={cn("subitems")}>{navLinks()}</div>}
+      {isCollapsed || <div className={cn("subitems")}>{navLinks}</div>}
     </>
   );
 }

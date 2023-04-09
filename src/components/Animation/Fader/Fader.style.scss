@@ -1,0 +1,127 @@
+@use "styles/abstracts/mixins" as *;
+
+.Fader {
+  --fade-duration: 1s;
+  --x-idle: 0%;
+  --y-idle: 0%;
+  --x-hidden: var(--x-idle);
+  --y-hidden: var(--y-idle);
+  --block-origin: center;
+  --inline-origin: center;
+  --shrinkage: 1;
+  --anchor-point: var(--block-origin) var(--inline-origin);
+  --idle-position: translate(var(--x-idle), var(--y-idle));
+  --hidden-position: translate(var(--x-hidden), var(--y-hidden));
+  --expanded-size: scale(1);
+  --shrunken-size: scale(var(--shrinkage));
+
+  transform-origin: var(--anchor-point);
+
+  // &:not(.visibleContent) {
+  //   color: transparent;
+
+  //   & > *,
+  //   &::before,
+  //   &::after {
+  //     opacity: 0;
+  //   }
+  // }
+
+  &.expandable {
+    --shrinkage: 0.75;
+  }
+
+  &.ap-top {
+    &.movable {
+      --y-hidden: calc(var(--y-idle) - 50%);
+    }
+
+    &.expandable {
+      --block-origin: top;
+    }
+  }
+
+  &.ap-bottom {
+    &.movable {
+      --y-hidden: calc(var(--y-idle) + 50%);
+    }
+
+    &.expandable {
+      --block-origin: bottom;
+    }
+  }
+
+  &.ap-start {
+    &.movable {
+      @include rtlDir {
+        --x-hidden: calc(var(--x-idle) + 50%);
+      }
+
+      @include ltrDir {
+        --x-hidden: calc(var(--x-idle) - 50%);
+      }
+    }
+
+    &.expandable {
+      @include rtlDir {
+        --inline-origin: right;
+      }
+
+      @include ltrDir {
+        --x-hidden: calc(var(--x-idle) - 50%);
+      }
+    }
+  }
+
+  &.ap-end {
+    &.movable {
+      @include rtlDir {
+        --x-hidden: calc(var(--x-idle) - 50%);
+      }
+
+      @include ltrDir {
+        --x-hidden: calc(var(--x-idle) + 50%);
+      }
+    }
+
+    &.expandable {
+      @include rtlDir {
+        --inline-origin: left;
+      }
+
+      @include ltrDir {
+        --inline-origin: right;
+      }
+    }
+  }
+
+  &.fadeIn {
+    animation: fadeInAction var(--fade-duration) forwards;
+  }
+
+  &.fadeOut {
+    animation: fadeOutAction var(--fade-duration) forwards;
+  }
+
+  @keyframes fadeInAction {
+    from {
+      opacity: 0;
+      transform: var(--hidden-position) var(--shrunken-size);
+    }
+    to {
+      opacity: 1;
+      transform: var(--idle-position) var(--expanded-size);
+    }
+  }
+
+  @keyframes fadeOutAction {
+    from {
+      opacity: 1;
+      transform: var(--idle-position) var(--expanded-size);
+    }
+    to {
+      opacity: 0;
+      transform: var(--hidden-position) var(--shrunken-size);
+    }
+  }
+}

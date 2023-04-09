@@ -1,11 +1,17 @@
-import { ReactElement, useCallback, useEffect, useRef } from "react";
+import {
+  ReactElement,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 
 import { ReactComponent as DangerIcon } from "assets/icons/block-svgrepo-com.svg";
 import { ReactComponent as InfoIcon } from "assets/icons/info-svgrepo-com.svg";
 import { ReactComponent as SuccessIcon } from "assets/icons/success-svgrepo-com.svg";
 import { ReactComponent as WarningIcon } from "assets/icons/warning-svgrepo-com.svg";
 import { CloseButton } from "components/Buttons";
-import { cn, mergeCallbacks } from "utils";
+import { cn, mergeCallbacks, mergeRefs } from "utils";
 
 export type ToastVariant = "success" | "info" | "warning" | "danger";
 
@@ -18,6 +24,7 @@ const icons: Record<ToastVariant, ReactElement> = {
 
 export interface ToastProps {
   message: string | ReactElement;
+  className?: string;
   duration?: number;
   variant?: ToastVariant;
   floating?: boolean;
@@ -25,20 +32,22 @@ export interface ToastProps {
   close?: VoidFunction;
 }
 
-export default function Toast({
-  message,
-  duration = 7e3,
-  floating,
-  variant = "info",
-  dir,
-  close,
-}: ToastProps) {
-  console.log(`Toast ${variant} rendered`);
-
+export default forwardRef<HTMLDivElement, ToastProps>(function Toast(
+  {
+    message,
+    duration = 7e3,
+    floating,
+    variant = "info",
+    dir,
+    close,
+    className,
+  },
+  ref
+) {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const startAtRef = useRef(new Date());
   const progressRef = useRef(0);
-  const ref = useRef<HTMLDivElement>(null);
+  const internalRef = useRef<HTMLDivElement>(null);
 
   const startCountdown = useCallback(
     (remainingDuration?: number) => {
@@ -48,7 +57,10 @@ export default function Toast({
         0
       );
 
-      ref.current?.style.setProperty("--toast-lifetime", `${_duration}ms`);
+      internalRef.current?.style.setProperty(
+        "--toast-lifetime",
+        `${_duration}ms`
+      );
 
       timeoutRef.current = setTimeout(() => close?.(), _duration);
     },
@@ -70,9 +82,9 @@ export default function Toast({
 
   return (
     <div
-      className={cn("Toast", variant, { floating })}
+      className={cn("Toast", variant, { floating }, className)}
       dir={dir}
-      ref={ref}
+      ref={mergeRefs(ref, internalRef)}
       onPointerEnter={() => {
         stopCountdown();
 
@@ -80,8 +92,8 @@ export default function Toast({
 
         progressRef.current += passedTime;
 
-        ref.current?.style.setProperty("--toast-lifetime", `0ms`);
-        ref.current?.style.setProperty(
+        internalRef.current?.style.setProperty("--toast-lifetime", `0ms`);
+        internalRef.current?.style.setProperty(
           "--toast-countdown",
           `${Math.max(1 - progressRef.current / duration, 0) * 100}%`
         );
@@ -96,4 +108,4 @@ export default function Toast({
       <CloseButton onClick={mergeCallbacks(close, stopCountdown)} />
     </div>
   );
-}
+});

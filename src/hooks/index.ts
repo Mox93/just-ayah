@@ -1,7 +1,7 @@
 export { default as useApplyOnce } from "./ApplyOnce";
 export { default as useCountdown } from "./Countdown";
 export { default as useDropdown } from "./Dropdown";
-export type { AnchorPoint } from "./Dropdown";
+export type { AnchorPoint, UseDropdownProps } from "./Dropdown";
 export { default as useDynamicList } from "./DynamicList";
 export { default as useLoading } from "./Loading";
 export * from "./LocalStorage";
@@ -13,3 +13,4 @@ export * from "./Tabs";
 export { default as useTabs } from "./Tabs";
 export * from "./Translation";
 export { default as useUniqueId } from "./UniqueId";
+export { default as useUpdate } from "./Update";

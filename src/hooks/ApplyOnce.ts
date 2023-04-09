@@ -4,12 +4,17 @@ export default function useApplyOnce(
   action: VoidFunction | (() => VoidFunction),
   condition = true
 ) {
-  const applied = useRef(false);
+  const isFirstTime = useRef(false);
+  const actionRef = useRef(action);
 
   useEffect(() => {
-    if (condition && !applied.current) {
-      applied.current = true;
-      return action();
+    actionRef.current = action;
+  }, [action]);
+
+  useEffect(() => {
+    if (condition && !isFirstTime.current) {
+      isFirstTime.current = true;
+      return actionRef.current();
     }
   }, [condition]);
 }

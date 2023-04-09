@@ -124,7 +124,8 @@ export default function SearchBar<TIndex>({
   return (
     <div className="SearchBar">
       {showResults
-        ? dropdownWrapper(searchBar, () => (
+        ? dropdownWrapper(
+            searchBar,
             <Menu
               ref={drivenRef}
               options={results || []}
@@ -145,7 +146,7 @@ export default function SearchBar<TIndex>({
               })}
               onSelect={onSelect}
             />
-          ))
+          )
         : searchBar}
     </div>
   );

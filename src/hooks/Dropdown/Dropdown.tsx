@@ -1,5 +1,6 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
+import { useFader } from "components/Animation";
 import { cn, documentEventFactory, oneOf, refEventFactory } from "utils";
 
 export type AnchorPoint = `${"top" | "bottom"}-${"start" | "end"}`;
@@ -25,7 +26,7 @@ export default function useDropdown<
   const [isOpen, setIsOpen] = useState(false);
 
   const driverRef = useRef<T1>(null);
-  const drivenRef = useRef<T2>(null);
+  const internalDrivenRef = useRef<T2>(null);
 
   const open = useRef(() => setIsOpen(true));
   const close = useRef(() => setIsOpen(false));
@@ -33,10 +34,12 @@ export default function useDropdown<
 
   useEffect(() => {
     function handleWentOutside(event: Event) {
+      if (!driverRef.current || !internalDrivenRef.current) return;
+
       if (
         event.target instanceof Node &&
         !driverRef.current?.contains(event.target) &&
-        !drivenRef.current?.contains(event.target)
+        !internalDrivenRef.current?.contains(event.target)
       )
         close.current();
     }
@@ -82,14 +85,18 @@ export default function useDropdown<
   //   }
   // }, []);
 
-  const isOpenRef = useRef(isOpen);
-  isOpenRef.current = isOpen;
+  const [drivenRef, isVisible] = useFader({
+    isOpen,
+    anchorPoint: (sideMounted ? anchorPoint : anchorPoint.split("-")[0]) as any,
+    expand: true,
+    ref: internalDrivenRef,
+  });
 
   const wrapper = useCallback(
-    (driver: ReactElement, driven: () => ReactElement) => (
+    (driver: ReactElement, driven: ReactElement) => (
       <div className={cn("DropdownWrapper", className)} dir={dir}>
         {driver}
-        {isOpenRef.current && (
+        {isVisible && (
           <div
             className={cn(
               "buffer",
@@ -97,12 +104,12 @@ export default function useDropdown<
               { sideMounted }
             )}
           >
-            {driven()}
+            {driven}
           </div>
         )}
       </div>
     ),
-    [anchorPoint, className, dir, sideMounted]
+    [anchorPoint, className, dir, isVisible, sideMounted]
   );
 
   return {

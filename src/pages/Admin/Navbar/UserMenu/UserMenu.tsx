@@ -52,36 +52,29 @@ export default function UserMenu() {
       label={label()}
     >
       {avatar}
-      {/* <div className="settingsSection">
-        <Button variant="danger-solid" className="signOut" onClick={signOut}>
-        {glb("signOut")}
-        </Button>
-      </div> */}
     </HiddenLabel>,
-    () => (
-      <Container
-        ref={drivenRef}
-        variant="menu"
-        header={
-          <>
-            {avatar}
-            {label("h3", "h5")}
-          </>
-        }
-      >
-        <Link className="navLink" to="/admin/account">
-          <ProfileIcon className="icon" />
-          {glb("myAccount")}
-        </Link>
-        <Link className="navLink" to="/admin/settings">
-          <SettingsIcon className="icon" />
-          {glb("settings")}
-        </Link>
-        <Button variant="danger-text" className="logout" onClick={signOut}>
-          <LogoutIcon className="icon" />
-          {glb("logout")}
-        </Button>
-      </Container>
-    )
+    <Container
+      ref={drivenRef}
+      variant="menu"
+      header={
+        <>
+          {avatar}
+          {label("h3", "h5")}
+        </>
+      }
+    >
+      <Link className="navLink" to="/admin/account">
+        <ProfileIcon className="icon" />
+        {glb("myAccount")}
+      </Link>
+      <Link className="navLink" to="/admin/settings">
+        <SettingsIcon className="icon" />
+        {glb("settings")}
+      </Link>
+      <Button variant="danger-text" className="logout" onClick={signOut}>
+        <LogoutIcon className="icon" />
+        {glb("logout")}
+      </Button>
+    </Container>
   );
 }

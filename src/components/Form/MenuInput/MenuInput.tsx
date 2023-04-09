@@ -71,18 +71,16 @@ export default forwardRef(function MenuInput<TOption>(
         : null}
       {after("input", <SpinningArrow {...{ isOpen, dir }} />)}
     </Input>,
-    () => (
-      <Menu
-        {...{ dir, getKey, options, searchFields }}
-        ref={drivenRef}
-        checkIsSelected={(option) => isEqual(option, selected)}
-        renderElement={renderElement}
-        onSelect={(option) => {
-          setValue?.(option);
-          close();
-        }}
-        withCheckMark
-      />
-    )
+    <Menu
+      {...{ dir, getKey, options, searchFields }}
+      ref={drivenRef}
+      checkIsSelected={(option) => isEqual(option, selected)}
+      renderElement={renderElement}
+      onSelect={(option) => {
+        setValue?.(option);
+        close();
+      }}
+      withCheckMark
+    />
   );
 });
