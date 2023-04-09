@@ -23,24 +23,24 @@ type NavTree = (
 )[];
 
 export function useNavTree() {
-  return navTree;
+  return NAV_TREE;
 }
 
-const icons = {
+const ICONS = {
   home: <HomeIcon className="icon" />,
   users: <UsersIcon className="icon" />,
   courses: <CoursesIcon className="icon" />,
 };
 
-const navTree: NavTree = [
+const NAV_TREE: NavTree = [
   {
-    icon: icons.home,
+    icon: ICONS.home,
     name: "home",
     label: "home",
     url: "/admin",
   },
   {
-    icon: icons.users,
+    icon: ICONS.users,
     name: "users",
     label: "users",
     subitems: [
@@ -67,7 +67,7 @@ const navTree: NavTree = [
     ],
   },
   {
-    icon: icons.courses,
+    icon: ICONS.courses,
     name: "courses",
     label: "courses",
     url: "/admin/courses",

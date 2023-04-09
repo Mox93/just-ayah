@@ -1,10 +1,9 @@
-import { HTMLAttributes, ReactNode } from "react";
+import { HTMLAttributes, ReactNode, Ref } from "react";
 
 import { ReactComponent as CallIcon } from "assets/icons/call-svgrepo-com.svg";
 import { ReactComponent as WhatsAppIcon } from "assets/icons/whatsapp-svgrepo-com.svg";
 import { ReactComponent as TelegramIcon } from "assets/icons/telegram-svgrepo-com.svg";
 import { useGlobalT, useMessageT } from "hooks";
-import { InnerProps } from "models";
 import {
   Country,
   CountryCode,
@@ -20,6 +19,10 @@ import FieldWrapper from "../FieldWrapper";
 import Input, { InputProps } from "../Input";
 import MenuInput, { MenuInputProps } from "../MenuInput";
 import SelectionInput, { SelectionInputProps } from "../SelectionInput";
+
+type InnerProps<TProps, TElement = any> = Partial<TProps> & {
+  ref?: Ref<TElement>;
+};
 
 interface PhoneNumberInputProps extends HTMLAttributes<HTMLDivElement> {
   label?: string;
@@ -93,7 +96,7 @@ export default function PhoneNumberInput({
           isInvalid={isInvalid}
           renderElement={(option) => (
             <>
-              {icons[option]}
+              {ICONS[option]}
               {glb(option)}
             </>
           )}
@@ -108,7 +111,7 @@ export default function PhoneNumberInput({
   );
 }
 
-const icons: { [key in PhoneNumberTag]: ReactNode } = {
+const ICONS = {
   call: <CallIcon className="call" />,
   whatsapp: <WhatsAppIcon className="whatsapp" />,
   telegram: <TelegramIcon className="telegram" />,

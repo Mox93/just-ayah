@@ -2,10 +2,11 @@ import { get } from "lodash";
 import { useMemo } from "react";
 import { useFormState, useWatch } from "react-hook-form";
 
-import ErrorMessage from "components/Form/ErrorMessage";
 import { SimplePhoneNumber } from "models/blocks";
 import { cn } from "utils";
 import { createModifier } from "utils/transformer";
+
+import ErrorMessage from "../../ErrorMessage";
 
 import {
   DefaultInputProps,

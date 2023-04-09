@@ -5,7 +5,6 @@ import type {
   UpdateData,
   WhereFilterOp,
 } from "firebase/firestore";
-import { Ref } from "react";
 import { PartialDeep } from "type-fest";
 
 import { Comment } from "../blocks";
@@ -39,10 +38,6 @@ export interface DataModel<T extends GenericObject = GenericObject>
 \***************************/
 
 export type SubsetOf<T> = T | Partial<T> | PartialDeep<T>;
-
-export type InnerProps<TProps, TElement = any> = Partial<TProps> & {
-  ref?: Ref<TElement>;
-};
 
 // FIXME returns unknown as value in nested objects
 export type UpdateObject<TData> = { [K in Path<TData>]+?: PathValue<TData, K> };
@@ -118,7 +113,3 @@ export type AddCommentFunc = (id: string, comment: Comment) => void;
 
 export type Converter<TInput, TOutput = TInput> = (value: TInput) => TOutput;
 export type GetKey<TInput> = Converter<TInput, string | number>;
-export type DBConverter<DataFrom, DataTo> = {
-  (id: string, data: DataFrom): DataTo & { id: string };
-  (id: string, data: Partial<DataFrom>): Partial<DataTo> & { id: string };
-};

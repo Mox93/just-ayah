@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
+import { ValueOrGetter } from "utils";
 
 export default function useApplyOnce(
-  action: VoidFunction | (() => VoidFunction),
+  action: ValueOrGetter<VoidFunction>,
   condition = true
 ) {
   const isFirstTime = useRef(false);

@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
+import { ValueOrGetter } from "utils";
 
 export default function useUpdate(
-  action: () => void | (() => void),
+  action: ValueOrGetter<VoidFunction>,
   dependencies?: any[]
 ) {
   const isFirstTime = useRef(true);

@@ -2,7 +2,7 @@ import { get } from "lodash";
 import { ReactNode, useMemo } from "react";
 
 import Container from "components/Container";
-import { cn, pass } from "utils";
+import { ValueOrGetter, cn, resolveValue, pass } from "utils";
 
 interface DataWithId {
   id: string;
@@ -21,7 +21,7 @@ interface TableProps<T, D> {
   className?: string;
   dir?: string;
   fields: FieldProps<T>[];
-  data: D | (() => D);
+  data: ValueOrGetter<D>;
   selected?: Set<string>;
   footer?: ReactNode;
   noCheckbox?: boolean;
@@ -44,7 +44,7 @@ const Table = <T extends DataWithId, D extends List<T>>({
   toggleSelect,
   extraProps = pass({}),
 }: TableProps<T, D>) => {
-  data = useMemo<D>(() => (typeof data === "function" ? data() : data), [data]);
+  data = useMemo(() => resolveValue(data), [data]);
   const size = Array.isArray(data)
     ? data.length
     : data instanceof Map

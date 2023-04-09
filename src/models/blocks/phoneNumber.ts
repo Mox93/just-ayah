@@ -1,8 +1,9 @@
 import { assert } from "utils";
 import { z, ZodTypeAny } from "zod";
 
+import { nonEmptyArray } from "lib/zod";
+
 import { countryCodeList, countryCodeSchema, countrySchema } from "./country";
-import { nonEmptyArray } from "./schemas";
 
 export const phoneNumberTagsSchema = z.enum(["call", "whatsapp", "telegram"]);
 

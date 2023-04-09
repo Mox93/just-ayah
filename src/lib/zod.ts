@@ -1,6 +1,6 @@
 import { Schema, z, ZodType, ZodTypeDef, ZodUnion } from "zod";
 
-import { Merge } from "../types/merge";
+import { Merge } from "models";
 
 export function nonEmptyArray<S extends ZodType>(schema: S) {
   return z.tuple([schema]).rest(schema);

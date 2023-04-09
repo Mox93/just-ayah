@@ -5,12 +5,10 @@
 
   &.invalid {
     --fg-color: var(--c-danger-200);
-    --c-foreground: var(--c-danger-300);
   }
 
   &.accepted {
     --fg-color: var(--c-success-200);
-    --c-foreground: var(--c-success-300);
   }
 
   .icon {

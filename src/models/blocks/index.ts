@@ -9,7 +9,6 @@ export * from "./language";
 export * from "./phoneNumber";
 export * from "./request";
 export * from "./schedule";
-export * from "./schemas";
 export * from "./status";
 export * from "./timezone";
 export * from "./trackable";

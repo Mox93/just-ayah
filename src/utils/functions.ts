@@ -1,25 +1,15 @@
 import { get } from "lodash";
-import { Primitive } from "type-fest";
 
 import { Path, PathValue } from "models";
 import { IS_DEV, IS_PROD } from "models/config";
+
+import { assert } from "./validation";
 
 export function identity(value: any) {
   return value;
 }
 
 export function omit() {}
-
-function oneOf<U extends Primitive, T extends Readonly<[U, ...U[]]>>(
-  value: any,
-  values: T
-): value is T[number];
-function oneOf<U extends Primitive, T extends [U, ...U[]]>(
-  value: any,
-  values: T
-): value is T[number] {
-  return values.includes(value);
-}
 
 function pass<R, A = unknown, T extends A[] = any[]>(
   func: (...args: T) => R,
@@ -63,17 +53,4 @@ export function prodOnly<T, A, Args extends [...A[]]>(
   return IS_PROD ? (...value: any) => action(...value) : omit;
 }
 
-export function hasAtLeastOne<T>(array?: T[]): array is [T, ...T[]] {
-  return !!array?.length;
-}
-
-export function assert(
-  value: unknown,
-  message?: string | Error
-): asserts value {
-  if (!value) {
-    throw message instanceof Error ? message : new Error(message);
-  }
-}
-
-export { oneOf, pass, pluck };
+export { pass, pluck };

@@ -15,7 +15,7 @@ import { cn, mergeCallbacks, mergeRefs } from "utils";
 
 export type ToastVariant = "success" | "info" | "warning" | "danger";
 
-const icons: Record<ToastVariant, ReactElement> = {
+const ICONS = {
   success: <SuccessIcon className="toastIcon iconL" />,
   info: <InfoIcon className="toastIcon iconL" />,
   warning: <WarningIcon className="toastIcon iconL" />,
@@ -103,7 +103,7 @@ export default forwardRef<HTMLDivElement, ToastProps>(function Toast(
         startCountdown(duration - progressRef.current);
       }}
     >
-      {icons[variant]}
+      {ICONS[variant]}
       <p className="message">{message}</p>
       <CloseButton onClick={mergeCallbacks(close, stopCountdown)} />
     </div>

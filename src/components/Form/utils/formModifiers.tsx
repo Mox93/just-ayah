@@ -132,7 +132,9 @@ export type WithFormHook<
 export type ProcessedProps<TProps extends {}, TFieldValues extends {}> = Merge<
   TProps,
   {
-    isRequired: boolean;
+    isRequired?: boolean;
+    isInvalid?: boolean;
+    errorMessage?: ReactElement;
     formHook: FormHook<TFieldValues>;
     rules: RegisterOptions<TFieldValues>;
   }
@@ -163,12 +165,17 @@ export const processProps = <TFieldValues extends {}>() =>
       formHook,
       rules,
       name,
+      noErrorMessage,
       ...props
     }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
       if (!formHook) return { ...props, name, rules };
 
-      const { onChange, onBlur, value, required, ...rest } =
+      const { onChange, onBlur, value, required, className, ...rest } =
         props as DefaultInputProps;
+
+      const { control } = formHook;
+      const { errors } = useFormState({ control, name });
+      const errorMessage = get(errors, name);
 
       const processedRules: typeof rules = { ...rules };
       const processedProps: ProcessedProps<DefaultInputProps, TFieldValues> = {
@@ -178,6 +185,11 @@ export const processProps = <TFieldValues extends {}>() =>
         isRequired: required || !!processedRules.required,
         rules: processedRules,
         formHook,
+        className: cn(className, "withErrors"),
+        isInvalid: !!errorMessage,
+        ...(noErrorMessage
+          ? {}
+          : { errorMessage: <ErrorMessage name={name} errors={errors} /> }),
       };
 
       COMMON_RULES.forEach((key) => {
@@ -262,20 +274,11 @@ export const registerField = <TFieldValues extends {}>(
     }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
       if (!formHook) return { ...props, name, ref };
 
-      const { register, control } = formHook;
-      const { className } = props as DefaultInputProps;
+      const { register } = formHook;
       const { ref: registerRef, ...rest } = register(name, rules);
-
-      const { errors } = useFormState({ control, name });
-      const errorMessage = get(errors, name);
 
       return {
         ...props,
-        className: cn(className, "withErrors"),
-        isInvalid: !!errorMessage,
-        ...(noErrorMessage
-          ? {}
-          : { errorMessage: ErrorMessage({ name, errors }) }),
         ...convert({ ref: mergeRefs(registerRef, ref), ...rest }),
       };
     }
