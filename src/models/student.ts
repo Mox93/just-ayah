@@ -28,6 +28,7 @@ import {
   userIndexSchema,
   workStatusSchema,
 } from "./blocks";
+import { paymentRefSchema } from "./payment";
 
 const metaSchema = trackableSchema.merge(
   z
@@ -40,6 +41,7 @@ const metaSchema = trackableSchema.merge(
       termsOfService: z.string(),
       progress: progressSchema,
       subscription: subscriptionSchema,
+      payment: paymentRefSchema,
       notes: commentListSchema,
       useTelegram: booleanSchema,
       quran: booleanSchema,

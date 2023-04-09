@@ -73,6 +73,11 @@ export default function RoutHandler() {
               <Route index element={<TeacherList />} />
               <Route path=":id" element={<TeacherProfile />} />
             </Route>
+
+            {/* Payments */}
+            <Route path="payments">
+              <Route index />
+            </Route>
           </Route>
         </Route>
       </Route>

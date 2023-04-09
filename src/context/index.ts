@@ -3,6 +3,7 @@ export * from "./Course";
 export * from "./Indexing";
 export * from "./Lead";
 export * from "./Header";
+export { default as usePaymentStore } from "./Payment";
 export * from "./Popup";
 export { default as useSidebarStore } from "./Sidebar";
 export * from "./Student";

@@ -25,12 +25,14 @@ import {
   userIndexListSchema,
 } from "./blocks";
 import { dateSchema } from "./blocks";
+import { paymentRefSchema } from "./payment";
 
 const metaSchema = trackableSchema.merge(
   z
     .object({
       schedule: scheduleSchema,
       dailyHours: z.number().positive(),
+      payment: paymentRefSchema,
       students: userIndexListSchema,
       leads: z.string(),
       termsOfService: z.string(),

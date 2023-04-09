@@ -92,6 +92,11 @@
     }
   }
 
+  .MonyIcon {
+    --fill-color: transparent;
+    --stroke-color: var(--fg-color);
+  }
+
   .companyLogo {
     padding-block: var(--spacing-m);
 

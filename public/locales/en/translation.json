@@ -98,7 +98,8 @@
     "leads": "leads",
     "staff": "staff",
     "courses": "programs",
-    "users": "users"
+    "users": "users",
+    "payments": "payments"
   },
   "personalInfo": {
     "fullName": "full name",
