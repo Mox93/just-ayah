@@ -1,11 +1,5 @@
 import { useSidebarStore } from "context";
-import {
-  cloneElement,
-  forwardRef,
-  HTMLAttributes,
-  ReactElement,
-  Ref,
-} from "react";
+import { cloneElement, forwardRef, HTMLAttributes, ReactElement } from "react";
 
 import { cn } from "utils";
 
@@ -21,9 +15,9 @@ type HiddenLabelProps = HiddenLabelCommonProps &
     | ({ Component: "button" } & HTMLAttributes<HTMLButtonElement>)
   );
 
-export default forwardRef(function HiddenLabel(
-  { className, children, label, Component = "div", ...props }: HiddenLabelProps,
-  ref: Ref<HTMLElement>
+export default forwardRef<HTMLElement, HiddenLabelProps>(function HiddenLabel(
+  { className, children, label, Component = "div", ...props },
+  ref
 ) {
   const showLabel = useSidebarStore((state) => state.isFullyExpanded);
 

@@ -1,4 +1,4 @@
-import { forwardRef, Ref } from "react";
+import { forwardRef } from "react";
 
 import { SpinningArrow } from "components/Icons";
 import { SpinningArrowVariant } from "components/Icons/SpinningArrow";
@@ -11,24 +11,19 @@ interface DropdownButtonProps extends ButtonProps {
   arrowVariant?: SpinningArrowVariant;
 }
 
-export default forwardRef(function DropdownButton(
-  {
-    children,
-    className,
-    isOpen,
-    dir,
-    arrowVariant,
-    ...props
-  }: DropdownButtonProps,
-  ref: Ref<HTMLButtonElement>
-) {
-  return (
-    <Button
-      {...{ ...props, ref, dir }}
-      className={cn("DropdownButton", className, { withChildren: children })}
-    >
-      {children}
-      <SpinningArrow {...{ isOpen, dir, variant: arrowVariant }} />
-    </Button>
-  );
-});
+export default forwardRef<HTMLButtonElement, DropdownButtonProps>(
+  function DropdownButton(
+    { children, className, isOpen, dir, arrowVariant, ...props },
+    ref
+  ) {
+    return (
+      <Button
+        {...{ ...props, ref, dir }}
+        className={cn("DropdownButton", className, { withChildren: children })}
+      >
+        {children}
+        <SpinningArrow {...{ isOpen, dir, variant: arrowVariant }} />
+      </Button>
+    );
+  }
+);

@@ -82,10 +82,12 @@
     );
 
     .SpinningArrow {
-      transform: rotate(-90deg);
-
       @include rtlDir {
         transform: rotate(90deg);
+      }
+
+      @include ltrDir {
+        transform: rotate(-90deg);
       }
     }
   }

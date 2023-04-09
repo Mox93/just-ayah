@@ -22,7 +22,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   visibleBorder?: boolean;
 }
 
-export default forwardRef(function Input(
+export default forwardRef<HTMLInputElement, InputProps>(function Input(
   {
     className,
     dir,
@@ -38,8 +38,8 @@ export default forwardRef(function Input(
     id,
     name,
     ...props
-  }: InputProps,
-  ref: Ref<HTMLInputElement>
+  },
+  ref
 ) {
   const _id = useUniqueId(name || "input");
 

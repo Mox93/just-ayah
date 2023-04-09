@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode, Ref } from "react";
+import { forwardRef, ReactNode } from "react";
 
 import { cn } from "utils";
 
@@ -12,9 +12,9 @@ interface ContainerProps {
   flat?: boolean;
 }
 
-export default forwardRef(function Container(
-  { className, children, variant, dir, header, footer, flat }: ContainerProps,
-  ref: Ref<HTMLDivElement>
+export default forwardRef<HTMLDivElement, ContainerProps>(function Container(
+  { className, children, variant, dir, header, footer, flat },
+  ref
 ) {
   return (
     <div

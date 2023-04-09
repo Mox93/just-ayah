@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, Children, forwardRef, Ref, useRef } from "react";
+import { ButtonHTMLAttributes, Children, forwardRef, useRef } from "react";
 
 import { cn, mergeCallbacks, mergeRefs, capitalize } from "utils";
 import { LoadingDots } from "components/Icons";
@@ -25,7 +25,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconButton?: boolean;
 }
 
-export default forwardRef(function Button(
+export default forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     children,
     className,
@@ -40,8 +40,8 @@ export default forwardRef(function Button(
     disabled,
     onClick,
     ...props
-  }: ButtonProps,
-  ref: Ref<HTMLButtonElement>
+  },
+  ref
 ) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 

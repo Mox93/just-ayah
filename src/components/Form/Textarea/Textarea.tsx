@@ -30,7 +30,7 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   visibleBorder?: boolean;
 }
 
-export default forwardRef(function Textarea(
+export default forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
   {
     className,
     dir,
@@ -46,8 +46,8 @@ export default forwardRef(function Textarea(
     name,
     id,
     ...props
-  }: TextareaProps,
-  ref: Ref<HTMLTextAreaElement>
+  },
+  ref
 ) {
   const innerRef = useRef(null);
   const _id = useUniqueId(name || "textarea");

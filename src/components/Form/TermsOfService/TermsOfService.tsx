@@ -1,10 +1,4 @@
-import {
-  forwardRef,
-  InputHTMLAttributes,
-  Ref,
-  useEffect,
-  useState,
-} from "react";
+import { forwardRef, InputHTMLAttributes, useEffect, useState } from "react";
 
 import { ReactComponent as AcceptedIcon } from "assets/icons/success-svgrepo-com.svg";
 import { ReactComponent as IdleIcon } from "assets/icons/minus-circle-svgrepo-com.svg";
@@ -29,49 +23,50 @@ interface TermsOfServiceProps
   onAccept?: (url: string) => void;
 }
 
-export default forwardRef(function TermsOfService(
-  { url, isInvalid, onAccept, ...props }: TermsOfServiceProps,
-  ref: Ref<HTMLInputElement>
-) {
-  const msg = useMessageT();
+export default forwardRef<HTMLInputElement, TermsOfServiceProps>(
+  function TermsOfService({ url, isInvalid, onAccept, ...props }, ref) {
+    const msg = useMessageT();
 
-  const [status, setStatus] = useState<"idle" | "invalid" | "accepted">("idle");
+    const [status, setStatus] = useState<"idle" | "invalid" | "accepted">(
+      "idle"
+    );
 
-  useEffect(() => {
-    if (isInvalid) setStatus("invalid");
-  }, [isInvalid]);
+    useEffect(() => {
+      if (isInvalid) setStatus("invalid");
+    }, [isInvalid]);
 
-  const { openModal, closeModal } = usePopupContext();
+    const { openModal, closeModal } = usePopupContext();
 
-  return (
-    <>
-      <input {...props} value={url} type="checkbox" ref={ref} hidden />
-      <Button
-        variant="plain-text"
-        className={cn("TermsOfService", status)}
-        iconButton
-        onClick={() =>
-          openModal(
-            <TermsOfServicePopup
-              url={url}
-              onAccept={mergeCallbacks(
-                pass(setStatus, "accepted"),
-                pass(onAccept, url),
-                closeModal
-              )}
-            />,
-            {
-              center: true,
-              closable: true,
-              dismissible: true,
-              dir: "rtl",
-            }
-          )
-        }
-      >
-        {icons[status]}
-        {msg("termsOfService")}
-      </Button>
-    </>
-  );
-});
+    return (
+      <>
+        <input {...props} value={url} type="checkbox" ref={ref} hidden />
+        <Button
+          variant="plain-text"
+          className={cn("TermsOfService", status)}
+          iconButton
+          onClick={() =>
+            openModal(
+              <TermsOfServicePopup
+                url={url}
+                onAccept={mergeCallbacks(
+                  pass(setStatus, "accepted"),
+                  pass(onAccept, url),
+                  closeModal
+                )}
+              />,
+              {
+                center: true,
+                closable: true,
+                dismissible: true,
+                dir: "rtl",
+              }
+            )
+          }
+        >
+          {icons[status]}
+          {msg("termsOfService")}
+        </Button>
+      </>
+    );
+  }
+);

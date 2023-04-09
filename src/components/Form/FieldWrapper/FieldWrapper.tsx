@@ -1,4 +1,4 @@
-import { Children, forwardRef, PropsWithChildren, ReactNode, Ref } from "react";
+import { Children, forwardRef, PropsWithChildren, ReactNode } from "react";
 
 import { cn, oneOf } from "utils";
 
@@ -29,31 +29,33 @@ type FieldWrapperProps = PropsWithChildren<{
   partition?: Partition;
 }>;
 
-export default forwardRef(function FieldWrapper(
-  {
-    className,
-    children,
-    isInvalid,
-    dir,
-    addPartitions,
-    contentFullWidth,
-    alwaysVisible,
-    expandable,
-    partition,
-  }: FieldWrapperProps,
-  ref: Ref<HTMLDivElement>
-) {
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "FieldWrapper",
-        { invalid: isInvalid, contentFullWidth, alwaysVisible, expandable },
-        className
-      )}
-      dir={dir}
-    >
-      {addPartitions ? injectPartitions(children, partition) : children}
-    </div>
-  );
-});
+export default forwardRef<HTMLDivElement, FieldWrapperProps>(
+  function FieldWrapper(
+    {
+      className,
+      children,
+      isInvalid,
+      dir,
+      addPartitions,
+      contentFullWidth,
+      alwaysVisible,
+      expandable,
+      partition,
+    },
+    ref
+  ) {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "FieldWrapper",
+          { invalid: isInvalid, contentFullWidth, alwaysVisible, expandable },
+          className
+        )}
+        dir={dir}
+      >
+        {addPartitions ? injectPartitions(children, partition) : children}
+      </div>
+    );
+  }
+);
