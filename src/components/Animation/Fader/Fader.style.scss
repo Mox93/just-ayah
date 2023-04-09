@@ -68,7 +68,7 @@
       }
 
       @include ltrDir {
-        --x-hidden: calc(var(--x-idle) - 50%);
+        --inline-origin: left;
       }
     }
   }
