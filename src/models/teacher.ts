@@ -111,3 +111,11 @@ export type TeacherEnrollDB = InstanceType<typeof TeacherEnroll.DB>;
 export type TeacherEnrollDBData = TeacherEnrollDB["data"];
 
 export type TeacherFormData = z.infer<typeof teacherFormSchema>;
+
+/*****************\
+|*** META DATA ***|
+\*****************/
+
+export const teacherMetaSchema = z.object({
+  termsUrl: z.string().array(),
+});

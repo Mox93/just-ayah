@@ -1,19 +1,20 @@
-import { DBEventHandler, EventType } from "../types";
+import { DBEventHandler, DBUpdateHandler, EventType } from "../types";
 
-export const merge =
-  (...handlers: DBEventHandler[]): DBEventHandler =>
-  (change, context) =>
+function merge(...handlers: DBEventHandler[]): DBEventHandler;
+function merge(...handlers: DBUpdateHandler[]): DBUpdateHandler;
+function merge<H extends DBEventHandler>(...handlers: H[]): DBEventHandler {
+  return (change, context) =>
     handlers.reduce(
       (obj, handler) => ({ ...obj, [handler.name]: handler(change, context) }),
       {}
     );
+}
 
-export const exclude =
-  (
-    handler: DBEventHandler,
-    ...events: [EventType] | [EventType, EventType]
-  ): DBEventHandler =>
-  (change, context) => {
+export function exclude(
+  handler: DBEventHandler,
+  ...events: [EventType] | [EventType, EventType]
+): DBEventHandler {
+  return (change, context) => {
     if (events.includes("delete") && !change.after.exists) return null;
 
     if (events.includes("create") && !change.before.exists) return null;
@@ -27,3 +28,6 @@ export const exclude =
 
     return handler(change, context);
   };
+}
+
+export { merge };

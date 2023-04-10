@@ -1,4 +1,4 @@
-import { TEACHER_DOC_PATH } from "../config";
+import { DOC_ID_VAR, TEACHER_DOC_PATH } from "../config";
 import { db, FieldValue } from "../lib";
 import { DBEventHandler } from "../types";
 import { getFullName } from "../utils";
@@ -15,13 +15,14 @@ export const studentTeacherSync: DBEventHandler = (change, context) => {
     return null;
   }
 
-  const id = context.params.documentId;
+  const id = context.params[DOC_ID_VAR];
+  const path = `meta.students.${id}`;
 
   // Checks for a delete
   if (!change.after.exists && oldTeacherId)
     return db
       .doc(TEACHER_DOC_PATH(oldTeacherId))
-      .update({ [`meta.students.${id}`]: FieldValue.delete() });
+      .update({ [path]: FieldValue.delete() });
 
   const actions = [];
 
@@ -29,7 +30,7 @@ export const studentTeacherSync: DBEventHandler = (change, context) => {
   if (newTeacherId)
     actions.push(
       db.doc(TEACHER_DOC_PATH(newTeacherId)).update({
-        [`meta.students.${id}`]: { name: getFullName(newData) },
+        [path]: { name: getFullName(newData) },
       })
     );
 
@@ -37,7 +38,7 @@ export const studentTeacherSync: DBEventHandler = (change, context) => {
   if (oldTeacherId)
     actions.push(
       db.doc(TEACHER_DOC_PATH(oldTeacherId)).update({
-        [`meta.students.${id}`]: FieldValue.delete(),
+        [path]: FieldValue.delete(),
       })
     );
 

@@ -1,7 +1,17 @@
-import { Change, DocumentSnapshot, EventContext } from "./lib";
+import {
+  Change,
+  DocumentSnapshot,
+  EventContext,
+  QueryDocumentSnapshot,
+} from "./lib";
 
 export type DBEventHandler = (
   change: Change<DocumentSnapshot>,
+  context: EventContext
+) => any;
+
+export type DBUpdateHandler = (
+  change: Change<QueryDocumentSnapshot>,
   context: EventContext
 ) => any;
 

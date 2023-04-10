@@ -8,7 +8,12 @@ import { Button } from "components/Buttons";
 import Countdown from "components/Countdown";
 import Ellipsis from "components/Ellipsis";
 import { EditableCell, FieldProps } from "components/Table";
-import { useStudentEnrollContext, useTeacherEnrollContext } from "context";
+import {
+  useStudentEnrollContext,
+  useStudentTermsUrl,
+  useTeacherEnrollContext,
+  useTeacherTermsUrl,
+} from "context";
 import { useGlobalT, useMessageT } from "hooks";
 import { StudentEnroll } from "models/student";
 import { TeacherEnroll } from "models/teacher";
@@ -19,10 +24,12 @@ export const ENROLL_CONTEXT = {
   student: {
     context: useStudentEnrollContext,
     DBClass: StudentEnroll.DB,
+    termsGetter: useStudentTermsUrl,
   },
   teacher: {
     context: useTeacherEnrollContext,
     DBClass: TeacherEnroll.DB,
+    termsGetter: useTeacherTermsUrl,
   },
 } as const;
 

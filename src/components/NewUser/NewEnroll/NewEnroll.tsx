@@ -10,9 +10,11 @@ import { createEnroll } from "models/blocks";
 import { capitalize } from "utils";
 
 import { UserVariant } from "../NewUser.type";
+import { useEffect } from "react";
 
 interface EnrollForm {
   name?: string;
+  termsUrl?: string;
 }
 
 const { MiniForm, Input } = formAtoms<EnrollForm>();
@@ -21,12 +23,16 @@ interface NewEnrollProps {
   variant: UserVariant;
   addEnroll: AddDataFunc<BaseModel<EnrollUser>>;
   DBClass: Class<BaseModel<EnrollUser>>;
+  termsUrl?: string;
+  isLoading?: boolean;
 }
 
 export default function NewEnroll({
   DBClass,
   addEnroll,
   variant,
+  termsUrl,
+  isLoading,
 }: NewEnrollProps) {
   const glb = useGlobalT();
   const pgT = usePageT("student");
@@ -53,10 +59,18 @@ export default function NewEnroll({
     resetOnSubmit: true,
   });
 
+  const {
+    formHook: { setValue },
+  } = formProps;
+
+  useEffect(() => {
+    setValue("termsUrl", termsUrl);
+  }, [setValue, termsUrl]);
+
   return (
     <MiniForm
       className="NewEnroll"
-      submitProps={{ children: glb("generateLink") }}
+      submitProps={{ children: glb("generateLink"), isLoading }}
       {...formProps}
     >
       <Input name="name" placeholder={pgT("newEnroll")} />

@@ -1,17 +1,12 @@
 import { doc } from "firebase/firestore";
-import { useCallback, useMemo } from "react";
-import { createStore, StoreApi, useStore } from "zustand";
+import { useCallback } from "react";
+import { createStore, StoreApi } from "zustand";
 
-import {
-  requestStateMap,
-  RequestStateMap,
-  UserIndex,
-  userIndexListSchema,
-} from "models/blocks";
+import { RequestStateMap, UserIndex, userIndexListSchema } from "models/blocks";
 import { CourseIndex, courseIndexListSchema } from "models/course";
 import { db } from "services/firebase";
 
-import { onSnapshotFactory, SnapshotState } from "./_internal";
+import { onSnapshotFactory, SnapshotState, useLazySnapshot } from "./_internal";
 
 export function useStudentIndex(sort?: (index: UserIndex[]) => UserIndex[]) {
   return useIndex(studentIndexStore, sort);
@@ -56,15 +51,13 @@ function useIndex<T>(
   indexStore: StoreApi<SnapshotState<T>>,
   modifier?: (index: T) => T
 ): [() => T, RequestStateMap] {
-  const subscribe = useStore(indexStore, (state) => state.subscribe);
-  const state = useStore(indexStore, (state) => state.state);
-  const index = useStore(indexStore, (state) => state.data);
+  const [getter, status] = useLazySnapshot(indexStore);
 
   return [
     useCallback(() => {
-      subscribe();
+      const index = getter();
       return modifier ? modifier(index) : index;
-    }, [index, modifier, subscribe]),
-    useMemo(() => requestStateMap(state), [state]),
+    }, [getter, modifier]),
+    status,
   ];
 }

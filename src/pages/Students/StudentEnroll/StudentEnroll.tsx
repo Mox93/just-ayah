@@ -6,12 +6,12 @@ import { FormLayout } from "components/Layouts";
 import { usePopupContext, useStudentEnrollContext } from "context";
 import { usePageT } from "hooks";
 import { Location } from "models";
-import Student, { StudentFormData } from "models/student";
+import Student, { StudentEnrollFormData } from "models/student";
 
 import StudentForm from "../StudentForm";
 
 export default function StudentEnroll() {
-  const stu = usePageT("student");
+  const pgT = usePageT("student");
 
   const { openModal } = usePopupContext();
   const { submitEnroll } = useStudentEnrollContext();
@@ -19,12 +19,12 @@ export default function StudentEnroll() {
   const { id } = useParams();
   const {
     state: { data },
-  } = useLocation() as Location<{ data: PartialDeep<StudentFormData> }>;
+  } = useLocation() as Location<{ data: PartialDeep<StudentEnrollFormData> }>;
 
   return (
-    <FormLayout name="StudentEnroll" title={stu("formTitle")}>
+    <FormLayout name="StudentEnroll" title={pgT("formTitle")}>
       <StudentForm
-        onSubmit={(data: StudentFormData) =>
+        onSubmit={(data) =>
           submitEnroll(id!, new Student.DB(data), {
             onFulfilled: () => openModal(<EnrolledMessage />, { center: true }),
             onRejected: (error) =>
@@ -36,7 +36,7 @@ export default function StudentEnroll() {
         }
         formId={id}
         defaultValues={data}
-        termsUrl="https://drive.google.com/file/d/1uXAUeNnZAVRCSq8u7Xv1lZXBX-fmLR-k/preview"
+        termsUrl={data.enroll?.termsUrl}
       />
     </FormLayout>
   );

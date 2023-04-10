@@ -24,6 +24,7 @@ export default function Countdown({
   ) : (
     <p className="Countdown active" dir="ltr">
       {timeDeltaUnits
+        .slice(0, -1) // HACK we don't need seconds for now
         .filter((key) => typeof countdown[key] === "number")
         .map((key) => addZeros(countdown[key], key === "year" ? 4 : 2))
         .join(":")}

@@ -4,6 +4,7 @@ export const DOC_ID_CARD = `{${DOC_ID_VAR}}` as const;
 
 // STUDENTS
 export const STUDENT_COLLECTION_PATH = "/students";
+export const STUDENT_META_PATH = "/meta/students";
 export const STUDENT_DOC_PATH = generateDocPath(STUDENT_COLLECTION_PATH);
 export const STUDENT_INDEX_PATH = generateIndexPath("student");
 
