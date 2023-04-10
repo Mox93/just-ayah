@@ -16,9 +16,20 @@ export default function SpinningArrow({
   variant = "dropdown",
   ...props
 }: SpinningArrowProps) {
+  const ref = useRef<SVGSVGElement>(null);
   const wasOpen = useRef(isOpen);
 
   useEffect(() => {
+    if (ref.current) {
+      if (isOpen && !wasOpen.current) {
+        ref.current.classList.remove("closing");
+        ref.current.classList.add("opening");
+      } else if (!isOpen && wasOpen.current) {
+        ref.current.classList.remove("opening");
+        ref.current.classList.add("closing");
+      }
+    }
+
     wasOpen.current = isOpen;
   }, [isOpen]);
 
@@ -28,13 +39,7 @@ export default function SpinningArrow({
       className={cn("SpinningArrow", className, variant)}
       dir={dir}
     >
-      <Angle
-        className={cn("icon", {
-          isOpen,
-          opening: isOpen && !wasOpen.current,
-          closing: wasOpen.current && !isOpen,
-        })}
-      />
+      <Angle ref={ref} className={cn("icon", { isOpen })} />
     </div>
   );
 }

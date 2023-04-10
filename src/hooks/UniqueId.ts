@@ -1,6 +1,6 @@
 import { uniqueId } from "lodash";
-import { useRef } from "react";
+import useRefSync from "./RefSync";
 
 export default function useUniqueId(prefix?: string) {
-  return useRef(uniqueId(prefix && `${prefix}-`)).current;
+  return useRefSync(uniqueId(prefix && `${prefix}-`)).current;
 }

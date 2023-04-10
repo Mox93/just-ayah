@@ -4,7 +4,7 @@ import {
   ReactNode,
   Ref,
   TextareaHTMLAttributes,
-  useEffect,
+  useLayoutEffect,
   useRef,
 } from "react";
 
@@ -52,9 +52,9 @@ export default forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
   const innerRef = useRef(null);
   const _id = useUniqueId(name || "textarea");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     innerRef.current && autoSize(innerRef.current);
-  }, [innerRef]);
+  }, []);
 
   return (
     <div className={cn("Textarea", className)} dir={dir}>
