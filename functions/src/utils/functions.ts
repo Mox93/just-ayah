@@ -1,4 +1,4 @@
-import { DBEventHandler, DBUpdateHandler, EventType } from "../types";
+import { DBEventHandler, DBUpdateHandler, EventType } from "@types";
 
 function merge(...handlers: DBEventHandler[]): DBEventHandler;
 function merge(...handlers: DBUpdateHandler[]): DBUpdateHandler;

@@ -4,9 +4,10 @@ import {
   STUDENT_DOC_PATH,
   STUDENT_INDEX_PATH,
   STUDENT_META_PATH,
-} from "../config";
-import { document } from "../lib";
-import { userIndexing, merge, syncTerms } from "../utils";
+} from "@config";
+import { document } from "@lib";
+import { userIndexing, merge, syncTerms } from "@utils";
+
 import { studentTeacherSync } from "./studentTeacherSync";
 
 export const onStudentDocWrite = document(

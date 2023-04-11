@@ -1,5 +1,5 @@
-import { FieldValue, db } from "../lib";
-import { DBUpdateHandler } from "../types";
+import { FieldValue, db } from "@lib";
+import { DBUpdateHandler } from "@types";
 
 export function syncTerms(targetPath: string): DBUpdateHandler {
   return (change) => {

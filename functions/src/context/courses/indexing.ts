@@ -1,6 +1,6 @@
-import { COURSES_INDEX_PATH, DOC_ID_VAR } from "../../config";
-import { db, FieldValue } from "../../lib";
-import { DBEventHandler } from "../../types";
+import { COURSES_INDEX_PATH, DOC_ID_VAR } from "@config";
+import { db, FieldValue } from "@lib";
+import { DBEventHandler } from "@types";
 
 export const indexing: DBEventHandler = (change, context) => {
   const id = context.params[DOC_ID_VAR];

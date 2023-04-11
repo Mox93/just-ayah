@@ -1,4 +1,4 @@
-import { PhoneNumber, UserName } from "../types";
+import { PhoneNumber, UserName } from "@types";
 
 export function getFullName({
   firstName,

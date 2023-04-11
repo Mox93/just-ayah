@@ -1,9 +1,9 @@
 {
   "name": "functions",
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "serve": "npm run build && firebase emulators:start --only functions",
+    "build": "tsc && tsc-alias",
+    "build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
+    "serve": "concurrently --kill-others \"firebase emulators:start --only functions\" \"npm run build:watch\"",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
@@ -19,6 +19,7 @@
     "googleapis": "^115.0.0"
   },
   "devDependencies": {
+    "tsc-alias": "^1.8.5",
     "typescript": "^4.6.4"
   },
   "private": true

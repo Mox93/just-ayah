@@ -1,8 +1,6 @@
-import * as functions from "firebase-functions";
+import { db, user } from "@lib";
 
-import { db } from "../lib";
-
-export const createUserProfile = functions.auth.user().onCreate((user) => {
+export const createUserProfile = user().onCreate((user) => {
   return db.collection("users").doc(user.uid).set({
     email: user.email,
     name: user.displayName,
@@ -11,6 +9,6 @@ export const createUserProfile = functions.auth.user().onCreate((user) => {
   });
 });
 
-export const deleteUserProfile = functions.auth.user().onDelete((user) => {
+export const deleteUserProfile = user().onDelete((user) => {
   return db.collection("users").doc(user.uid).delete();
 });

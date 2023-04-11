@@ -1,7 +1,7 @@
-import { DOC_ID_VAR, TEACHER_DOC_PATH } from "../config";
-import { db, FieldValue } from "../lib";
-import { DBEventHandler } from "../types";
-import { getFullName } from "../utils";
+import { DOC_ID_VAR, TEACHER_DOC_PATH } from "@config";
+import { db, FieldValue } from "@lib";
+import { DBEventHandler } from "@types";
+import { getFullName } from "@utils";
 
 export const studentTeacherSync: DBEventHandler = (change, context) => {
   const oldData = change.before.data();
