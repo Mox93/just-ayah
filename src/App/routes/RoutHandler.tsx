@@ -21,8 +21,10 @@ import {
 import { FormUI, MainUI, SandboxUI } from "pages/UI";
 import { pass } from "utils";
 
-import { UserGuard, FetchGuard, AuthGuard } from "../guard";
 import { useLocalStorage } from "hooks";
+import { SessionTrack, Temp } from "temp";
+
+import { UserGuard, FetchGuard, AuthGuard } from "../guard";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 
@@ -122,6 +124,14 @@ export default function RoutHandler() {
           }
         >
           <Route index element={<TeacherEnroll />} />
+        </Route>
+      </Route>
+
+      {/* Temporary Routes */}
+      <Route path="temp">
+        <Route index element={<Temp />} />
+        <Route path="sessions">
+          <Route path="track" element={<SessionTrack />}></Route>
         </Route>
       </Route>
 
