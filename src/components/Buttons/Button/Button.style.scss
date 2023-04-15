@@ -4,25 +4,19 @@
 .Button {
   --fill-color: var(--c-gray-300);
   --text-color: var(--c-foreground);
-  --transition-duration: 0.25s;
 
   font-size: 1rem;
   display: flex;
   align-items: center;
   gap: var(--spacing-s);
   position: relative;
-  transition: color var(--transition-duration);
 
-  & > * {
-    transition: opacity var(--transition-duration);
-  }
+  @include buttonVariants();
 
   &:not(.plain-text) {
     --fill-color: var(--c-foreground);
     justify-content: center;
   }
-
-  @include buttonVariants();
 
   &.isLoading {
     color: transparent;
@@ -30,11 +24,11 @@
     & > * {
       opacity: 0;
     }
+  }
 
-    .loadingIndicator {
-      opacity: 1;
+  .loadingIndicator {
+    opacity: 1;
 
-      @include positioning();
-    }
+    @include positioning();
   }
 }

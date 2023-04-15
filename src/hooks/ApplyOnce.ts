@@ -1,20 +1,18 @@
 import { useEffect, useRef } from "react";
+import { ValueOrGetter } from "utils";
+import useRefSync from "./RefSync";
 
 export default function useApplyOnce(
-  action: VoidFunction | (() => VoidFunction),
+  action: ValueOrGetter<VoidFunction>,
   condition = true
 ) {
   const isFirstTime = useRef(false);
-  const actionRef = useRef(action);
-
-  useEffect(() => {
-    actionRef.current = action;
-  }, [action]);
+  const actionRef = useRefSync(action);
 
   useEffect(() => {
     if (condition && !isFirstTime.current) {
       isFirstTime.current = true;
       return actionRef.current();
     }
-  }, [condition]);
+  }, [actionRef, condition]);
 }

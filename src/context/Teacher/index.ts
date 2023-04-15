@@ -3,3 +3,4 @@ export {
   TeacherEnrollProvider,
   useTeacherEnrollContext,
 } from "./TeacherEnroll";
+export * from "./TeacherMeta";

@@ -7,6 +7,7 @@ import { cn } from "utils";
 
 interface FlashCardProps {
   children: ReactNode;
+  actions?: ReactNode;
   state?: "success" | "error";
   className?: string;
 }
@@ -15,6 +16,7 @@ export default function FlashCard({
   className,
   state,
   children,
+  actions,
 }: FlashCardProps) {
   return (
     <Container
@@ -29,6 +31,7 @@ export default function FlashCard({
           />
         )
       }
+      footer={actions}
     >
       {children}
     </Container>

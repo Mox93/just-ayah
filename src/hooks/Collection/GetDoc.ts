@@ -9,19 +9,20 @@ interface UseGetDocProps<T>
   extends Pick<BaseCollectionProps<T>, "collectionRef"> {}
 
 export default function useGetDoc<T>({ collectionRef }: UseGetDocProps<T>) {
-  const { current: cachedData } = useRef(new Map<string, T>());
+  const cachedData = useRef(new Map<string, T>());
 
   return useCallback<GetDataFunc<T>>(
     async (id, { fresh, cache = true } = {}) => {
-      if (!fresh && cachedData.has(id)) return cachedData.get(id);
+      if (!fresh && cachedData.current.has(id))
+        return cachedData.current.get(id);
 
       const result = await getDoc(doc(collectionRef, id));
       const data = result.data() as T;
 
-      if (cache) cachedData.set(id, data);
+      if (cache) cachedData.current.set(id, data);
 
       return data;
     },
-    [cachedData, collectionRef]
+    [collectionRef]
   );
 }

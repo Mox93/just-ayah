@@ -2,7 +2,7 @@ import { get } from "lodash";
 import { ReactNode, useMemo } from "react";
 
 import Container from "components/Container";
-import { cn, pass } from "utils";
+import { ValueOrGetter, cn, resolveValue, pass } from "utils";
 
 interface DataWithId {
   id: string;
@@ -21,12 +21,12 @@ interface TableProps<T, D> {
   className?: string;
   dir?: string;
   fields: FieldProps<T>[];
-  data: D | (() => D);
+  data: ValueOrGetter<D>;
   selected?: Set<string>;
   footer?: ReactNode;
   noCheckbox?: boolean;
   flat?: boolean;
-  toggleSelect?: (checked: boolean, id?: string) => void;
+  setSelect?: (checked: boolean, id?: string) => void;
   extraProps?: (data: T, index: number) => Record<string, any>;
 }
 
@@ -41,10 +41,10 @@ const Table = <T extends DataWithId, D extends List<T>>({
   footer,
   noCheckbox,
   flat,
-  toggleSelect,
+  setSelect,
   extraProps = pass({}),
 }: TableProps<T, D>) => {
-  data = useMemo<D>(() => (typeof data === "function" ? data() : data), [data]);
+  data = useMemo(() => resolveValue(data), [data]);
   const size = Array.isArray(data)
     ? data.length
     : data instanceof Map
@@ -62,7 +62,7 @@ const Table = <T extends DataWithId, D extends List<T>>({
                   type="checkbox"
                   name="selectAll"
                   id={"all"}
-                  onChange={(e) => toggleSelect?.(e.target.checked)}
+                  onChange={(e) => setSelect?.(e.target.checked)}
                   checked={size > 0 && selected?.size === size}
                 />
               </th>
@@ -81,7 +81,7 @@ const Table = <T extends DataWithId, D extends List<T>>({
                     name="selectItem"
                     id={row.id}
                     checked={selected?.has(row.id)}
-                    onChange={(e) => toggleSelect?.(e.target.checked, row.id)}
+                    onChange={(e) => setSelect?.(e.target.checked, row.id)}
                   />
                 </td>
               )}

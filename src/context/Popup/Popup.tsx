@@ -2,19 +2,19 @@ import {
   createContext,
   PropsWithChildren,
   useContext,
-  useEffect,
   useMemo,
   useReducer,
   useRef,
-  useState,
 } from "react";
 
+import { Fader, useFader } from "components/Animation";
+import { useStateSync } from "hooks";
 import { assert } from "utils";
 
 import Loading, { LoadingProps } from "./Loading";
 import Modal, { ModalProps } from "./Modal";
 import Toast, { ToastProps } from "./Toast";
-import { Fader, useFader } from "components/Animation";
+import { Await } from "components/Await";
 
 type OpenModal = (
   children: ModalProps["children"],
@@ -115,48 +115,42 @@ export function PopupOutlet() {
   const { modal, toast } = usePopupOutletContext();
   const { closeModal, closeToast } = usePopupContext();
 
-  const [modalIsOpen, setModalIsOpen] = useState(modal.isOpen);
-  const [toastIsOpen, setToastIsOpen] = useState(toast.isOpen);
-
-  useEffect(() => {
-    setModalIsOpen(modal.isOpen);
-  }, [modal.isOpen]);
-
-  useEffect(() => {
-    setToastIsOpen(toast.isOpen);
-  }, [toast.isOpen]);
+  const [modalIsOpen, setModalIsOpen] = useStateSync(modal.isOpen);
+  const [toastIsOpen, setToastIsOpen] = useStateSync(toast.isOpen);
 
   const [ref, isVisible] = useFader<HTMLDivElement>({
     isOpen: modalIsOpen,
     expand: true,
-    // duration: 1e4,
     afterFadeOut: closeModal,
   });
 
   const modalCloser = useMemo(
     () => modal.props?.close && (() => setModalIsOpen(false)),
-    [modal.props?.close]
+    [modal.props?.close, setModalIsOpen]
   );
   const toastCloser = useMemo(
     () => toast.props?.close && (() => setToastIsOpen(false)),
-    [toast.props?.close]
+    [setToastIsOpen, toast.props?.close]
   );
 
   return (
     <>
-      {isVisible && (
-        <Modal {...modal.props!} bodyRef={ref} close={modalCloser} />
-      )}
-      <Fader
-        isOpen={toastIsOpen}
-        expand
-        move
-        anchorPoint="top"
-        // duration={1e4}
-        afterFadeOut={closeToast}
-      >
-        <Toast {...toast.props!} close={toastCloser} />
-      </Fader>
+      <Await>
+        {isVisible && (
+          <Modal {...modal.props!} bodyRef={ref} close={modalCloser} />
+        )}
+      </Await>
+      <Await>
+        <Fader
+          isOpen={toastIsOpen}
+          expand
+          move
+          anchorPoint="top"
+          afterFadeOut={closeToast}
+        >
+          <Toast {...toast.props!} close={toastCloser} />
+        </Fader>
+      </Await>
     </>
   );
 }

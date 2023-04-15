@@ -5,9 +5,9 @@ import { identity } from "utils";
  * unlike the css `text-transform: capitalize;`
  * which makes the first letter of every word uppercase.
  */
-function capitalize(value: string): string;
-function capitalize<T>(value: T): T;
-function capitalize<T>(value: T) {
+export function capitalize(value: string): string;
+export function capitalize<T>(value: T): T;
+export function capitalize<T>(value: T) {
   return typeof value === "string"
     ? `${value.charAt(0).toUpperCase()}${value.slice(1)}`
     : value;
@@ -26,5 +26,3 @@ export function addZeros(x = 0, length = 2) {
         .join()}${x}`
     : `${x}`;
 }
-
-export { capitalize };

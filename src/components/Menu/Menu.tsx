@@ -75,7 +75,7 @@ export default forwardRef(function Menu<TItem>(
             >
               {render(option)}
               {withCheckMark && isSelected && (
-                <CheckMarkIcon className="CheckMark icon" />
+                <CheckMarkIcon className="CheckMark icon" {...{ dir }} /> // HACK spreading the { dir } like that prevents TS from complaining
               )}
             </Button>
           );

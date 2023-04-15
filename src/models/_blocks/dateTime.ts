@@ -1,4 +1,3 @@
-import { Timestamp } from "firebase/firestore";
 import { RequireAtLeastOne } from "type-fest";
 
 import { identity, range, addZeros } from "utils";
@@ -247,14 +246,5 @@ export const formatTimeDelta = (
   timeDelta: TimeDelta,
   maxUnit: TimeDeltaUnits
 ): TimeDelta => msToTd(tdToMs(timeDelta), maxUnit);
-
-export const toDate = (value: unknown) => {
-  if (value instanceof Timestamp) return value.toDate();
-  if (value instanceof Date) return value;
-  if (typeof value === "string" || typeof value === "number") {
-    const date = new Date(value);
-    if (!isNaN(date.getTime())) return date;
-  }
-};
 
 export { getTimeDelta };

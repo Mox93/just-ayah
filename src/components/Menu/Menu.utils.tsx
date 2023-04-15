@@ -3,12 +3,12 @@ import { ChangeEventHandler, useEffect, useMemo, useState } from "react";
 import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.svg";
 import { Input } from "components/Form";
 import { Path } from "models";
-import { hasAtLeastOne } from "utils";
+import { ValueOrGetter, resolveIfValue, hasAtLeastOne } from "utils";
 import { substringMatch } from "utils/match";
 import { before } from "utils/position";
 
 export interface UseListFilterProps<TOption> {
-  options: TOption[] | (() => TOption[]);
+  options: ValueOrGetter<TOption[]>;
   searchFields?: Path<TOption>[];
   dir?: string;
 }
@@ -19,7 +19,7 @@ export function useListFilter<TOption>({
   dir,
 }: UseListFilterProps<TOption>) {
   const [optionList, setOptionList] = useState<TOption[]>(
-    Array.isArray(options) ? options : []
+    resolveIfValue(options, [])
   );
 
   useEffect(() => setOptionList(options), [options]);

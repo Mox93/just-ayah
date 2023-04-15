@@ -15,14 +15,14 @@ function reduceChain<TIn, TOut>(chain: Function[]) {
     chain.reduce((node, func) => func(node), value) as unknown as TOut;
 }
 
-function applyInOrder<TIn, TOut>(
+export function applyInOrder<TIn, TOut>(
   funcOrChain: FunctionOrChain<TIn, TOut>[] | FunctionOrChain<TIn, TOut>
 ): (value: TIn) => TOut;
-function applyInOrder<TIn, TOut>(
+export function applyInOrder<TIn, TOut>(
   funcOrChain: FunctionOrChain<TIn, TOut>[] | FunctionOrChain<TIn, TOut>,
   args: TIn
 ): TOut;
-function applyInOrder<TIn, TOut>(
+export function applyInOrder<TIn, TOut>(
   funcOrChain: FunctionOrChain<TIn, TOut>[] | FunctionOrChain<TIn, TOut>,
   value?: TIn
 ) {
@@ -35,5 +35,3 @@ function applyInOrder<TIn, TOut>(
 
   return value === undefined ? callback : callback(value);
 }
-
-export { applyInOrder };

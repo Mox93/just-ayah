@@ -1,6 +1,14 @@
 import { forwardRef, ReactNode, Ref } from "react";
 
-import { applyInOrder, capitalize, cn, FunctionOrChain, identity } from "utils";
+import {
+  applyInOrder,
+  capitalize,
+  cn,
+  FunctionOrChain,
+  identity,
+  resolveValue,
+  ValueOrGetter,
+} from "utils";
 
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
@@ -10,7 +18,7 @@ import { filterByPosition } from "utils/position";
 
 export interface SelectionInputProps<TOption>
   extends Omit<InputProps, "value" | "id"> {
-  options: TOption[];
+  options: ValueOrGetter<TOption[]>;
   type: "radio" | "checkbox";
   renderElement?: FunctionOrChain<TOption, ReactNode>;
   keepFormat?: boolean;
@@ -49,7 +57,7 @@ export default forwardRef(function SelectionInput<TOption>(
 
       {before("field", children)}
       <FieldWrapper addPartitions isInvalid={isInvalid}>
-        {options.map((option) => {
+        {resolveValue(options).map((option) => {
           const key = getKey(option);
           const id = `${name}_${key}`;
           const label = render(option);

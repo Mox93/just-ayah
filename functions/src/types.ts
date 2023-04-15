@@ -1,7 +1,23 @@
-import { Change, DocumentSnapshot, EventContext } from "./lib";
+import {
+  Change,
+  DocumentSnapshot,
+  EventContext,
+  QueryDocumentSnapshot,
+  Timestamp,
+} from "@lib";
 
 export type DBEventHandler = (
   change: Change<DocumentSnapshot>,
+  context: EventContext
+) => any;
+
+export type DBUpdateHandler = (
+  change: Change<QueryDocumentSnapshot>,
+  context: EventContext
+) => any;
+
+export type DBCreateHandler = (
+  snapshot: QueryDocumentSnapshot,
   context: EventContext
 ) => any;
 
@@ -17,4 +33,27 @@ export interface UserName {
 export interface PhoneNumber {
   code: string;
   number: string;
+}
+
+export interface ChapterData {
+  verses: number;
+  chapter: string;
+}
+
+export interface MetaData {
+  staff: string[];
+  teachers: Record<string, string[]>;
+  courses: Record<string, ChapterData[]>;
+  subscriptions: string[];
+  monthlySessions: string[];
+  sessionStatus: string[];
+  recitationRules: string[];
+  unassignedStudents: string[];
+  noMatchTeachers: Record<string, string[]>;
+}
+
+export interface CachedMetaData {
+  data: MetaData;
+  ttl: number;
+  updatedAt: Timestamp;
 }

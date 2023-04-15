@@ -1,0 +1,24 @@
+@use "styles/abstracts/mixins" as *;
+
+.Temp {
+  padding: var(--spacing-xl) var(--spacing-m);
+
+  .Button {
+    @include positioning(
+      $position: fixed,
+      $inlineDir: end,
+      $block: var(--spacing-m),
+      $inline: var(--spacing-m),
+      $y: 0,
+      $x: 0
+    );
+
+    .loadingIndicator {
+      @include positioning($parent: ".Temp", $child: ".loadingIndicator");
+    }
+  }
+
+  code {
+    white-space: pre;
+  }
+}

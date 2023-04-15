@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 
 import {
   getTimeDelta,
@@ -6,6 +6,8 @@ import {
   TimeDelta,
   TimeDeltaUnits,
 } from "models/_blocks";
+
+import useStateSync from "./StateSync";
 
 type CountdownState = [TimeDelta, boolean];
 
@@ -19,10 +21,7 @@ export default function useCountdown(
     return [getTimeDelta(expiresAt, now, maxUnit), expiresAt <= now];
   }, [expiresAt, maxUnit]);
 
-  const [[countdown, isExpired], setCountdown] =
-    useState<CountdownState>(remainingTime);
-
-  useEffect(() => setCountdown(remainingTime), [remainingTime]);
+  const [[countdown, isExpired], setCountdown] = useStateSync(remainingTime);
 
   useEffect(() => {
     if (isExpired) return;
@@ -32,7 +31,7 @@ export default function useCountdown(
     }, tdToMs(delta));
 
     return () => clearInterval(interval);
-  }, [isExpired]);
+  }, [delta, isExpired, remainingTime, setCountdown]);
 
   return [countdown, isExpired];
 }

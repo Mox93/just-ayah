@@ -1,3 +1,5 @@
+export { default as cn } from "classnames";
+export * from "./array";
 export * from "./applyConverters";
 export * from "./applyFilters";
 export * from "./applyUpdates";
@@ -8,6 +10,6 @@ export * from "./functionChain";
 export * from "./merge";
 export * from "./nestedPaths";
 export * from "./range";
-export * from "./array";
 export * from "./string";
-export { default as cn } from "classnames";
+export * from "./validation";
+export * from "./valueOrGetter";

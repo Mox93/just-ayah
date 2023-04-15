@@ -10,8 +10,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition-property: transform;
-  transition-delay: var(--duration);
 
   &.dropdown {
     --duration: 0.35s;
@@ -49,20 +47,20 @@
   }
 
   .icon {
-    &.opening {
-      animation: openMotion var(--duration) var(--timing-function);
-    }
-
-    &.closing {
-      animation: closeMotion var(--duration) var(--timing-function);
-    }
-
     &.isOpen {
       transform: rotate(var(--opened-angle));
     }
 
     &:not(.isOpen) {
       transform: rotate(var(--closed-angle));
+    }
+
+    &.opening {
+      animation: openMotion var(--duration) var(--timing-function) forwards;
+    }
+
+    &.closing {
+      animation: closeMotion var(--duration) var(--timing-function) forwards;
     }
   }
 

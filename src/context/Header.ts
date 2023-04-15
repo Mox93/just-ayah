@@ -3,11 +3,12 @@ import { create } from "zustand";
 import { shallow } from "zustand/shallow";
 
 import { RequestStateMap, UserIndex } from "models/blocks";
+import { ValueOrGetter } from "utils";
 import { MatchResult } from "utils/match";
 
 export interface HeaderProps {
   title?: string;
-  dataIndex?: UserIndex[] | (() => UserIndex[]);
+  dataIndex?: ValueOrGetter<UserIndex[]>;
   indexState?: RequestStateMap;
   onSearchSelect?: (value: MatchResult<UserIndex>) => void;
   newEntityButton?: ReactElement;

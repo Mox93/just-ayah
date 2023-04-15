@@ -9,6 +9,7 @@ export const enrollSchema = trackableSchema.extend({
   name: z.string().optional(),
   awaiting: booleanSchema,
   expiresAt: dateSchema,
+  termsUrl: z.string().optional(),
 });
 
 export type Enroll = z.infer<typeof enrollSchema>;

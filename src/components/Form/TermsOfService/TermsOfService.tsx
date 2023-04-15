@@ -1,4 +1,4 @@
-import { forwardRef, InputHTMLAttributes, useEffect, useState } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
 
 import { ReactComponent as AcceptedIcon } from "assets/icons/success-svgrepo-com.svg";
 import { ReactComponent as IdleIcon } from "assets/icons/minus-circle-svgrepo-com.svg";
@@ -10,30 +10,33 @@ import { cn, mergeCallbacks, pass } from "utils";
 
 import TermsOfServicePopup from "./TermsOfServicePopup";
 
-const icons = {
+const ICONS = {
   invalid: <InvalidIcon className="icon" />,
   accepted: <AcceptedIcon className="icon" />,
   idle: <IdleIcon className="icon" />,
 };
 
+const COLOR_MAP = {
+  invalid: "danger",
+  accepted: "success",
+  idle: "gray",
+} as const;
+
+export type TermsStatus = "idle" | "invalid" | "accepted";
+
 interface TermsOfServiceProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "type"> {
+  extends Omit<
+    InputHTMLAttributes<HTMLInputElement>,
+    "value" | "type" | "hidden" | "ref"
+  > {
   url: string;
-  isInvalid?: boolean;
+  status?: TermsStatus;
   onAccept?: (url: string) => void;
 }
 
 export default forwardRef<HTMLInputElement, TermsOfServiceProps>(
-  function TermsOfService({ url, isInvalid, onAccept, ...props }, ref) {
+  function TermsOfService({ url, status = "idle", onAccept, ...props }, ref) {
     const msg = useMessageT();
-
-    const [status, setStatus] = useState<"idle" | "invalid" | "accepted">(
-      "idle"
-    );
-
-    useEffect(() => {
-      if (isInvalid) setStatus("invalid");
-    }, [isInvalid]);
 
     const { openModal, closeModal } = usePopupContext();
 
@@ -41,7 +44,7 @@ export default forwardRef<HTMLInputElement, TermsOfServiceProps>(
       <>
         <input {...props} value={url} type="checkbox" ref={ref} hidden />
         <Button
-          variant="plain-text"
+          variant={`${COLOR_MAP[status]}-text`}
           className={cn("TermsOfService", status)}
           iconButton
           onClick={() =>
@@ -49,7 +52,7 @@ export default forwardRef<HTMLInputElement, TermsOfServiceProps>(
               <TermsOfServicePopup
                 url={url}
                 onAccept={mergeCallbacks(
-                  pass(setStatus, "accepted"),
+                  // pass(setStatus, "accepted"),
                   pass(onAccept, url),
                   closeModal
                 )}
@@ -63,7 +66,7 @@ export default forwardRef<HTMLInputElement, TermsOfServiceProps>(
             )
           }
         >
-          {icons[status]}
+          {ICONS[status]}
           {msg("termsOfService")}
         </Button>
       </>

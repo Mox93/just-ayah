@@ -9,13 +9,12 @@
   --block-origin: center;
   --inline-origin: center;
   --shrinkage: 1;
-  --anchor-point: var(--block-origin) var(--inline-origin);
   --idle-position: translate(var(--x-idle), var(--y-idle));
   --hidden-position: translate(var(--x-hidden), var(--y-hidden));
   --expanded-size: scale(1);
   --shrunken-size: scale(var(--shrinkage));
 
-  transform-origin: var(--anchor-point);
+  transform-origin: var(--block-origin) var(--inline-origin);
 
   // &:not(.visibleContent) {
   //   color: transparent;

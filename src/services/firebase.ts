@@ -3,7 +3,8 @@ import {
   getAuth,
   useDeviceLanguage as fromDeviceLanguage,
 } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeFirestore } from "firebase/firestore";
+import { getFunctions } from "firebase/functions";
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -15,8 +16,9 @@ const app = initializeApp({
 });
 
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = initializeFirestore(app, { ignoreUndefinedProperties: true });
+const functions = getFunctions(app);
 
 fromDeviceLanguage(auth);
 
-export { auth, db };
+export { auth, db, functions };

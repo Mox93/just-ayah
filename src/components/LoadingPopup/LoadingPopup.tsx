@@ -10,7 +10,7 @@ export default function LoadingPopup({ message }: LoadingProps) {
     startLoading(message);
 
     return stopLoading;
-  }, [message]);
+  }, [message, startLoading, stopLoading]);
 
   return null;
 }

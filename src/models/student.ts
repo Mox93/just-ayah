@@ -83,6 +83,7 @@ const studentDBSchema = studentSchema.extend({
 });
 
 const studentFormSchema = studentSchema.extend(simpleFields);
+const studentEnrollFormSchema = studentFormSchema.merge(externalUserSchema);
 
 export default class Student extends DataModel(studentSchema) {
   static DB = BaseModel(studentDBSchema);
@@ -116,3 +117,12 @@ export type StudentEnrollDB = InstanceType<typeof StudentEnroll.DB>;
 export type StudentEnrollDBData = StudentEnrollDB["data"];
 
 export type StudentFormData = z.infer<typeof studentFormSchema>;
+export type StudentEnrollFormData = z.infer<typeof studentEnrollFormSchema>;
+
+/*****************\
+|*** META DATA ***|
+\*****************/
+
+export const studentMetaSchema = z.object({
+  termsUrl: z.string().array(),
+});

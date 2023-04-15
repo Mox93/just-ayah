@@ -1,9 +1,11 @@
 import { z } from "zod";
 
+import { indexList, indexMap } from "lib/zod";
+
 import { phoneNumberStringSchema } from "./phoneNumber";
-import { indexList, indexMap } from "./schemas";
 
 export const userSchema = z.object({
+  uid: z.string(),
   email: z.string().email(),
   displayName: z.string().optional(),
   photoURL: z.string().url().optional(),

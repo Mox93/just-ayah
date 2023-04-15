@@ -11,10 +11,10 @@ interface ErrorMessageProps<
   errors?: FieldErrors<TFieldValues>;
 }
 
-const ErrorMessage = <TFieldValues extends {}>({
+function ErrorMessage<TFieldValues extends {}>({
   name,
   errors,
-}: ErrorMessageProps<TFieldValues>) => {
+}: ErrorMessageProps<TFieldValues>) {
   const msgT = useMessageT();
 
   return (
@@ -38,6 +38,6 @@ const ErrorMessage = <TFieldValues extends {}>({
       }
     />
   );
-};
+}
 
 export default ErrorMessage;

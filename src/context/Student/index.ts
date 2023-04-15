@@ -3,3 +3,4 @@ export {
   StudentEnrollProvider,
   useStudentEnrollContext,
 } from "./StudentEnroll";
+export * from "./StudentMeta";

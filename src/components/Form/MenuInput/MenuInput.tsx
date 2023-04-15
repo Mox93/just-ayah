@@ -5,7 +5,14 @@ import { SpinningArrow } from "components/Icons";
 import Menu from "components/Menu";
 import { AnchorPoint, useDropdown } from "hooks";
 import { GetKey, Merge, Path } from "models";
-import { applyInOrder, cn, FunctionOrChain, identity, oneOf } from "utils";
+import {
+  applyInOrder,
+  cn,
+  FunctionOrChain,
+  identity,
+  oneOf,
+  ValueOrGetter,
+} from "utils";
 import { after, before } from "utils/position";
 
 import Input, { InputProps } from "../Input";
@@ -19,7 +26,7 @@ export type MenuInputProps<TOption> = Merge<
 >;
 
 interface MenuInputPropsInternal<TOption> extends MenuInputProps<TOption> {
-  options: TOption[] | (() => TOption[]);
+  options: ValueOrGetter<TOption[]>;
   selected?: TOption;
   renderElement?: FunctionOrChain<TOption, ReactNode>;
   searchFields?: Path<TOption>[];

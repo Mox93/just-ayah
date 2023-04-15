@@ -1,9 +1,10 @@
 import { z } from "zod";
 
+import { indexList, indexMap } from "lib/zod";
 import { dbConverter } from "utils";
 
 import { BaseModel, DataModel } from "./abstract";
-import { indexList, indexMap, trackableSchema } from "./blocks";
+import { trackableSchema } from "./blocks";
 
 const _courseSchema = z.object({
   name: z.string(),

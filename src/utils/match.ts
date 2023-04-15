@@ -2,7 +2,10 @@ import { get, isEmpty } from "lodash";
 
 import { Path } from "models";
 
-import { applyFilters, Filter, identity, nestedPaths } from ".";
+import { applyFilters, Filter } from "./applyFilters";
+import { identity } from "./functions";
+import { nestedPaths } from "./nestedPaths";
+import { ValueOrGetter } from "./valueOrGetter";
 
 type MatchRecord<
   TFieldValues,
@@ -45,7 +48,7 @@ const calculateScore = (matchedSubstring: RegExpMatchArray) =>
   );
 
 export function substringMatch<TFieldValues>(
-  indexData: TFieldValues[] | (() => TFieldValues[]),
+  indexData: ValueOrGetter<TFieldValues[]>,
   { filter, substringMinLength = 2 }: SubstringMatchOptions<TFieldValues> = {}
 ) {
   return (searchKey: string) => {

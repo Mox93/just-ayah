@@ -12,17 +12,16 @@ const _commentSchema = trackableSchema.merge(
 
 export type Comment = z.infer<typeof _commentSchema>;
 
-export const commentSchema = trackableSchema
-  .merge(_commentSchema)
+export const commentSchema = _commentSchema
   .extend({
     user: userSchema.nullable().optional(),
   })
   .transform(({ createdBy, user, ...rest }) => {
     return _commentSchema.parse({
       ...rest,
-      ...(createdBy?.email
+      ...(createdBy?.email && createdBy.uid
         ? { createdBy }
-        : user?.email
+        : user?.email && user.uid
         ? { createdBy: user }
         : {}),
     });

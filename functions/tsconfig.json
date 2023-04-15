@@ -1,5 +1,14 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@config": ["config.ts"],
+      "@context": ["context"],
+      "@lib": ["lib"],
+      "@services": ["services"],
+      "@types": ["types.ts"],
+      "@utils": ["utils"]
+    },
     "module": "commonjs",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -9,7 +18,5 @@
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

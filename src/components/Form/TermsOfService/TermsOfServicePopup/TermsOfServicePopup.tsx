@@ -22,7 +22,6 @@ export default function TermsOfServicePopup({
       <iframe
         title={glb("termsOfService")}
         src={url}
-        allow="autoplay"
         onLoad={() => setIsLoading(false)}
       />
       <Button isLoading={isLoading} variant="success-solid" onClick={onAccept}>

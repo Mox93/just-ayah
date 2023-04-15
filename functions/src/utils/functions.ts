@@ -1,19 +1,32 @@
-import { DBEventHandler, EventType } from "../types";
+import { DBEventHandler, EventType } from "@types";
 
-export const merge =
-  (...handlers: DBEventHandler[]): DBEventHandler =>
-  (change, context) =>
-    handlers.reduce(
-      (obj, handler) => ({ ...obj, [handler.name]: handler(change, context) }),
-      {}
+type FunctionIn<D, C, R> = (change: D, context: C) => R;
+type FunctionOut<D, C, R> = (
+  change: D,
+  context: C
+) => Promise<Record<string, Awaited<R>>>;
+
+export function merge<D, C, R, T extends FunctionIn<D, C, R>>(
+  ...handlers: [T, ...T[]]
+): FunctionOut<D, C, R> {
+  return async (change, context) => {
+    const result: Record<string, Awaited<R>> = {};
+
+    await Promise.all(
+      handlers.map(async (handler) => {
+        result[handler.name] = await handler(change, context);
+      })
     );
 
-export const exclude =
-  (
-    handler: DBEventHandler,
-    ...events: [EventType] | [EventType, EventType]
-  ): DBEventHandler =>
-  (change, context) => {
+    return result;
+  };
+}
+
+export function exclude(
+  handler: DBEventHandler,
+  ...events: [EventType] | [EventType, EventType]
+): DBEventHandler {
+  return (change, context) => {
     if (events.includes("delete") && !change.after.exists) return null;
 
     if (events.includes("create") && !change.before.exists) return null;
@@ -27,3 +40,4 @@ export const exclude =
 
     return handler(change, context);
   };
+}

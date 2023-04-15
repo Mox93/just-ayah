@@ -1,6 +1,7 @@
-import { DOC_ID_VAR } from "../config";
-import { db, FieldValue } from "../lib";
-import { DBEventHandler } from "../types";
+import { DOC_ID_VAR } from "@config";
+import { db, FieldValue } from "@lib";
+import { DBEventHandler } from "@types";
+
 import { getFullName, parsePhoneNumber } from "./stringify";
 
 export function userIndexing<P extends string>(
