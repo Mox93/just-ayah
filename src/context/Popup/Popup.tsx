@@ -14,6 +14,7 @@ import { assert } from "utils";
 import Loading, { LoadingProps } from "./Loading";
 import Modal, { ModalProps } from "./Modal";
 import Toast, { ToastProps } from "./Toast";
+import { Await } from "components/Await";
 
 type OpenModal = (
   children: ModalProps["children"],
@@ -134,18 +135,22 @@ export function PopupOutlet() {
 
   return (
     <>
-      {isVisible && (
-        <Modal {...modal.props!} bodyRef={ref} close={modalCloser} />
-      )}
-      <Fader
-        isOpen={toastIsOpen}
-        expand
-        move
-        anchorPoint="top"
-        afterFadeOut={closeToast}
-      >
-        <Toast {...toast.props!} close={toastCloser} />
-      </Fader>
+      <Await>
+        {isVisible && (
+          <Modal {...modal.props!} bodyRef={ref} close={modalCloser} />
+        )}
+      </Await>
+      <Await>
+        <Fader
+          isOpen={toastIsOpen}
+          expand
+          move
+          anchorPoint="top"
+          afterFadeOut={closeToast}
+        >
+          <Toast {...toast.props!} close={toastCloser} />
+        </Fader>
+      </Await>
     </>
   );
 }

@@ -3,8 +3,9 @@
 .FlashCard {
   --hero-size: 10rem;
 
-  width: 100vw;
-  max-width: 30rem;
+  width: fit-content;
+  min-width: 30rem;
+  max-width: 100vw;
   text-align: center;
 
   .light {
@@ -34,6 +35,12 @@
 
       @include positioning($blockDir: end, $block: 0, $y: 0);
     }
+  }
+
+  .footer {
+    padding: var(--spacing-l);
+    display: flex;
+    justify-content: space-between;
   }
 
   p {

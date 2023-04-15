@@ -26,7 +26,7 @@ interface TableProps<T, D> {
   footer?: ReactNode;
   noCheckbox?: boolean;
   flat?: boolean;
-  toggleSelect?: (checked: boolean, id?: string) => void;
+  setSelect?: (checked: boolean, id?: string) => void;
   extraProps?: (data: T, index: number) => Record<string, any>;
 }
 
@@ -41,7 +41,7 @@ const Table = <T extends DataWithId, D extends List<T>>({
   footer,
   noCheckbox,
   flat,
-  toggleSelect,
+  setSelect,
   extraProps = pass({}),
 }: TableProps<T, D>) => {
   data = useMemo(() => resolveValue(data), [data]);
@@ -62,7 +62,7 @@ const Table = <T extends DataWithId, D extends List<T>>({
                   type="checkbox"
                   name="selectAll"
                   id={"all"}
-                  onChange={(e) => toggleSelect?.(e.target.checked)}
+                  onChange={(e) => setSelect?.(e.target.checked)}
                   checked={size > 0 && selected?.size === size}
                 />
               </th>
@@ -81,7 +81,7 @@ const Table = <T extends DataWithId, D extends List<T>>({
                     name="selectItem"
                     id={row.id}
                     checked={selected?.has(row.id)}
-                    onChange={(e) => toggleSelect?.(e.target.checked, row.id)}
+                    onChange={(e) => setSelect?.(e.target.checked, row.id)}
                   />
                 </td>
               )}

@@ -116,7 +116,7 @@ export default function formAtoms<TFieldValues extends FieldValues>() {
         toValue: fromDateInfo,
         toSelected: toDateInfo,
       }),
-      registerField<TFieldValues>((innerProps: any) => ({ innerProps }))
+      registerFieldMod
     ),
     WeekDayInput: formChild(
       MenuInput as FC<MenuInputProps<WeekDay>>,

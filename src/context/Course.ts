@@ -23,20 +23,19 @@ export const useCourseStore = create<CourseStore>()((set) => ({
   data: new DataMap(),
   add: addDocFactory({
     collectionRef: courseRef,
-    setData: (course) =>
-      set(({ data }) => ({ data: data.addAt("start", course) })),
+    setData: (course) => set(({ data }) => ({ data: data.pushStart(course) })),
     DataClass: Course,
   }),
   fetch: getDocsFactory({
     collectionRef: courseRef,
     setData: (courses) =>
-      set(({ data }) => ({ data: data.addAt("end", ...courses) })),
+      set(({ data }) => ({ data: data.pushEnd(...courses) })),
     fetchDefaults: { sort: { by: "meta.dateCreated", direction: "desc" } },
   }),
   update: updateDocFactory({
     collectionRef,
     setData: (id, updates) =>
-      set(({ data }) => ({ data: data.updateAt(id, updates) })),
+      set(({ data }) => ({ data: data.update(id, updates) })),
     processUpdates: changeDateUpdated("meta"),
   }),
 }));

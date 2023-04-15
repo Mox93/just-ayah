@@ -6,13 +6,16 @@ export function resolveValue<T>(valueOrGetter: ValueOrGetter<T>): T {
     : valueOrGetter;
 }
 
-function resolveIfValue<T>(valueOrGetter: ValueOrGetter<T>, fallback: T): T;
-function resolveIfValue<T>(valueOrGetter: ValueOrGetter<T>): T | undefined;
-function resolveIfValue<T>(
+export function resolveIfValue<T>(
+  valueOrGetter: ValueOrGetter<T>,
+  fallback: T
+): T;
+export function resolveIfValue<T>(
+  valueOrGetter: ValueOrGetter<T>
+): T | undefined;
+export function resolveIfValue<T>(
   valueOrGetter: ValueOrGetter<T>,
   fallback?: T
 ): T | undefined {
   return typeof valueOrGetter === "function" ? fallback : (valueOrGetter as T);
 }
-
-export { resolveIfValue };

@@ -35,17 +35,17 @@ export default memo(function CourseList() {
   const courses = useCourseStore((state) => state.data);
   const fetchCourses = useCourseStore((state) => state.fetch);
 
-  const [selected, toggleSelect] = useSelect(() => courses.map(({ id }) => id));
+  const [selected, setSelect] = useSelect(() => [...courses.keys()]);
 
-  const [loadCourses, isLoading] = useLoading((stopLoading) => {
-    fetchCourses({ onCompleted: stopLoading });
-  });
+  const [loadCourses, isLoading] = useLoading((stopLoading) =>
+    fetchCourses({ onCompleted: stopLoading })
+  );
 
   useApplyOnce(loadCourses, IS_PROD && !courses.size);
 
   return (
     <Table
-      {...{ fields, selected, toggleSelect }}
+      {...{ fields, selected, setSelect }}
       data={courses}
       footer={
         <Button

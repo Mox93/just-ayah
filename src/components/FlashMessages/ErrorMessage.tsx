@@ -1,7 +1,7 @@
 import { Trans } from "react-i18next";
 
 import { useMessageT } from "hooks";
-import FlashCard from "../FlashCard";
+import FlashCard from "./FlashCard";
 
 interface ErrorMessageProps {
   error?: any;

@@ -1,10 +1,11 @@
+import { isEqual } from "lodash";
 import {
-  HTMLAttributes,
   InputHTMLAttributes,
   ReactNode,
+  forwardRef,
   useCallback,
   useEffect,
-  useReducer,
+  useState,
 } from "react";
 
 import { useDateTimeT } from "hooks";
@@ -17,29 +18,7 @@ import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
 import { DateRange, useDateRanges as useDateRange } from "./DateInput.utils";
 
-type State = Partial<DateInfo>;
-type Action = {
-  type: "update" | "replace";
-  payload?: Partial<DateInfo>;
-  setValue?: (value: DateInfo) => void;
-};
-
-const reduce = (date: State, { type, payload, setValue }: Action): State => {
-  const newDate = clampDate(
-    type === "update"
-      ? { ...date, ...payload }
-      : type === "replace"
-      ? { ...payload }
-      : date
-  );
-
-  if (newDate?.day && newDate?.month && newDate?.year)
-    setValue?.(newDate as DateInfo);
-
-  return newDate;
-};
-
-interface DateInputProps extends HTMLAttributes<HTMLDivElement> {
+interface DateInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   name?: string;
   isInvalid?: boolean;
@@ -47,56 +26,58 @@ interface DateInputProps extends HTMLAttributes<HTMLDivElement> {
   children?: PositionalElement<string>;
   errorMessage?: ReactNode;
   range?: DateRange;
-  innerProps?: InputHTMLAttributes<HTMLInputElement>;
   selected?: DateInfo;
   setValue?: (value: DateInfo) => void;
 }
 
-export default function DateInput({
-  label,
-  isRequired,
-  isInvalid,
-  children,
-  errorMessage,
-  className,
-  range,
-  innerProps,
-  selected,
-  setValue,
-  ...props
-}: DateInputProps) {
+export default forwardRef<HTMLInputElement, DateInputProps>(function DateInput(
+  {
+    label,
+    isRequired,
+    isInvalid,
+    children,
+    errorMessage,
+    className,
+    range,
+    selected,
+    setValue,
+    ...props
+  },
+  ref
+) {
   const dts = useDateTimeT("symbols");
 
-  const [{ day, month, year }, dispatch] = useReducer(
-    reduce,
-    selected || toDateInfo(innerProps?.value) || {}
+  const [date, setDate] = useState<Partial<DateInfo>>(
+    selected || toDateInfo(props?.value) || {}
   );
 
+  const { day, month, year } = date;
+  const { day: _day, month: _month, year: _year } = selected || {};
+
   useEffect(() => {
-    if (
-      selected?.day !== day ||
-      selected?.month !== month ||
-      selected?.year !== year
-    )
-      dispatch({ type: "replace", payload: selected, setValue });
-  }, [selected]);
+    if (!isEqual(selected, date)) setDate(clampDate(selected || {}));
+  }, [_day, _month, _year]);
+
+  useEffect(() => {
+    if (![day, month, year].includes(undefined))
+      setValue?.(clampDate({ day, month, year }) as DateInfo);
+  }, [day, month, year]);
 
   const update = useCallback(
     (key: keyof DateInfo) => (value?: number) =>
-      value &&
-      dispatch({ type: "update", payload: { [key]: value }, setValue }),
-    [setValue]
+      value && setDate((state) => ({ ...state, [key]: value })),
+    []
   );
 
   const { days, months, years } = useDateRange({ ...range, day, month, year });
 
   return (
-    <div {...props} className={cn("DateInput", className)}>
+    <div className={cn("DateInput", className)}>
       <FieldHeader {...{ label, isRequired, isInvalid }}>
         {children}
       </FieldHeader>
 
-      <input {...innerProps} hidden />
+      <input ref={ref} {...props} hidden readOnly />
       <FieldWrapper isInvalid={isInvalid} addPartitions contentFullWidth>
         <MenuInput
           className="day"
@@ -126,4 +107,4 @@ export default function DateInput({
       {errorMessage}
     </div>
   );
-}
+});

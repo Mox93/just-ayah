@@ -81,7 +81,7 @@ export default function FormUI() {
           </InputGroup>
 
           <DateInput
-            innerProps={{ ...register("dateOfBirth") }}
+            {...register("dateOfBirth")}
             label="date of birth"
             range={{ start: now, end: shiftDate(now, { year: -150 }) }}
             setValue={(date) => setValue("dateOfBirth", fromDateInfo(date))}

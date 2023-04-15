@@ -32,9 +32,9 @@ export default function EnrollsViewer({ variant }: EnrollsViewerProps) {
     deleteEnroll,
   });
 
-  const [loadEnrolls, isLoading] = useLoading((stopLoading) => {
-    fetchEnrolls({ onCompleted: stopLoading });
-  });
+  const [loadEnrolls, isLoading] = useLoading((stopLoading) =>
+    fetchEnrolls({ onCompleted: stopLoading })
+  );
 
   const [getTermsUrl, { isLoading: _isLoading }] = termsGetter();
   const [termsUrl] = useStateSync(getTermsUrl);

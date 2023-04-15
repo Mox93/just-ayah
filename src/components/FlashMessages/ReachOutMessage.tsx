@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { useMessageT } from "hooks";
 
-import FlashCard from "../FlashCard";
+import FlashCard from "./FlashCard";
 
 export default function ReachOutMessage() {
   const msg = useMessageT("flash");

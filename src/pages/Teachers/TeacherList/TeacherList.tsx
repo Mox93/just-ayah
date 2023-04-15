@@ -18,13 +18,11 @@ export default function TeacherList() {
 
   const { teachers, fetchTeachers } = useTeacherContext();
 
-  const [selected, toggleSelect] = useSelect(() =>
-    teachers.map(({ id }) => id)
-  );
+  const [selected, setSelect] = useSelect(() => teachers.map(({ id }) => id));
 
-  const [loadTeachers, isLoading] = useLoading((stopLoading) => {
-    fetchTeachers({ onCompleted: stopLoading });
-  });
+  const [loadTeachers, isLoading] = useLoading((stopLoading) =>
+    fetchTeachers({ onCompleted: stopLoading })
+  );
 
   useApplyOnce(loadTeachers, IS_PROD && !teachers.length);
 
@@ -42,7 +40,7 @@ export default function TeacherList() {
         fields={fields}
         data={teachers}
         selected={selected}
-        toggleSelect={toggleSelect}
+        setSelect={setSelect}
         extraProps={({ data: { gender } }) => ({ gender })}
         footer={
           <Button

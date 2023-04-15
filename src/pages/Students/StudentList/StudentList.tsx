@@ -18,13 +18,11 @@ export default function StudentList() {
 
   const { students, fetchStudents } = useStudentContext();
 
-  const [selected, toggleSelect] = useSelect(() =>
-    students.map(({ id }) => id)
-  );
+  const [selected, setSelect] = useSelect(() => students.map(({ id }) => id));
 
-  const [loadStudents, isLoading] = useLoading((stopLoading) => {
-    fetchStudents({ onCompleted: stopLoading });
-  });
+  const [loadStudents, isLoading] = useLoading((stopLoading) =>
+    fetchStudents({ onCompleted: stopLoading })
+  );
 
   useApplyOnce(loadStudents, IS_PROD && !students.length);
 
@@ -36,7 +34,7 @@ export default function StudentList() {
         </div>
       )}
       <Table
-        {...{ selected, toggleSelect }}
+        {...{ selected, setSelect }}
         className="StudentList"
         fields={useTableFields()}
         data={students}

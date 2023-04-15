@@ -2,7 +2,7 @@ import { Trans } from "react-i18next";
 
 import { useMessageT } from "hooks";
 
-import FlashCard from "../FlashCard";
+import FlashCard from "./FlashCard";
 
 export default function EnrolledMessage() {
   const msg = useMessageT("flash");

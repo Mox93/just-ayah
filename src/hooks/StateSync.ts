@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-export default function useStateSync<T>(externalState: T | (() => T)) {
+import { ValueOrGetter } from "utils";
+
+export default function useStateSync<T>(externalState: ValueOrGetter<T>) {
   const [state, setState] = useState(externalState);
 
   useEffect(() => setState(externalState), [externalState]);
