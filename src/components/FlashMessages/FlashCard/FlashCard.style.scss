@@ -4,9 +4,15 @@
   --hero-size: 10rem;
 
   width: fit-content;
-  min-width: 30rem;
-  max-width: 100vw;
+  min-width: var(--width-xs);
+  max-width: var(--width-s);
   text-align: center;
+
+  @include mobile {
+    width: 100vw;
+    min-width: unset;
+    max-width: unset;
+  }
 
   .light {
     font-weight: 300;
