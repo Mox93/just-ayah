@@ -16,7 +16,7 @@ import { PositionalElement } from "utils/position";
 import MenuInput from "../MenuInput";
 import FieldHeader from "../FieldHeader";
 import FieldWrapper from "../FieldWrapper";
-import { DateRange, useDateRanges as useDateRange } from "./DateInput.utils";
+import { DateRange, useDateRanges } from "./DateInput.utils";
 
 interface DateInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -69,7 +69,7 @@ export default forwardRef<HTMLInputElement, DateInputProps>(function DateInput(
     []
   );
 
-  const { days, months, years } = useDateRange({ ...range, day, month, year });
+  const { days, months, years } = useDateRanges({ ...range, day, month, year });
 
   return (
     <div className={cn("DateInput", className)}>

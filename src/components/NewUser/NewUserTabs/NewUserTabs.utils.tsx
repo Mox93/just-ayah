@@ -1,10 +1,9 @@
 import { lazy, useMemo, FC } from "react";
-import { SubmitHandler } from "react-hook-form";
 import { Class } from "type-fest";
 
 import { ErrorToast, SuccessToast } from "components/FlashMessages";
 import { usePopupContext } from "context";
-import { Tabs, useGlobalT, useTabs } from "hooks";
+import { SubmitHandler, Tabs, useGlobalT, useTabs } from "hooks";
 import { AddDataFunc } from "models";
 import { capitalize } from "utils";
 

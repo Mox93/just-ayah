@@ -1,15 +1,14 @@
 import { cloneDeep, isPlainObject } from "lodash";
-import { useCallback, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
-  FieldValues,
   SubmitErrorHandler,
-  SubmitHandler,
   useForm,
   UseFormProps,
+  UseFormReset,
 } from "react-hook-form";
 import { PartialDeep } from "type-fest";
 
-import { applyUpdates, mergeCallbacks } from "utils";
+import { applyUpdates } from "utils";
 
 import { LocalStorageOptions, useLocalStorage } from ".";
 
@@ -17,18 +16,24 @@ interface Storage<TData> extends LocalStorageOptions<TData> {
   key: string;
 }
 
-interface UseSmartFormProps<TFieldValues extends FieldValues>
+export type SubmitHandler<TFieldValues extends {}> = (
+  data: TFieldValues,
+  options: {
+    event?: React.BaseSyntheticEvent;
+    reset: UseFormReset<TFieldValues>;
+  }
+) => any | Promise<any>;
+
+interface UseSmartFormProps<TFieldValues extends {}>
   extends UseFormProps<TFieldValues> {
   storage?: Storage<PartialDeep<TFieldValues>>;
-  resetOnSubmit?: boolean;
   resetToDefaultValues?: boolean;
   onSubmit?: SubmitHandler<TFieldValues>;
   onFail?: SubmitErrorHandler<TFieldValues>;
 }
 
-export default function useSmartForm<TFieldValues extends FieldValues>({
+export default function useSmartForm<TFieldValues extends {}>({
   storage,
-  resetOnSubmit,
   resetToDefaultValues,
   onSubmit,
   onFail,
@@ -58,45 +63,40 @@ export default function useSmartForm<TFieldValues extends FieldValues>({
 
   const { watch, reset } = formHook;
 
+  const emptyValues = useRef<any>();
+
   useEffect(() => {
-    if (!key) return;
-
     //TODO filter out empty fields
-    const subscription = watch((data) =>
-      formSession?.set(data as PartialDeep<TFieldValues>)
-    );
-    return subscription.unsubscribe;
-  }, [key, watch]);
-
-  const handleReset = useCallback(
-    (keepDefaultValue?: boolean) => () => {
-      const values = watch();
-      const resetValues = Object.entries(values).reduce(
+    const subscription = watch((data) => {
+      formSession?.set(data as PartialDeep<TFieldValues>);
+      emptyValues.current = Object.entries(data).reduce(
         (obj, [key, value]) => ({
           ...obj,
           [key]: isPlainObject(value) ? {} : null,
         }),
         {}
       );
+    });
 
-      reset({
-        ...resetValues,
-        ...(keepDefaultValue ? defaultValues : {}),
-      } as TFieldValues);
-      formSession?.clear();
-    },
-    [defaultValues, reset, watch]
-  );
+    return subscription.unsubscribe;
+  }, [watch]);
+
+  const handleReset: UseFormReset<TFieldValues> = (values, options) => {
+    reset({ ...emptyValues.current, ...values }, options);
+    formSession?.clear();
+  };
 
   return {
     formHook,
     onSubmit: handleSubmit(
       // FIXME handleReset should only happen when submit is successful
-      mergeCallbacks(onSubmit, resetOnSubmit && handleReset()) as NonNullable<
-        typeof onSubmit
-      >,
+      (data, event) =>
+        onSubmit?.(data, {
+          event,
+          reset: handleReset,
+        }),
       onFail
     ),
-    onReset: handleReset(resetToDefaultValues),
+    onReset: () => handleReset(defaultValues as TFieldValues),
   };
 }
