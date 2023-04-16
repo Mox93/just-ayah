@@ -1,11 +1,12 @@
 import ReactJson from "react-json-view";
 
 import { Button } from "components/Buttons";
+import { ErrorMessage } from "components/FlashMessages";
 import { usePopupContext } from "context";
 import { useLoading } from "hooks";
+import SuccessMessage from "temp/SuccessMessage";
 
 import { refreshMetaData, useMetaData } from "../utils";
-import SuccessMessage from "temp/SuccessMessage";
 
 export default function Temp() {
   const metaData = useMetaData();
@@ -16,6 +17,12 @@ export default function Temp() {
     refreshMetaData()
       .then(() =>
         openModal(<SuccessMessage />, { center: true, closable: true })
+      )
+      .catch((error) =>
+        openModal(<ErrorMessage error={error} />, {
+          center: true,
+          closable: true,
+        })
       )
       .finally(stopLoading);
   });

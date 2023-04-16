@@ -79,8 +79,9 @@ export const clampDate = ({
   };
 };
 
-export const fromDateInfo = ({ day, month, year }: DateInfo) =>
-  new Date(year, month - 1, day);
+export function fromDateInfo({ day, month, year }: DateInfo) {
+  return new Date(Date.UTC(year, month - 1, day));
+}
 
 export const toDateInfo = (date?: any): DateInfo | undefined => {
   if (!date) return;

@@ -60,8 +60,10 @@ async function addLogToSheet(
         values: [
           [
             id,
-            _timestamp.toLocaleString().replace(",", ""),
-            _date.toLocaleString().replace(",", ""),
+            _timestamp
+              .toLocaleString("en-US", { timeZone: "Africa/Cairo" })
+              .replace(",", ""),
+            _date.toLocaleDateString(),
             teacher,
             student,
             status,

@@ -1,7 +1,5 @@
-import { SubmitHandler } from "react-hook-form";
-
 import { formAtoms } from "components/Form";
-import { usePersonalInfoT, useSmartForm } from "hooks";
+import { SubmitHandler, usePersonalInfoT, useSmartForm } from "hooks";
 import { LeadFormData } from "models/lead";
 
 const { Form, Input, Textarea, InputGroup, PhoneNumberInput } =

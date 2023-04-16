@@ -1,9 +1,14 @@
-import { SubmitHandler } from "react-hook-form";
 import { PartialDeep } from "type-fest";
 
 import { formAtoms } from "components/Form";
-import { useGlobalT, usePersonalInfoT, useSmartForm } from "hooks";
+import {
+  SubmitHandler,
+  useGlobalT,
+  usePersonalInfoT,
+  useSmartForm,
+} from "hooks";
 import { OTHER } from "models";
+import { shiftDate } from "models/_blocks";
 import {
   booleanSelectorProps,
   genderSchema,
@@ -12,7 +17,6 @@ import {
 import { StudentFormData } from "models/student";
 
 import { useWorkStatus } from "./StudentForm.utils";
-import { shiftDate } from "models/_blocks";
 
 const {
   CountrySelectorInput,

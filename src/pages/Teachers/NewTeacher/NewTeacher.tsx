@@ -16,7 +16,7 @@ export default function NewTeacher() {
     <NewUserTabs
       variant="teacher"
       title={tch("newTeachers")}
-      UserForm={TeacherForm}
+      UserForm={TeacherForm as any} // HACK for some reason it's rejecting the type
       addUser={addTeacher}
       UserClass={Teacher.DB}
     />

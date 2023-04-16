@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useWatch } from "react-hook-form";
+import { UseFormReset, useWatch } from "react-hook-form";
 
 import { MenuInput as BaseMenuInput, formAtoms } from "components/Form";
 import {
@@ -45,31 +45,35 @@ export default function SessionTrack() {
   const { openModal, closeModal } = usePopupContext();
 
   const [addTrack, isLoading] = useLoading(
-    (stopLoading) => (data: SessionTrackData) =>
-      addSessionTrack(data)
-        .then((doc) =>
-          openModal(
-            <SuccessMessage
-              close={closeModal}
-              undo={() => {
-                deleteSessionTrack({ id: doc.id }).then(closeModal);
-              }}
-            />,
-            { center: true }
-          )
-        )
-        .catch((error) =>
-          openModal(<ErrorMessage error={error} />, {
-            center: true,
-            closable: true,
+    (stopLoading) =>
+      (data: SessionTrackData, reset: UseFormReset<SessionTrackData>) =>
+        addSessionTrack(data)
+          .then((doc) => {
+            openModal(
+              <SuccessMessage
+                close={() => {
+                  closeModal();
+                  reset({ date: new Date() });
+                }}
+                undo={() => {
+                  deleteSessionTrack({ id: doc.id }).then(closeModal);
+                }}
+              />,
+              { center: true }
+            );
           })
-        )
-        .finally(stopLoading)
+          .catch((error) =>
+            openModal(<ErrorMessage error={error} />, {
+              center: true,
+              closable: true,
+            })
+          )
+          .finally(stopLoading)
   );
 
   const formProps = useSmartForm<SessionTrackData>({
-    onSubmit: (data) => addTrack()(data),
-    resetOnSubmit: true,
+    onSubmit: (data, { reset }) => addTrack()(data, reset),
+    defaultValues: { date: new Date() },
   });
   const {
     formHook: { control, resetField },
