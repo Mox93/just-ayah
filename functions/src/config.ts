@@ -1,3 +1,5 @@
+import { defineString } from "@lib";
+
 // GENERAL
 export const DOC_ID_VAR = "documentId";
 export const DOC_ID_CARD = `{${DOC_ID_VAR}}` as const;
@@ -28,8 +30,8 @@ function generateIndexPath<N extends string>(name: N): `/meta/${N}Index` {
 }
 
 // GOOGLE_SHEETS
-export const DATA_SHEET_ID = "1FLOBX-8vdwa00BRcWJe6VjQJoE0bFqboHhAGpDU6-DM";
-export const LOGS_SHEET_ID = "1fY3rzXUSfUsEaoaz8OqWOLU-D28wqUbHNVYfrMW6D-Y";
+export const DATA_SHEET_ID = defineString("DATA_SHEET_ID").value();
+export const LOGS_SHEET_ID = defineString("LOGS_SHEET_ID").value();
 export const META_DATA_RANGES = [
   "staff",
   "subscriptions",
