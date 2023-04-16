@@ -9,7 +9,7 @@
   text-align: center;
 
   @include mobile {
-    width: 100vw;
+    width: calc(100vw - 2 * var(--spacing-l));
     min-width: unset;
     max-width: unset;
   }

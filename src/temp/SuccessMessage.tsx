@@ -2,20 +2,23 @@ import { Button } from "components/Buttons";
 import { FlashCard } from "components/FlashMessages";
 
 interface SuccessMessageProps {
-  close?: VoidFunction;
+  startOver?: VoidFunction;
   undo?: VoidFunction;
 }
 
-export default function SuccessMessage({ close, undo }: SuccessMessageProps) {
+export default function SuccessMessage({
+  startOver,
+  undo,
+}: SuccessMessageProps) {
   return (
     <FlashCard
       state="success"
-      {...(close || undo
+      {...(startOver || undo
         ? {
             actions: (
               <>
-                {close && (
-                  <Button variant="primary-text" onClick={close}>
+                {startOver && (
+                  <Button variant="primary-text" onClick={startOver}>
                     قم بعملية جديدة
                   </Button>
                 )}

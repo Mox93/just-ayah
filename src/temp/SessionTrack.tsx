@@ -11,7 +11,7 @@ import {
 import FormLayout from "components/Layouts/FormLayout";
 import LoadingPopup from "components/LoadingPopup";
 import { useApplyOnce, useLanguage, useLoading, useSmartForm } from "hooks";
-import { identity } from "utils";
+import { identity, mergeCallbacks, pass } from "utils";
 
 import {
   SessionTrackData,
@@ -51,10 +51,10 @@ export default function SessionTrack() {
           .then((doc) => {
             openModal(
               <SuccessMessage
-                close={() => {
-                  closeModal();
-                  reset({ date: new Date() });
-                }}
+                startOver={mergeCallbacks(
+                  closeModal,
+                  pass(reset, { date: new Date() })
+                )}
                 undo={() => {
                   deleteSessionTrack({ id: doc.id }).then(closeModal);
                 }}
