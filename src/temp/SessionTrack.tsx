@@ -55,8 +55,9 @@ export default function SessionTrack() {
                   closeModal,
                   pass(reset, { date: new Date() })
                 )}
-                undo={() => {
-                  deleteSessionTrack({ id: doc.id }).then(closeModal);
+                undo={async () => {
+                  await deleteSessionTrack({ id: doc.id });
+                  closeModal();
                 }}
               />,
               { center: true }
@@ -90,15 +91,15 @@ export default function SessionTrack() {
   }, [resetField, student, teacher, teachers]);
 
   const getTeachers = useCallback(
-    () => (teachers ? Object.keys(teachers) : []),
+    () => (teachers ? Object.keys(teachers).sort() : []),
     [teachers]
   );
-  const getStudents = useCallback(
+  const getStudents = useCallback<() => string[]>(
     () =>
       teachers
         ? teacher
-          ? teachers[teacher]
-          : (Object.values(teachers).flatMap(identity) as string[])
+          ? teachers[teacher].sort()
+          : Object.values(teachers).flatMap(identity).sort()
         : [],
     [teacher, teachers]
   );
