@@ -21,6 +21,7 @@ export default function FlashCard({
   return (
     <Container
       variant="card"
+      alwaysRound
       className={cn("FlashCard", className, state)}
       header={
         state && (

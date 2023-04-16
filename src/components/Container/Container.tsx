@@ -10,16 +10,17 @@ interface ContainerProps {
   header?: ReactNode;
   footer?: ReactNode;
   flat?: boolean;
+  alwaysRound?: boolean;
 }
 
 export default forwardRef<HTMLDivElement, ContainerProps>(function Container(
-  { className, children, variant, dir, header, footer, flat },
+  { className, children, variant, dir, header, footer, flat, alwaysRound },
   ref
 ) {
   return (
     <div
       ref={ref}
-      className={cn("Container", variant, className, { flat })}
+      className={cn("Container", variant, className, { flat, alwaysRound })}
       dir={dir}
     >
       {header && <div className="header">{header}</div>}

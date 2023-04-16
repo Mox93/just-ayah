@@ -20,6 +20,10 @@
     }
   }
 
+  &.alwaysRound {
+    --border-radius: var(--radius-xl);
+  }
+
   &.menu {
     --border-radius: var(--radius-s);
 
