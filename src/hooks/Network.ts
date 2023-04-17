@@ -1,23 +1,19 @@
-import { useEffect, useState } from "react";
-import { windowEventFactory } from "utils";
+import { useState } from "react";
+import useEventListener from "./EventListener";
 
 export default function useNetwork(): boolean {
   const [isOnline, setIsOnline] = useState(window.navigator.onLine);
 
-  useEffect(() => {
+  useEventListener(window, () => {
     const updateNetworkStatus = () => {
       setIsOnline(window.navigator.onLine);
     };
 
-    const [addEvents, removeEvents] = windowEventFactory({
+    return {
       online: updateNetworkStatus,
       offline: updateNetworkStatus,
-    });
-
-    addEvents();
-
-    return removeEvents;
-  }, []);
+    };
+  });
 
   return isOnline;
 }

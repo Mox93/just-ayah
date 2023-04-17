@@ -1,7 +1,8 @@
-import { ReactElement, Ref, useEffect } from "react";
+import { ReactElement, Ref } from "react";
 
 import { CloseButton } from "components/Buttons";
-import { cn, documentEventFactory, oneOf, pass } from "utils";
+import { cn, oneOf, pass } from "utils";
+import { useEventListener } from "hooks";
 
 export type ModalProps = {
   children: ReactElement;
@@ -22,17 +23,14 @@ export default function Modal({
   bodyRef,
   className,
 }: ModalProps) {
-  useEffect(() => {
-    if (!dismissible) return;
-
-    const [addEvents, removeEvents] = documentEventFactory({
-      keyup: ({ key }) => oneOf(key, ["Escape"]) && close?.(),
-    });
-
-    addEvents();
-
-    return removeEvents;
-  }, [dismissible, close]);
+  useEventListener(
+    document,
+    dismissible
+      ? {
+          keyup: ({ key }) => oneOf(key, ["Escape"]) && close?.(),
+        }
+      : {}
+  );
 
   return (
     <div className={cn("Modal", className)} dir={dir}>

@@ -2,26 +2,21 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useTitle } from "context";
-import { useGlobalT, useLanguage } from "hooks";
-import { windowEventFactory } from "utils";
+import { useEventListener, useGlobalT, useLanguage } from "hooks";
 
 export default function usePageSync() {
   // LANGUAGE
   const [language, setLanguage] = useLanguage();
 
+  useEventListener(window, {
+    storage: ({ key, newValue }) => {
+      if (key === "i18nextLng" && newValue) setLanguage(newValue);
+    },
+  });
+
   useEffect(() => {
     document.documentElement.setAttribute("lang", language);
-
-    const [addEvents, removeEvents] = windowEventFactory({
-      storage: ({ key, newValue }) => {
-        if (key === "i18nextLng" && newValue) setLanguage(newValue);
-      },
-    });
-
-    addEvents();
-
-    return removeEvents;
-  }, [language, setLanguage]);
+  }, [language]);
 
   // DIR
   const { t } = useTranslation();

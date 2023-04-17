@@ -1,7 +1,8 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
 import { useFader } from "components/Animation";
-import { cn, documentEventFactory, oneOf, refEventFactory } from "utils";
+import { cn, eventFactory, oneOf } from "utils";
+import useEventListener from "hooks/EventListener";
 
 export type AnchorPoint = `${"top" | "bottom"}-${"start" | "end"}`;
 
@@ -48,7 +49,7 @@ export default function useDropdown<
       if (oneOf(event.key, ["Escape"])) close.current();
     }
 
-    const [addEvents, removeEvents] = documentEventFactory({
+    const [addEvents, removeEvents] = eventFactory(document, {
       mouseup: handleWentOutside,
       focusin: handleWentOutside,
       keyup: handelCancelButtons,
@@ -63,17 +64,14 @@ export default function useDropdown<
     return removeEvents;
   }, [isOpen]);
 
-  useEffect(() => {
-    if (driverRef.current && onClick) {
-      const [addEvents, removeEvents] = refEventFactory(driverRef, {
-        click: onClick === "open" ? open.current : toggle.current,
-      });
-
-      addEvents();
-
-      return removeEvents;
-    }
-  }, [onClick]);
+  useEventListener(
+    driverRef.current,
+    driverRef.current && onClick
+      ? {
+          click: onClick === "open" ? open.current : toggle.current,
+        }
+      : {}
+  );
 
   // FIXME issue with dropdown keyboard control
   // const handleToggleButtons = useCallback((event: KeyboardEvent) => {
