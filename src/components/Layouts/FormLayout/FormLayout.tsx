@@ -2,10 +2,9 @@ import { ReactElement } from "react";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import Container from "components/Container";
+import LanguageSelector from "components/LanguageSelector";
 import { useSetHeaderProps } from "context";
 import { cn } from "utils";
-
-import LanguageSelector from "../LanguageSelector";
 
 interface FormLayoutProps {
   children: ReactElement;

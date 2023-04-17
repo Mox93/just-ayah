@@ -3,7 +3,7 @@ import { useMemo } from "react";
 
 import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
 import { Button } from "components/Buttons";
-import LanguageSelector from "components/Layouts/LanguageSelector";
+import LanguageSelector from "components/LanguageSelector";
 import { usePopupContext } from "context";
 import { HeaderProps as _HeaderProps } from "context/Header";
 import { cn } from "utils";
