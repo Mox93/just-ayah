@@ -28,9 +28,12 @@ export function useMetaData() {
 
   useApplyOnce(() => {
     getCachedMetaData()
-      .then(([data, expired]) => (expired ? getFreshMetaData() : data))
-      .catch(() => getFreshMetaData())
-      .then((data) => useMetaDataStore.setState(data));
+      .then(([data, expired]) => {
+        if (expired) getFreshMetaData().then(setMetaData);
+        return data;
+      })
+      .catch(getFreshMetaData)
+      .then(setMetaData);
   }, isEmpty(metaData));
 
   return metaData;
@@ -39,6 +42,10 @@ export function useMetaData() {
 export async function refreshMetaData() {
   const metaData = await getFreshMetaData();
   useMetaDataStore.setState(metaData);
+}
+
+function setMetaData(data: MetaData) {
+  return useMetaDataStore.setState(data);
 }
 
 const useMetaDataStore = create<Partial<MetaData>>()(() => ({}));

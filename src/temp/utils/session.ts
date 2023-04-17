@@ -3,8 +3,11 @@ import { httpsCallable } from "firebase/functions";
 
 import { db, functions } from "services/firebase";
 
-const sessionTrackRef = collection(db, "meta/temp/sessionTrack");
+/*********************\
+|*** Session Track ***|
+\*********************/
 
+const sessionTrackRef = collection(db, "meta/temp/sessionTrack");
 export interface SessionTrackData {
   teacher: string;
   student: string;
@@ -21,4 +24,22 @@ export async function addSessionTrack(data: SessionTrackData) {
 export const deleteSessionTrack = httpsCallable<{ id: string }>(
   functions,
   "deleteSessionTrack"
+);
+
+/**********************\
+|*** Session Report ***|
+\**********************/
+
+const sessionReportRef = collection(db, "meta/temp/sessionReport");
+
+export interface SessionReportData extends SessionTrackData {}
+
+export async function addSessionReport(data: SessionReportData) {
+  console.log(data);
+  return await addDoc(sessionReportRef, { ...data, timestamp: new Date() });
+}
+
+export const deleteSessionReport = httpsCallable<{ id: string }>(
+  functions,
+  "deleteSessionReport"
 );

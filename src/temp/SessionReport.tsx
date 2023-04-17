@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useWatch } from "react-hook-form";
+import { UseFormReset, useWatch } from "react-hook-form";
 
 import { MenuInput as BaseMenuInput, formAtoms } from "components/Form";
 import {
@@ -10,19 +10,21 @@ import {
 } from "components/Form/utils/formModifiers";
 import FormLayout from "components/Layouts/FormLayout";
 import LoadingPopup from "components/LoadingPopup";
-import { useApplyOnce, useLanguage, useSmartForm } from "hooks";
-import { identity } from "utils";
+import { useApplyOnce, useLanguage, useLoading, useSmartForm } from "hooks";
+import { identity, mergeCallbacks, pass } from "utils";
 
-import { useMetaData } from "./utils";
+import {
+  SessionReportData,
+  addSessionReport,
+  deleteSessionReport,
+  useMetaData,
+} from "./utils";
+import { usePopupContext } from "context";
+import SuccessMessage from "./SuccessMessage";
+import { ErrorMessage } from "components/FlashMessages";
 
-interface SessionTrackForm {
-  teacher: string;
-  student: string;
-  status: string;
-  date: Date;
-}
-
-const { Form, InputGroup, DateInput } = formAtoms<SessionTrackForm>();
+const { Form, DateInput, InputGroup, Textarea } =
+  formAtoms<SessionReportData>();
 
 function menuModifiers<T extends {}>() {
   return [processProps<T>(), menu<T>(), registerField<T>()] as const;
@@ -30,7 +32,7 @@ function menuModifiers<T extends {}>() {
 
 const MenuInput = formChild(
   BaseMenuInput,
-  ...menuModifiers<SessionTrackForm>()
+  ...menuModifiers<SessionReportData>()
 );
 
 export default function SessionReport() {
@@ -41,10 +43,39 @@ export default function SessionReport() {
 
   const { teachers, sessionStatus } = useMetaData();
 
-  const formProps = useSmartForm<SessionTrackForm>({
-    onSubmit: (data) => {
-      console.log(data);
-    },
+  const { openModal, closeModal } = usePopupContext();
+
+  const [addReport, isLoading] = useLoading(
+    (stopLoading) =>
+      (data: SessionReportData, reset: UseFormReset<SessionReportData>) =>
+        addSessionReport(data)
+          .then((doc) => {
+            openModal(
+              <SuccessMessage
+                startOver={mergeCallbacks(
+                  closeModal,
+                  pass(reset, { date: new Date() })
+                )}
+                undo={async () => {
+                  await deleteSessionReport({ id: doc.id });
+                  closeModal();
+                }}
+              />,
+              { center: true }
+            );
+          })
+          .catch((error) =>
+            openModal(<ErrorMessage error={error} />, {
+              center: true,
+              closable: true,
+            })
+          )
+          .finally(stopLoading)
+  );
+
+  const formProps = useSmartForm<SessionReportData>({
+    onSubmit: (data, { reset }) => addReport()(data, reset),
+    defaultValues: { date: new Date() },
   });
   const {
     formHook: { control, resetField },
@@ -61,15 +92,15 @@ export default function SessionReport() {
   }, [resetField, student, teacher, teachers]);
 
   const getTeachers = useCallback(
-    () => (teachers ? Object.keys(teachers) : []),
+    () => (teachers ? Object.keys(teachers).sort() : []),
     [teachers]
   );
-  const getStudents = useCallback(
+  const getStudents = useCallback<() => string[]>(
     () =>
       teachers
         ? teacher
-          ? teachers[teacher]
-          : (Object.values(teachers).flatMap(identity) as string[])
+          ? teachers[teacher].sort()
+          : Object.values(teachers).flatMap(identity).sort()
         : [],
     [teacher, teachers]
   );
@@ -84,15 +115,36 @@ export default function SessionReport() {
 
   return (
     <FormLayout title="(المعلمين) تقارير اللقاءات">
-      <Form {...formProps} resetProps={{}}>
+      <Form {...formProps} resetProps={{}} submitProps={{ isLoading }}>
         <InputGroup>
-          <MenuInput options={getTeachers} name="teacher" label="اسم المعلم" />
-          <MenuInput options={getStudents} name="student" label="اسم الطالب" />
+          <MenuInput
+            options={getTeachers}
+            name="teacher"
+            label="اسم المعلم"
+            required
+          />
+          <MenuInput
+            options={getStudents}
+            name="student"
+            label="اسم الطالب"
+            required
+          />
         </InputGroup>
         <InputGroup>
-          <MenuInput options={sessionStatus} name="status" label="وضع اللقاء" />
-          <DateInput name="date" label="تاريخ اللقاء" range={{ start, end }} />
+          <MenuInput
+            options={sessionStatus}
+            name="status"
+            label="وضع اللقاء"
+            required
+          />
+          <DateInput
+            name="date"
+            label="تاريخ اللقاء"
+            range={{ start, end }}
+            required
+          />
         </InputGroup>
+        <Textarea name="notes" label="ملاحظات" />
       </Form>
     </FormLayout>
   );
