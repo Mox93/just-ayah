@@ -72,12 +72,12 @@ export function StudentProvider({ children }: PropsWithChildren) {
   });
 
   const addNote = useCallback<AddCommentFunc>(
-    (id, note) => {
+    (id, note, options) => {
       const { dateCreated } = note;
       updateStudent(
         id,
         { [`meta.notes.${dateCreated.getTime()}`]: note },
-        { applyLocally: true }
+        { ...options, applyLocally: true }
       );
     },
     [updateStudent]

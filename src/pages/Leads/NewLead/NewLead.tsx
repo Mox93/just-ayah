@@ -2,7 +2,7 @@ import { ErrorMessage, ReachOutMessage } from "components/FlashMessages";
 import { FormLayout } from "components/Layouts";
 import { useLeadContext, usePopupContext } from "context";
 import { usePageT } from "hooks";
-import Lead, { LeadFormData } from "models/lead";
+import Lead from "models/lead";
 
 import LeadForm from "../LeadForm";
 
@@ -15,10 +15,12 @@ export default function NewLead() {
   return (
     <FormLayout name="NewLead" title={ldt("formTitle")}>
       <LeadForm
-        onSubmit={(data: LeadFormData) =>
+        onSubmit={(data, { reset }) =>
           addLead(new Lead.DB(data), {
-            onFulfilled: () =>
-              openModal(<ReachOutMessage />, { center: true, closable: true }),
+            onFulfilled: () => {
+              openModal(<ReachOutMessage />, { center: true, closable: true });
+              reset();
+            },
             onRejected: () =>
               openModal(<ErrorMessage />, {
                 center: true,

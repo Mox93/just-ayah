@@ -38,16 +38,18 @@ export function useNewUserTabs<TUser, TUserForm extends {}>({
         key: "form",
         body: (
           <UserForm
-            onSubmit={(data) =>
+            onSubmit={(data, { reset }) =>
               addUser(new UserClass(data), {
-                onFulfilled: () =>
+                onFulfilled: () => {
                   openToast(
                     <SuccessToast
                       i18nKey={`new${capitalize(variant)}`}
                       message={`a new ${variant} was added!`}
                     />,
                     { variant: "success" }
-                  ),
+                  );
+                  reset();
+                },
                 onRejected: (error: any) =>
                   openToast(<ErrorToast error={error} />, {
                     variant: "danger",

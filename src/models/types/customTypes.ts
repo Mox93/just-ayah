@@ -105,7 +105,11 @@ export type DeleteDataFunc = (
   options?: RequestCallback & LocalAction
 ) => void;
 
-export type AddCommentFunc = (id: string, comment: Comment) => void;
+export type AddCommentFunc = (
+  id: string,
+  comment: Comment,
+  options?: RequestCallback
+) => void;
 
 /*********************************\
 |****** FUNCTION DEFINITION ******|

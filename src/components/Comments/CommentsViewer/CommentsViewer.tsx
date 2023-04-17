@@ -17,7 +17,7 @@ interface CommentsViewerProps {
   storageKey?: string;
   placeholder?: string;
   header?: string;
-  onAddComment: (comment: Comment) => void;
+  onAddComment: (comment: Comment, reset: VoidFunction) => void;
 }
 
 export default function CommentsViewer({
@@ -32,11 +32,10 @@ export default function CommentsViewer({
   const { user } = useAuthContext();
 
   const formProps = useSmartForm<CommentForm>({
-    onSubmit: ({ draft }) =>
+    onSubmit: ({ draft }, { reset }) =>
       // TODO use safeParse and handle error state
-      onAddComment(commentSchema.parse({ body: draft, user })),
+      onAddComment(commentSchema.parse({ body: draft, user }), reset),
     ...(storageKey ? { storage: { key: storageKey } } : {}),
-    resetOnSubmit: true,
   });
 
   return (

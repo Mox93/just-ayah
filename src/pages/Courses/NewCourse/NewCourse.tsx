@@ -17,7 +17,7 @@ export default function NewCourse() {
   const addCourse = useCourseStore((state) => state.add);
 
   const formProps = useSmartForm<CourseFormData>({
-    onSubmit: (data) =>
+    onSubmit: (data, { reset }) =>
       addCourse(new Course.DB(data), {
         applyLocally: true,
         onFulfilled: () => {
@@ -29,11 +29,11 @@ export default function NewCourse() {
             />,
             { variant: "success" }
           );
+          reset();
         },
         onRejected: (error) =>
           openToast(<ErrorToast error={error} />, { variant: "danger" }),
       }),
-    resetOnSubmit: true,
   });
 
   return (

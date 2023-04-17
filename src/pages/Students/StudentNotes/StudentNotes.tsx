@@ -23,7 +23,9 @@ export default function StudentNotes({ id }: StudentNotesProps) {
   return (
     <CommentsViewer
       comments={notes}
-      onAddComment={(note) => addNote(id, note)}
+      onAddComment={(note, reset) =>
+        addNote(id, note, { onFulfilled: () => reset() })
+      }
       placeholder={msg("noNotes")}
       header={glb("notes")}
     />

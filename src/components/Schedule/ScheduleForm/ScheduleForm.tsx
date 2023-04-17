@@ -22,11 +22,8 @@ export default function ScheduleForm({
 }: ScheduleFormProps) {
   const glb = useGlobalT();
   const formProps = useSmartForm({
-    onSubmit: ({ entries, notes }) => {
-      if (!onSubmit) return;
-
-      onSubmit({ ...(notes ? { notes } : {}), entries });
-    },
+    onSubmit: ({ entries, notes }) =>
+      onSubmit?.({ ...(notes ? { notes } : {}), entries }),
     defaultValues,
   });
 

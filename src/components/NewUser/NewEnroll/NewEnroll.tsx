@@ -40,23 +40,23 @@ export default function NewEnroll({
   const { openToast } = usePopupContext();
 
   const formProps = useSmartForm<EnrollForm>({
-    onSubmit: (enroll) =>
+    onSubmit: (enroll, { reset }) =>
       addEnroll(new DBClass({ enroll: createEnroll(enroll) }), {
         applyLocally: true,
-        onFulfilled: () =>
+        onFulfilled: () => {
           openToast(
             <SuccessToast
               i18nKey={`new${capitalize(variant)}Enroll`}
               message={`a new ${variant} enroll was added!`}
-            />,
-            { variant: "success" }
-          ),
+            />
+          );
+          reset();
+        },
         onRejected: (error: any) =>
           openToast(<ErrorToast error={error} />, {
             variant: "danger",
           }),
       }),
-    resetOnSubmit: true,
   });
 
   const {

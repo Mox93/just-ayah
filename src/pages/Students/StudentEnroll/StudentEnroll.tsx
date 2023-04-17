@@ -24,9 +24,12 @@ export default function StudentEnroll() {
   return (
     <FormLayout name="StudentEnroll" title={pgT("formTitle")}>
       <StudentForm
-        onSubmit={(data) =>
+        onSubmit={(data, { reset }) =>
           submitEnroll(id!, new Student.DB(data), {
-            onFulfilled: () => openModal(<EnrolledMessage />, { center: true }),
+            onFulfilled: () => {
+              openModal(<EnrolledMessage />, { center: true });
+              reset();
+            },
             onRejected: (error) =>
               openModal(<ErrorMessage error={error} />, {
                 center: true,

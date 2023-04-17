@@ -12,10 +12,7 @@ interface LeadFormProps {
 export default function LeadForm({ onSubmit }: LeadFormProps) {
   const pi = usePersonalInfoT();
 
-  const formProps = useSmartForm({
-    onSubmit,
-    // resetOnSubmit: true,
-  });
+  const formProps = useSmartForm({ onSubmit });
 
   return (
     <Form className="ContainerForm" resetProps={{}} {...formProps}>
