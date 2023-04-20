@@ -12,7 +12,7 @@
   justify-content: center;
 
   &.dropdown {
-    --duration: 0.35s;
+    --duration: 0.45s;
     --opened-angle: 0deg;
 
     @include rtlDir {
@@ -29,7 +29,7 @@
   }
 
   &.expand {
-    --duration: 0.2s;
+    --duration: 0.3s;
 
     @include rtlDir {
       --opened-angle: -180deg;

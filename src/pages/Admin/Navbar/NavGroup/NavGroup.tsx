@@ -8,7 +8,8 @@ import { useDropdown, useNavT } from "hooks";
 import { cn } from "utils";
 
 import HiddenLabel from "../HiddenLabel";
-import { NavSubitems, useHasActivePath } from "../Navbar.utils";
+import { NavSubitems } from "../Navbar.utils";
+import { useDelayClose, useHasActivePath } from "./NavGroup.utils";
 
 interface NavGroupProps {
   icon: ReactElement;
@@ -20,17 +21,11 @@ export default function NavGroup({ icon, label, subitems }: NavGroupProps) {
   const navT = useNavT();
 
   const isFullyExpanded = useSidebarStore((state) => state.isFullyExpanded);
-
-  const [hasActivePath, setHasActivePath] = useState(false);
-
-  const _hasActivePath = useHasActivePath(
-    () => subitems.map(({ url }) => url),
-    setHasActivePath
-  );
-
-  const [isOpen, setIsOpen] = useState(_hasActivePath);
+  const hasActivePath = useHasActivePath(() => subitems.map(({ url }) => url));
+  const [isOpen, setIsOpen] = useState(hasActivePath);
 
   const isCollapsed = !isFullyExpanded || !isOpen;
+  const isVisible = useDelayClose(!isCollapsed);
 
   const { driverRef, drivenRef, dropdownWrapper, toggle, close } = useDropdown<
     HTMLElement,
@@ -80,7 +75,16 @@ export default function NavGroup({ icon, label, subitems }: NavGroupProps) {
           {navLinks}
         </Container>
       )}
-      {isCollapsed || <div className={cn("subitems")}>{navLinks}</div>}
+      {isVisible && (
+        <div
+          className={cn("subitems", {
+            expanding: !isCollapsed,
+            collapsing: isCollapsed,
+          })}
+        >
+          {navLinks}
+        </div>
+      )}
     </>
   );
 }

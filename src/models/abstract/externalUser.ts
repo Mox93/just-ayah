@@ -6,11 +6,9 @@ import { applyUpdates, devOnly } from "utils";
 import { enrollSchema } from "../blocks";
 import { DeepUnion, UpdateObject } from "../types";
 
-export const externalUserSchema = z
-  .object({
-    enroll: enrollSchema,
-  })
-  .passthrough();
+export const externalUserSchema = z.object({
+  enroll: enrollSchema,
+});
 
 export default function ExternalUser<DataIn extends {}, DataOut extends {}>(
   schema: z.Schema<DataOut, ZodTypeDef, DataIn>,

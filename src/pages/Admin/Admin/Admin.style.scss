@@ -1,7 +1,12 @@
+@use "styles/abstracts/mixins" as *;
+
 .Admin {
-  padding: var(--spacing-m);
   height: var(--body-height);
   max-height: var(--body-height);
   display: grid;
   gap: var(--spacing-m);
+
+  @include desktop {
+    padding: var(--spacing-m);
+  }
 }

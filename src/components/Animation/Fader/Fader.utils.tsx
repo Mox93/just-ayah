@@ -30,7 +30,7 @@ export type UseFaderProps = {
 );
 
 export function useFader<T extends HTMLElement>({
-  isOpen = false,
+  isOpen,
   duration = 150,
   anchorPoint,
   expand,

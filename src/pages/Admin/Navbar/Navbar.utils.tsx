@@ -1,10 +1,8 @@
-import { ReactElement, useEffect, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { ReactElement } from "react";
 
 import { ReactComponent as CoursesIcon } from "assets/icons/book-svgrepo-com.svg";
 import { ReactComponent as HomeIcon } from "assets/icons/home-svgrepo-com.svg";
 import { ReactComponent as UsersIcon } from "assets/icons/users-svgrepo-com.svg";
-import { useRefSync } from "hooks";
 import { Merge } from "models";
 
 interface NavItem {
@@ -74,33 +72,3 @@ const NAV_TREE: NavTree = [
     url: "/admin/courses",
   },
 ];
-
-export function useHasActivePath(
-  paths: () => string[],
-  setActive: (isActive: boolean) => void
-) {
-  const pathname = useLocation().pathname.toLowerCase().replace(/\/$/g, "");
-
-  const setActiveRef = useRefSync(setActive);
-  const pathsRef = useRefSync(paths);
-
-  const hasActivePath = useMemo(
-    () =>
-      pathsRef
-        .current()
-        .some((path) =>
-          pathname.startsWith(path.toLowerCase().replace(/\/$/g, ""))
-        ),
-    [pathname, pathsRef]
-  );
-
-  useEffect(() => {
-    if (hasActivePath) {
-      setActiveRef.current(true);
-    } else {
-      setActiveRef.current(false);
-    }
-  }, [hasActivePath, setActiveRef]);
-
-  return hasActivePath;
-}

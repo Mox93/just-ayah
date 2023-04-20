@@ -20,6 +20,8 @@ export default function SpinningArrow({
   const wasOpen = useRef(isOpen);
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
     if (ref.current) {
       if (isOpen && !wasOpen.current) {
         ref.current.classList.remove("closing");
@@ -28,10 +30,17 @@ export default function SpinningArrow({
         ref.current.classList.remove("opening");
         ref.current.classList.add("closing");
       }
+
+      timeout = setTimeout(
+        () => ref.current?.classList.remove("opening", "closing"),
+        variant === "dropdown" ? 451 : 301
+      );
     }
 
     wasOpen.current = isOpen;
-  }, [isOpen]);
+
+    return () => timeout && clearTimeout(timeout);
+  }, [isOpen, variant]);
 
   return (
     <div
