@@ -1,25 +1,13 @@
 import { DBEventHandler, EventType } from "@types";
 
-type FunctionIn<D, C, R> = (change: D, context: C) => R;
-type FunctionOut<D, C, R> = (
-  change: D,
-  context: C
-) => Promise<Record<string, Awaited<R>>>;
+type HandlerIn<T, X, R> = (change: T, context: X) => R;
+type HandlerOut<T, X, R> = (change: T, context: X) => Promise<Awaited<R>[]>;
 
-export function merge<D, C, R, T extends FunctionIn<D, C, R>>(
-  ...handlers: [T, ...T[]]
-): FunctionOut<D, C, R> {
-  return async (change, context) => {
-    const result: Record<string, Awaited<R>> = {};
-
-    await Promise.all(
-      handlers.map(async (handler) => {
-        result[handler.name] = await handler(change, context);
-      })
-    );
-
-    return result;
-  };
+export function merge<T, X, R, H extends HandlerIn<T, X, R>>(
+  ...handlers: [H, ...H[]]
+): HandlerOut<T, X, R> {
+  return (change, context) =>
+    Promise.all(handlers.map((handler) => handler(change, context)));
 }
 
 export function exclude(

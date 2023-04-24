@@ -33,35 +33,35 @@ export default function useDropdown<
   const close = useRef(() => setIsOpen(false));
   const toggle = useRef(() => setIsOpen((state) => !state));
 
+  const handleWentOutside = useRef((event: Event) => {
+    if (!driverRef.current || !internalDrivenRef.current) return;
+
+    if (
+      event.target instanceof Node &&
+      !driverRef.current?.contains(event.target) &&
+      !internalDrivenRef.current?.contains(event.target)
+    )
+      close.current();
+  });
+
+  const handelCancelButtons = useRef((event: KeyboardEvent) => {
+    if (oneOf(event.key, ["Escape"])) close.current();
+  });
+
   useEffect(() => {
-    function handleWentOutside(event: Event) {
-      if (!driverRef.current || !internalDrivenRef.current) return;
-
-      if (
-        event.target instanceof Node &&
-        !driverRef.current?.contains(event.target) &&
-        !internalDrivenRef.current?.contains(event.target)
-      )
-        close.current();
-    }
-
-    function handelCancelButtons(event: KeyboardEvent) {
-      if (oneOf(event.key, ["Escape"])) close.current();
-    }
-
-    const [addEvents, removeEvents] = eventFactory(document, {
-      mouseup: handleWentOutside,
-      focusin: handleWentOutside,
-      keyup: handelCancelButtons,
+    const [addEventListeners, removeEventListeners] = eventFactory(document, {
+      mouseup: handleWentOutside.current,
+      focusin: handleWentOutside.current,
+      keyup: handelCancelButtons.current,
     });
 
     if (isOpen) {
-      addEvents();
+      addEventListeners();
     } else {
-      removeEvents();
+      removeEventListeners();
     }
 
-    return removeEvents;
+    return removeEventListeners;
   }, [isOpen]);
 
   useEventListener(
