@@ -24,7 +24,7 @@ export default forwardRef<HTMLInputElement, GovernorateSelectorInputProps>(
         (country !== "EG" && selected?.startsWith(EG_PREFIX))
       )
         setValue?.();
-    }, [country, selected]);
+    }, [country, selected]); // Don't add setValue because it causes a infinite loop
 
     return country === "EG" ? (
       <MenuInput

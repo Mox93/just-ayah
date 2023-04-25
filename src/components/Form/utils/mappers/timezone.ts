@@ -18,13 +18,13 @@ const timezoneMapper = createModifier<TimezoneMapperProps>(
   ({
     renderSections = ["label"],
     searchFields = ["label"],
-    setValue: _setValue,
+    setValue,
     selected,
     ...props
   }: TimezoneMapperPropsInternal) => ({
     ...props,
     searchFields,
-    setValue: (value: any) => _setValue?.(value?.tzCode),
+    setValue: (value: any) => setValue?.(value?.tzCode),
     ...timezoneSelectorProps(renderSections, selected),
   })
 );

@@ -32,24 +32,19 @@ const commentsSchema = z.union([
   z.record(z.string(), commentSchema),
 ]);
 
-export const commentListSchema = commentsSchema.transform<Comment[]>((value) =>
+export const commentListSchema = commentsSchema.transform((value) =>
   Array.isArray(value)
     ? value
     : Object.entries(value)
         .sort(([a], [b]) => Number(b) - Number(a))
-        .map(([_, value]) => value)
+        .map(([, value]) => value)
 );
 
-export const commentMapSchema = commentsSchema.transform<{
-  [x: string]: Comment;
-}>((value) =>
+export const commentMapSchema = commentsSchema.transform((value) =>
   Array.isArray(value)
-    ? value.reduce(
-        (obj, comment) => ({
-          ...obj,
-          [`${comment.dateCreated.getTime()}`]: comment,
-        }),
-        {}
-      )
+    ? value.reduce((obj, comment) => {
+        obj[`${comment.dateCreated.getTime()}`] = comment;
+        return obj;
+      }, {} as Record<string, Comment>)
     : value
 );

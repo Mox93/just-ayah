@@ -69,13 +69,10 @@ export default function useSmartForm<TFieldValues extends {}>({
     //TODO filter out empty fields
     const subscription = watch((data) => {
       formSession?.set(data as PartialDeep<TFieldValues>);
-      emptyValues.current = Object.entries(data).reduce(
-        (obj, [key, value]) => ({
-          ...obj,
-          [key]: isPlainObject(value) ? {} : null,
-        }),
-        {}
-      );
+      emptyValues.current = Object.entries(data).reduce((obj, [key, value]) => {
+        obj[key] = isPlainObject(value) ? {} : null;
+        return obj;
+      }, {} as any);
     });
 
     return subscription.unsubscribe;

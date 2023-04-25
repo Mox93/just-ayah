@@ -9,8 +9,8 @@ export type RequestStateMap = {
 };
 
 export function requestStateMap(state: RequestState) {
-  return requestStates.reduce(
-    (obj, key) => ({ ...obj, [`is${capitalize(key)}`]: state === key }),
-    {}
-  ) as RequestStateMap;
+  return requestStates.reduce((obj, key) => {
+    obj[`is${capitalize(key)}` as keyof RequestStateMap] = state === key;
+    return obj;
+  }, {} as RequestStateMap);
 }

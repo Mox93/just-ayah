@@ -26,10 +26,10 @@ export const timezoneSchema = z.union([
   _timezoneCodeSchema.transform((value) => getTimezone(value)!),
 ]);
 
-const timezoneMap: Record<string, Timezone> = timezones.reduce(
-  (obj, tz) => ({ ...obj, [tz.tzCode]: tz }),
-  {}
-);
+const timezoneMap: Record<string, Timezone> = timezones.reduce((obj, tz) => {
+  obj[tz.tzCode] = tz;
+  return obj;
+}, {} as Record<string, Timezone>);
 
 export function getTimezone(code?: string) {
   return code ? timezoneMap[code] : undefined;

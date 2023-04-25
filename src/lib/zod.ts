@@ -21,10 +21,10 @@ export function indexMap<A extends any[], R extends Record<string, any>>(
 ) {
   return schema.transform<R>((value) =>
     Array.isArray(value)
-      ? value.reduce(
-          (obj, { id, ...userIndex }) => ({ ...obj, [id]: userIndex }),
-          {}
-        )
+      ? value.reduce((obj, { id, ...userIndex }) => {
+          obj[id] = userIndex;
+          return obj;
+        }, {})
       : value
   );
 }
