@@ -1,46 +1,23 @@
-import { useCallback, useEffect } from "react";
-import { UseFormReset, useWatch } from "react-hook-form";
+import { UseFormReset } from "react-hook-form";
 
-import { MenuInput as BaseMenuInput, formAtoms } from "components/Form";
-import {
-  formChild,
-  menu,
-  processProps,
-  registerField,
-} from "components/Form/utils/formModifiers";
-import FormLayout from "components/Layouts/FormLayout";
-import LoadingPopup from "components/LoadingPopup";
-import { useApplyOnce, useLanguage, useLoading, useSmartForm } from "hooks";
-import { identity, mergeCallbacks, pass } from "utils";
-
-import {
-  SessionTrackData,
-  addSessionTrack,
-  deleteSessionTrack,
-  useMetaData,
-} from "./utils";
-import { usePopupContext } from "context";
-import SuccessMessage from "./SuccessMessage";
 import { ErrorMessage } from "components/FlashMessages";
+import { formAtoms } from "components/Form";
+import FormLayout from "components/Layouts/FormLayout";
+import { usePopupContext } from "context";
+import { useApplyOnce, useLanguage, useLoading, useSmartForm } from "hooks";
+import { mergeCallbacks, pass } from "utils";
 
-const { Form, DateInput, InputGroup, Textarea } = formAtoms<SessionTrackData>();
+import SessionTrackFields from "./SessionTrackFields";
+import SuccessMessage from "./SuccessMessage";
+import { SessionTrackData, addSessionTrack, deleteSessionTrack } from "./utils";
 
-function menuModifiers<T extends {}>() {
-  return [processProps<T>(), menu<T>(), registerField<T>()] as const;
-}
-
-const MenuInput = formChild(
-  BaseMenuInput,
-  ...menuModifiers<SessionTrackData>()
-);
+const { Form, Textarea } = formAtoms<SessionTrackData>();
 
 export default function SessionTrack() {
   const [, setLanguage] = useLanguage();
   useApplyOnce(() => {
     setLanguage("ar");
   });
-
-  const { teachers, sessionStatus } = useMetaData();
 
   const { openModal, closeModal } = usePopupContext();
 
@@ -80,69 +57,10 @@ export default function SessionTrack() {
     formHook: { control, resetField },
   } = formProps;
 
-  const [teacher, student] = useWatch({
-    name: ["teacher", "student"],
-    control,
-  });
-
-  useEffect(() => {
-    if (!teachers || !teacher || teachers[teacher].includes(student)) return;
-    resetField("student");
-  }, [resetField, student, teacher, teachers]);
-
-  const getTeachers = useCallback(
-    () => (teachers ? Object.keys(teachers).sort() : []),
-    [teachers]
-  );
-  const getStudents = useCallback<() => string[]>(
-    () =>
-      teachers
-        ? teacher
-          ? teachers[teacher].sort()
-          : Object.values(teachers).flatMap(identity).sort()
-        : [],
-    [teacher, teachers]
-  );
-
-  if (!teachers || !sessionStatus) return <LoadingPopup message="تحميل" />;
-
-  const now = new Date();
-  const start = new Date();
-  const end = new Date();
-  start.setFullYear(2020);
-  end.setFullYear(now.getFullYear() + 1);
-
   return (
     <FormLayout title="(الاشراف الإداري) تقارير اللقاءات">
       <Form {...formProps} resetProps={{}} submitProps={{ isLoading }}>
-        <InputGroup>
-          <MenuInput
-            options={getTeachers}
-            name="teacher"
-            label="اسم المعلم"
-            required
-          />
-          <MenuInput
-            options={getStudents}
-            name="student"
-            label="اسم الطالب"
-            required
-          />
-        </InputGroup>
-        <InputGroup>
-          <MenuInput
-            options={sessionStatus}
-            name="status"
-            label="وضع اللقاء"
-            required
-          />
-          <DateInput
-            name="date"
-            label="تاريخ اللقاء"
-            range={{ start, end }}
-            required
-          />
-        </InputGroup>
+        <SessionTrackFields {...{ control, resetField }} />
         <Textarea name="notes" label="ملاحظات" />
       </Form>
     </FormLayout>

@@ -36,7 +36,6 @@ export const META_DATA_RANGES = [
   "staff",
   "subscriptions",
   "monthlySessions",
-  "sessionStatus",
   "recitationRules",
 ] as const;
 export const CUSTOM_META_DATA_RANGES = [
@@ -45,6 +44,7 @@ export const CUSTOM_META_DATA_RANGES = [
   "assignedTeachers",
   "courses",
   "chapters",
+  "sessionStatus",
 ] as const;
 export const TEMP_PATH = "/meta/temp";
 export const TEMP_SESSION_TRACK_PATH = <I extends string>(

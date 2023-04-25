@@ -22,7 +22,7 @@ import { FormUI, MainUI, SandboxUI } from "pages/UI";
 import { pass } from "utils";
 
 import { useLocalStorage } from "hooks";
-import { SessionTrack, Temp } from "temp";
+import { SessionReport, SessionTrack, Temp } from "temp";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guard";
 // import AdminView from "./AdminView";
@@ -132,6 +132,7 @@ export default function RoutHandler() {
         <Route index element={<Temp />} />
         <Route path="sessions">
           <Route path="track" element={<SessionTrack />}></Route>
+          <Route path="report" element={<SessionReport />}></Route>
         </Route>
       </Route>
 

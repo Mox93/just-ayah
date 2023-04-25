@@ -40,13 +40,18 @@ export interface ChapterData {
   chapter: string;
 }
 
+interface SessionStatus {
+  value: string;
+  needsReport: boolean;
+}
+
 export interface MetaData {
   staff: string[];
   teachers: Record<string, string[]>;
   courses: Record<string, ChapterData[]>;
+  sessionStatus: SessionStatus[];
   subscriptions: string[];
   monthlySessions: string[];
-  sessionStatus: string[];
   recitationRules: string[];
   unassignedStudents: string[];
   noMatchTeachers: Record<string, string[]>;

@@ -32,7 +32,18 @@ export const deleteSessionTrack = httpsCallable<{ id: string }>(
 
 const sessionReportRef = collection(db, "meta/temp/sessionReport");
 
-export interface SessionReportData extends SessionTrackData {}
+interface Recital {
+  chapter: string;
+  from: number;
+  to: number;
+  rating: string;
+}
+
+export interface SessionReportData extends SessionTrackData {
+  recital: Recital[];
+  memorization: Omit<Recital, "rating">[];
+  rules: string[];
+}
 
 export async function addSessionReport(data: SessionReportData) {
   console.log(data);

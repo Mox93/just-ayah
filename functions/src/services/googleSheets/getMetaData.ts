@@ -52,13 +52,24 @@ async function getFreshMetaData(): Promise<MetaData> {
       )
     ).data.valueRanges || [];
 
-  const [teachers, students, assignedTeachers, courses, chapters] =
-    ranges.slice(META_DATA_RANGES.length);
+  const [
+    teachers,
+    students,
+    assignedTeachers,
+    courses,
+    chapters,
+    sessionStatus,
+  ] = ranges.slice(META_DATA_RANGES.length);
 
   return {
     ...parsePlainData(ranges),
     ...parseStudentsData(teachers, students, assignedTeachers),
     courses: parseCoursesData(courses, chapters),
+    sessionStatus:
+      sessionStatus.values?.map(([value, needsReport]) => ({
+        value,
+        needsReport: needsReport === "TRUE",
+      })) || [],
   };
 }
 

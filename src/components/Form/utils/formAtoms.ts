@@ -11,6 +11,7 @@ import { transformer } from "utils/transformer";
 import {
   DateInput,
   Form,
+  FormFragment,
   GovernorateSelectorInput,
   Input,
   InputGroup,
@@ -75,6 +76,7 @@ export default function formAtoms<TFieldValues extends FieldValues>() {
       smartFormMod
     ),
     InputGroup: formChild(InputGroup),
+    FormFragment: formChild(FormFragment),
 
     // Single Field Components
     Input: formChild(
