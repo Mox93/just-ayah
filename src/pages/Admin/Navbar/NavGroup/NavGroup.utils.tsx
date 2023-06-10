@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useRefSync, useUpdate } from "hooks";
+import { startTimeout } from "utils";
 
 export function useHasActivePath(paths: () => string[]) {
   const pathname = useLocation().pathname.toLowerCase().replace(/\/$/g, "");
@@ -29,14 +30,14 @@ export function useDelayClose(isOpen: boolean, duration = 200) {
   useUpdate(() => {
     if (isOpen === wasOpenRef.current) return;
 
-    let timeout: NodeJS.Timeout;
+    let stopTimeout: VoidFunction | undefined;
 
     if (isOpen) setIsVisible(true);
-    else timeout = setTimeout(() => setIsVisible(false), duration);
+    else stopTimeout = startTimeout(() => setIsVisible(false), duration);
 
     wasOpenRef.current = isOpen;
 
-    return () => timeout && clearTimeout(timeout);
+    return stopTimeout;
   }, [isOpen, duration]);
 
   return isVisible;

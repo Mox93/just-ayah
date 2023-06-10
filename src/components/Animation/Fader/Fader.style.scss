@@ -16,80 +16,72 @@
 
   transform-origin: var(--block-origin) var(--inline-origin);
 
-  // &:not(.visibleContent) {
-  //   color: transparent;
-
-  //   & > *,
-  //   &::before,
-  //   &::after {
-  //     opacity: 0;
-  //   }
-  // }
-
   &.expandable {
     --shrinkage: 0.75;
   }
 
-  &.ap-top {
-    &.movable {
-      --y-hidden: calc(var(--y-idle) - 50%);
-    }
-
-    &.expandable {
-      --block-origin: top;
-    }
-  }
-
-  &.ap-bottom {
-    &.movable {
-      --y-hidden: calc(var(--y-idle) + 50%);
-    }
-
-    &.expandable {
-      --block-origin: bottom;
-    }
-  }
-
-  &.ap-start {
-    &.movable {
-      @include rtlDir {
-        --x-hidden: calc(var(--x-idle) + 50%);
+  &.ap {
+    &-top {
+      &.movable {
+        --y-hidden: calc(var(--y-idle) - 50%);
       }
 
-      @include ltrDir {
-        --x-hidden: calc(var(--x-idle) - 50%);
+      &.expandable {
+        --block-origin: top;
       }
     }
 
-    &.expandable {
-      @include rtlDir {
-        --inline-origin: right;
+    &-bottom {
+      &.movable {
+        --y-hidden: calc(var(--y-idle) + 50%);
       }
 
-      @include ltrDir {
-        --inline-origin: left;
-      }
-    }
-  }
-
-  &.ap-end {
-    &.movable {
-      @include rtlDir {
-        --x-hidden: calc(var(--x-idle) - 50%);
-      }
-
-      @include ltrDir {
-        --x-hidden: calc(var(--x-idle) + 50%);
+      &.expandable {
+        --block-origin: bottom;
       }
     }
 
-    &.expandable {
-      @include rtlDir {
-        --inline-origin: left;
+    &-start {
+      &.movable {
+        @include rtlDir {
+          --x-hidden: calc(var(--x-idle) + 50%);
+        }
+
+        @include ltrDir {
+          --x-hidden: calc(var(--x-idle) - 50%);
+        }
       }
 
-      @include ltrDir {
-        --inline-origin: right;
+      &.expandable {
+        @include rtlDir {
+          --inline-origin: right;
+        }
+
+        @include ltrDir {
+          --inline-origin: left;
+        }
+      }
+    }
+
+    &-end {
+      &.movable {
+        @include rtlDir {
+          --x-hidden: calc(var(--x-idle) - 50%);
+        }
+
+        @include ltrDir {
+          --x-hidden: calc(var(--x-idle) + 50%);
+        }
+      }
+
+      &.expandable {
+        @include rtlDir {
+          --inline-origin: left;
+        }
+
+        @include ltrDir {
+          --inline-origin: right;
+        }
       }
     }
   }

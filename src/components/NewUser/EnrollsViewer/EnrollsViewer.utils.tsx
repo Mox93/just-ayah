@@ -18,7 +18,7 @@ import { useGlobalT, useMessageT } from "hooks";
 import { StudentEnroll } from "models/student";
 import { TeacherEnroll } from "models/teacher";
 import { DeleteDataFunc } from "models";
-import { cn, pass } from "utils";
+import { cn, pass, startTimeout } from "utils";
 
 export const ENROLL_CONTEXT = {
   student: {
@@ -35,21 +35,16 @@ export const ENROLL_CONTEXT = {
 
 function useCopyToClipboard() {
   const [copied, setCopied] = useState<string>();
-  const timeout = useRef<NodeJS.Timeout>();
+  const stopTimeout = useRef<VoidFunction>();
 
   const copy = useCallback((value: string) => {
-    if (timeout.current !== undefined) {
-      clearTimeout(timeout.current);
-      timeout.current = undefined;
-    }
-
+    stopTimeout.current?.();
     navigator.clipboard.writeText(value);
-
     setCopied(value);
 
-    timeout.current = setTimeout(() => {
+    stopTimeout.current = startTimeout(() => {
       setCopied(undefined);
-      timeout.current = undefined;
+      stopTimeout.current = undefined;
     }, 1e3);
   }, []);
 

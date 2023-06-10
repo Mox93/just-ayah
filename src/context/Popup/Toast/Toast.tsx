@@ -11,7 +11,7 @@ import { ReactComponent as InfoIcon } from "assets/icons/info-svgrepo-com.svg";
 import { ReactComponent as SuccessIcon } from "assets/icons/success-svgrepo-com.svg";
 import { ReactComponent as WarningIcon } from "assets/icons/warning-svgrepo-com.svg";
 import { CloseButton } from "components/Buttons";
-import { cn, mergeCallbacks, mergeRefs } from "utils";
+import { cn, mergeCallbacks, mergeRefs, startTimeout } from "utils";
 
 export type ToastVariant = "success" | "info" | "warning" | "danger";
 
@@ -44,7 +44,7 @@ export default forwardRef<HTMLDivElement, ToastProps>(function Toast(
   },
   ref
 ) {
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const stopTimeoutRef = useRef<VoidFunction>();
   const startAtRef = useRef(new Date());
   const progressRef = useRef(0);
   const internalRef = useRef<HTMLDivElement>(null);
@@ -62,22 +62,15 @@ export default forwardRef<HTMLDivElement, ToastProps>(function Toast(
         `${_duration}ms`
       );
 
-      timeoutRef.current = setTimeout(() => close?.(), _duration);
+      stopTimeoutRef.current = startTimeout(() => close?.(), _duration);
     },
     [close, duration]
   );
 
-  const stopCountdown = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = undefined;
-    }
-  };
-
   useEffect(() => {
     startCountdown();
 
-    return stopCountdown;
+    return stopTimeoutRef.current;
   }, [startCountdown]);
 
   return (
@@ -86,7 +79,7 @@ export default forwardRef<HTMLDivElement, ToastProps>(function Toast(
       dir={dir}
       ref={mergeRefs(ref, internalRef)}
       onPointerEnter={() => {
-        stopCountdown();
+        stopTimeoutRef.current?.();
 
         const passedTime = new Date().getTime() - startAtRef.current.getTime();
 
@@ -105,7 +98,7 @@ export default forwardRef<HTMLDivElement, ToastProps>(function Toast(
     >
       {ICONS[variant]}
       <p className="message">{message}</p>
-      <CloseButton onClick={mergeCallbacks(close, stopCountdown)} />
+      <CloseButton onClick={mergeCallbacks(close, stopTimeoutRef.current)} />
     </div>
   );
 });

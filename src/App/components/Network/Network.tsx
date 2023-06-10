@@ -2,42 +2,30 @@ import { useRef, useState } from "react";
 
 import { ReactComponent as Online } from "assets/icons/wifi-svgrepo-com.svg";
 import { ReactComponent as Offline } from "assets/icons/wifi-off-svgrepo-com.svg";
-import { useMessageT, useNetwork, useUpdate } from "hooks";
-import { cn } from "utils";
 import { Fader } from "components/Animation";
+import { useMessageT, useNetwork, useUpdate } from "hooks";
+import { cn, startTimeout } from "utils";
 
 export default function Network() {
   const isOnline = useNetwork();
   const msg = useMessageT();
   const [isVisible, setIsVisible] = useState(!isOnline);
-  const timeout = useRef<NodeJS.Timeout | undefined>();
+  let stopTimeout = useRef<VoidFunction | undefined>();
 
   useUpdate(() => {
-    const stopTimeout = () => {
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-        timeout.current = undefined;
-      }
-    };
-
-    if (isOnline) timeout.current = setTimeout(() => setIsVisible(false), 3e3);
+    if (isOnline)
+      stopTimeout.current = startTimeout(() => setIsVisible(false), 3e3);
     else {
-      stopTimeout();
+      stopTimeout.current?.();
       setIsVisible(true);
     }
 
-    return stopTimeout;
+    return stopTimeout.current;
   }, [isOnline]);
 
   return (
     <Fader isOpen={isVisible} move anchorPoint="end" duration={200}>
-      <div
-        className={cn("Network", {
-          online: isOnline,
-          offline: !isOnline,
-          // isVisible,
-        })}
-      >
+      <div className={cn("Network", { online: isOnline, offline: !isOnline })}>
         {isOnline ? (
           <>
             <Online className="icon" />

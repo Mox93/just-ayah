@@ -1,7 +1,7 @@
 import { Ref, useLayoutEffect, useRef, useState } from "react";
 
 import { useUpdate } from "hooks";
-import { mergeRefs } from "utils";
+import { mergeRefs, startTimeout } from "utils";
 
 type AnchorPoint =
   | "top"
@@ -49,43 +49,30 @@ export function useFader<T extends HTMLElement>({
   useUpdate(() => {
     if (isOpen === wasOpenRef.current) return;
 
-    let timeouts: NodeJS.Timeout[] = [];
+    let stopTimeout: VoidFunction | undefined;
 
     if (isOpen) {
       onFadeIn?.();
-      timeouts.push(
-        setTimeout(
-          () => internalRef.current?.classList.add("visibleContent"),
-          duration * 0.5
-        ),
-        setTimeout(() => afterFadeIn?.(), duration)
-      );
+      stopTimeout = startTimeout(() => afterFadeIn?.(), duration);
       setIsVisible(true);
     } else {
       onFadeOut?.();
-      timeouts.push(
-        setTimeout(() => {
-          setIsVisible(false);
-          afterFadeOut?.();
-        }, duration)
-      );
+      stopTimeout = startTimeout(() => {
+        setIsVisible(false);
+        afterFadeOut?.();
+      }, duration);
       internalRef.current?.classList.remove("visibleContent");
     }
 
     wasOpenRef.current = isOpen;
 
-    return () => timeouts.forEach((timeout) => clearTimeout(timeout));
+    return stopTimeout;
   }, [isOpen, duration]);
 
   useLayoutEffect(() => {
     if (!internalRef.current) return;
 
     internalRef.current.style.setProperty("--fade-duration", `${duration}ms`);
-
-    internalRef.current.classList.add(
-      "Fader",
-      ...(anchorPoint ? anchorPoint.split("-").map((cls) => `ap-${cls}`) : [])
-    );
 
     const classNames: Partial<Record<string, boolean>> = {
       expandable: expand,
@@ -95,6 +82,8 @@ export function useFader<T extends HTMLElement>({
     };
 
     internalRef.current.classList.add(
+      "Fader",
+      ...(anchorPoint ? anchorPoint.split("-").map((cls) => `ap-${cls}`) : []),
       ...Object.keys(classNames).filter((key) => classNames[key])
     );
 

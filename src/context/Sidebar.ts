@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { startTimeout } from "utils";
+
 interface SidebarStore {
   isExpanded: boolean;
   isFullyExpanded: boolean;
@@ -10,20 +12,20 @@ interface SidebarStore {
 const useSidebarStore = create(
   persist<SidebarStore>(
     (set) => {
-      let timeout: NodeJS.Timeout | null;
+      let stopTimeout: VoidFunction | undefined;
 
       return {
         isExpanded: false,
         isFullyExpanded: false,
         toggleExpand: () => {
           set(({ isExpanded }) => {
-            if (timeout) {
-              clearTimeout(timeout);
-              timeout = null;
-            }
+            stopTimeout?.();
 
             if (!isExpanded) {
-              timeout = setTimeout(() => set({ isFullyExpanded: true }), 200);
+              stopTimeout = startTimeout(
+                () => set({ isFullyExpanded: true }),
+                200
+              );
             }
 
             return isExpanded
@@ -33,9 +35,7 @@ const useSidebarStore = create(
         },
       };
     },
-    {
-      name: "sidebar",
-    }
+    { name: "sidebar" }
   )
 );
 
