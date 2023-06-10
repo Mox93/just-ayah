@@ -1,7 +1,9 @@
 import { HTMLAttributes, useEffect, useRef } from "react";
 
 import { ReactComponent as Angle } from "assets/icons/angle-up-svgrepo-com.svg";
-import { cn } from "utils";
+import { cn, startTimeout } from "utils";
+
+const SPIN_DURATION = { dropdown: 450, expand: 300 };
 
 export type SpinningArrowVariant = "dropdown" | "expand";
 interface SpinningArrowProps extends HTMLAttributes<HTMLDivElement> {
@@ -20,7 +22,7 @@ export default function SpinningArrow({
   const wasOpen = useRef(isOpen);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let stopTimeout: VoidFunction | undefined;
 
     if (ref.current) {
       if (isOpen && !wasOpen.current) {
@@ -31,15 +33,15 @@ export default function SpinningArrow({
         ref.current.classList.add("closing");
       }
 
-      timeout = setTimeout(
+      stopTimeout = startTimeout(
         () => ref.current?.classList.remove("opening", "closing"),
-        variant === "dropdown" ? 451 : 301
+        SPIN_DURATION[variant]
       );
     }
 
     wasOpen.current = isOpen;
 
-    return () => timeout && clearTimeout(timeout);
+    return stopTimeout;
   }, [isOpen, variant]);
 
   return (

@@ -88,7 +88,7 @@ function useLocalStorage<TData>(
       stringify,
       filter,
     });
-  });
+  }).current;
 
   const update = useRef<UpdateData<TData>>((updates) => {
     data.current = handleNewState({
@@ -103,31 +103,31 @@ function useLocalStorage<TData>(
       stringify,
       filter,
     });
-  });
+  }).current;
 
   const refresh = useRef(() => {
     data.current = getItem(key!, parse);
 
     return data.current;
-  });
+  }).current;
 
   const clear = useRef(() => {
     window.localStorage.removeItem(key!);
     data.current = undefined;
-  });
+  }).current;
 
   return useMemo(
     () =>
       key
         ? {
             data: data.current,
-            set: set.current,
-            update: update.current,
-            refresh: refresh.current,
-            clear: clear.current,
+            set,
+            update,
+            refresh,
+            clear,
           }
         : undefined,
-    [key]
+    [clear, key, refresh, set, update]
   );
 }
 

@@ -14,7 +14,5 @@
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "svg.preview.background": "transparent",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "todo-tree.tree.scanMode": "workspace only"
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

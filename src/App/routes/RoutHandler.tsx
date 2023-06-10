@@ -24,7 +24,7 @@ import { pass } from "utils";
 import { useLocalStorage } from "hooks";
 import { SessionReport, SessionTrack, Temp } from "temp";
 
-import { UserGuard, FetchGuard, AuthGuard } from "../guard";
+import { UserGuard, FetchGuard, AuthGuard } from "../guards";
 // import AdminView from "./AdminView";
 // import PublicView from "./PublicView";
 

@@ -44,6 +44,7 @@ export default forwardRef(function MenuInput<TOption>(
     getKey = identity,
     setValue,
     renderElement = identity,
+    disabled,
     ...props
   }: MenuInputPropsInternal<TOption>,
   ref: Ref<HTMLInputElement>
@@ -55,7 +56,7 @@ export default forwardRef(function MenuInput<TOption>(
     className: cn("MenuInput", className),
     dir,
     anchorPoint,
-    onClick: "toggle",
+    onClick: !disabled ? "toggle" : undefined,
   });
 
   const hasSelection = !oneOf(selected, ["", null, undefined]);

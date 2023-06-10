@@ -9,7 +9,7 @@ export type Modifier<TExtraProps = {}> = <TPropsIn>(
   Component: SimpleFC<TPropsIn>
 ) => SimpleFC<TPropsIn & TExtraProps>;
 
-export type Modifiers<TExtraProps extends Array<{}> = [{}]> = {
+export type Modifiers<TExtraProps extends {}[] = [{}]> = {
   [Idx in keyof TExtraProps]: Modifier<TExtraProps[Idx]>;
 };
 
@@ -31,7 +31,7 @@ const sanitize: Modifier = (Component) =>
     createElement(Component as FC, { ...props, ...(ref && { ref }) })
   );
 
-export type Transformer = <TPropsIn, TExtraProps extends Array<{}>>(
+type Transformer = <TPropsIn, TExtraProps extends {}[]>(
   Component: SimpleFC<TPropsIn>,
   ...modifiers: Modifiers<TExtraProps>
 ) => SimpleFC<TPropsIn & UnionToIntersection<TExtraProps[number]>, TPropsIn>;

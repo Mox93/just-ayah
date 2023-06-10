@@ -19,7 +19,6 @@ import { usePageSync } from "./hooks";
 import { RoutHandler } from "./routes";
 
 import "services/i18n";
-import "styles/index.scss";
 
 function App() {
   usePageSync();

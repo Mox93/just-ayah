@@ -13,5 +13,6 @@ export default function useUpdate(
     if (!isFirstTime.current) return actionRef.current();
 
     isFirstTime.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 }

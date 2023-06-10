@@ -12,7 +12,7 @@ export function mergeRefs<T>(...refs: (Ref<T | null> | undefined)[]) {
   };
 }
 
-export const mergeCallbacks = (...callbacks: any[]) => {
+export function mergeCallbacks(...callbacks: any[]) {
   const validCallbacks = callbacks.filter(
     (callback) => typeof callback === "function"
   );
@@ -22,4 +22,4 @@ export const mergeCallbacks = (...callbacks: any[]) => {
         validCallbacks.forEach((callback) => callback!(...args));
       }
     : undefined;
-};
+}

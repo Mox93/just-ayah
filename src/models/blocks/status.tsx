@@ -7,7 +7,8 @@ import { identity } from "utils";
 import { shiftDate, shortDateRep } from "../_blocks/dateTime";
 import { dateSchema } from "./dateTime";
 
-const { Input, DateInput } = formAtoms();
+const { Input } = formAtoms<{ partialPay: number }>();
+const { DateInput } = formAtoms<{ postponed: Date }>();
 
 /****************************\
 |****** Generic Status ******|

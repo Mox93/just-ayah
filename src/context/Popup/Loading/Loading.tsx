@@ -1,5 +1,6 @@
-import { LoadingSpinner } from "components/Icons";
 import { ReactElement } from "react";
+
+import { LoadingSpinner } from "components/Icons";
 
 export interface LoadingProps {
   message?: string | ReactElement;

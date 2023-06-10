@@ -4,14 +4,14 @@ import { Constructor } from "type-fest";
 import { DataModel } from "../types";
 
 export default class DataMap<T extends DataModel> extends Map<string, T> {
-  pushStart(...dataList: T[]) {
+  prepend(...dataList: T[]) {
     return new (this.constructor as Constructor<typeof this>)([
       ...dataList.map((data) => [data.id, data]),
       ...this,
     ]);
   }
 
-  pushEnd(...dataList: T[]) {
+  append(...dataList: T[]) {
     return new (this.constructor as Constructor<typeof this>)([
       ...this,
       ...dataList.map((data) => [data.id, data]),

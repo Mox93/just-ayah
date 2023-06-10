@@ -4,7 +4,7 @@ import { Admin, SignIn } from "pages/Admin";
 import { Courses, NewCourse, CourseProfile } from "pages/Courses";
 import { Students, StudentProfile, StudentEnroll } from "pages/Students";
 import { TeacherEnroll, TeacherProfile, Teachers } from "pages/Teachers";
-import UserGuard from "../guard/UserGuard";
+import UserGuard from "../guards/UserGuard";
 
 export default function AdminRoutes() {
   return (

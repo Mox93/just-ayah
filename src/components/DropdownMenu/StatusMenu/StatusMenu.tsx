@@ -1,8 +1,10 @@
 import {
   forwardRef,
+  lazy,
   MouseEventHandler,
   ReactElement,
   Ref,
+  Suspense,
   useEffect,
   useReducer,
 } from "react";
@@ -10,6 +12,7 @@ import {
 import { ReactComponent as CheckMarkIcon } from "assets/icons/checkmark-svgrepo-com.svg";
 import { Button, DropdownButton } from "components/Buttons";
 import Container from "components/Container";
+import { LoadingDots } from "components/Icons";
 import { useDropdown, useGlobalT } from "hooks";
 import { UNKNOWN } from "models";
 import {
@@ -22,7 +25,7 @@ import {
 } from "models/blocks";
 import { cn, mergeRefs, capitalize } from "utils";
 
-import StatusForm from "./StatusForm";
+const StatusForm = lazy(() => import("./StatusForm"));
 
 type State = {
   currentStatus: Status;
@@ -133,23 +136,25 @@ export default forwardRef(function StatusMenu<TVariant extends StatusVariants>(
           isSelected && customStatus ? (
             <div key={statusOption.type} className="customStatusWrapper">
               {statusButton}
-              <StatusForm
-                onSubmit={(data) =>
-                  dispatch({
-                    type: "setValue",
-                    payload: {
-                      type: statusOption.type,
-                      value: data[statusOption.type],
-                    },
-                  })
-                }
-                defaultValues={{
-                  [statusOption.type]: statusOption.value,
-                  [currentStatus.type]: currentStatus.value,
-                }}
-              >
-                {customStatus?.field}
-              </StatusForm>
+              <Suspense fallback={<LoadingDots />}>
+                <StatusForm
+                  onSubmit={(data) =>
+                    dispatch({
+                      type: "setValue",
+                      payload: {
+                        type: statusOption.type,
+                        value: data[statusOption.type],
+                      },
+                    })
+                  }
+                  defaultValues={{
+                    [statusOption.type]: statusOption.value,
+                    [currentStatus.type]: currentStatus.value,
+                  }}
+                >
+                  {customStatus?.field}
+                </StatusForm>
+              </Suspense>
             </div>
           ) : (
             statusButton

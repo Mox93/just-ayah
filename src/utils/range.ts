@@ -1,20 +1,20 @@
-type Range = {
-  (end: number): number[];
-  (start: number, end: number, step?: number): number[];
-};
+import { assert } from "./validations";
 
-export const range: Range = (startOrEnd, end?: number, step?: number) => {
-  const [startAt, endAt] = end ? [startOrEnd, end] : [0, startOrEnd];
-  const [endOfLoop, x] =
-    startAt < endAt
-      ? [(i: number) => i < endAt, step || 1]
-      : [(i: number) => i > endAt, step ? (step > 0 ? -step : step) : -1];
+export function range(end: number): number[];
+export function range(start: number, end: number, step?: number): number[];
+export function range(startOrEnd: number, end?: number, step = 1) {
+  assert(step, "'step' must be a non zero number");
 
-  const output: number[] = [];
+  const [startAt, endAt] =
+    typeof end === "number" ? [startOrEnd, end] : [0, startOrEnd];
 
-  for (let i = startAt; endOfLoop(i); i += x) {
-    output.push(i);
+  const delta = startAt < endAt ? Math.abs(step) : -Math.abs(step);
+  const length = Math.floor(Math.abs((endAt - startAt) / delta));
+  const output: number[] = Array(length);
+
+  for (let i = 0; i < length; i++) {
+    output[i] = startAt + delta * i;
   }
 
   return output;
-};
+}
