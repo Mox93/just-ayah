@@ -3,7 +3,7 @@ import { get } from "lodash";
 import { Path, PathValue } from "models";
 import { IS_DEV, IS_PROD } from "models/config";
 
-import { assert } from "./validation";
+import { assert } from "./validations";
 
 export function identity(value: any) {
   return value;
@@ -39,6 +39,23 @@ export function pluck<T, S extends boolean = false>(path: Path<T>, strict?: S) {
     assert(obj || !strict);
     return get(obj, path);
   };
+}
+
+export function singleton<F extends () => any>(func: F) {
+  let instance: ReturnType<F>;
+
+  const newFunc = () => {
+    if (instance !== undefined) return instance;
+    instance = func();
+    return instance;
+  };
+
+  return newFunc as F;
+}
+
+export function startTimeout(callback: VoidFunction, delay?: number) {
+  const timeout = setTimeout(callback, delay);
+  return () => clearTimeout(timeout);
 }
 
 export function devOnly<T, A, Args extends [...A[]]>(

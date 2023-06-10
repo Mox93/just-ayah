@@ -11,5 +11,5 @@ export * from "./merge";
 export * from "./nestedPaths";
 export * from "./range";
 export * from "./string";
-export * from "./validation";
+export * from "./validations";
 export * from "./valueOrGetter";

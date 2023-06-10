@@ -34,3 +34,26 @@ export function eventFactory(target: any, events: Record<string, Function>) {
       ),
   ];
 }
+
+export function subscribeEvents(
+  target: Document,
+  events: DocumentEventHandlerMap
+): VoidFunction;
+export function subscribeEvents(
+  target: Window,
+  events: WindowEventHandlerMap
+): VoidFunction;
+export function subscribeEvents(
+  target: HTMLElement | null,
+  events: HTMLElementEventHandlerMap
+): VoidFunction;
+export function subscribeEvents(target: any, events: Record<string, Function>) {
+  const [addEventListeners, removeEventListeners] = eventFactory(
+    target,
+    events
+  );
+
+  addEventListeners();
+
+  return removeEventListeners;
+}
