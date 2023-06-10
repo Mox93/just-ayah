@@ -1,8 +1,7 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
 import { useFader } from "components/Animation";
-import { cn, eventFactory, oneOf } from "utils";
-import useEventListener from "hooks/EventListener";
+import { cn, eventFactory, subscribeEvents, oneOf } from "utils";
 
 export type AnchorPoint = `${"top" | "bottom"}-${"start" | "end"}`;
 
@@ -29,9 +28,9 @@ export default function useDropdown<
   const driverRef = useRef<T1>(null);
   const internalDrivenRef = useRef<T2>(null);
 
-  const open = useRef(() => setIsOpen(true));
-  const close = useRef(() => setIsOpen(false));
-  const toggle = useRef(() => setIsOpen((state) => !state));
+  const open = useRef(() => setIsOpen(true)).current;
+  const close = useRef(() => setIsOpen(false)).current;
+  const toggle = useRef(() => setIsOpen((state) => !state)).current;
 
   const handleWentOutside = useRef((event: Event) => {
     if (!driverRef.current || !internalDrivenRef.current) return;
@@ -41,11 +40,11 @@ export default function useDropdown<
       !driverRef.current?.contains(event.target) &&
       !internalDrivenRef.current?.contains(event.target)
     )
-      close.current();
+      close();
   });
 
   const handelCancelButtons = useRef((event: KeyboardEvent) => {
-    if (oneOf(event.key, ["Escape"])) close.current();
+    if (oneOf(event.key, ["Escape"])) close();
   });
 
   useEffect(() => {
@@ -64,13 +63,13 @@ export default function useDropdown<
     return removeEventListeners;
   }, [isOpen]);
 
-  useEventListener(
-    driverRef.current,
-    driverRef.current && onClick
-      ? {
-          click: onClick === "open" ? open.current : toggle.current,
-        }
-      : {}
+  useEffect(
+    () =>
+      subscribeEvents(
+        driverRef.current,
+        onClick ? { click: onClick === "open" ? open : toggle } : {}
+      ),
+    [onClick, open, toggle]
   );
 
   // FIXME issue with dropdown keyboard control
@@ -114,9 +113,9 @@ export default function useDropdown<
     driverRef,
     drivenRef,
     isOpen,
-    open: open.current,
-    close: close.current,
-    toggle: toggle.current,
+    open,
+    close,
+    toggle,
     dropdownWrapper: wrapper,
   };
 }

@@ -24,22 +24,22 @@
       min-width: 100%;
     }
 
-    &.ap- {
-      &top {
+    &.ap {
+      &-top {
         padding-block-end: var(--buffer-size);
         inset-block-start: var(--y-gap);
       }
 
-      &bottom {
+      &-bottom {
         padding-block-start: var(--buffer-size);
         inset-block-end: var(--y-gap);
       }
 
-      &start {
+      &-start {
         inset-inline-start: var(--x-gap);
       }
 
-      &end {
+      &-end {
         inset-inline-end: var(--x-gap);
       }
     }
