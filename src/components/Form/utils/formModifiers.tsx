@@ -1,11 +1,4 @@
-import {
-  Children,
-  cloneElement,
-  InputHTMLAttributes,
-  ReactElement,
-  ReactNode,
-  Ref,
-} from "react";
+import { InputHTMLAttributes, ReactElement, Ref } from "react";
 import {
   FieldPath,
   get,
@@ -18,90 +11,18 @@ import {
 
 import { Merge } from "models";
 import { cn, identity, mergeCallbacks, mergeRefs } from "utils";
-import { createModifier, Transformer, transformer } from "utils/transformer";
+import { createModifier } from "utils/transformer";
 
 import ErrorMessage from "../ErrorMessage";
-import { FormProps } from "../Form";
 
 /*************************\
 |***** From Modifier *****|
 \*************************/
 
-export type FormHook<TFieldValues extends {}> = Omit<
+type FormHook<TFieldValues extends {}> = Omit<
   UseFormReturn<TFieldValues>,
   "handleSubmit"
 >;
-
-type SmartFormProps<TFieldValues extends {}> = Merge<
-  FormProps,
-  {
-    formHook: FormHook<TFieldValues>;
-    noErrorMessage?: boolean;
-  }
->;
-
-export const smartForm = <TFieldValues extends {}>() =>
-  createModifier<SmartFormProps<TFieldValues>>(
-    ({
-      formHook,
-      children,
-      noErrorMessage,
-      // submitProps,
-      ...props
-    }: SmartFormProps<TFieldValues>) => {
-      // const {
-      //   formState: { isSubmitting }, // FIXME this is not working need to use Loading hook
-      // } = formHook;
-
-      return {
-        ...props,
-        // submitProps: { isLoading: isSubmitting, ...submitProps },
-        children: passPropsToFormChildren(children, {
-          formHook,
-          noErrorMessage,
-        }),
-      };
-    }
-  );
-
-/*******************************\
-|***** From Child Creation *****|
-\*******************************/
-
-type FormChild<Component = any> = Component & { formChild?: boolean };
-
-/**
- * Must be the first modifier for it to work, otherwise the modifiers that proceed will overwrite it
- */
-
-export const formChild: Transformer = (Component, ...modifiers) => {
-  const Child = transformer(Component, ...modifiers);
-  (Child as FormChild).formChild = true;
-  return Child;
-};
-
-/*********************************\
-|***** Form Child Validation *****|
-\*********************************/
-
-const isFormChild = (component: any): component is ReactElement => {
-  return component?.type?.formChild;
-};
-
-export const passPropsToFormChildren = (
-  children: ReactNode,
-  props: any
-): ReactNode => {
-  return Children.map(children, (child) => {
-    return isFormChild(child)
-      ? cloneElement(child, {
-          ...props,
-          ...child.props,
-          key: child.props.name,
-        })
-      : child;
-  });
-};
 
 /********************************\
 |***** Form Child Modifiers *****|
@@ -149,7 +70,7 @@ export interface NamedChildProps<
   TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > {
   name: TFieldName;
-  rules?: RegisterOptions<TFieldValues, FieldPath<TFieldValues>>;
+  rules?: RegisterOptions<TFieldValues, TFieldName>;
   noErrorMessage?: boolean;
   ref?: Ref<HTMLInputElement>;
 }
@@ -235,8 +156,12 @@ export const menu = <TFieldValues extends {}>({
     ({
       formHook,
       name,
+      setValue: _setValue,
       ...props
-    }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
+    }: Merge<
+      WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>,
+      { setValue?: (value: any) => void }
+    >) => {
       if (!formHook) return { ...props, name };
 
       const { setValue: setValueByName, control } = formHook;
@@ -245,10 +170,12 @@ export const menu = <TFieldValues extends {}>({
 
       const selected = useWatch({ control, name });
 
-      const setValue = (value: any) =>
+      const setValue = (value: any) => {
+        _setValue?.(value);
         setValueByName(name, toValue(value), {
           shouldValidate: isSubmitted,
         });
+      };
 
       return {
         ...props,

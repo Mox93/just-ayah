@@ -1,8 +1,7 @@
 import { ReactComponent as CrossIcon } from "assets/icons/close-svgrepo-com.svg";
 import { formAtoms } from "components/Form";
-import { useSmartForm } from "hooks";
 
-const { MiniForm, Input } = formAtoms<{ value: string }>();
+const { MiniForm, Input, useForm } = formAtoms<{ value: string }>();
 
 interface EditableCellProps {
   value?: string;
@@ -15,7 +14,7 @@ export default function EditableCell({
   onSubmit,
   onCancel,
 }: EditableCellProps) {
-  const formProps = useSmartForm<{ value: string }>({
+  const formProps = useForm({
     onSubmit: ({ value }) => onSubmit?.(value),
     defaultValues: { value },
   });

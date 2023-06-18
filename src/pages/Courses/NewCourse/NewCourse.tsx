@@ -2,10 +2,10 @@ import Container from "components/Container";
 import { ErrorToast, SuccessToast } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
 import { useCourseStore, usePopupContext } from "context";
-import { useGlobalT, useMessageT, usePageT, useSmartForm } from "hooks";
+import { useGlobalT, useMessageT, usePageT } from "hooks";
 import { Course, CourseFormData } from "models/course";
 
-const { Form, Input } = formAtoms<CourseFormData>();
+const { Form, Input, useForm } = formAtoms<CourseFormData>();
 
 export default function NewCourse() {
   const glb = useGlobalT();
@@ -16,7 +16,7 @@ export default function NewCourse() {
 
   const addCourse = useCourseStore((state) => state.add);
 
-  const formProps = useSmartForm<CourseFormData>({
+  const formProps = useForm({
     onSubmit: (data, { reset }) =>
       addCourse(new Course.DB(data), {
         applyLocally: true,

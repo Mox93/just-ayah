@@ -1,55 +1,37 @@
-import { useCallback } from "react";
-
 import { MenuInput as BaseMenuInput, formAtoms } from "components/Form";
-import { formChild } from "components/Form/utils/formModifiers";
+import { formContextFactory } from "components/Form/utils";
+import { transformer } from "utils/transformer";
 
-import { SessionReportData, menuModifiers, useMetaData } from "./utils";
-import { range } from "utils";
+import { SessionReportData, useMetaData } from "./utils";
+import { pass } from "utils";
+import { useFieldArray } from "lib/react-hook-form";
 
-const MenuInput = formChild(
-  BaseMenuInput,
-  ...menuModifiers<SessionReportData>()
-);
+const {
+  modifiers: { menuModifiers },
+} = formAtoms<SessionReportData>();
 
-const { FormFragment, InputGroup, DateInput } = formAtoms<SessionReportData>();
+const MenuInput = transformer(BaseMenuInput, ...menuModifiers);
 
-interface SessionReportFieldsProps {}
+const [, useFormContext] = formContextFactory<SessionReportData>();
 
-export default formChild(function SessionReportFields({
-  ...props
-}: SessionReportFieldsProps) {
+export default function SessionReportFields() {
   const { courses } = useMetaData();
 
-  const getChapter = useCallback<() => string[]>(
-    () =>
-      courses
-        ? [
-            ...new Set(
-              Object.values(courses).flatMap((chapters) =>
-                chapters.map(({ chapter }) => chapter)
-              )
-            ),
-          ]
-        : [],
-    [courses]
-  );
+  const {
+    formHook: { control },
+  } = useFormContext();
+
+  const { fields, insert, remove } = useFieldArray({
+    name: "recital",
+    control,
+    emptyItem: { chapter: "", from: 0, to: 0, rating: "" },
+  });
 
   return (
-    <FormFragment {...props}>
-      <DateInput name="date" />
-      <InputGroup>
-        <MenuInput
-          name="recital.0.chapter"
-          options={getChapter}
-          label="السورة"
-        />
-        <MenuInput
-          name="recital.0.from"
-          options={range(200)}
-          label="من الآية"
-        />
-        <MenuInput name="recital.0.to" options={range(200)} label="إلى الآية" />
-      </InputGroup>
-    </FormFragment>
+    <>
+      {fields.map(({ id }, index) => (
+        <div key={id} />
+      ))}
+    </>
   );
-});
+}

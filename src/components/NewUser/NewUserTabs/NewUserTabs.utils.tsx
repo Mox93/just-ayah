@@ -2,8 +2,9 @@ import { lazy, useMemo, FC } from "react";
 import { Class } from "type-fest";
 
 import { ErrorToast, SuccessToast } from "components/FlashMessages";
+import { SubmitHandler } from "components/Form/utils";
 import { usePopupContext } from "context";
-import { SubmitHandler, Tabs, useGlobalT, useTabs } from "hooks";
+import { Tabs, useGlobalT, useTabs } from "hooks";
 import { AddDataFunc } from "models";
 import { capitalize } from "utils";
 

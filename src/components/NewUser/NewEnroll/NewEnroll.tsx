@@ -3,7 +3,7 @@ import { Class } from "type-fest";
 import { ErrorToast, SuccessToast } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
 import { usePopupContext } from "context";
-import { useGlobalT, usePageT, useSmartForm } from "hooks";
+import { useGlobalT, usePageT } from "hooks";
 import { EnrollUser } from "hooks/Collection";
 import { AddDataFunc, BaseModel } from "models";
 import { createEnroll } from "models/blocks";
@@ -17,7 +17,7 @@ interface EnrollForm {
   termsUrl?: string;
 }
 
-const { MiniForm, Input } = formAtoms<EnrollForm>();
+const { MiniForm, Input, useForm } = formAtoms<EnrollForm>();
 
 interface NewEnrollProps {
   variant: UserVariant;
@@ -39,7 +39,7 @@ export default function NewEnroll({
 
   const { openToast } = usePopupContext();
 
-  const formProps = useSmartForm<EnrollForm>({
+  const formProps = useForm({
     onSubmit: (enroll, { reset }) =>
       addEnroll(new DBClass({ enroll: createEnroll(enroll) }), {
         applyLocally: true,

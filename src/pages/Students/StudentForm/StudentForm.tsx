@@ -1,12 +1,12 @@
 import { PartialDeep } from "type-fest";
 
-import { formAtoms } from "components/Form";
 import {
-  SubmitHandler,
-  useGlobalT,
-  usePersonalInfoT,
-  useSmartForm,
-} from "hooks";
+  InputGroup,
+  formAtoms,
+  SelectionInput as BaseSelectionInput,
+} from "components/Form";
+import { SubmitHandler } from "components/Form/utils";
+import { useGlobalT, usePersonalInfoT } from "hooks";
 import { OTHER } from "models";
 import { shiftDate } from "models/_blocks";
 import {
@@ -15,6 +15,7 @@ import {
   noWorkReasons,
 } from "models/blocks";
 import { StudentFormData } from "models/student";
+import { transformer } from "utils/transformer";
 
 import { useWorkStatus } from "./StudentForm.utils";
 
@@ -24,12 +25,14 @@ const {
   Form,
   GovernorateSelectorInput,
   Input,
-  InputGroup,
   PhoneNumberInput,
-  SelectionInput: { Student: SelectionInput },
+  modifiers: { defaultModifiers },
   TermsOfService,
   TimezoneSelectorInput,
+  useForm,
 } = formAtoms<StudentFormData>();
+
+const SelectionInput = transformer(BaseSelectionInput, ...defaultModifiers);
 
 interface StudentFormProps {
   formId?: string;
@@ -51,7 +54,7 @@ export default function StudentForm({
     formHook,
     formHook: { control },
     ...formProps
-  } = useSmartForm<StudentFormData>({
+  } = useForm({
     onSubmit,
     ...(defaultValues && { defaultValues }),
     storage: {

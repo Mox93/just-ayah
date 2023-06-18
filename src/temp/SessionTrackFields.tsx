@@ -1,28 +1,32 @@
 import { useCallback, useEffect } from "react";
 import { Control, UseFormResetField, useWatch } from "react-hook-form";
 
-import { MenuInput as BaseMenuInput, formAtoms } from "components/Form";
-import { formChild } from "components/Form/utils/formModifiers";
+import {
+  MenuInput as BaseMenuInput,
+  InputGroup,
+  formAtoms,
+} from "components/Form";
+import { formContextFactory } from "components/Form/utils";
 import { identity } from "utils";
+import { transformer } from "utils/transformer";
 
-import { SessionTrackData, menuModifiers, useMetaData } from "./utils";
+import { SessionTrackData, useMetaData } from "./utils";
 
-const { DateInput, FormFragment, InputGroup } = formAtoms<SessionTrackData>();
+const {
+  DateInput,
+  modifiers: { menuModifiers },
+} = formAtoms<SessionTrackData>();
 
-const MenuInput = formChild(
-  BaseMenuInput,
-  ...menuModifiers<SessionTrackData>()
-);
+const MenuInput = transformer(BaseMenuInput, ...menuModifiers);
 
-interface SessionTrackFieldsProps<T extends SessionTrackData> {
-  control: Control<T, any>;
-  resetField: UseFormResetField<T>;
-}
+const [, useFormContext] = formContextFactory<SessionTrackData>();
 
-export default formChild(function SessionTrackFields<
-  T extends SessionTrackData
->({ control, resetField, ...props }: SessionTrackFieldsProps<T>) {
+export default function SessionTrackFields() {
   const { teachers, sessionStatus } = useMetaData();
+
+  const {
+    formHook: { control, resetField },
+  } = useFormContext();
 
   const [teacher, student] = useWatch({
     name: ["teacher", "student"],
@@ -61,7 +65,7 @@ export default formChild(function SessionTrackFields<
   end.setFullYear(now.getFullYear() + 1);
 
   return (
-    <FormFragment {...props}>
+    <>
       <InputGroup>
         <MenuInput
           options={getTeachers}
@@ -90,6 +94,6 @@ export default formChild(function SessionTrackFields<
           required
         />
       </InputGroup>
-    </FormFragment>
+    </>
   );
-});
+}

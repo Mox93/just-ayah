@@ -6,6 +6,13 @@
   flex-wrap: wrap;
   gap: var(--spacing-xl) var(--spacing-l);
 
+  &.dynamicListItem {
+    & > .action {
+      flex-grow: 0;
+      align-self: flex-end;
+    }
+  }
+
   & > * {
     flex: 1;
   }

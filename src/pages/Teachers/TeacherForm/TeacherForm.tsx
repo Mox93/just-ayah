@@ -1,22 +1,30 @@
 import { PartialDeep } from "type-fest";
 
-import { formAtoms } from "components/Form";
-import { useGlobalT, usePersonalInfoT, useSmartForm } from "hooks";
+import {
+  InputGroup,
+  formAtoms,
+  SelectionInput as BaseSelectionInput,
+} from "components/Form";
+import { SubmitHandler } from "components/Form/utils";
+import { useGlobalT, usePersonalInfoT } from "hooks";
 import { genderSchema } from "models/blocks";
 import { TeacherFormData } from "models/teacher";
+import { transformer } from "utils/transformer";
 
 const {
   Form,
   Input,
-  InputGroup,
   PhoneNumberInput,
-  SelectionInput: { Teacher: SelectionInput },
+  modifiers: { defaultModifiers },
+  useForm,
 } = formAtoms<TeacherFormData>();
+
+const SelectionInput = transformer(BaseSelectionInput, ...defaultModifiers);
 
 interface TeacherFormProps {
   formId?: string;
   defaultValues?: PartialDeep<TeacherFormData>;
-  onSubmit: (data: TeacherFormData) => void;
+  onSubmit: SubmitHandler<TeacherFormData>;
 }
 
 export default function TeacherForm({
@@ -27,7 +35,7 @@ export default function TeacherForm({
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
 
-  const formProps = useSmartForm<TeacherFormData>({
+  const formProps = useForm({
     onSubmit,
     defaultValues,
     storage: { key: "teacherForm" + (formId ? `/${formId}` : "") },

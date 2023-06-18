@@ -1,7 +1,7 @@
 import Container from "components/Container";
 import { formAtoms } from "components/Form";
 import { useAuthContext } from "context";
-import { useGlobalT, useMessageT, useSmartForm } from "hooks";
+import { useGlobalT, useMessageT } from "hooks";
 import { Comment, commentSchema } from "models/blocks";
 
 import CommentItem from "../CommentItem";
@@ -10,7 +10,7 @@ interface CommentForm {
   draft: string;
 }
 
-const { Form, Textarea } = formAtoms<CommentForm>();
+const { Form, Textarea, useForm } = formAtoms<CommentForm>();
 
 interface CommentsViewerProps {
   comments?: Comment[];
@@ -31,7 +31,7 @@ export default function CommentsViewer({
   const msg = useMessageT();
   const { user } = useAuthContext();
 
-  const formProps = useSmartForm<CommentForm>({
+  const formProps = useForm({
     onSubmit: ({ draft }, { reset }) =>
       // TODO use safeParse and handle error state
       onAddComment(commentSchema.parse({ body: draft, user }), reset),

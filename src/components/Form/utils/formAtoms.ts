@@ -1,153 +1,146 @@
-import { FieldValues } from "react-hook-form";
-import { FC, PropsWithChildren } from "react";
+import { FC } from "react";
 
 import { Country } from "models/blocks";
 import { fromDateInfo, toDateInfo } from "models/_blocks";
 import { Timezone, WeekDay } from "models/blocks";
-import { StudentFormData } from "models/student";
-import { TeacherFormData } from "models/teacher";
+import { singleton } from "utils";
 import { transformer } from "utils/transformer";
 
 import {
   DateInput,
   Form,
-  FormFragment,
   GovernorateSelectorInput,
   Input,
-  InputGroup,
   MenuInput,
   MiniForm,
   PhoneNumberInput,
-  SelectionInput,
   TermsOfService,
   Textarea,
   TimeInput,
 } from "../";
 import { MenuInputProps } from "../MenuInput";
+import formHookFactory from "./formHook";
 import {
-  formChild,
   processProps,
   menu,
   registerField,
-  smartForm,
   trimWhitespace,
 } from "./formModifiers";
 import {
   countryMapper,
   governorateMapper,
+  miniFormMapper,
   phoneNumberMapper,
   termsOfServiceMapper,
   timezoneMapper,
   weekDayMapper,
-} from "./mappers";
-import miniFormMapper from "./mappers/miniForm";
-
-const selectionInput = {
-  Student: formChild(
-    SelectionInput,
-    processProps<StudentFormData>(),
-    registerField<StudentFormData>()
-  ),
-  Teacher: formChild(
-    SelectionInput,
-    processProps<TeacherFormData>(),
-    registerField<TeacherFormData>()
-  ),
-} as const;
+} from "./modifiers";
+import { formFamilyFactory } from "./modifiers";
 
 /**
 // TODO:
  *  - Investigate the possibility of using overload to pass a namespace and get back the correct type
  */
 
-export default function formAtoms<TFieldValues extends FieldValues>() {
-  const registerFieldMod = registerField<TFieldValues>();
-  const processPropsMod = processProps<TFieldValues>();
-  const menuMod = menu<TFieldValues>();
-  const trimWhitespaceMod = trimWhitespace<TFieldValues>();
-  const smartFormMod = smartForm<TFieldValues>();
+export default singleton(function formAtoms<T extends {}>() {
+  const { formParent, formChild } = formFamilyFactory<T>();
+
+  const registerFieldMod = registerField<T>();
+  const processPropsMod = processProps<T>();
+  const menuMod = menu<T>();
+  const trimWhitespaceMod = trimWhitespace<T>();
 
   return {
     // Wrapper Components
-    Form: transformer(Form as FC<PropsWithChildren>, smartFormMod),
-    MiniForm: transformer(
-      MiniForm as FC<PropsWithChildren>,
-      miniFormMapper,
-      smartFormMod
-    ),
-    InputGroup: formChild(InputGroup),
-    FormFragment: formChild(FormFragment),
+    Form: transformer(Form, formParent),
+    MiniForm: transformer(MiniForm, formParent, miniFormMapper),
 
     // Single Field Components
-    Input: formChild(
+    Input: transformer(
       Input,
+      formChild,
       trimWhitespaceMod,
       processPropsMod,
       registerFieldMod
     ),
-    Textarea: formChild(
+    Textarea: transformer(
       Textarea,
+      formChild,
       trimWhitespaceMod,
       processPropsMod,
       registerFieldMod
     ),
-    CountrySelectorInput: formChild(
+    CountrySelectorInput: transformer(
       MenuInput as FC<MenuInputProps<Country>>,
+      formChild,
       processPropsMod,
       menuMod,
       countryMapper,
       registerFieldMod
     ),
-    TimezoneSelectorInput: formChild(
+    TimezoneSelectorInput: transformer(
       MenuInput as FC<MenuInputProps<Timezone>>,
+      formChild,
       processPropsMod,
       menuMod,
       timezoneMapper,
       registerFieldMod
     ),
-    GovernorateSelectorInput: formChild(
+    GovernorateSelectorInput: transformer(
       GovernorateSelectorInput,
+      formChild,
       processPropsMod,
-      governorateMapper<TFieldValues>(),
+      governorateMapper<T>(),
       registerFieldMod
     ),
-    DateInput: formChild(
+    DateInput: transformer(
       DateInput,
+      formChild,
       processPropsMod,
-      menu<TFieldValues>({
+      menu<T>({
         toValue: fromDateInfo,
         toSelected: toDateInfo,
       }),
       registerFieldMod
     ),
-    WeekDayInput: formChild(
+    WeekDayInput: transformer(
       MenuInput as FC<MenuInputProps<WeekDay>>,
+      formChild,
       processPropsMod,
       menuMod,
       weekDayMapper,
       registerFieldMod
     ),
-    TimeInput: formChild(
+    TimeInput: transformer(
       TimeInput,
+      formChild,
       processPropsMod,
       menuMod,
-      registerField<TFieldValues>((innerProps: any) => ({ innerProps }))
+      registerField<T>((innerProps: any) => ({ innerProps }))
     ),
-    TermsOfService: formChild(
+    TermsOfService: transformer(
       TermsOfService,
+      formChild,
       processPropsMod,
       termsOfServiceMapper,
       registerFieldMod
     ),
 
     // Nested Fields Components
-    PhoneNumberInput: formChild(
+    PhoneNumberInput: transformer(
       PhoneNumberInput,
+      formChild,
       processPropsMod,
-      phoneNumberMapper<TFieldValues>()
+      phoneNumberMapper<T>()
     ),
 
-    // Generic Components
-    SelectionInput: selectionInput,
-  };
-}
+    // Form Hook
+    useForm: formHookFactory<T>(),
+
+    // Modifiers
+    modifiers: {
+      defaultModifiers: [formChild, processPropsMod, registerFieldMod],
+      menuModifiers: [formChild, processPropsMod, menuMod, registerFieldMod],
+    },
+  } as const;
+});

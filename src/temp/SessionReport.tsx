@@ -5,7 +5,7 @@ import { ErrorMessage } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
 import FormLayout from "components/Layouts/FormLayout";
 import { usePopupContext } from "context";
-import { useApplyOnce, useLanguage, useLoading, useSmartForm } from "hooks";
+import { useApplyOnce, useLanguage, useLoading } from "hooks";
 import { mergeCallbacks, pass } from "utils";
 
 import SessionReportFields from "./SessionReportFields";
@@ -18,7 +18,7 @@ import {
   useMetaData,
 } from "./utils";
 
-const { Form, Textarea } = formAtoms<SessionReportData>();
+const { Form, Textarea, useForm } = formAtoms<SessionReportData>();
 
 export default function SessionReport() {
   const [, setLanguage] = useLanguage();
@@ -29,39 +29,42 @@ export default function SessionReport() {
   const { openModal, closeModal } = usePopupContext();
 
   const [addReport, isLoading] = useLoading(
-    (stopLoading) =>
-      (data: SessionReportData, reset: UseFormReset<SessionReportData>) =>
-        addSessionReport(data)
-          .then((doc) => {
-            openModal(
-              <SuccessMessage
-                startOver={mergeCallbacks(
-                  closeModal,
-                  pass(reset, { date: new Date() })
-                )}
-                undo={async () => {
-                  await deleteSessionReport({ id: doc.id });
-                  closeModal();
-                }}
-              />,
-              { center: true }
-            );
+    (
+      stopLoading,
+      data: SessionReportData,
+      reset: UseFormReset<SessionReportData>
+    ) =>
+      addSessionReport(data)
+        .then((doc) => {
+          openModal(
+            <SuccessMessage
+              startOver={mergeCallbacks(
+                closeModal,
+                pass(reset, { date: new Date() })
+              )}
+              undo={async () => {
+                await deleteSessionReport({ id: doc.id });
+                closeModal();
+              }}
+            />,
+            { center: true }
+          );
+        })
+        .catch((error) =>
+          openModal(<ErrorMessage error={error} />, {
+            center: true,
+            closable: true,
           })
-          .catch((error) =>
-            openModal(<ErrorMessage error={error} />, {
-              center: true,
-              closable: true,
-            })
-          )
-          .finally(stopLoading)
+        )
+        .finally(stopLoading)
   );
 
-  const formProps = useSmartForm<SessionReportData>({
-    onSubmit: (data, { reset }) => addReport()(data, reset),
+  const formProps = useForm({
+    onSubmit: (data, { reset }) => addReport(data, reset),
     defaultValues: { date: new Date() },
   });
   const {
-    formHook: { control, resetField },
+    formHook: { control },
   } = formProps;
 
   const status = useWatch({ name: "status", control });
@@ -75,7 +78,7 @@ export default function SessionReport() {
   return (
     <FormLayout title="(المعلمين) تقارير اللقاءات">
       <Form {...formProps} resetProps={{}} submitProps={{ isLoading }}>
-        <SessionTrackFields {...{ control, resetField }} />
+        <SessionTrackFields />
         {showReport && <SessionReportFields />}
         <Textarea name="notes" label="ملاحظات" />
       </Form>

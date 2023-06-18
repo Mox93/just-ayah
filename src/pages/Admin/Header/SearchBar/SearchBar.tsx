@@ -10,7 +10,7 @@ import { ReactComponent as SearchIcon } from "assets/icons/search-svgrepo-com.sv
 import { formAtoms } from "components/Form"; // can't use formAtoms because of circular input
 import Highlight from "components/Highlight";
 import Menu from "components/Menu";
-import { AnchorPoint, useDropdown, useGlobalT, useSmartForm } from "hooks";
+import { AnchorPoint, useDropdown, useGlobalT } from "hooks";
 import { Converter, GetKey } from "models";
 import { RequestStateMap } from "models/blocks";
 import { identity } from "utils";
@@ -21,7 +21,7 @@ interface Search {
   search: string;
 }
 
-const { Input, MiniForm } = formAtoms<Search>();
+const { Input, MiniForm, useForm } = formAtoms<Search>();
 
 type SearchRenderMap = {
   value: string;
@@ -62,7 +62,7 @@ export default function SearchBar<TIndex>({
     HTMLDivElement,
     HTMLDivElement
   >({ anchorPoint });
-  const formProps = useSmartForm<Search>({
+  const formProps = useForm({
     onSubmit: (data) => {
       console.log(data);
       onSubmit?.(results);

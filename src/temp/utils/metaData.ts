@@ -6,9 +6,9 @@ import { create } from "zustand";
 import { useApplyOnce } from "hooks";
 import { db, functions } from "services/firebase";
 
-interface ChapterData {
-  verses: number;
+export interface ChapterData {
   chapter: string;
+  verses: number;
 }
 
 interface SessionStatus {
