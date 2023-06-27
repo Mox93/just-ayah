@@ -9,7 +9,7 @@ import NewCourse from "../NewCourse";
 export default memo(function Courses() {
   const pgT = usePageT("course");
 
-  useSetHeaderProps({ title: pgT("title"), newEntityButton: <NewCourse /> });
+  useSetHeaderProps({ title: pgT("title"), newEntityElement: <NewCourse /> });
 
   return <Outlet />;
 });

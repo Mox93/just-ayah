@@ -4,7 +4,7 @@ import { ReactComponent as AcceptedIcon } from "assets/icons/success-svgrepo-com
 import { ReactComponent as IdleIcon } from "assets/icons/minus-circle-svgrepo-com.svg";
 import { ReactComponent as InvalidIcon } from "assets/icons/block-svgrepo-com.svg";
 import { Button } from "components/Buttons";
-import { usePopupContext } from "context";
+import { openModal, closeModal } from "context";
 import { useMessageT } from "hooks";
 import { cn, mergeCallbacks, pass } from "utils";
 
@@ -37,8 +37,6 @@ interface TermsOfServiceProps
 export default forwardRef<HTMLInputElement, TermsOfServiceProps>(
   function TermsOfService({ url, status = "idle", onAccept, ...props }, ref) {
     const msg = useMessageT();
-
-    const { openModal, closeModal } = usePopupContext();
 
     return (
       <>

@@ -3,7 +3,7 @@ import { PartialDeep } from "type-fest";
 
 import { EnrolledMessage, ErrorMessage } from "components/FlashMessages";
 import { FormLayout } from "components/Layouts";
-import { usePopupContext, useStudentEnrollContext } from "context";
+import { openModal, useStudentEnrollContext } from "context";
 import { usePageT } from "hooks";
 import { Location } from "models";
 import Student, { StudentEnrollFormData } from "models/student";
@@ -13,7 +13,6 @@ import StudentForm from "../StudentForm";
 export default function StudentEnroll() {
   const pgT = usePageT("student");
 
-  const { openModal } = usePopupContext();
   const { submitEnroll } = useStudentEnrollContext();
 
   const { id } = useParams();

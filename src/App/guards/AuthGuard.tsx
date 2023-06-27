@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 
-import { Await } from "components/Await";
+import Await from "components/Await";
 import { useAuthContext } from "context";
 import { Unauthorized } from "pages/Fallback";
 

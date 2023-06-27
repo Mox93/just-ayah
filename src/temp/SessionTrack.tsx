@@ -3,7 +3,7 @@ import { UseFormReset } from "react-hook-form";
 import { ErrorMessage } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
 import FormLayout from "components/Layouts/FormLayout";
-import { usePopupContext } from "context";
+import { openModal, closeModal } from "context";
 import { useApplyOnce, useLanguage, useLoading } from "hooks";
 import { mergeCallbacks, pass } from "utils";
 
@@ -18,8 +18,6 @@ export default function SessionTrack() {
   useApplyOnce(() => {
     setLanguage("ar");
   });
-
-  const { openModal, closeModal } = usePopupContext();
 
   const [addTrack, isLoading] = useLoading(
     (

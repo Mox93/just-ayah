@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 
-import { Await } from "components/Await";
-import { useHeaderProps, usePopupContext } from "context";
+import Await from "components/Await";
+import { useHeaderProps, openToast } from "context";
 import { useApplyOnce } from "hooks";
 import { IS_PROD } from "models/config";
 
@@ -9,8 +9,6 @@ import Header from "../Header";
 import Navbar from "../Navbar";
 
 export default function Admin() {
-  const { openToast } = usePopupContext();
-
   useApplyOnce(
     () =>
       openToast(

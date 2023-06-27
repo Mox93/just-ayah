@@ -1,7 +1,7 @@
 import { ReactElement, useState } from "react";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 
-import { Await } from "components/Await";
+import Await from "components/Await";
 import LoadingPopup from "components/LoadingPopup";
 import { useApplyOnce, useGlobalT } from "hooks";
 import { Location } from "models";

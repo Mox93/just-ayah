@@ -3,7 +3,7 @@ import { PartialDeep } from "type-fest";
 
 import { EnrolledMessage, ErrorMessage } from "components/FlashMessages";
 import { FormLayout } from "components/Layouts";
-import { usePopupContext, useTeacherEnrollContext } from "context";
+import { openModal, useTeacherEnrollContext } from "context";
 import { usePageT } from "hooks";
 import { Location } from "models";
 import Teacher, { TeacherFormData } from "models/teacher";
@@ -13,7 +13,6 @@ import TeacherForm from "../TeacherForm";
 export default function TeacherEnroll() {
   const tch = usePageT("teacher");
 
-  const { openModal } = usePopupContext();
   const { submitEnroll } = useTeacherEnrollContext();
 
   const { id } = useParams();

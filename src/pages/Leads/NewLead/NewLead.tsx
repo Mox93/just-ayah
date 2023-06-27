@@ -1,6 +1,6 @@
 import { ErrorMessage, ReachOutMessage } from "components/FlashMessages";
 import { FormLayout } from "components/Layouts";
-import { useLeadContext, usePopupContext } from "context";
+import { useLeadContext, openModal } from "context";
 import { usePageT } from "hooks";
 import Lead from "models/lead";
 
@@ -9,7 +9,6 @@ import LeadForm from "../LeadForm";
 export default function NewLead() {
   const ldt = usePageT("lead");
 
-  const { openModal } = usePopupContext();
   const { addLead } = useLeadContext();
 
   return (

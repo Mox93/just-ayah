@@ -2,7 +2,7 @@ import { Class } from "type-fest";
 
 import { ErrorToast, SuccessToast } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
-import { usePopupContext } from "context";
+import { openToast } from "context";
 import { useGlobalT, usePageT } from "hooks";
 import { EnrollUser } from "hooks/Collection";
 import { AddDataFunc, BaseModel } from "models";
@@ -36,8 +36,6 @@ export default function NewEnroll({
 }: NewEnrollProps) {
   const glb = useGlobalT();
   const pgT = usePageT("student");
-
-  const { openToast } = usePopupContext();
 
   const formProps = useForm({
     onSubmit: (enroll, { reset }) =>
