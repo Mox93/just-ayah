@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "just-ayah-prod",
+    "default": "just-ayah-dev",
     "dev": "just-ayah-dev",
     "prod": "just-ayah-prod"
   },
