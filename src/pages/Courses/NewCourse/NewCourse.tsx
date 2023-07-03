@@ -1,7 +1,7 @@
 import Container from "components/Container";
 import { ErrorToast, SuccessToast } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
-import { useCourseStore, usePopupContext } from "context";
+import { useCourseStore, closeModal, openToast } from "context";
 import { useGlobalT, useMessageT, usePageT } from "hooks";
 import { Course, CourseFormData } from "models/course";
 
@@ -11,8 +11,6 @@ export default function NewCourse() {
   const glb = useGlobalT();
   const pgT = usePageT("course");
   const msg = useMessageT();
-
-  const { closeModal, openToast } = usePopupContext();
 
   const addCourse = useCourseStore((state) => state.add);
 

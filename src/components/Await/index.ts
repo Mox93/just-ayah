@@ -1,1 +1,1 @@
-export { default as Await } from "./Await";
+export { default } from "./Await";

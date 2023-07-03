@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { ReactComponent as PlusIcon } from "assets/icons/plus-svgrepo-com.svg";
 import { Button } from "components/Buttons";
 import LanguageSelector from "components/LanguageSelector";
-import { usePopupContext } from "context";
+import { openModal } from "context";
 import { HeaderProps as _HeaderProps } from "context/Header";
 import { cn } from "utils";
 import { substringMatch } from "utils/match";
@@ -21,10 +21,8 @@ export default function Header({
   dataIndex,
   indexState,
   onSearchSelect,
-  newEntityButton: newEntityElement,
+  newEntityElement,
 }: HeaderProps) {
-  const { openModal } = usePopupContext();
-
   const applySearch = useMemo(
     () =>
       dataIndex &&

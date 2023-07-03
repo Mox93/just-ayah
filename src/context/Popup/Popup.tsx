@@ -1,208 +1,157 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useMemo,
-  useReducer,
-  useRef,
-} from "react";
+import { createStore, useStore } from "zustand";
 
-import { Fader, useFader } from "components/Animation";
-import { useStateSync } from "hooks";
-import { assert } from "utils";
+import { Fader } from "components/Animation";
+import Await from "components/Await";
 
 import Loading, { LoadingProps } from "./Loading";
 import Modal, { ModalProps } from "./Modal";
 import Toast, { ToastProps } from "./Toast";
-import { Await } from "components/Await";
 
-type OpenModal = (
-  children: ModalProps["children"],
-  options?: Pick<ModalProps, "center" | "dir" | "dismissible"> & {
-    closable?: boolean;
-  }
-) => void;
+const OPEN = { isOpen: true, isVisible: true } as const;
+const CLOSE = { isOpen: false, isVisible: false } as const;
+const CLOSING = { isOpen: false, isVisible: true } as const;
 
-type OpenToast = (
-  message: ToastProps["message"],
-  options?: Pick<ToastProps, "dir" | "variant"> & {
-    duration?: number;
-  }
-) => void;
+type OpenModalOptions = Pick<ModalProps, "center" | "dir"> &
+  (
+    | { closable: true; dismissible?: boolean }
+    | { closable?: never; dismissible?: false }
+  );
 
-type StartLoading = (message?: LoadingProps["message"]) => void;
+type MaybeProps<TProps, WithActions extends boolean = true> = {
+  isOpen: boolean;
+} & ({ isVisible: true; props: TProps } | { isVisible: false; props?: never }) &
+  (WithActions extends true
+    ? {
+        actions: {
+          close: VoidFunction;
+          unmount: VoidFunction;
+        };
+      }
+    : { actions?: never });
 
-type MaybeProps<TProps> =
-  | { isOpen: true; props: TProps }
-  | { isOpen: false; props?: never };
-
-interface PopupContext {
-  openModal: OpenModal;
-  closeModal: VoidFunction;
-  openToast: OpenToast;
-  closeToast: VoidFunction;
-  startLoading: StartLoading;
-  stopLoading: VoidFunction;
-}
-
-interface PopupOutletContext {
+interface PopupStore {
   modal: MaybeProps<ModalProps>;
   toast: MaybeProps<ToastProps>;
+  loading: MaybeProps<LoadingProps, false>;
 }
 
-const popupContext = createContext<PopupContext | null>(null);
-const popupOutletContext = createContext<PopupOutletContext | null>(null);
-
-export function PopupProvider({ children }: PropsWithChildren) {
-  const [{ loading, ...outletValue }, dispatch] = useReducer(reduce, {
-    modal: { isOpen: false },
-    toast: { isOpen: false },
-    loading: { isOpen: false },
+const popupStore = createStore<PopupStore>()((set, get) => {
+  const createActions = (key: keyof PopupStore) => ({
+    close: () => {
+      const { isVisible, props, actions } = get()[key];
+      if (isVisible) set({ [key]: { ...CLOSING, props, actions } });
+    },
+    unmount: () =>
+      set(({ [key]: { actions } }) => ({ [key]: { ...CLOSE, actions } })),
   });
 
-  const closeModal = useRef(() => dispatch({ type: "closeModal" }));
+  return {
+    modal: {
+      ...CLOSE,
+      actions: createActions("modal"),
+    },
+    toast: {
+      ...CLOSE,
+      actions: createActions("toast"),
+    },
+    loading: CLOSE,
+  };
+});
 
-  const openModal = useRef<OpenModal>((children, { closable, ...props } = {}) =>
-    dispatch({
-      type: "openModal",
-      payload: {
+export function openModal(
+  children: ModalProps["children"],
+  { closable, ...props }: OpenModalOptions = {}
+) {
+  popupStore.setState(({ modal: { actions } }) => ({
+    modal: {
+      ...OPEN,
+      actions,
+      props: {
         ...props,
         children,
-        ...(closable && { close: closeModal.current }),
-      },
-    })
-  );
-
-  const closeToast = useRef(() => dispatch({ type: "closeToast" }));
-
-  const openToast = useRef<OpenToast>((message, props) => {
-    dispatch({
-      type: "openToast",
-      payload: {
-        ...props,
-        message,
-        close: closeToast.current,
-      },
-    });
-  });
-
-  const startLoading = useRef<StartLoading>((message) =>
-    dispatch({ type: "startLoading", payload: { message } })
-  );
-
-  const stopLoading = useRef(() => dispatch({ type: "stopLoading" }));
-
-  return (
-    <popupContext.Provider
-      value={{
-        openModal: openModal.current,
-        closeModal: closeModal.current,
-        openToast: openToast.current,
-        closeToast: closeToast.current,
-        startLoading: startLoading.current,
-        stopLoading: stopLoading.current,
-      }}
-    >
-      <popupOutletContext.Provider value={outletValue}>
-        {children}
-      </popupOutletContext.Provider>
-      {loading.isOpen && <Loading {...loading.props} />}
-    </popupContext.Provider>
-  );
+        ...(closable ? actions : { unmount: actions.unmount }),
+      } as ModalProps,
+    },
+  }));
 }
 
-export function PopupOutlet() {
-  const { modal, toast } = usePopupOutletContext();
-  const { closeModal, closeToast } = usePopupContext();
+export const closeModal = popupStore.getState().modal.actions.close;
 
-  const [modalIsOpen, setModalIsOpen] = useStateSync(modal.isOpen);
-  const [toastIsOpen, setToastIsOpen] = useStateSync(toast.isOpen);
+export function openToast(
+  message: ToastProps["message"], // TODO change to children
+  props: Pick<ToastProps, "dir" | "variant"> & {
+    duration?: number;
+  } = {}
+) {
+  popupStore.setState(({ toast: { actions } }) => ({
+    toast: {
+      ...OPEN,
+      actions,
+      props: {
+        ...props,
+        message,
+        floating: true,
+        close: actions.close,
+      },
+    },
+  }));
+}
 
-  const [ref, isVisible] = useFader<HTMLDivElement>({
-    isOpen: modalIsOpen,
-    expand: true,
-    afterFadeOut: closeModal,
-  });
+export const closeToast = popupStore.getState().toast.actions.close;
 
-  const modalCloser = useMemo(
-    () => modal.props?.close && (() => setModalIsOpen(false)),
-    [modal.props?.close, setModalIsOpen]
-  );
-  const toastCloser = useMemo(
-    () => toast.props?.close && (() => setToastIsOpen(false)),
-    [setToastIsOpen, toast.props?.close]
-  );
+export function startLoading(
+  message?: LoadingProps["message"] // TODO change to children
+) {
+  popupStore.setState({ loading: { ...OPEN, props: { message } } });
+}
 
+export function stopLoading() {
+  return popupStore.setState({ loading: CLOSE });
+}
+
+export function Popup() {
   return (
     <>
-      <Await>
-        {isVisible && (
-          <Modal {...modal.props!} bodyRef={ref} close={modalCloser} />
-        )}
-      </Await>
-      <Await>
-        <Fader
-          isOpen={toastIsOpen}
-          expand
-          move
-          anchorPoint="top"
-          afterFadeOut={closeToast}
-        >
-          <Toast {...toast.props!} close={toastCloser} />
-        </Fader>
-      </Await>
+      <ShowModal />
+      <ShowToast />
+      <ShowLoading />
     </>
   );
 }
 
-function usePopupOutletContext() {
-  const context = useContext(popupOutletContext);
-  assert(context !== null);
-  return context;
+function ShowModal() {
+  const { props, isOpen, isVisible } = usePopupStore("modal");
+
+  return <Await>{isVisible && <Modal {...props!} isOpen={isOpen} />}</Await>;
 }
 
-export function usePopupContext() {
-  const context = useContext(popupContext);
-  assert(context !== null);
-  return context;
+function ShowToast() {
+  const {
+    props,
+    isOpen,
+    actions: { close, unmount },
+  } = usePopupStore("toast");
+
+  return (
+    <Await>
+      <Fader
+        isOpen={isOpen}
+        expand
+        move
+        anchorPoint="top"
+        afterFadeOut={unmount}
+      >
+        <Toast {...props!} close={close} />
+      </Fader>
+    </Await>
+  );
 }
 
-interface State extends PopupOutletContext {
-  loading: MaybeProps<LoadingProps>;
+function ShowLoading() {
+  const { props, isOpen } = usePopupStore("loading");
+  return <Await>{isOpen && <Loading {...props} />}</Await>;
 }
 
-type Action =
-  | { type: "openModal"; payload: ModalProps }
-  | { type: "closeModal" }
-  | { type: "openToast"; payload: ToastProps }
-  | { type: "closeToast" }
-  | { type: "startLoading"; payload: LoadingProps }
-  | { type: "stopLoading" };
-
-const CLOSE = { isOpen: false } as const;
-
-function OPEN<T>(props: T) {
-  return { isOpen: true, props } as const;
+function usePopupStore<K extends keyof PopupStore>(key: K) {
+  return useStore(popupStore, (state) => state[key]);
 }
-
-const reduce = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "openModal":
-      return { ...state, modal: OPEN(action.payload) };
-
-    case "closeModal":
-      return { ...state, modal: CLOSE };
-
-    case "openToast":
-      return { ...state, toast: OPEN({ ...action.payload, floating: true }) };
-
-    case "closeToast":
-      return { ...state, toast: CLOSE };
-
-    case "startLoading":
-      return { ...state, loading: OPEN(action.payload) };
-
-    case "stopLoading":
-      return { ...state, loading: CLOSE };
-  }
-};

@@ -2,7 +2,7 @@ import ReactJson from "react-json-view";
 
 import { Button } from "components/Buttons";
 import { ErrorMessage } from "components/FlashMessages";
-import { usePopupContext } from "context";
+import { openModal } from "context";
 import { useLoading } from "hooks";
 import SuccessMessage from "temp/SuccessMessage";
 
@@ -10,8 +10,6 @@ import { refreshMetaData, useMetaData } from "../utils";
 
 export default function Temp() {
   const metaData = useMetaData();
-
-  const { openModal } = usePopupContext();
 
   const [refresh, isLoading] = useLoading((stopLoading) => {
     refreshMetaData()

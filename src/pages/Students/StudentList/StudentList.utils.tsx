@@ -6,7 +6,7 @@ import { Button } from "components/Buttons";
 import Ellipsis from "components/Ellipsis";
 import { CourseMenu, StatusMenu, TeacherMenu } from "components/DropdownMenu";
 import { FieldProps } from "components/Table";
-import { usePopupContext, useStudentContext } from "context";
+import { openModal, useStudentContext } from "context";
 import { useDateTimeT, useGlobalT, useGovT, usePersonalInfoT } from "hooks";
 import { Path, PathValue } from "models";
 import { getAge, historyRep } from "models/_blocks";
@@ -30,26 +30,7 @@ export function useTableFields() {
   const swd = useDateTimeT("weekDay.short");
   const dt = useDateTimeT();
 
-  const { openModal } = usePopupContext();
   const { updateStudent } = useStudentContext();
-
-  const showNotesPopup = useCallback(
-    (id: string) => () =>
-      openModal(<StudentNotes id={id} />, {
-        closable: true,
-        dismissible: true,
-      }),
-    [openModal]
-  );
-
-  const showSchedulePopup = useCallback(
-    (id: string) => () =>
-      openModal(<StudentSchedule id={id} />, {
-        closable: true,
-        dismissible: true,
-      }),
-    [openModal]
-  );
 
   const updateField = useCallback(
     <TKey extends Path<Student>>(name: TKey, id: string) =>
@@ -183,7 +164,12 @@ export function useTableFields() {
             <Button
               variant="plain-text"
               size="small"
-              onClick={showSchedulePopup(id)}
+              onClick={() =>
+                openModal(<StudentSchedule id={id} />, {
+                  closable: true,
+                  dismissible: true,
+                })
+              }
             >
               <Ellipsis className={cn({ empty: !brief })}>
                 {brief || ". . ."}
@@ -201,7 +187,12 @@ export function useTableFields() {
           <Button
             variant="plain-text"
             size="small"
-            onClick={showNotesPopup(id)}
+            onClick={() =>
+              openModal(<StudentNotes id={id} />, {
+                closable: true,
+                dismissible: true,
+              })
+            }
             dir="auto"
           >
             <Ellipsis className={cn({ empty: !lastNote })}>
@@ -217,6 +208,6 @@ export function useTableFields() {
         fit: true,
       },
     ],
-    [dt, glb, gov, pi, showNotesPopup, showSchedulePopup, swd, updateField]
+    [dt, glb, gov, pi, swd, updateField]
   );
 }

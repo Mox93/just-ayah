@@ -30,7 +30,16 @@ export const onSessionTrackCreate = document(
 ).onCreate(
   merge((snapshot, context) => {
     const id = context.params[DOC_ID_VAR];
-    return addLogToSheet(id, snapshot.data() as SessionTrackData);
+    return addRowToSheet(id, snapshot.data() as SessionTrackData);
+  })
+);
+
+export const onSessionTrackUpdate = document(
+  TEMP_SESSION_TRACK_PATH(DOC_ID_CARD)
+).onUpdate(
+  merge((snapshot, context) => {
+    const id = context.params[DOC_ID_VAR];
+    return changeRowInSheet(id, snapshot.after.data() as SessionTrackData);
   })
 );
 
@@ -39,17 +48,10 @@ export const deleteSessionTrack = onCall(async (data: { id: string }) => {
 
   if (!id) throw new HttpsError("invalid-argument", "No 'id' was found!");
 
-  return Promise.all([moveToDeleted(id), removeLogFromSheet(id)]);
+  return Promise.all([moveToDeleted(id), removeRowFromSheet(id)]);
 });
 
-async function addLogToSheet(
-  id: string,
-  { timestamp, teacher, student, date, status, notes }: SessionTrackData
-) {
-  const _date = date instanceof Timestamp ? date.toDate() : date;
-  const _timestamp =
-    timestamp instanceof Timestamp ? timestamp.toDate() : timestamp;
-
+async function addRowToSheet(id: string, data: SessionTrackData) {
   return sheets.spreadsheets.values.append(
     {
       auth: await authClient,
@@ -57,24 +59,32 @@ async function addLogToSheet(
       range: "sessionTrack",
       valueInputOption: "USER_ENTERED",
       requestBody: {
-        values: [
-          [
-            id,
-            _timestamp
-              .toLocaleString("en-US", { timeZone: "Africa/Cairo" })
-              .replace(",", ""),
-            _date.toLocaleDateString(),
-            teacher,
-            student,
-            status,
-            notes,
-          ],
-        ],
+        values: [dataToRow(id, data)],
         majorDimension: "ROWS",
       },
     },
     {}
   );
+}
+
+async function changeRowInSheet(id: string, data: SessionTrackData) {
+  const i = await getIdIndex(id);
+
+  return i >= 0
+    ? sheets.spreadsheets.values.update(
+        {
+          auth: await authClient,
+          spreadsheetId: LOGS_SHEET_ID,
+          range: `A${i + 1}`,
+          valueInputOption: "USER_ENTERED",
+          requestBody: {
+            values: [dataToRow(id, data)],
+            majorDimension: "ROWS",
+          },
+        },
+        {}
+      )
+    : null;
 }
 
 async function moveToDeleted(id: string) {
@@ -92,7 +102,55 @@ async function moveToDeleted(id: string) {
   });
 }
 
-async function removeLogFromSheet(id: string) {
+async function removeRowFromSheet(id: string) {
+  const i = await getIdIndex(id);
+
+  return i >= 0
+    ? sheets.spreadsheets.batchUpdate(
+        {
+          auth: await authClient,
+          spreadsheetId: LOGS_SHEET_ID,
+          requestBody: {
+            requests: [
+              {
+                deleteDimension: {
+                  range: {
+                    dimension: "ROWS",
+                    startIndex: i,
+                    endIndex: i + 1,
+                  },
+                },
+              },
+            ],
+          },
+        },
+        {}
+      )
+    : null;
+}
+
+function dataToRow(
+  id: string,
+  { timestamp, teacher, student, date, status, notes }: SessionTrackData
+) {
+  date = date instanceof Timestamp ? date.toDate() : date;
+  timestamp = timestamp instanceof Timestamp ? timestamp.toDate() : timestamp;
+
+  return [
+    id,
+    timestamp
+      .toLocaleString("en-US", { timeZone: "Africa/Cairo" })
+      .replace(",", ""),
+    date.toLocaleDateString(),
+    teacher,
+    student,
+    status,
+    notes,
+    `=HYPERLINK(CONCAT($B$1,"${id}"),"تعديل")`,
+  ];
+}
+
+async function getIdIndex(id: string) {
   const ids =
     (
       await sheets.spreadsheets.values.get(
@@ -106,29 +164,8 @@ async function removeLogFromSheet(id: string) {
     ).data.values || [];
 
   for (let i = 0; i < ids.length; i++) {
-    if (ids[i][0] !== id) continue;
-
-    return sheets.spreadsheets.batchUpdate(
-      {
-        auth: await authClient,
-        spreadsheetId: LOGS_SHEET_ID,
-        requestBody: {
-          requests: [
-            {
-              deleteDimension: {
-                range: {
-                  dimension: "ROWS",
-                  startIndex: i,
-                  endIndex: i + 1,
-                },
-              },
-            },
-          ],
-        },
-      },
-      {}
-    );
+    if (ids[i][0] === id) return i;
   }
 
-  return null;
+  return -1;
 }

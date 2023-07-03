@@ -1,6 +1,6 @@
 import { Navigate, Outlet, To, useLocation } from "react-router-dom";
 
-import { Await } from "components/Await";
+import Await from "components/Await";
 import { useAuthContext } from "context";
 
 interface UserGuardProps {

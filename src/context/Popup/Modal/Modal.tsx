@@ -1,45 +1,52 @@
-import { ReactElement, Ref } from "react";
+import { ReactElement, useEffect } from "react";
 
+import { Fader } from "components/Animation";
 import { CloseButton } from "components/Buttons";
-import { cn, oneOf, pass } from "utils";
-import { useEventListener } from "hooks";
+import { cn, subscribeEvents, oneOf } from "utils";
 
 export type ModalProps = {
   children: ReactElement;
   className?: string;
-  dismissible?: boolean;
   center?: boolean;
+  isOpen?: boolean;
   dir?: string;
-  close?: VoidFunction;
-  bodyRef?: Ref<HTMLDivElement>;
-};
+  unmount: VoidFunction;
+} & (
+  | { close: VoidFunction; dismissible?: boolean }
+  | { close?: never; dismissible?: false }
+);
 
 export default function Modal({
   children,
-  close,
   dismissible,
   center,
+  isOpen,
   dir,
-  bodyRef,
   className,
+  close,
+  unmount,
 }: ModalProps) {
-  useEventListener(
-    document,
-    dismissible
-      ? {
-          keyup: ({ key }) => oneOf(key, ["Escape"]) && close?.(),
-        }
-      : {}
+  useEffect(
+    () =>
+      subscribeEvents(
+        document,
+        dismissible
+          ? { keyup: ({ key }) => oneOf(key, ["Escape"]) && close?.() }
+          : {}
+      ),
+    [close, dismissible]
   );
 
   return (
     <div className={cn("Modal", className)} dir={dir}>
-      <div className="background" onClick={pass(dismissible && close)} />
+      <div className="background" onClick={dismissible ? close : undefined} />
       <div className={cn("foreground", { center })}>
-        <div className="body" ref={bodyRef}>
-          {children}
-          {close && <CloseButton onClick={close} />}
-        </div>
+        <Fader expand isOpen={isOpen} afterFadeOut={unmount}>
+          <div className="body">
+            {children}
+            {close && <CloseButton onClick={close} />}
+          </div>
+        </Fader>
       </div>
     </div>
   );

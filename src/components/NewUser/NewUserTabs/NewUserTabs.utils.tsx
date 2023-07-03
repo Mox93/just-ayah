@@ -3,7 +3,7 @@ import { Class } from "type-fest";
 
 import { ErrorToast, SuccessToast } from "components/FlashMessages";
 import { SubmitHandler } from "components/Form/utils";
-import { usePopupContext } from "context";
+import { openToast } from "context";
 import { Tabs, useGlobalT, useTabs } from "hooks";
 import { AddDataFunc } from "models";
 import { capitalize } from "utils";
@@ -26,8 +26,6 @@ export function useNewUserTabs<TUser, TUserForm extends {}>({
   UserClass,
 }: UseNewUserTabsProps<TUser, TUserForm>) {
   const glb = useGlobalT();
-
-  const { openToast } = usePopupContext();
 
   const tabs = useMemo<Tabs>(
     () => [
@@ -61,7 +59,7 @@ export function useNewUserTabs<TUser, TUserForm extends {}>({
         ),
       },
     ],
-    [UserClass, UserForm, addUser, openToast, variant]
+    [UserClass, UserForm, addUser, variant]
   );
 
   return useTabs({ tabs, renderHeader: glb });

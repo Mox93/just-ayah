@@ -18,7 +18,7 @@ export default function Teachers() {
     onSearchSelect: ({ value: { id } }) =>
       // TODO Redirect to profile page
       getTeacher(id).then((data) => console.log(data)),
-    newEntityButton: <NewTeacher />,
+    newEntityElement: <NewTeacher />,
   });
 
   return <Outlet />;

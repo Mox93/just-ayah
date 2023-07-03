@@ -1,13 +1,12 @@
 import { StrictMode, Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 
-import { Await } from "components/Await";
+import Await from "components/Await";
 import LoadingPopup from "components/LoadingPopup";
 import {
   AuthProvider,
   LeadProvider,
-  PopupOutlet,
-  PopupProvider,
+  Popup,
   StudentProvider,
   TeacherProvider,
   StudentEnrollProvider,
@@ -28,7 +27,6 @@ function App() {
       <StrictMode />
 
       {/* General UI Providers */}
-      <PopupProvider />
       <Suspense fallback={<LoadingPopup />} />
       <Await />
       <>
@@ -49,9 +47,7 @@ function App() {
           {/* Page Content */}
           <>
             <RoutHandler />
-            <Await>
-              <PopupOutlet />
-            </Await>
+            <Popup />
           </>
         </Nest>
         <Network />

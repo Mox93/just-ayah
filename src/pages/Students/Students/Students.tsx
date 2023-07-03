@@ -19,7 +19,7 @@ export default function Students() {
     onSearchSelect: ({ value: { id } }) =>
       // TODO Redirect to profile page
       getStudent(id).then((data) => console.log(data)),
-    newEntityButton: <NewStudent />,
+    newEntityElement: <NewStudent />,
   });
 
   return <Outlet />;

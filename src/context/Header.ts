@@ -11,7 +11,7 @@ export interface HeaderProps {
   dataIndex?: ValueOrGetter<UserIndex[]>;
   indexState?: RequestStateMap;
   onSearchSelect?: (value: MatchResult<UserIndex>) => void;
-  newEntityButton?: ReactElement;
+  newEntityElement?: ReactElement;
 }
 
 interface HeaderStore extends HeaderProps {
