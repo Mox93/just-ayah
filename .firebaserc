@@ -1,7 +1,9 @@
 {
   "projects": {
     "default": "just-ayah-prod",
-    "dev": "just-ayah-dev"
+    "dev": "just-ayah-dev",
+    "prod": "just-ayah-prod"
   },
-  "targets": {}
+  "targets": {},
+  "etags": {}
 }
