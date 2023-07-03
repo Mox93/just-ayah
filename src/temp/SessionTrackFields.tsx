@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { Control, UseFormResetField, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 
 import {
   MenuInput as BaseMenuInput,
@@ -30,12 +30,12 @@ export default function SessionTrackFields() {
 
   const [teacher, student] = useWatch({
     name: ["teacher", "student"],
-    control: control as unknown as Control<SessionTrackData, any>,
+    control,
   });
 
   useEffect(() => {
     if (!teachers || !teacher || teachers[teacher].includes(student)) return;
-    (resetField as UseFormResetField<SessionTrackData>)("student");
+    resetField("student", { defaultValue: null });
   }, [resetField, student, teacher, teachers]);
 
   const getTeachers = useCallback(

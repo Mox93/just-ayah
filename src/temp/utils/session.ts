@@ -1,6 +1,8 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
+import { z } from "zod";
 
+import { dateSchema } from "models/blocks";
 import { db, functions } from "services/firebase";
 
 /*********************\
@@ -8,17 +10,30 @@ import { db, functions } from "services/firebase";
 \*********************/
 
 const sessionTrackRef = collection(db, "meta/temp/sessionTrack");
-export interface SessionTrackData {
-  teacher: string;
-  student: string;
-  status: string;
-  date: Date;
-  notes?: string;
+
+const sessionTrackSchema = z.object({
+  teacher: z.string(),
+  student: z.string(),
+  status: z.string(),
+  notes: z.string().optional(),
+  date: dateSchema,
+});
+
+export type SessionTrackData = z.infer<typeof sessionTrackSchema>;
+
+export async function getSessionTrack(id: string) {
+  const docRef = doc(sessionTrackRef, id);
+  const data = (await getDoc(docRef)).data();
+  return data ? sessionTrackSchema.parse(data) : data;
 }
 
 export async function addSessionTrack(data: SessionTrackData) {
-  console.log(data);
   return await addDoc(sessionTrackRef, { ...data, timestamp: new Date() });
+}
+
+export async function updateSessionTrack(id: string, data: SessionTrackData) {
+  const docRef = doc(sessionTrackRef, id);
+  return await updateDoc(docRef, { ...data, updateAt: new Date() });
 }
 
 export const deleteSessionTrack = httpsCallable<{ id: string }>(

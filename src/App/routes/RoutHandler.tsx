@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, To } from "react-router-dom";
 
 import { useStudentEnrollContext, useTeacherEnrollContext } from "context";
+import { useLocalStorage } from "hooks";
 import { IS_DEV } from "models/config";
 import { Admin, Home, SignIn } from "pages/Admin";
 import { CourseList, CourseProfile, Courses } from "pages/Courses";
@@ -19,10 +20,9 @@ import {
   TeacherProfile,
 } from "pages/Teachers";
 import { FormUI, MainUI, SandboxUI } from "pages/UI";
-import { pass } from "utils";
-
-import { useLocalStorage } from "hooks";
 import { SessionReport, SessionTrack, Temp } from "temp";
+import { getSessionTrack } from "temp/utils";
+import { pass } from "utils";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guards";
 // import AdminView from "./AdminView";
@@ -131,8 +131,21 @@ export default function RoutHandler() {
       <Route path="temp">
         <Route index element={<Temp />} />
         <Route path="sessions">
-          <Route path="track" element={<SessionTrack />}></Route>
-          <Route path="report" element={<SessionReport />}></Route>
+          <Route path="track">
+            <Route index element={<SessionTrack />} />
+            <Route
+              path=":id"
+              element={
+                <FetchGuard
+                  fetcher={({ id }: { id: string }) => getSessionTrack(id)}
+                  failed={<Unauthorized />}
+                />
+              }
+            >
+              <Route index element={<SessionTrack />} />
+            </Route>
+          </Route>
+          <Route path="report" element={<SessionReport />} />
         </Route>
       </Route>
 
