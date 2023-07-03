@@ -69,7 +69,7 @@ export function openModal(
       props: {
         ...props,
         children,
-        ...(closable && actions),
+        ...(closable ? actions : { unmount: actions.unmount }),
       } as ModalProps,
     },
   }));

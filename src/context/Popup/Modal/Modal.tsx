@@ -10,9 +10,10 @@ export type ModalProps = {
   center?: boolean;
   isOpen?: boolean;
   dir?: string;
+  unmount: VoidFunction;
 } & (
-  | { close: VoidFunction; unmount: VoidFunction; dismissible?: boolean }
-  | { close?: never; unmount?: never; dismissible?: false }
+  | { close: VoidFunction; dismissible?: boolean }
+  | { close?: never; dismissible?: false }
 );
 
 export default function Modal({

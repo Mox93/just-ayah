@@ -33,7 +33,7 @@ export default function FetchGuard({
       .then((data: any) => {
         if (data) location.state = { ...location.state, data };
         setFetchState(data ? "success" : "notFound");
-        if (IS_DEV) console.log("Fetch Succeeded", data);
+        if (IS_DEV) console.log("Fetch Completed", data);
       })
       .catch((error) => {
         if (IS_DEV) console.log("Fetch Failed", error);
