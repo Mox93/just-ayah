@@ -10,6 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm ci --legacy-peer-deps && npm run build
+        env:
+          REACT_APP_API_KEY: ${{ secrets.FIREBASE_DEV_API_KEY }}
+          REACT_APP_MESSAGE_SEND_ID: ${{ secrets.FIREBASE_DEV_MESSAGE_SEND_ID }}
+          REACT_APP_APP_ID: ${{ secrets.FIREBASE_DEV_APP_ID }}
+          REACT_APP_AUTH_DOMAIN: just-ayah-dev.firebaseapp.com
+          REACT_APP_PROJECT_ID: just-ayah-dev
+          REACT_APP_STORAGE_BUCKET: just-ayah-dev.appspot.com
+          REACT_APP_ENV: development
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
