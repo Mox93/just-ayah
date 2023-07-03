@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 
 import Await from "components/Await";
+// import { DesktopView } from "components/Layouts";
 import { useHeaderProps, openToast } from "context";
 import { useApplyOnce } from "hooks";
 import { IS_PROD } from "models/config";
@@ -29,8 +30,10 @@ export default function Admin() {
 
   return (
     <>
+      {/* <DesktopView> */}
       <Navbar />
       <Header {...useHeaderProps()} />
+      {/* </DesktopView> */}
       <main className="Admin followSidebar">
         <Await>
           <Outlet />
