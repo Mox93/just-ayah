@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { isEqual } from "lodash";
 import { UseFormReset, useWatch } from "react-hook-form";
 import { useLocation, useParams } from "react-router-dom";
@@ -11,15 +12,14 @@ import { useApplyOnce, useLanguage, useLoading } from "hooks";
 import { Location } from "models";
 import { mergeCallbacks, pass } from "utils";
 
-import SessionTrackFields from "./SessionTrackFields";
-import SuccessMessage from "./SuccessMessage";
 import {
   SessionTrackData,
   addSessionTrack,
   deleteSessionTrack,
   updateSessionTrack,
-} from "./utils";
-import { useMemo, useState } from "react";
+} from "../utils";
+import SessionTrackFields from "./SessionTrackFields";
+import SuccessMessage from "../SuccessMessage";
 
 const { Form, Textarea, useForm } = formAtoms<SessionTrackData>();
 

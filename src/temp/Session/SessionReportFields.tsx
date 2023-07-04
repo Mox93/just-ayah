@@ -1,10 +1,11 @@
 import { MenuInput as BaseMenuInput, formAtoms } from "components/Form";
 import { formContextFactory } from "components/Form/utils";
+import { useFieldArray } from "lib/react-hook-form";
+import { pass } from "utils";
 import { transformer } from "utils/transformer";
 
-import { SessionReportData, useMetaData } from "./utils";
-import { pass } from "utils";
-import { useFieldArray } from "lib/react-hook-form";
+import { SessionReportData, useMetaData } from "../utils";
+import ChapterInputRow from "./ChapterInput";
 
 const {
   modifiers: { menuModifiers },
@@ -30,7 +31,12 @@ export default function SessionReportFields() {
   return (
     <>
       {fields.map(({ id }, index) => (
-        <div key={id} />
+        <ChapterInputRow
+          key={id}
+          index={index}
+          addItem={pass(insert, index)}
+          removeItem={pass(remove, index)}
+        />
       ))}
     </>
   );
