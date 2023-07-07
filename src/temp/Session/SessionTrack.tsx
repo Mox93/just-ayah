@@ -20,6 +20,7 @@ import {
 } from "../utils";
 import SessionTrackFields from "./SessionTrackFields";
 import SuccessMessage from "../SuccessMessage";
+import DeleteButton from "./DeleteButton";
 
 const { Form, Textarea, useForm } = formAtoms<SessionTrackData>();
 
@@ -105,6 +106,14 @@ export default function SessionTrack() {
         <SessionTrackFields />
         <Textarea name="notes" label="ملاحظات" />
       </Form>
+      {id && (
+        <DeleteButton
+          onDelete={async () => {
+            await deleteSessionTrack({ id });
+            closeModal();
+          }}
+        />
+      )}
     </FormLayout>
   );
 }
