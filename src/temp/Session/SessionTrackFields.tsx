@@ -10,7 +10,7 @@ import { formContextFactory } from "components/Form/utils";
 import { identity } from "utils";
 import { transformer } from "utils/transformer";
 
-import { SessionTrackData, useMetaData } from "./utils";
+import { SessionTrackData, useMetaData } from "../utils";
 
 const {
   DateInput,

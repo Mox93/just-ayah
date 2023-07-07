@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactNode } from "react";
 
 import justAyahBG from "assets/img/just-ayah-banner.jpg";
 import Container from "components/Container";
@@ -7,7 +7,7 @@ import { useSetHeaderProps } from "context";
 import { cn } from "utils";
 
 interface FormLayoutProps {
-  children: ReactElement;
+  children: ReactNode;
   name?: string;
   title?: string;
 }

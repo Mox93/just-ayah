@@ -8,15 +8,15 @@ import { openModal, closeModal } from "context";
 import { useApplyOnce, useLanguage, useLoading } from "hooks";
 import { mergeCallbacks, pass } from "utils";
 
-import SessionReportFields from "./SessionReportFields";
-import SessionTrackFields from "./SessionTrackFields";
-import SuccessMessage from "./SuccessMessage";
+import SuccessMessage from "../SuccessMessage";
 import {
   SessionReportData,
   addSessionReport,
   deleteSessionReport,
   useMetaData,
-} from "./utils";
+} from "../utils";
+import SessionReportFields from "./SessionReportFields";
+import SessionTrackFields from "./SessionTrackFields";
 
 const { Form, Textarea, useForm } = formAtoms<SessionReportData>();
 
