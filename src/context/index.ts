@@ -1,4 +1,5 @@
 export * from "./Auth";
+export * from "./CopyToClipboard";
 export * from "./Course";
 export * from "./Indexing";
 export * from "./Lead";

@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Class } from "type-fest";
 
 import Container from "components/Container";
-import { SubmitHandler } from "components/Form/utils";
+import { SubmitHandler } from "components/Form";
 import { AddDataFunc } from "models";
 
 import { UserVariant } from "../NewUser.type";

@@ -1,23 +1,19 @@
+import { useMemo } from "react";
 import { PartialDeep } from "type-fest";
 
 import {
   InputGroup,
   formAtoms,
   SelectionInput as BaseSelectionInput,
+  SubmitHandler,
 } from "components/Form";
-import { SubmitHandler } from "components/Form/utils";
 import { useGlobalT, usePersonalInfoT } from "hooks";
-import { OTHER } from "models";
 import { shiftDate } from "models/_blocks";
-import {
-  booleanSelectorProps,
-  genderSchema,
-  noWorkReasons,
-} from "models/blocks";
+import { booleanSelectorProps, genderSchema } from "models/blocks";
 import { StudentFormData } from "models/student";
 import { transformer } from "utils/transformer";
 
-import { useWorkStatus } from "./StudentForm.utils";
+import WorkStatusSection from "./WorkStatusSection";
 
 const {
   CountrySelectorInput,
@@ -49,12 +45,7 @@ export default function StudentForm({
 }: StudentFormProps) {
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
-
-  const {
-    formHook,
-    formHook: { control },
-    ...formProps
-  } = useForm({
+  const formProps = useForm({
     onSubmit,
     ...(defaultValues && { defaultValues }),
     storage: {
@@ -63,16 +54,21 @@ export default function StudentForm({
     },
   });
 
-  const workStatus = useWorkStatus(control);
   const yesNoProps = booleanSelectorProps(glb, "yes", "no");
-  const now = new Date();
+
+  const range = useMemo(() => {
+    const now = new Date();
+    return {
+      start: shiftDate(now, { year: -10 }),
+      end: shiftDate(now, { year: -150 }),
+    };
+  }, []);
 
   return (
     <Form
       className="StudentForm"
       submitProps={{ children: glb("joinInitiative") }}
       resetProps={{}}
-      formHook={formHook}
       {...formProps}
     >
       <InputGroup>
@@ -98,7 +94,7 @@ export default function StudentForm({
           name="dateOfBirth"
           label={pi("dateOfBirth")}
           rules={{ required: "noDateOfBirth" }}
-          range={{ start: now, end: shiftDate(now, { year: -150 }) }}
+          range={range}
         />
 
         <SelectionInput
@@ -167,40 +163,7 @@ export default function StudentForm({
         />
       </InputGroup>
 
-      <InputGroup>
-        <SelectionInput
-          name="workStatus.doesWork"
-          label={pi("doesWork")}
-          rules={{ required: "noWorkStatus" }}
-          {...yesNoProps}
-        />
-
-        {workStatus?.doesWork ? (
-          <Input
-            name="workStatus.job"
-            label={pi("occupation")}
-            rules={{ required: "noWorkStatus", shouldUnregister: true }}
-          />
-        ) : workStatus?.doesWork === false ? (
-          <SelectionInput
-            name="workStatus.status.value"
-            type="radio"
-            options={noWorkReasons}
-            renderElement={pi}
-            label={pi("noWorkReason")}
-            rules={{ required: "noWorkStatus", shouldUnregister: true }}
-          />
-        ) : null}
-      </InputGroup>
-
-      {workStatus?.doesWork === false &&
-        workStatus?.status?.value === OTHER && (
-          <Input
-            name="workStatus.status.other"
-            label={pi("noWorkDetails")}
-            rules={{ required: "noWorkStatus", shouldUnregister: true }}
-          />
-        )}
+      <WorkStatusSection />
 
       <SelectionInput
         name="meta.quran"

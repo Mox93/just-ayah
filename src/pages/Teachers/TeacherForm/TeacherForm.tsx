@@ -4,8 +4,8 @@ import {
   InputGroup,
   formAtoms,
   SelectionInput as BaseSelectionInput,
+  SubmitHandler,
 } from "components/Form";
-import { SubmitHandler } from "components/Form/utils";
 import { useGlobalT, usePersonalInfoT } from "hooks";
 import { genderSchema } from "models/blocks";
 import { TeacherFormData } from "models/teacher";

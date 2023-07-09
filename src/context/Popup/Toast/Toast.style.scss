@@ -86,10 +86,10 @@
     --toast-bg-color: var(--c-danger-100);
   }
 
-  @at-root .toastIcon {
+  .toastIcon {
     @include positioning(
       $parent,
-      $child: &,
+      $child: ".toastIcon",
       $inline: var(--icon-center),
       $block: var(--icon-center)
     );
@@ -113,12 +113,10 @@
       --fill-color: var(--toast-bg-color);
       --bg-color: var(--toast-fg-color);
     }
-  }
 
-  @at-root .CloseButton {
     @include positioning(
       $parent,
-      $child: &,
+      $child: ".CloseButton",
       $inlineDir: end,
       $inline: var(--icon-center),
       $block: var(--icon-center)

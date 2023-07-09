@@ -37,7 +37,7 @@ export default singleton(function formHookFactory<T extends {}>() {
     onSubmit,
     onFail,
     ...config
-  }: _UseFormProps) {
+  }: _UseFormProps = {}) {
     const { key, ...options } = storage || {};
     const formSession = useLocalStorage<PartialDeep<T>>(key, options);
 

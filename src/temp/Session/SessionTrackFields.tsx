@@ -5,8 +5,8 @@ import {
   MenuInput as BaseMenuInput,
   InputGroup,
   formAtoms,
+  formContextFactory,
 } from "components/Form";
-import { formContextFactory } from "components/Form/utils";
 import { identity } from "utils";
 import { transformer } from "utils/transformer";
 

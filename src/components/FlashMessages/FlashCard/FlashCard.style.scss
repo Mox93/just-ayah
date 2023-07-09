@@ -8,6 +8,12 @@
   max-width: var(--width-s);
   text-align: center;
 
+  & > .body {
+    max-height: calc(100vh - (var(--hero-size) + 2 * var(--spacing-xl)));
+    display: flex;
+    flex-direction: column;
+  }
+
   @include mobile {
     width: calc(100vw - 2 * var(--spacing-l));
     min-width: unset;
@@ -55,10 +61,60 @@
   }
 
   .code {
+    $parent: &;
+
     text-align: left;
     border: 1px solid var(--c-gray-200);
     border-radius: var(--radius-xs);
     margin-block-start: var(--spacing-l);
     padding: var(--spacing-m);
+    overflow: auto;
+    overscroll-behavior: contain;
+    position: relative;
+
+    pre {
+      position: relative;
+      inset-block-start: -4rem;
+    }
+
+    .headsUp {
+      width: fit-content;
+      background-color: var(--c-gray-100);
+      color: var(--c-gray-300);
+      padding: var(--spacing-s) var(--spacing-m);
+      border-radius: var(--radius-xs);
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      z-index: 1;
+
+      &.active {
+        opacity: 1;
+      }
+
+      @include positioning($parent, $child: ".headsUp", $position: sticky);
+    }
+
+    &:hover {
+      & > .action {
+        opacity: 1;
+      }
+    }
+
+    & > .action {
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 1;
+
+      @include positioning(
+        $parent,
+        $child: ".action",
+        $position: sticky,
+        $inline: 100%,
+        $block: 0,
+        $x: -100%,
+        $y: 0
+      );
+    }
   }
 }
