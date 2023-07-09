@@ -10,7 +10,7 @@ import {
 import { range } from "utils";
 import { transformer } from "utils/transformer";
 
-import { SessionReportData, useMetaData } from "../utils";
+import { SessionReportData, useMetaData } from "../api";
 
 const {
   modifiers: { menuModifiers },

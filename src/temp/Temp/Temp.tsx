@@ -6,7 +6,7 @@ import { openModal } from "context";
 import { useLoading } from "hooks";
 import SuccessMessage from "temp/SuccessMessage";
 
-import { refreshMetaData, useMetaData } from "../utils";
+import { refreshMetaData, useMetaData } from "../api";
 
 export default function Temp() {
   const metaData = useMetaData();

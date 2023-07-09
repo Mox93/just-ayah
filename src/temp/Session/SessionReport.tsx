@@ -14,7 +14,7 @@ import {
   addSessionReport,
   deleteSessionReport,
   useMetaData,
-} from "../utils";
+} from "../api";
 import SessionReportFields from "./SessionReportFields";
 import SessionTrackFields from "./SessionTrackFields";
 

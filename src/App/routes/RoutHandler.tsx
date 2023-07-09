@@ -21,7 +21,7 @@ import {
 } from "pages/Teachers";
 import { FormUI, MainUI, SandboxUI } from "pages/UI";
 import { SessionReport, SessionTrack, Temp } from "temp";
-import { getSessionTrack } from "temp/utils";
+import { getSessionTrack } from "temp/api";
 import { pass } from "utils";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guards";
