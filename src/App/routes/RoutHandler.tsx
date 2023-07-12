@@ -20,7 +20,7 @@ import {
   TeacherProfile,
 } from "pages/Teachers";
 import { FormUI, MainUI, SandboxUI } from "pages/UI";
-import { SessionReport, SessionTrack, Temp } from "temp";
+import { SessionReport, SessionTrack, MetaData, Temp } from "temp";
 import { getSessionTrack } from "temp/api";
 import { pass } from "utils";
 
@@ -128,8 +128,9 @@ export default function RoutHandler() {
       </Route>
 
       {/* Temporary Routes */}
-      <Route path="temp">
-        <Route index element={<Temp />} />
+      <Route path="temp" element={<Temp />}>
+        <Route index element={<Navigate to="./meta-data" />} />
+        <Route path="meta-data" element={<MetaData />} />
         <Route path="sessions">
           <Route path="track">
             <Route index element={<SessionTrack />} />

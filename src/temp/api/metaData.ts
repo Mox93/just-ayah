@@ -1,10 +1,13 @@
 import { isEmpty } from "lodash";
-import { Timestamp, collection, doc, getDoc } from "firebase/firestore";
+import { Timestamp, getDoc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
-import { create } from "zustand";
+import { createStore, useStore } from "zustand";
 
 import { useApplyOnce } from "hooks";
-import { db, functions } from "services/firebase";
+import { IS_DEV } from "models/config";
+import { functions } from "services/firebase";
+
+import { tempRef } from "./temp";
 
 export interface ChapterData {
   chapter: string;
@@ -28,17 +31,17 @@ interface MetaData {
   noMatchTeachers: Record<string, string[]>;
 }
 
+interface CachedMetaData {
+  data: MetaData;
+  ttl: number;
+  updatedAt: Timestamp;
+}
+
 export function useMetaData() {
-  const metaData = useMetaDataStore();
+  const metaData = useStore(metaDataStore);
 
   useApplyOnce(() => {
-    getCachedMetaData()
-      .then(([data, expired]) => {
-        if (expired) getFreshMetaData().then(setMetaData);
-        return data;
-      })
-      .catch(getFreshMetaData)
-      .then(setMetaData);
+    getCachedMetaData().catch(getFreshMetaData).then(setMetaData);
   }, isEmpty(metaData));
 
   return metaData;
@@ -46,41 +49,39 @@ export function useMetaData() {
 
 export async function refreshMetaData() {
   const metaData = await getFreshMetaData();
-  useMetaDataStore.setState(metaData);
+  setMetaData(metaData);
+}
+
+async function getCachedMetaData() {
+  const result = await getDoc(tempRef);
+  const {
+    metaData: { data, ttl, updatedAt },
+  } = result.data() as { metaData: CachedMetaData };
+
+  if (IS_DEV) console.log("cachedMetaData", data);
+
+  const passedTime = new Date().getTime() - updatedAt.toDate().getTime();
+
+  if (passedTime < ttl) return data;
+
+  throw new Error("expired");
+}
+
+async function getFreshMetaData() {
+  const data = (await getMetaData({ fresh: true })).data;
+
+  if (IS_DEV) console.log("freshMetaData", data);
+
+  return data;
 }
 
 function setMetaData(data: MetaData) {
-  return useMetaDataStore.setState(data);
+  return metaDataStore.setState(data);
 }
 
-const useMetaDataStore = create<Partial<MetaData>>()(() => ({}));
+const metaDataStore = createStore<Partial<MetaData>>()(() => ({}));
 
 const getMetaData = httpsCallable<{ fresh?: boolean }, MetaData>(
   functions,
   "getMetaData"
 );
-
-async function getFreshMetaData() {
-  const data = (await getMetaData({ fresh: true })).data;
-  console.log("freshMetaData", data);
-  return data;
-}
-
-interface CachedMetaData {
-  data: MetaData;
-  ttl: number;
-  updatedAt: Timestamp;
-}
-
-async function getCachedMetaData() {
-  const result = await getDoc(doc(collection(db, "meta"), "temp"));
-  const {
-    metaData: { data, ttl, updatedAt },
-  } = result.data() as { metaData: CachedMetaData };
-
-  console.log("cachedMetaData", data);
-  return [
-    data,
-    !(updatedAt.toDate().getTime() + ttl > new Date().getTime()),
-  ] as const;
-}

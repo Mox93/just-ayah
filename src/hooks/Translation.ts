@@ -1,10 +1,17 @@
+import { Callback } from "i18next";
 import { useTranslation } from "react-i18next";
 
 import { identity } from "utils";
 
 export function useLanguage() {
   const { i18n } = useTranslation();
-  return [i18n.resolvedLanguage, i18n.changeLanguage] as const;
+  return [
+    i18n.resolvedLanguage,
+    (lng?: string, callback?: Callback) => {
+      i18n.changeLanguage(lng, callback);
+      localStorage.setItem("manualLngChange", "true");
+    },
+  ] as const;
 }
 
 /**Namespaced T */

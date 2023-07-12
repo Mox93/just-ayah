@@ -26,11 +26,11 @@ export default function Temp() {
   });
 
   return (
-    <div className="Temp" dir="ltr">
+    <div className="MetaData" dir="ltr">
       <Button onClick={refresh} isLoading={isLoading}>
         refresh
       </Button>
-      {metaData && <ReactJson src={metaData} name="metaData" collapsed />}
+      {metaData ? <ReactJson src={metaData} name="metaData" collapsed /> : null}
     </div>
   );
 }
