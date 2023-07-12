@@ -20,7 +20,7 @@ import {
   TeacherProfile,
 } from "pages/Teachers";
 import { FormUI, MainUI, SandboxUI } from "pages/UI";
-import { SessionReport, SessionTrack, MetaData, Temp } from "temp";
+import { NewStudent, SessionReport, SessionTrack, MetaData, Temp } from "temp";
 import { getSessionTrack } from "temp/api";
 import { pass } from "utils";
 
@@ -147,6 +147,10 @@ export default function RoutHandler() {
             </Route>
           </Route>
           <Route path="report" element={<SessionReport />} />
+        </Route>
+        <Route path="students">
+          <Route path="new" element={<NewStudent />} />
+          <Route path="edit/:id" />
         </Route>
       </Route>
 
