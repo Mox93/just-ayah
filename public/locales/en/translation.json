@@ -32,6 +32,10 @@
     "submit": "submit",
     "clearForm": "clear form",
     "clear": "clear",
+    "facebook": "facebook",
+    "linkedin": "linkedin",
+    "tiktok": "tik tok",
+    "friend": "one of our students / a friend",
     "whatsapp": "WhatsApp",
     "telegram": "Telegram",
     "call": "Call",
@@ -53,7 +57,8 @@
     "termsOfService": "terms of service",
     "name": "name",
     "numberOfSessions": "number of sessions",
-    "add": "add"
+    "add": "add",
+    "other": "other"
   },
   "dateTime": {
     "day": "day",
@@ -121,6 +126,7 @@
     "governorate": "governorate",
     "residence": "residence",
     "education": "education",
+    "job": "job",
     "doesWork": "do you work?",
     "occupation": "job",
     "noWorkReason": "are you?",
@@ -133,6 +139,9 @@
     "noDetails": "details",
     "quran": "have you memorized portions of the quran before?",
     "zoom": "are you able to use the conferencing app \"Zoom\"? as the sessions take place through it.",
+    "zoomTestSession": "do you need an introductory session \"Zoom\"?",
+    "telegram": "are you able to use the chat app \"Telegram\"? as this is our main communication medium.",
+    "lead": "how did you know about \"Just Ayah\"?",
     "leaveQuestion": "if you have any questions or comments leave them here"
   },
   "pages": {
@@ -145,7 +154,8 @@
       "counter_other": "{{count}} students selected",
       "formTitle": "student information",
       "newStudents": "new students",
-      "newEnroll": "new enroll link name"
+      "newEnroll": "new enroll link name",
+      "submitting": "submitting student information"
     },
     "lead": {
       "title": "leads",

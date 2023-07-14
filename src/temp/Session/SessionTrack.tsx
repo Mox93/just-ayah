@@ -17,7 +17,7 @@ import {
   addSessionTrack,
   deleteSessionTrack,
   updateSessionTrack,
-} from "../utils";
+} from "../api";
 import SessionTrackFields from "./SessionTrackFields";
 import SuccessMessage from "../SuccessMessage";
 import DeleteButton from "./DeleteButton";

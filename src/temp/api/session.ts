@@ -3,13 +3,15 @@ import { httpsCallable } from "firebase/functions";
 import { z } from "zod";
 
 import { dateSchema } from "models/blocks";
-import { db, functions } from "services/firebase";
+import { functions } from "services/firebase";
+
+import { tempRef } from "./temp";
 
 /*********************\
 |*** Session Track ***|
 \*********************/
 
-const sessionTrackRef = collection(db, "meta/temp/sessionTrack");
+const sessionTrackRef = collection(tempRef, "sessionTrack");
 
 const sessionTrackSchema = z.object({
   teacher: z.string(),
@@ -22,8 +24,7 @@ const sessionTrackSchema = z.object({
 export type SessionTrackData = z.infer<typeof sessionTrackSchema>;
 
 export async function getSessionTrack(id: string) {
-  const docRef = doc(sessionTrackRef, id);
-  const data = (await getDoc(docRef)).data();
+  const data = (await getDoc(doc(sessionTrackRef, id))).data();
   return data ? sessionTrackSchema.parse(data) : data;
 }
 
@@ -32,8 +33,10 @@ export async function addSessionTrack(data: SessionTrackData) {
 }
 
 export async function updateSessionTrack(id: string, data: SessionTrackData) {
-  const docRef = doc(sessionTrackRef, id);
-  return await updateDoc(docRef, { ...data, updateAt: new Date() });
+  return await updateDoc(doc(sessionTrackRef, id), {
+    ...data,
+    updateAt: new Date(),
+  });
 }
 
 export const deleteSessionTrack = httpsCallable<{ id: string }>(
@@ -45,7 +48,7 @@ export const deleteSessionTrack = httpsCallable<{ id: string }>(
 |*** Session Report ***|
 \**********************/
 
-const sessionReportRef = collection(db, "meta/temp/sessionReport");
+const sessionReportRef = collection(tempRef, "sessionReport");
 
 interface Recital {
   chapter: string;

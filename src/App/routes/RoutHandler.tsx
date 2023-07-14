@@ -20,8 +20,8 @@ import {
   TeacherProfile,
 } from "pages/Teachers";
 import { FormUI, MainUI, SandboxUI } from "pages/UI";
-import { SessionReport, SessionTrack, Temp } from "temp";
-import { getSessionTrack } from "temp/utils";
+import { NewStudent, SessionReport, SessionTrack, MetaData, Temp } from "temp";
+import { getSessionTrack } from "temp/api";
 import { pass } from "utils";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guards";
@@ -128,8 +128,9 @@ export default function RoutHandler() {
       </Route>
 
       {/* Temporary Routes */}
-      <Route path="temp">
-        <Route index element={<Temp />} />
+      <Route path="temp" element={<Temp />}>
+        <Route index element={<Navigate to="./meta-data" />} />
+        <Route path="meta-data" element={<MetaData />} />
         <Route path="sessions">
           <Route path="track">
             <Route index element={<SessionTrack />} />
@@ -146,6 +147,10 @@ export default function RoutHandler() {
             </Route>
           </Route>
           <Route path="report" element={<SessionReport />} />
+        </Route>
+        <Route path="students">
+          <Route path="new" element={<NewStudent />} />
+          <Route path="edit/:id" />
         </Route>
       </Route>
 

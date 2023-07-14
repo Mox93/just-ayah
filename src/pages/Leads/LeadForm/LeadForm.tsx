@@ -1,5 +1,4 @@
-import { InputGroup, formAtoms } from "components/Form";
-import { SubmitHandler } from "components/Form/utils";
+import { InputGroup, formAtoms, SubmitHandler } from "components/Form";
 import { usePersonalInfoT } from "hooks";
 import { LeadFormData } from "models/lead";
 

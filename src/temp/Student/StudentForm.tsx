@@ -1,19 +1,21 @@
 import { useMemo } from "react";
-import { PartialDeep } from "type-fest";
+import { useWatch } from "react-hook-form";
 
 import {
   InputGroup,
   formAtoms,
   SelectionInput as BaseSelectionInput,
+  formContextFactory,
+  MenuInput as BaseMenuInput,
   SubmitHandler,
 } from "components/Form";
 import { useGlobalT, usePersonalInfoT } from "hooks";
+import { OTHER } from "models";
+import { booleanSelectorProps, genderSchema, leadsSchema } from "models/blocks";
 import { shiftDate } from "models/_blocks";
-import { booleanSelectorProps, genderSchema } from "models/blocks";
-import { StudentFormData } from "models/student";
 import { transformer } from "utils/transformer";
 
-import WorkStatusSection from "./WorkStatusSection";
+import { NewStudent } from "../api";
 
 const {
   CountrySelectorInput,
@@ -21,40 +23,31 @@ const {
   Form,
   GovernorateSelectorInput,
   Input,
+  modifiers: { defaultModifiers, menuModifiers },
   PhoneNumberInput,
-  modifiers: { defaultModifiers },
   TermsOfService,
-  TimezoneSelectorInput,
   useForm,
-} = formAtoms<StudentFormData>();
+} = formAtoms<NewStudent>();
 
 const SelectionInput = transformer(BaseSelectionInput, ...defaultModifiers);
+const MenuInput = transformer(BaseMenuInput, ...menuModifiers);
 
 interface StudentFormProps {
-  formId?: string;
-  termsUrl?: string;
-  defaultValues?: PartialDeep<StudentFormData>;
-  onSubmit: SubmitHandler<StudentFormData>;
+  termsUrl: string;
+  onSubmit: SubmitHandler<NewStudent>;
 }
 
-export default function StudentForm({
-  formId,
-  defaultValues,
-  termsUrl,
-  onSubmit,
-}: StudentFormProps) {
+export default function StudentForm({ termsUrl, onSubmit }: StudentFormProps) {
   const glb = useGlobalT();
   const pi = usePersonalInfoT();
+
   const formProps = useForm({
     onSubmit,
-    ...(defaultValues && { defaultValues }),
     storage: {
-      key: "studentForm" + (formId ? `/${formId}` : ""),
-      filter: { type: "omit", fields: ["meta.termsOfService"] },
+      key: "studentForm/temp",
+      filter: { type: "omit", fields: ["termsOfService"] },
     },
   });
-
-  const yesNoProps = booleanSelectorProps(glb, "yes", "no");
 
   const range = useMemo(() => {
     const now = new Date();
@@ -64,39 +57,20 @@ export default function StudentForm({
     };
   }, []);
 
+  const yesNoProps = booleanSelectorProps(glb, "yes", "no");
+
   return (
     <Form
-      className="StudentForm"
       submitProps={{ children: glb("joinInitiative") }}
       resetProps={{}}
       {...formProps}
     >
       <InputGroup>
         <Input
-          name="firstName"
-          label={pi("firstName")}
-          rules={{ required: "noFirstName" }}
+          name="name"
+          label={pi("fullName")}
+          rules={{ required: "noFullName" }}
         />
-        <Input
-          name="middleName"
-          label={pi("middleName")}
-          rules={{ required: "noMiddleName" }}
-        />
-        <Input
-          name="lastName"
-          label={pi("lastName")}
-          rules={{ required: "noLastName" }}
-        />
-      </InputGroup>
-
-      <InputGroup>
-        <DateInput
-          name="dateOfBirth"
-          label={pi("dateOfBirth")}
-          rules={{ required: "noDateOfBirth" }}
-          range={range}
-        />
-
         <SelectionInput
           name="gender"
           type="radio"
@@ -108,13 +82,21 @@ export default function StudentForm({
       </InputGroup>
 
       <InputGroup>
+        <DateInput
+          name="dateOfBirth"
+          label={pi("dateOfBirth")}
+          rules={{ required: "noDateOfBirth" }}
+          range={range}
+        />
         <CountrySelectorInput
           name="nationality"
           label={pi("nationality")}
           renderSections={["emoji", "native"]}
           rules={{ required: "noNationality" }}
         />
+      </InputGroup>
 
+      <InputGroup>
         <CountrySelectorInput
           name="country"
           label={pi("residence")}
@@ -122,20 +104,11 @@ export default function StudentForm({
           rules={{ required: "noResidence" }}
           anchorPoint="top-end"
         />
-      </InputGroup>
-
-      <InputGroup>
         <GovernorateSelectorInput
           name="governorate"
           countryField="country"
           label={pi("governorate")}
           rules={{ required: "noGovernorate" }}
-        />
-
-        <TimezoneSelectorInput
-          name="timezone"
-          label={pi("timezone")}
-          anchorPoint="top-end"
         />
       </InputGroup>
 
@@ -153,33 +126,86 @@ export default function StudentForm({
         />
       </InputGroup>
 
-      <InputGroup>
-        <Input name="email" label={pi("email")} type="email" />
+      <Input name="email" label={pi("email")} type="email" />
 
+      <InputGroup>
         <Input
           name="education"
           label={pi("education")}
           rules={{ required: "noEducation" }}
         />
+        <Input
+          name="job"
+          label={pi("job")}
+          rules={{ required: "noWorkStatus" }}
+        />
       </InputGroup>
 
-      <WorkStatusSection />
-
       <SelectionInput
-        name="meta.quran"
+        name="quran"
         label={pi("quran")}
         rules={{ required: "noAnswer" }}
         {...yesNoProps}
       />
 
       <SelectionInput
-        name="meta.zoom.canUse"
+        name="zoom"
         label={pi("zoom")}
         rules={{ required: "noAnswer" }}
         {...yesNoProps}
       />
 
-      {termsUrl && <TermsOfService name="meta.termsOfService" url={termsUrl} />}
+      <SelectionInput
+        name="zoomTestSession"
+        label={pi("zoomTestSession")}
+        rules={{ required: "noAnswer" }}
+        {...yesNoProps}
+      />
+
+      <SelectionInput
+        name="telegram"
+        label={pi("telegram")}
+        rules={{ required: "noAnswer" }}
+        {...yesNoProps}
+      />
+
+      <LeadsSection />
+
+      {<TermsOfService name="termsOfService" url={termsUrl} />}
     </Form>
+  );
+}
+
+const [, useFormContext] = formContextFactory<NewStudent>();
+
+function LeadsSection() {
+  const glb = useGlobalT();
+  const pi = usePersonalInfoT();
+
+  const {
+    formHook: { control },
+  } = useFormContext();
+
+  const lead = useWatch({
+    control: control,
+    name: "lead",
+  });
+
+  return (
+    <InputGroup>
+      <MenuInput
+        name="lead"
+        options={leadsSchema.options}
+        renderElement={glb}
+        label={pi("lead")}
+        rules={{ required: "noAnswer" }}
+      />
+      {lead === OTHER && (
+        <Input
+          name="leadOther"
+          rules={{ required: "noAnswer", shouldUnregister: true }}
+        />
+      )}
+    </InputGroup>
   );
 }

@@ -2,7 +2,7 @@ import { lazy, useMemo, FC } from "react";
 import { Class } from "type-fest";
 
 import { ErrorToast, SuccessToast } from "components/FlashMessages";
-import { SubmitHandler } from "components/Form/utils";
+import { SubmitHandler } from "components/Form";
 import { openToast } from "context";
 import { Tabs, useGlobalT, useTabs } from "hooks";
 import { AddDataFunc } from "models";

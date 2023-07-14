@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { ReactComponent as CrossIcon } from "assets/icons/close-svgrepo-com.svg";
 import { ReactComponent as CopyIcon } from "assets/icons/copy-svgrepo-com.svg";
@@ -9,6 +9,7 @@ import Countdown from "components/Countdown";
 import Ellipsis from "components/Ellipsis";
 import { EditableCell, FieldProps } from "components/Table";
 import {
+  useCopyToClipboard,
   useStudentEnrollContext,
   useStudentTermsUrl,
   useTeacherEnrollContext,
@@ -18,7 +19,7 @@ import { useGlobalT, useMessageT } from "hooks";
 import { StudentEnroll } from "models/student";
 import { TeacherEnroll } from "models/teacher";
 import { DeleteDataFunc } from "models";
-import { cn, pass, startTimeout } from "utils";
+import { cn, pass } from "utils";
 
 export const ENROLL_CONTEXT = {
   student: {
@@ -32,24 +33,6 @@ export const ENROLL_CONTEXT = {
     termsGetter: useTeacherTermsUrl,
   },
 } as const;
-
-function useCopyToClipboard() {
-  const [copied, setCopied] = useState<string>();
-  const stopTimeout = useRef<VoidFunction>();
-
-  const copy = useCallback((value: string) => {
-    stopTimeout.current?.();
-    navigator.clipboard.writeText(value);
-    setCopied(value);
-
-    stopTimeout.current = startTimeout(() => {
-      setCopied(undefined);
-      stopTimeout.current = undefined;
-    }, 1e3);
-  }, []);
-
-  return [copied, copy] as const;
-}
 
 interface UseTableFieldsProps {
   refreshEnroll: (id: string, duration?: number | undefined) => void;
@@ -66,7 +49,8 @@ export function useTableFields({
   const msg = useMessageT();
 
   const [editing, setEditing] = useState<string>();
-  const [copied, copyToClipboard] = useCopyToClipboard();
+  const copied = useCopyToClipboard((state) => state.copied);
+  const copyToClipboard = useCopyToClipboard((state) => state.copyToClipboard);
 
   return useMemo<FieldProps<StudentEnroll | TeacherEnroll>[]>(
     () => [
@@ -107,9 +91,6 @@ export function useTableFields({
               <Ellipsis position="center" dir="ltr">
                 {enrollUrl}
               </Ellipsis>
-              <div className={cn("headsUp", { active: copied === enrollUrl })}>
-                {msg("copied")}
-              </div>
               <Button
                 className="action"
                 variant="primary-ghost"
@@ -119,6 +100,9 @@ export function useTableFields({
               >
                 <CopyIcon className="icon" />
               </Button>
+              <div className={cn("headsUp", { active: copied === enrollUrl })}>
+                {msg("copied")}
+              </div>
             </div>
           );
         },

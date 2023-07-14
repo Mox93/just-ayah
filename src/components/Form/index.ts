@@ -10,4 +10,5 @@ export { default as SelectionInput } from "./SelectionInput";
 export { default as TermsOfService } from "./TermsOfService";
 export { default as Textarea } from "./Textarea";
 export { default as TimeInput } from "./TimeInput";
-export { formAtoms } from "./utils";
+export { formAtoms, formContextFactory } from "./utils";
+export type { SubmitHandler } from "./utils";
