@@ -208,6 +208,7 @@
     "noFirstName": "please enter your first name",
     "noMiddleName": "please enter your middle name",
     "noLastName": "please enter your last name",
+    "noCountryCode": "please make sure your phone number contains the country code",
     "noPhoneNumber": "please enter your phone number",
     "wrongPhoneNumber": "please make sure you've entered a correct phone number",
     "noEducation": "please enter your education status",

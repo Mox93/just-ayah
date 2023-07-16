@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import { Merge } from "models";
 import { singleton } from "utils";
 import { createModifier } from "utils/transformer";
@@ -10,12 +12,27 @@ export default singleton(function formFamilyFactory<T extends {}>() {
 
   const formParent = createModifier<
     Merge<FormProps, Parameters<typeof FormProvider>[0]>
-  >(({ children, formHook, noErrorMessage, ...props }) => ({
-    ...props,
-    children: (
-      <FormProvider {...{ formHook, noErrorMessage }}>{children}</FormProvider>
-    ),
-  }));
+  >(({ children, formHook, noErrorMessage, ...props }) => {
+    const {
+      setFocus,
+      formState: { errors },
+    } = formHook;
+
+    useEffect(() => {
+      const firstError = Object.keys(errors).find((field) => !!errors[field]);
+
+      if (firstError) setFocus(firstError);
+    }, [errors, setFocus]);
+
+    return {
+      ...props,
+      children: (
+        <FormProvider {...{ formHook, noErrorMessage }}>
+          {children}
+        </FormProvider>
+      ),
+    };
+  });
 
   const formChild = createModifier((props) => ({
     ...useFormContext(),

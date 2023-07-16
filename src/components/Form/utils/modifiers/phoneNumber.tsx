@@ -32,12 +32,14 @@ export default function phoneNumberMapper<TFieldValues extends {}>() {
     }: WithFormHook<TFieldValues, NamedChildProps<TFieldValues>>) => {
       if (!formHook) return { ...props, name };
 
-      const { CODE, NUMBER, TAGS } = Object.entries(FIELDS).reduce(
-        (obj, [key, subName]) => {
-          obj[key as keyof typeof FIELDS] = `${name}.${subName}` as typeof name;
-          return obj;
-        },
-        {} as Record<keyof typeof FIELDS, typeof name>
+      const { CODE, NUMBER, TAGS } = useMemo(
+        () =>
+          Object.entries(FIELDS).reduce((obj, [key, subName]) => {
+            obj[key as keyof typeof FIELDS] =
+              `${name}.${subName}` as typeof name;
+            return obj;
+          }, {} as Record<keyof typeof FIELDS, typeof name>),
+        [name]
       );
 
       const { register, setValue, control } = formHook;
