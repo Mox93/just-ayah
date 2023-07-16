@@ -19,7 +19,10 @@ export const phoneNumberTagSetSchema = z
 
 const _phoneNumberSchema = z.object({
   code: z.union([countryCodeSchema, z.literal("")]), // TODO use only `countryCodeSchema` once all country codes are valid in the DB
-  number: z.string().regex(/^\d+$/g).max(15),
+  number: z
+    .string()
+    .regex(/^\+?\d+$/g)
+    .max(15),
   tags: z.union([
     phoneNumberTagSetSchema,
     phoneNumberTagListSchema.transform((value) => new Set(value)),
@@ -31,7 +34,7 @@ type PhoneNumber = z.infer<typeof _phoneNumberSchema>;
 const _phoneNumberStringSchema = z
   .string()
   .max(17)
-  .regex(new RegExp(`^(${countryCodeList.join("|")})-\\d+$`));
+  .regex(new RegExp(`(^(${countryCodeList.join("|")})-\\d+$)|(^\\+?\\d+$)`));
 
 export const phoneNumberStringSchema = z
   .union([_phoneNumberStringSchema, _phoneNumberSchema])

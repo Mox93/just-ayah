@@ -1,7 +1,8 @@
 .TermsOfServicePopup {
   --modal-height: calc(100vh - 4rem);
 
-  width: 50rem;
+  width: 100vw;
+  max-width: 50rem;
   height: var(--modal-height);
   padding-block-end: var(--spacing-l);
 

@@ -16,6 +16,7 @@ import { shiftDate } from "models/_blocks";
 import { transformer } from "utils/transformer";
 
 import { NewStudent } from "../api";
+import PhoneNumberField from "./PhoneNumberField";
 
 const {
   CountrySelectorInput,
@@ -24,7 +25,6 @@ const {
   GovernorateSelectorInput,
   Input,
   modifiers: { defaultModifiers, menuModifiers },
-  PhoneNumberInput,
   TermsOfService,
   useForm,
 } = formAtoms<NewStudent>();
@@ -113,17 +113,12 @@ export default function StudentForm({ termsUrl, onSubmit }: StudentFormProps) {
       </InputGroup>
 
       <InputGroup>
-        <PhoneNumberInput
+        <PhoneNumberField
           name="phoneNumber.0"
           label={pi("phoneNumber")}
-          rules={{ required: "noPhoneNumber" }}
-          withTags
+          required
         />
-        <PhoneNumberInput
-          name="phoneNumber.1"
-          label={pi("secondPhoneNumber")}
-          withTags
-        />
+        <PhoneNumberField name="phoneNumber.1" label={pi("phoneNumber")} />
       </InputGroup>
 
       <Input name="email" label={pi("email")} type="email" />
