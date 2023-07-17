@@ -118,7 +118,10 @@ export default function StudentForm({ termsUrl, onSubmit }: StudentFormProps) {
           label={pi("phoneNumber")}
           required
         />
-        <PhoneNumberField name="phoneNumber.1" label={pi("phoneNumber")} />
+        <PhoneNumberField
+          name="phoneNumber.1"
+          label={pi("secondPhoneNumber")}
+        />
       </InputGroup>
 
       <Input name="email" label={pi("email")} type="email" />
