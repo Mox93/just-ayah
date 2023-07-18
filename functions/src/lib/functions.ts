@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-export { defineString } from "firebase-functions/params";
+export { defineInt, defineString } from "firebase-functions/params";
 export { HttpsError, onCall } from "firebase-functions/v1/https";
 
 export type Change<T> = functions.Change<T>;
