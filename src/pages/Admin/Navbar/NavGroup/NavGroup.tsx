@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState } from "react";
+import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import Container from "components/Container";
@@ -19,6 +19,8 @@ interface NavGroupProps {
 
 export default function NavGroup({ icon, label, subitems }: NavGroupProps) {
   const navT = useNavT();
+
+  const ref = useRef<HTMLDivElement>(null);
 
   const isFullyExpanded = useSidebarStore((state) => state.isFullyExpanded);
   const hasActivePath = useHasActivePath(() => subitems.map(({ url }) => url));
@@ -46,6 +48,12 @@ export default function NavGroup({ icon, label, subitems }: NavGroupProps) {
       )),
     [close, navT, subitems]
   );
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    ref.current.style.setProperty("--items-count", `${subitems.length}`);
+  }, [subitems.length, isVisible]);
 
   return (
     <>
@@ -81,6 +89,7 @@ export default function NavGroup({ icon, label, subitems }: NavGroupProps) {
             expanding: !isCollapsed,
             collapsing: isCollapsed,
           })}
+          ref={ref}
         >
           {navLinks}
         </div>

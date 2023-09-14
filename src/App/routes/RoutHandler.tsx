@@ -20,8 +20,15 @@ import {
   TeacherProfile,
 } from "pages/Teachers";
 import { FormUI, MainUI, SandboxUI } from "pages/UI";
-import { NewStudent, SessionReport, SessionTrack, MetaData, Temp } from "temp";
-import { getSessionTrack } from "temp/api";
+import {
+  NewStudent,
+  SessionReport,
+  SessionTrack,
+  MetaData,
+  Temp,
+  EditStudent,
+} from "temp";
+import { getSessionTrack, getStudent } from "temp/api";
 import { pass } from "utils";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guards";
@@ -149,8 +156,19 @@ export default function RoutHandler() {
           <Route path="report" element={<SessionReport />} />
         </Route>
         <Route path="students">
+          <Route index element={<NotFound />} />
           <Route path="new" element={<NewStudent />} />
-          <Route path="edit/:id" />
+          <Route
+            path="edit/:id"
+            element={
+              <FetchGuard
+                fetcher={({ id }: { id: string }) => getStudent(id)}
+                failed={<Unauthorized />}
+              />
+            }
+          >
+            <Route index element={<EditStudent />} />
+          </Route>
         </Route>
       </Route>
 

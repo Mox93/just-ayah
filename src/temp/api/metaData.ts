@@ -7,7 +7,7 @@ import { useApplyOnce } from "hooks";
 import { IS_DEV } from "models/config";
 import { functions } from "services/firebase";
 
-import { tempRef } from "./temp";
+import { TEMP_REF } from "./temp";
 
 export interface ChapterData {
   chapter: string;
@@ -53,7 +53,7 @@ export async function refreshMetaData() {
 }
 
 async function getCachedMetaData() {
-  const result = await getDoc(tempRef);
+  const result = await getDoc(TEMP_REF);
   const {
     metaData: { data, ttl, updatedAt },
   } = result.data() as { metaData: CachedMetaData };

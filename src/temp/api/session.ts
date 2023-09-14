@@ -5,13 +5,13 @@ import { z } from "zod";
 import { dateSchema } from "models/blocks";
 import { functions } from "services/firebase";
 
-import { tempRef } from "./temp";
+import { TEMP_REF } from "./temp";
 
 /*********************\
 |*** Session Track ***|
 \*********************/
 
-const sessionTrackRef = collection(tempRef, "sessionTrack");
+const SESSION_TRACK_REF = collection(TEMP_REF, "sessionTrack");
 
 const sessionTrackSchema = z.object({
   teacher: z.string(),
@@ -24,16 +24,19 @@ const sessionTrackSchema = z.object({
 export type SessionTrackData = z.infer<typeof sessionTrackSchema>;
 
 export async function getSessionTrack(id: string) {
-  const data = (await getDoc(doc(sessionTrackRef, id))).data();
-  return data ? sessionTrackSchema.parse(data) : data;
+  const data = (await getDoc(doc(SESSION_TRACK_REF, id))).data();
+  return data && sessionTrackSchema.parse(data);
 }
 
-export async function addSessionTrack(data: SessionTrackData) {
-  return await addDoc(sessionTrackRef, { ...data, timestamp: new Date() });
+export function addSessionTrack(data: SessionTrackData) {
+  return addDoc(SESSION_TRACK_REF, { ...data, timestamp: new Date() });
 }
 
-export async function updateSessionTrack(id: string, data: SessionTrackData) {
-  return await updateDoc(doc(sessionTrackRef, id), {
+export function updateSessionTrack(
+  id: string,
+  data: Partial<SessionTrackData>
+) {
+  return updateDoc(doc(SESSION_TRACK_REF, id), {
     ...data,
     updateAt: new Date(),
   });
@@ -48,7 +51,7 @@ export const deleteSessionTrack = httpsCallable<{ id: string }>(
 |*** Session Report ***|
 \**********************/
 
-const sessionReportRef = collection(tempRef, "sessionReport");
+const sessionReportRef = collection(TEMP_REF, "sessionReport");
 
 interface Recital {
   chapter: string;

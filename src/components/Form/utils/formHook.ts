@@ -1,5 +1,5 @@
 import { cloneDeep, isPlainObject } from "lodash";
-import { useEffect, useRef } from "react";
+import { FormEvent, useEffect, useRef } from "react";
 import {
   SubmitErrorHandler,
   useForm,
@@ -95,7 +95,10 @@ export default singleton(function formHookFactory<T extends {}>() {
           }),
         onFail
       ),
-      onReset: () => handleReset(defaultValues as T),
+      onReset: (event: FormEvent) => {
+        event.preventDefault();
+        handleReset(resetToDefaultValues ? (defaultValues as T) : undefined);
+      },
     };
   }
 
