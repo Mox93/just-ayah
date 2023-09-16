@@ -33,6 +33,7 @@ export interface UserName {
 export interface PhoneNumber {
   code: string;
   number: string;
+  tags?: string[];
 }
 
 export interface ChapterData {

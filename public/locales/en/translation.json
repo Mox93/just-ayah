@@ -17,6 +17,7 @@
     "newNote": "new note",
     "writeNoteHere": "write your note here",
     "save": "save",
+    "undo": "undo",
     "loadMore": "load more",
     "unknown": "unknown",
     "pending": "pending",
@@ -155,7 +156,8 @@
       "formTitle": "student information",
       "newStudents": "new students",
       "newEnroll": "new enroll link name",
-      "submitting": "submitting student information"
+      "submitting": "submitting student information",
+      "saving": "saving changes"
     },
     "lead": {
       "title": "leads",

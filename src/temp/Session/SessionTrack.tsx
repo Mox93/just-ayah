@@ -1,15 +1,13 @@
 import { useMemo, useState } from "react";
 import { isEqual } from "lodash";
 import { UseFormReset, useWatch } from "react-hook-form";
-import { useLocation, useParams } from "react-router-dom";
 import { PartialDeep } from "type-fest";
 
 import { ErrorMessage } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
 import FormLayout from "components/Layouts/FormLayout";
-import { openModal, closeModal } from "context";
+import { openModal, closeModal, useRequestData } from "context";
 import { useApplyOnce, useLanguage, useLoading } from "hooks";
-import { Location } from "models";
 import { mergeCallbacks, pass } from "utils";
 
 import {
@@ -25,23 +23,24 @@ import DeleteButton from "./DeleteButton";
 const { Form, Textarea, useForm } = formAtoms<SessionTrackData>();
 
 export default function SessionTrack() {
-  const { id } = useParams();
-  const { state } = useLocation() as Location<{
-    data?: PartialDeep<SessionTrackData>;
-  }>;
+  const {
+    data,
+    params: { id },
+  } = useRequestData<PartialDeep<SessionTrackData>>();
 
-  const [defaultData, setDefaultData] = useState(state?.data);
+  const [defaultData, setDefaultData] = useState(data);
 
   const [, setLanguage] = useLanguage();
+
   useApplyOnce(() => {
     setLanguage("ar");
   });
 
-  const [addTrack, isLoading] = useLoading(
+  const [onSubmit, isLoading] = useLoading(
     (
       stopLoading,
       data: SessionTrackData,
-      reset: UseFormReset<SessionTrackData>
+      { reset }: { reset: UseFormReset<SessionTrackData> }
     ) =>
       (id
         ? updateSessionTrack(id, data).then(() => setDefaultData(data))
@@ -71,8 +70,9 @@ export default function SessionTrack() {
   );
 
   const formProps = useForm({
-    onSubmit: (data, { reset }) => addTrack(data, reset),
+    onSubmit,
     defaultValues: id ? defaultData : { date: new Date() },
+    resetToDefaultValues: true,
   });
 
   const {

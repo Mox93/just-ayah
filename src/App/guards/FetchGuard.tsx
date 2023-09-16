@@ -7,6 +7,7 @@ import { useApplyOnce, useGlobalT } from "hooks";
 import { Location } from "models";
 import { IS_DEV } from "models/config";
 import { NotFound } from "pages/Fallback";
+import { RequestDataProvider } from "context";
 
 interface FetchGuardProps {
   fetcher: Function;
@@ -22,22 +23,30 @@ export default function FetchGuard({
   failed = <NotFound />,
 }: FetchGuardProps) {
   const glb = useGlobalT();
+
+  const params = useParams();
+  const location = useLocation() as Location<{} | undefined>;
+
   const [fetchState, setFetchState] = useState<
     "loading" | "success" | "failed" | "notFound"
   >("loading");
-  const params = useParams();
-  const location = useLocation() as Location<{} | undefined>;
+  const [data, setData] = useState();
 
   useApplyOnce(() => {
     Promise.resolve(fetcher(params))
       .then((data: any) => {
-        if (data) location.state = { ...location.state, data };
+        if (data) {
+          location.state = { ...location.state, data };
+          setData(data);
+        }
         setFetchState(data ? "success" : "notFound");
+
         if (IS_DEV) console.log("Fetch Completed", data);
       })
       .catch((error) => {
-        if (IS_DEV) console.log("Fetch Failed", error);
         setFetchState("failed");
+
+        if (IS_DEV) console.log("Fetch Failed", error);
       });
   });
 
@@ -47,7 +56,9 @@ export default function FetchGuard({
     case "success":
       return (
         <Await>
-          <Outlet />
+          <RequestDataProvider data={data!}>
+            <Outlet />
+          </RequestDataProvider>
         </Await>
       );
     case "notFound":

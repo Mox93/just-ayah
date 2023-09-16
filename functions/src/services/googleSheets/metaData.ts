@@ -4,48 +4,22 @@ import {
   TEMP_PATH,
   CUSTOM_META_DATA_RANGES,
 } from "@config";
-import { Schema$ValueRange, authClient, db, onCall, sheets } from "@lib";
-import { CachedMetaData, MetaData } from "@types";
+import { Schema$ValueRange, authClient, db, sheets } from "@lib";
+import { MetaData } from "@types";
 
-export const getMetaData = onCall(async (options) => {
-  const { fresh = false } = options || {};
-
-  if (!fresh) {
-    const {
-      metaData: { ttl, updatedAt, data },
-    } = (await db.doc(TEMP_PATH).get()).data() as {
-      metaData: CachedMetaData;
-    };
-
-    if (updatedAt.toDate().getTime() + ttl > new Date().getTime()) {
-      return data;
-    }
-  }
-
-  const result = await getFreshMetaData();
-
-  await updateMetaData(result);
-
-  return result;
-});
-
-/*************\
-|*** UTILS ***|
-\*************/
-
-async function updateMetaData(data: MetaData) {
+export async function updateMetaData(data: MetaData) {
   return await db
     .doc(TEMP_PATH)
     .update({ "metaData.data": data, "metaData.updatedAt": new Date() });
 }
 
-async function getFreshMetaData(): Promise<MetaData> {
+export async function getFreshMetaData(): Promise<MetaData> {
   const ranges =
     (
       await sheets.spreadsheets.values.batchGet(
         {
           auth: await authClient,
-          spreadsheetId: DATA_SHEET_ID,
+          spreadsheetId: DATA_SHEET_ID.value(),
           ranges: [...META_DATA_RANGES, ...CUSTOM_META_DATA_RANGES],
         },
         {}

@@ -1,53 +1,30 @@
 import { useMemo } from "react";
-import { useWatch } from "react-hook-form";
 
 import {
   InputGroup,
   formAtoms,
   SelectionInput as BaseSelectionInput,
-  formContextFactory,
-  MenuInput as BaseMenuInput,
-  SubmitHandler,
 } from "components/Form";
-import { useGlobalT, usePersonalInfoT } from "hooks";
-import { OTHER } from "models";
-import { booleanSelectorProps, genderSchema, leadsSchema } from "models/blocks";
+import { usePersonalInfoT } from "hooks";
+import { genderSchema } from "models/blocks";
 import { shiftDate } from "models/_blocks";
 import { transformer } from "utils/transformer";
 
-import { NewStudent } from "../api";
+import { StudentData } from "../api";
 import PhoneNumberField from "./PhoneNumberField";
 
 const {
   CountrySelectorInput,
   DateInput,
-  Form,
   GovernorateSelectorInput,
   Input,
-  modifiers: { defaultModifiers, menuModifiers },
-  TermsOfService,
-  useForm,
-} = formAtoms<NewStudent>();
+  modifiers: { defaultModifiers },
+} = formAtoms<StudentData>();
 
 const SelectionInput = transformer(BaseSelectionInput, ...defaultModifiers);
-const MenuInput = transformer(BaseMenuInput, ...menuModifiers);
 
-interface StudentFormProps {
-  termsUrl: string;
-  onSubmit: SubmitHandler<NewStudent>;
-}
-
-export default function StudentForm({ termsUrl, onSubmit }: StudentFormProps) {
-  const glb = useGlobalT();
+export default function StudentDataFields() {
   const pi = usePersonalInfoT();
-
-  const formProps = useForm({
-    onSubmit,
-    storage: {
-      key: "studentForm/temp",
-      filter: { type: "omit", fields: ["termsOfService"] },
-    },
-  });
 
   const range = useMemo(() => {
     const now = new Date();
@@ -57,14 +34,8 @@ export default function StudentForm({ termsUrl, onSubmit }: StudentFormProps) {
     };
   }, []);
 
-  const yesNoProps = booleanSelectorProps(glb, "yes", "no");
-
   return (
-    <Form
-      submitProps={{ children: glb("joinInitiative") }}
-      resetProps={{}}
-      {...formProps}
-    >
+    <>
       <InputGroup>
         <Input
           name="name"
@@ -138,72 +109,6 @@ export default function StudentForm({ termsUrl, onSubmit }: StudentFormProps) {
           rules={{ required: "noWorkStatus" }}
         />
       </InputGroup>
-
-      <SelectionInput
-        name="quran"
-        label={pi("quran")}
-        rules={{ required: "noAnswer" }}
-        {...yesNoProps}
-      />
-
-      <SelectionInput
-        name="zoom"
-        label={pi("zoom")}
-        rules={{ required: "noAnswer" }}
-        {...yesNoProps}
-      />
-
-      <SelectionInput
-        name="zoomTestSession"
-        label={pi("zoomTestSession")}
-        rules={{ required: "noAnswer" }}
-        {...yesNoProps}
-      />
-
-      <SelectionInput
-        name="telegram"
-        label={pi("telegram")}
-        rules={{ required: "noAnswer" }}
-        {...yesNoProps}
-      />
-
-      <LeadsSection />
-
-      {<TermsOfService name="termsOfService" url={termsUrl} />}
-    </Form>
-  );
-}
-
-const [, useFormContext] = formContextFactory<NewStudent>();
-
-function LeadsSection() {
-  const glb = useGlobalT();
-  const pi = usePersonalInfoT();
-
-  const {
-    formHook: { control },
-  } = useFormContext();
-
-  const lead = useWatch({
-    control: control,
-    name: "lead",
-  });
-
-  return (
-    <InputGroup>
-      <MenuInput
-        name="lead"
-        options={leadsSchema.options}
-        renderElement={glb}
-        label={pi("lead")}
-        rules={{ required: "noAnswer" }}
-      />
-      {lead === OTHER && (
-        <Input
-          name="leadOther"
-          rules={{ required: "noAnswer", shouldUnregister: true }}
-        />
-      )}
-    </InputGroup>
+    </>
   );
 }

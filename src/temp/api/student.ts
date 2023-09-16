@@ -1,4 +1,4 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { z } from "zod";
 
 import {
@@ -12,9 +12,9 @@ import {
   urlSchema,
 } from "models/blocks";
 
-import { tempRef } from "./temp";
+import { TEMP_REF } from "./temp";
 
-const studentsRef = collection(tempRef, "students");
+const STUDENTS_REF = collection(TEMP_REF, "students");
 
 export const newStudentSchema = z.object({
   name: z.string(),
@@ -37,10 +37,19 @@ export const newStudentSchema = z.object({
   termsOfService: z.string(),
 });
 
-export type NewStudent = z.infer<typeof newStudentSchema>;
+export const editStudentSchema = newStudentSchema.deepPartial();
 
-export async function addStudent(data: NewStudent) {
-  console.log("addStudent", data);
+export type StudentData = z.infer<typeof newStudentSchema>;
 
-  return await addDoc(studentsRef, { ...data, timestamp: new Date() });
+export async function getStudent(id: string) {
+  const data = (await getDoc(doc(STUDENTS_REF, id))).data();
+  return data && newStudentSchema.parse(data);
+}
+
+export function addStudent(data: StudentData) {
+  return addDoc(STUDENTS_REF, { ...data, timestamp: new Date() });
+}
+
+export function updateStudent(id: string, data: Partial<StudentData>) {
+  return updateDoc(doc(STUDENTS_REF, id), { ...data, updateAt: new Date() });
 }

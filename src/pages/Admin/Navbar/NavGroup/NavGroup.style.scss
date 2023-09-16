@@ -63,7 +63,11 @@
 
   & + .subitems {
     --animation-duration: 0.2s;
-    --expanded-height: 10rem;
+    --item-height: 2.25rem;
+    --expanded-height: calc(
+      var(--item-height) * var(--items-count) + var(--spacing-s) *
+        (var(--items-count) - 1)
+    ); // 10rem;
 
     padding-inline-start: calc(
       var(--closed-sidebar-width) / 2 - var(--navbar-padding) + var(--spacing-s)

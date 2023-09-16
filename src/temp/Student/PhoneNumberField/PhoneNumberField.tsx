@@ -101,8 +101,6 @@ export default function PhoneNumberField({
         onChange={(e) => {
           const phoneNumber = parsePhoneNumber(e.target.value);
 
-          console.log(phoneNumber);
-
           setValue(`${name}.code`, phoneNumber?.country as CountryCode, {
             shouldValidate: isSubmitted,
           });
