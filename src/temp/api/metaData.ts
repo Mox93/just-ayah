@@ -41,7 +41,7 @@ export function useMetaData() {
   const metaData = useStore(metaDataStore);
 
   useApplyOnce(() => {
-    getCachedMetaData().catch(getFreshMetaData).then(setMetaData);
+    getCachedMetaData().catch(getFreshMetaData);
   }, isEmpty(metaData));
 
   return metaData;
@@ -58,13 +58,13 @@ async function getCachedMetaData() {
     metaData: { data, ttl, updatedAt },
   } = result.data() as { metaData: CachedMetaData };
 
+  setMetaData(data);
+
   if (IS_DEV) console.log("cachedMetaData", data);
 
   const passedTime = new Date().getTime() - updatedAt.toDate().getTime();
 
-  if (passedTime < ttl) return data;
-
-  throw new Error("expired");
+  if (passedTime >= ttl) throw new Error("expired");
 }
 
 async function getFreshMetaData() {

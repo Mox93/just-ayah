@@ -1,7 +1,9 @@
 @use "styles/abstracts/mixins" as *;
 
 .MetaData {
+  $parent: &;
   padding: var(--spacing-xl) var(--spacing-m);
+  margin-block-start: var(--spacing-xl);
 
   .Button {
     @include positioning(
@@ -14,7 +16,7 @@
     );
 
     .loadingIndicator {
-      @include positioning($parent: ".Temp", $child: ".loadingIndicator");
+      @include positioning($parent, $child: ".loadingIndicator");
     }
   }
 
