@@ -15,6 +15,7 @@ import {
   countryToCell,
   dateTimeToCell,
   dateToCell,
+  editLinkCell,
   hyperLinkCell,
   phoneNumberToCells,
   resolveGender,
@@ -23,7 +24,7 @@ import {
 } from "@utils";
 import { moveToDeleted } from "./utils";
 
-export interface NewStudentData {
+export interface StudentData {
   name: string;
   gender: string;
   dateOfBirth: Date;
@@ -52,7 +53,7 @@ export const onStudentCreate = document(
   return await addRowToSheet(
     STUDENT_SHEET_ID.value(),
     STUDENT_RANGE_NAME.value(),
-    dataToRow(id, snapshot.data() as NewStudentData)
+    dataToRow(id, snapshot.data() as StudentData)
   );
 });
 
@@ -64,7 +65,7 @@ export const onStudentUpdate = document(
     STUDENT_SHEET_ID.value(),
     STUDENT_TAB_NAME.value(),
     id,
-    dataToRow(id, snapshot.after.data() as NewStudentData)
+    dataToRow(id, snapshot.after.data() as StudentData)
   );
 });
 
@@ -73,7 +74,7 @@ export const deleteStudent = onCall(async (data?: { id?: string }) => {
 
   if (!id) throw new HttpsError("invalid-argument", "No 'id' was provided!");
 
-  await moveToDeleted(TEMP_STUDENT_PATH(id));
+  await moveToDeleted(TEMP_STUDENT_PATH(""), id);
   await removeRowFromSheet(
     STUDENT_SHEET_ID.value(),
     STUDENT_TAB_NAME.value(),
@@ -105,7 +106,7 @@ function dataToRow(
     leadOther,
     termsOfService,
     timestamp,
-  }: NewStudentData
+  }: StudentData
 ) {
   return [
     id,
@@ -128,5 +129,6 @@ function dataToRow(
     resolveLead(lead),
     leadOther,
     hyperLinkCell("قبلت السياسات", termsOfService),
+    editLinkCell(id),
   ];
 }

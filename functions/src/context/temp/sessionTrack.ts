@@ -50,7 +50,7 @@ export const deleteSessionTrack = onCall(async (data?: { id?: string }) => {
 
   if (!id) throw new HttpsError("invalid-argument", "No 'id' was provided!");
 
-  await moveToDeleted(TEMP_SESSION_TRACK_PATH(id));
+  await moveToDeleted(TEMP_SESSION_TRACK_PATH(""), id);
   await removeRowFromSheet(
     LOGS_SHEET_ID.value(),
     LOGS_TAB_NAME.value(),
