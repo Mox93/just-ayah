@@ -5,7 +5,7 @@ export async function addRowToSheet(
   range: string,
   row: (string | undefined)[]
 ) {
-  return sheets.spreadsheets.values.append(
+  return await sheets.spreadsheets.values.append(
     {
       auth: await authClient,
       spreadsheetId,
@@ -29,11 +29,11 @@ export async function changeRowInSheet(
   const i = await getIdIndex(spreadsheetId, sheetName, id);
 
   return i >= 0
-    ? sheets.spreadsheets.values.update(
+    ? await sheets.spreadsheets.values.update(
         {
           auth: await authClient,
           spreadsheetId,
-          range: `${sheetName}!A${i + 1}`,
+          range: `'${sheetName}'!A${i + 1}`,
           valueInputOption: "USER_ENTERED",
           requestBody: {
             values: [row],
@@ -54,7 +54,7 @@ export async function removeRowFromSheet(
   const i = await getIdIndex(spreadsheetId, sheetName, id);
 
   return i >= 0
-    ? sheets.spreadsheets.batchUpdate(
+    ? await sheets.spreadsheets.batchUpdate(
         {
           auth: await authClient,
           spreadsheetId,
@@ -89,7 +89,7 @@ export async function getIdIndex(
         {
           auth: await authClient,
           spreadsheetId,
-          range: `${sheetName}!A`,
+          range: `'${sheetName}'!A:A`,
         },
         {}
       )

@@ -11,7 +11,7 @@ import { HttpsError, document, onCall } from "@lib";
 import { addRowToSheet, changeRowInSheet, removeRowFromSheet } from "@services";
 
 import { moveToDeleted } from "./utils";
-import { dateTimeToCell, dateToCell } from "@utils";
+import { dateTimeToCell, dateToCell, editLinkCell } from "@utils";
 
 export interface SessionTrackData {
   teacher: string;
@@ -24,22 +24,22 @@ export interface SessionTrackData {
 
 export const onSessionTrackCreate = document(
   TEMP_SESSION_TRACK_PATH(DOC_ID_CARD)
-).onCreate((snapshot, context) => {
+).onCreate(async (snapshot, context) => {
   const id = context.params[DOC_ID_VAR];
-  return addRowToSheet(
-    LOGS_SHEET_ID,
-    LOGS_RANGE_NAME,
+  return await addRowToSheet(
+    LOGS_SHEET_ID.value(),
+    LOGS_RANGE_NAME.value(),
     dataToRow(id, snapshot.data() as SessionTrackData)
   );
 });
 
 export const onSessionTrackUpdate = document(
   TEMP_SESSION_TRACK_PATH(DOC_ID_CARD)
-).onUpdate((snapshot, context) => {
+).onUpdate(async (snapshot, context) => {
   const id = context.params[DOC_ID_VAR];
-  return changeRowInSheet(
-    LOGS_SHEET_ID,
-    LOGS_TAB_NAME,
+  return await changeRowInSheet(
+    LOGS_SHEET_ID.value(),
+    LOGS_TAB_NAME.value(),
     id,
     dataToRow(id, snapshot.after.data() as SessionTrackData)
   );
@@ -50,10 +50,15 @@ export const deleteSessionTrack = onCall(async (data?: { id?: string }) => {
 
   if (!id) throw new HttpsError("invalid-argument", "No 'id' was provided!");
 
-  return Promise.all([
-    moveToDeleted(TEMP_SESSION_TRACK_PATH(id)),
-    removeRowFromSheet(LOGS_SHEET_ID, LOGS_TAB_NAME, LOGS_TAB_ID, id),
-  ]);
+  await moveToDeleted(TEMP_SESSION_TRACK_PATH(id));
+  await removeRowFromSheet(
+    LOGS_SHEET_ID.value(),
+    LOGS_TAB_NAME.value(),
+    LOGS_TAB_ID.value(),
+    id
+  );
+
+  return null;
 });
 
 function dataToRow(
@@ -68,6 +73,6 @@ function dataToRow(
     student,
     status,
     notes,
-    `=HYPERLINK(CONCAT($B$1,"${id}"),"تعديل")`,
+    editLinkCell(id),
   ];
 }

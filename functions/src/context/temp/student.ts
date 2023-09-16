@@ -3,17 +3,25 @@ import {
   DOC_ID_VAR,
   STUDENT_RANGE_NAME,
   STUDENT_SHEET_ID,
+  STUDENT_TAB_ID,
+  STUDENT_TAB_NAME,
   TEMP_STUDENT_PATH,
 } from "@config";
-import { document } from "@lib";
-import { addRowToSheet } from "@services";
+import { HttpsError, document, onCall } from "@lib";
+import { addRowToSheet, changeRowInSheet, removeRowFromSheet } from "@services";
 import { PhoneNumber } from "@types";
 import {
   booleanToCell,
+  countryToCell,
   dateTimeToCell,
   dateToCell,
+  hyperLinkCell,
   phoneNumberToCells,
+  resolveGender,
+  resolveGovernorate,
+  resolveLead,
 } from "@utils";
+import { moveToDeleted } from "./utils";
 
 export interface NewStudentData {
   name: string;
@@ -37,15 +45,43 @@ export interface NewStudentData {
   timestamp: Date;
 }
 
-export const onNewStudentCreate = document(
+export const onStudentCreate = document(
   TEMP_STUDENT_PATH(DOC_ID_CARD)
-).onCreate((snapshot, context) => {
+).onCreate(async (snapshot, context) => {
   const id = context.params[DOC_ID_VAR];
-  return addRowToSheet(
-    STUDENT_SHEET_ID,
-    STUDENT_RANGE_NAME,
+  return await addRowToSheet(
+    STUDENT_SHEET_ID.value(),
+    STUDENT_RANGE_NAME.value(),
     dataToRow(id, snapshot.data() as NewStudentData)
   );
+});
+
+export const onStudentUpdate = document(
+  TEMP_STUDENT_PATH(DOC_ID_CARD)
+).onUpdate(async (snapshot, context) => {
+  const id = context.params[DOC_ID_VAR];
+  return await changeRowInSheet(
+    STUDENT_SHEET_ID.value(),
+    STUDENT_TAB_NAME.value(),
+    id,
+    dataToRow(id, snapshot.after.data() as NewStudentData)
+  );
+});
+
+export const deleteStudent = onCall(async (data?: { id?: string }) => {
+  const { id } = data || {};
+
+  if (!id) throw new HttpsError("invalid-argument", "No 'id' was provided!");
+
+  await moveToDeleted(TEMP_STUDENT_PATH(id));
+  await removeRowFromSheet(
+    STUDENT_SHEET_ID.value(),
+    STUDENT_TAB_NAME.value(),
+    STUDENT_TAB_ID.value(),
+    id
+  );
+
+  return null;
 });
 
 function dataToRow(
@@ -75,11 +111,11 @@ function dataToRow(
     id,
     dateTimeToCell(timestamp),
     name,
-    gender,
+    resolveGender(gender),
     dateToCell(dateOfBirth),
-    nationality,
-    country,
-    governorate,
+    countryToCell(nationality),
+    countryToCell(country),
+    resolveGovernorate(governorate),
     ...phoneNumberToCells(phoneNumber[0]),
     ...phoneNumberToCells(phoneNumber[1]),
     email,
@@ -89,8 +125,8 @@ function dataToRow(
     booleanToCell(zoom),
     booleanToCell(zoomTestSession),
     booleanToCell(telegram),
-    lead,
+    resolveLead(lead),
     leadOther,
-    termsOfService,
+    hyperLinkCell("قبلت السياسات", termsOfService),
   ];
 }

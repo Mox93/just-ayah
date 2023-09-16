@@ -29,13 +29,18 @@ export const TEMP_STUDENT_PATH = generateDocPath(`${TEMP_PATH}/students`);
 export const TEMP_DELETED_PATH = `${TEMP_PATH}/deleted` as const;
 
 // GOOGLE_SHEETS
-export const DATA_SHEET_ID = defineString("DATA_SHEET_ID").value();
-export const LOGS_SHEET_ID = defineString("LOGS_SHEET_ID").value();
-export const LOGS_RANGE_NAME = defineString("LOGS_RANGE_NAME").value();
-export const LOGS_TAB_NAME = defineString("LOGS_TAB_NAME").value();
-export const LOGS_TAB_ID = defineInt("LOGS_TAB_ID").value();
-export const STUDENT_SHEET_ID = defineString("STUDENT_SHEET_ID").value();
-export const STUDENT_RANGE_NAME = defineString("STUDENT_RANGE_NAME").value();
+export const DATA_SHEET_ID = defineString("DATA_SHEET_ID");
+
+export const LOGS_SHEET_ID = defineString("LOGS_SHEET_ID");
+export const LOGS_RANGE_NAME = defineString("LOGS_RANGE_NAME");
+export const LOGS_TAB_NAME = defineString("LOGS_TAB_NAME");
+export const LOGS_TAB_ID = defineInt("LOGS_TAB_ID");
+
+export const STUDENT_SHEET_ID = defineString("STUDENT_SHEET_ID");
+export const STUDENT_RANGE_NAME = defineString("STUDENT_RANGE_NAME");
+export const STUDENT_TAB_NAME = defineString("STUDENT_TAB_NAME");
+export const STUDENT_TAB_ID = defineInt("STUDENT_TAB_ID");
+
 export const META_DATA_RANGES = [
   "staff",
   "subscriptions",

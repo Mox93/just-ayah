@@ -1,3 +1,3 @@
 export * from "./getMetaData";
-export * from "./newStudent";
+export * from "./student";
 export * from "./sessionTrack";

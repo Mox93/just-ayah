@@ -19,7 +19,7 @@ export async function getFreshMetaData(): Promise<MetaData> {
       await sheets.spreadsheets.values.batchGet(
         {
           auth: await authClient,
-          spreadsheetId: DATA_SHEET_ID,
+          spreadsheetId: DATA_SHEET_ID.value(),
           ranges: [...META_DATA_RANGES, ...CUSTOM_META_DATA_RANGES],
         },
         {}
