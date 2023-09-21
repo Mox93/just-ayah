@@ -54,6 +54,7 @@ export interface MetaData {
   subscriptions: string[];
   monthlySessions: string[];
   recitationRules: string[];
+  recitationRating: string[];
   unassignedStudents: string[];
   noMatchTeachers: Record<string, string[]>;
 }

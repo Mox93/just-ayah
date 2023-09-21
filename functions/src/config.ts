@@ -46,6 +46,7 @@ export const META_DATA_RANGES = [
   "subscriptions",
   "monthlySessions",
   "recitationRules",
+  "recitationRating",
 ] as const;
 export const CUSTOM_META_DATA_RANGES = [
   "teachers",
