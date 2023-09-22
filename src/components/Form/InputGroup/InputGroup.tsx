@@ -47,7 +47,7 @@ export default function InputGroup({
       )}
       {children}
       {variant === "dynamicListItem" && (
-        <>
+        <div className="actions">
           <Button
             iconButton
             variant="primary-ghost"
@@ -64,7 +64,7 @@ export default function InputGroup({
           >
             <CrossIcon className="icon" />
           </Button>
-        </>
+        </div>
       )}
     </div>
   );

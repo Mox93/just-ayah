@@ -47,7 +47,8 @@ export default forwardRef<HTMLInputElement, InputProps>(function Input(
     <div className={cn("Input", className)} dir={dir}>
       <FieldHeader
         htmlFor={id || _id}
-        {...{ label, required, isRequired, isInvalid }}
+        isRequired={isRequired || required}
+        {...{ label, isInvalid }}
       >
         {children}
       </FieldHeader>

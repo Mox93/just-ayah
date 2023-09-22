@@ -1,0 +1,39 @@
+@use "styles/abstracts/mixins" as *;
+
+.FormSection {
+  margin-block: var(--spacing-l) var(--spacing-m);
+  padding-block: var(--spacing-m) var(--spacing-xl);
+  position: relative;
+  display: grid;
+  gap: var(--spacing-xl);
+  outline: 1px solid var(--c-gray-100);
+  outline-offset: var(--spacing-m);
+  border-radius: var(--spacing-xs);
+
+  &.compact {
+    padding-block-end: unset;
+    gap: var(--spacing-l);
+
+    & > .InputGroup {
+      @include mobile {
+        gap: var(--spacing-m);
+      }
+    }
+  }
+
+  @include mobile {
+    gap: var(--spacing-xl);
+    outline-offset: var(--spacing-s);
+  }
+
+  & > .title {
+    padding-inline: var(--spacing-s);
+    background-color: var(--c-white);
+
+    @include positioning(
+      $block: calc(-1 * var(--spacing-m)),
+      $inline: var(--spacing-s),
+      $x: 0
+    );
+  }
+}

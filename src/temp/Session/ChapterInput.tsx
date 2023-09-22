@@ -1,13 +1,16 @@
 import { useEffect, useMemo } from "react";
-import { useWatch } from "react-hook-form";
+import { ArrayPath, Control, useWatch } from "react-hook-form";
 
 import {
   MenuInput as BaseMenuInput,
+  FormSection,
   InputGroup,
   formAtoms,
   formContextFactory,
 } from "components/Form";
-import { range } from "utils";
+import { useSessionT } from "hooks";
+import { useFieldArray } from "lib/react-hook-form";
+import { pass, range } from "utils";
 import { transformer } from "utils/transformer";
 
 import { SessionReportData, useMetaData } from "../api";
@@ -21,21 +24,58 @@ const MenuInput = transformer(BaseMenuInput, ...menuModifiers);
 const [, useFormContext] = formContextFactory<SessionReportData>();
 
 interface ChapterInputProps {
+  control: Control<SessionReportData>;
+  name: ArrayPath<SessionReportData>;
+}
+
+export default function ChapterInput({ control, name }: ChapterInputProps) {
+  const seT = useSessionT();
+
+  const { fields, insert, remove } = useFieldArray({
+    name,
+    control,
+    emptyItem: {
+      chapter: "",
+      from: 0,
+      to: 0,
+      ...(name === "recitation" ? { rating: "" } : {}),
+    },
+  });
+
+  return (
+    <FormSection className="ChapterInput" title={seT(name)} compact isRequired>
+      {fields.map(({ id }, index) => (
+        <ChapterInputRow
+          key={id}
+          name={name}
+          index={index}
+          addItem={pass(insert, index + 1)}
+          removeItem={pass(remove, index)}
+        />
+      ))}
+    </FormSection>
+  );
+}
+
+interface ChapterInputRowProps {
+  name: ArrayPath<SessionReportData>;
   index: number;
   addItem: VoidFunction;
   removeItem: VoidFunction;
 }
 
-export default function ChapterInputRow({
+function ChapterInputRow({
+  name,
   index,
   addItem,
   removeItem,
-}: ChapterInputProps) {
-  const CH = `recital.${index}.chapter` as const;
-  const VF = `recital.${index}.from` as const;
-  const VT = `recital.${index}.to` as const;
+}: ChapterInputRowProps) {
+  const CH = `${name}.${index}.chapter` as const;
+  const VF = `${name}.${index}.from` as const;
+  const VT = `${name}.${index}.to` as const;
+  const RA = name === "recitation" ? (`${name}.${index}.rating` as const) : "";
 
-  const { courses } = useMetaData();
+  const { courses, recitationRating = [] } = useMetaData();
 
   const chapters = useMemo(() => {
     if (!courses) return [];
@@ -71,15 +111,11 @@ export default function ChapterInputRow({
   }, [chapterName, courses]);
 
   useEffect(() => {
-    if (versesFrom > versesTo) {
-      resetField(VT, { defaultValue: "" });
-    }
-  }, [VT, resetField, versesFrom, versesTo]);
-
-  useEffect(() => {
-    resetField(VF, { defaultValue: "" });
-    resetField(VT, { defaultValue: "" });
-  }, [VF, VT, chapterName, resetField]);
+    if (versesFrom > verses)
+      resetField(VF, { defaultValue: "", keepError: true });
+    if (versesTo > verses || versesFrom > versesTo)
+      resetField(VT, { defaultValue: "", keepError: true });
+  }, [VF, VT, chapterName, resetField, verses, versesFrom, versesTo]);
 
   return (
     <InputGroup
@@ -90,22 +126,33 @@ export default function ChapterInputRow({
       <MenuInput
         name={CH}
         options={chapters}
-        {...(index === 0 ? { label: "السورة" } : { placeholder: "السورة" })}
+        placeholder="السورة"
+        required={index === 0}
+        noErrorMessage
       />
       <MenuInput
         name={VF}
-        options={range(1, verses)}
-        {...(index === 0 ? { label: "من الآية" } : { placeholder: "من الآية" })}
+        options={range(1, verses + 1)}
+        placeholder="من الآية"
         disabled={!verses}
+        required={index === 0}
       />
       <MenuInput
         name={VT}
-        options={range(versesFrom || 1, verses)}
-        {...(index === 0
-          ? { label: "إلى الآية" }
-          : { placeholder: "إلى الآية" })}
+        options={range(versesFrom || 1, verses + 1)}
+        placeholder="إلى الآية"
         disabled={!verses}
+        required={index === 0}
       />
+      {RA ? (
+        <MenuInput
+          name={RA}
+          options={recitationRating}
+          placeholder="التقييم"
+          disabled={!verses}
+          required={index === 0}
+        />
+      ) : null}
     </InputGroup>
   );
 }

@@ -151,17 +151,6 @@ $desktopSize: 35.01rem;
   }
 }
 
-@mixin menuItem {
-  width: 100%;
-  height: 2.5rem;
-  display: flex;
-  gap: var(--spacing-m);
-  align-items: center;
-  white-space: nowrap;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-}
-
 @mixin menuLayout {
   padding: var(--spacing-s);
   display: flex;

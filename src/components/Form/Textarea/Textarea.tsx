@@ -60,7 +60,8 @@ export default forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
     <div className={cn("Textarea", className)} dir={dir}>
       <FieldHeader
         htmlFor={id || _id}
-        {...{ label, required, isRequired, isInvalid }}
+        isRequired={isRequired || required}
+        {...{ label, isInvalid }}
       >
         {children}
       </FieldHeader>

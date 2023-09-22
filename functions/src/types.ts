@@ -54,6 +54,7 @@ export interface MetaData {
   subscriptions: string[];
   monthlySessions: string[];
   recitationRules: string[];
+  recitationRating: string[];
   unassignedStudents: string[];
   noMatchTeachers: Record<string, string[]>;
 }
@@ -62,4 +63,26 @@ export interface CachedMetaData {
   data: MetaData;
   ttl: number;
   updatedAt: Timestamp;
+}
+
+export interface SessionTrackData {
+  teacher: string;
+  student: string;
+  status: string;
+  date: Date;
+  timestamp: Date;
+  notes?: string;
+}
+
+export interface ChapterVersus {
+  chapter: string;
+  from: number;
+  to: number;
+  rating: string;
+}
+
+export interface SessionReportData extends SessionTrackData {
+  recitation: ChapterVersus[];
+  memorization: Omit<ChapterVersus, "rating">[];
+  rules: string[];
 }

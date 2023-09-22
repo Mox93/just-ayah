@@ -34,3 +34,4 @@ export const useGovT = createHook("governorate");
 export const usePersonalInfoT = createHook("personalInfo");
 export const useMessageT = createHook("messages");
 export const useDateTimeT = createHook("dateTime");
+export const useSessionT = createHook("session");

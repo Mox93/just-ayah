@@ -36,11 +36,11 @@ export default function SessionTrack() {
     setLanguage("ar");
   });
 
-  const [onSubmit, isLoading] = useLoading(
+  const [addTrack, isLoading] = useLoading(
     (
       stopLoading,
       data: SessionTrackData,
-      { reset }: { reset: UseFormReset<SessionTrackData> }
+      reset: UseFormReset<SessionTrackData>
     ) =>
       (id
         ? updateSessionTrack(id, data).then(() => setDefaultData(data))
@@ -70,7 +70,7 @@ export default function SessionTrack() {
   );
 
   const formProps = useForm({
-    onSubmit,
+    onSubmit: (data, { reset }) => addTrack(data, reset),
     defaultValues: id ? defaultData : { date: new Date() },
     resetToDefaultValues: true,
   });
@@ -86,7 +86,7 @@ export default function SessionTrack() {
   );
 
   return (
-    <FormLayout title="(الاشراف الإداري) تقارير اللقاءات">
+    <FormLayout title="تقارير اللقاءات (الاشراف الإداري)">
       <Form
         {...formProps}
         resetProps={{

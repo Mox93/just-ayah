@@ -51,24 +51,43 @@ export const deleteSessionTrack = httpsCallable<{ id: string }>(
 |*** Session Report ***|
 \**********************/
 
-const sessionReportRef = collection(TEMP_REF, "sessionReport");
+const SESSION_REPORT_REF = collection(TEMP_REF, "sessionReport");
 
-interface Recital {
-  chapter: string;
-  from: number;
-  to: number;
-  rating: string;
-}
+const chapterVersusSchema = z.object({
+  chapter: z.string(),
+  from: z.number().int().positive(),
+  to: z.number().int().positive(),
+  rating: z.string(),
+});
 
-export interface SessionReportData extends SessionTrackData {
-  recital: Recital[];
-  memorization: Omit<Recital, "rating">[];
-  rules: string[];
+const sessionReportSchema = sessionTrackSchema.merge(
+  z.object({
+    recitation: chapterVersusSchema.array(),
+    memorization: chapterVersusSchema.omit({ rating: true }).array(),
+    rules: z.string().array(),
+  })
+);
+
+export type SessionReportData = z.infer<typeof sessionReportSchema>;
+
+export async function getSessionReport(id: string) {
+  const data = (await getDoc(doc(SESSION_REPORT_REF, id))).data();
+  return data && sessionReportSchema.parse(data);
 }
 
 export async function addSessionReport(data: SessionReportData) {
   console.log(data);
-  return await addDoc(sessionReportRef, { ...data, timestamp: new Date() });
+  return await addDoc(SESSION_REPORT_REF, { ...data, timestamp: new Date() });
+}
+
+export function updateSessionReport(
+  id: string,
+  data: Partial<SessionReportData>
+) {
+  return updateDoc(doc(SESSION_REPORT_REF, id), {
+    ...data,
+    updateAt: new Date(),
+  });
 }
 
 export const deleteSessionReport = httpsCallable<{ id: string }>(

@@ -7,7 +7,7 @@ import {
   FieldArrayPath,
 } from "react-hook-form";
 
-import { useRefSync } from "hooks";
+import { useApplyOnce, useRefSync } from "hooks";
 
 export interface UseFieldArrayProps<
   T extends {},
@@ -29,7 +29,7 @@ export default function useFieldArray<
 >({ emptyItem, minCount = 1, ...props }: UseFieldArrayProps<T, N, K>) {
   const { keyName = "id" as K } = props;
 
-  const { fields, append, prepend, insert, update, ...rest } =
+  const { fields, append, prepend, insert, update, remove, ...rest } =
     _useFieldArray(props);
 
   const appendRef = useRefSync(
@@ -63,12 +63,37 @@ export default function useFieldArray<
 
   const resetRef = useRefSync((index: number) => update(index, emptyItem));
 
+  const removeRef = useRefSync((index?: number | number[]) => {
+    remove(index);
+
+    if (typeof index === "number" && index < fields.length) {
+      for (let i = 0; i < minCount - (fields.length - 1); i++) {
+        appendRef.current(emptyItem);
+      }
+    } else if (Array.isArray(index)) {
+      const newCount =
+        fields.length - index.filter((idx) => idx < fields.length).length;
+
+      if (newCount < minCount)
+        for (let i = 0; i < minCount - newCount; i++) {
+          appendRef.current(emptyItem);
+        }
+    }
+  });
+
+  useApplyOnce(() => {
+    for (let i = 0; i < minCount - fields.length; i++) {
+      appendRef.current(emptyItem);
+    }
+  });
+
   return {
     append: appendRef.current,
     prepend: prependRef.current,
     insert: insertRef.current,
     clone: cloneRef.current,
     reset: resetRef.current,
+    remove: removeRef.current,
     fields,
     update,
     ...rest,

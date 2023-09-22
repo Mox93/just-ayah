@@ -1,5 +1,6 @@
 {
   "dir": "ltr",
+
   "globals": {
     "googleSignIn": "enter with Google",
     "joinInitiative": "join the initiative",
@@ -61,6 +62,7 @@
     "add": "add",
     "other": "other"
   },
+
   "dateTime": {
     "day": "day",
     "month": "month",
@@ -97,6 +99,7 @@
       }
     }
   },
+
   "nav": {
     "home": "home",
     "students": "students",
@@ -106,6 +109,7 @@
     "courses": "programs",
     "users": "users"
   },
+
   "personalInfo": {
     "fullName": "full name",
     "firstName": "name",
@@ -145,6 +149,12 @@
     "lead": "how did you know about \"Just Ayah\"?",
     "leaveQuestion": "if you have any questions or comments leave them here"
   },
+
+  "session": {
+    "recitation": "recitation",
+    "memorization": "memorization"
+  },
+
   "pages": {
     "admin": {
       "title": "home"
@@ -174,6 +184,7 @@
       "title": "programs"
     }
   },
+
   "governorate": {
     "egypt": {
       "Alexandria": "Alexandria",
@@ -205,6 +216,7 @@
       "Suez": "Suez"
     }
   },
+
   "messages": {
     "noFullName": "please enter your full name",
     "noFirstName": "please enter your first name",
