@@ -25,16 +25,28 @@ export const TEMP_PATH = "/meta/temp";
 export const TEMP_SESSION_TRACK_PATH = generateDocPath(
   `${TEMP_PATH}/sessionTrack`
 );
+export const TEMP_SESSION_REPORT_PATH = generateDocPath(
+  `${TEMP_PATH}/sessionReport`
+);
 export const TEMP_STUDENT_PATH = generateDocPath(`${TEMP_PATH}/students`);
 export const TEMP_DELETED_PATH = `${TEMP_PATH}/deleted` as const;
 
 // GOOGLE_SHEETS
 export const DATA_SHEET_ID = defineString("DATA_SHEET_ID");
 
-export const LOGS_SHEET_ID = defineString("LOGS_SHEET_ID");
-export const LOGS_RANGE_NAME = defineString("LOGS_RANGE_NAME");
-export const LOGS_TAB_NAME = defineString("LOGS_TAB_NAME");
-export const LOGS_TAB_ID = defineInt("LOGS_TAB_ID");
+export const SESSION_TRACK_SHEET_ID = defineString("SESSION_TRACK_SHEET_ID");
+export const SESSION_TRACK_RANGE_NAME = defineString(
+  "SESSION_TRACK_RANGE_NAME"
+);
+export const SESSION_TRACK_TAB_NAME = defineString("SESSION_TRACK_TAB_NAME");
+export const SESSION_TRACK_TAB_ID = defineInt("SESSION_TRACK_TAB_ID");
+
+export const SESSION_REPORT_SHEET_ID = defineString("SESSION_REPORT_SHEET_ID");
+export const SESSION_REPORT_RANGE_NAME = defineString(
+  "SESSION_REPORT_RANGE_NAME"
+);
+export const SESSION_REPORT_TAB_NAME = defineString("SESSION_REPORT_TAB_NAME");
+export const SESSION_REPORT_TAB_ID = defineInt("SESSION_REPORT_TAB_ID");
 
 export const STUDENT_SHEET_ID = defineString("STUDENT_SHEET_ID");
 export const STUDENT_RANGE_NAME = defineString("STUDENT_RANGE_NAME");

@@ -1,7 +1,23 @@
-@use "styles/abstracts/mixins" as *;
-
 .MenuInput {
   position: relative;
+
+  &.multiChoice {
+    .Input {
+      .FieldWrapper {
+        height: unset;
+      }
+
+      .selected {
+        flex-wrap: wrap;
+      }
+
+      .option {
+        padding: var(--spacing-xs) var(--spacing-s);
+        background-color: var(--c-primary-100);
+        border-radius: var(--spacing-m);
+      }
+    }
+  }
 
   .Input {
     --fill-color: var(--c-gray-400);
@@ -20,8 +36,13 @@
     }
 
     .selected {
-      @include menuItem();
-
+      width: 100%;
+      display: flex;
+      gap: var(--spacing-m);
+      align-items: center;
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
       cursor: text;
     }
   }

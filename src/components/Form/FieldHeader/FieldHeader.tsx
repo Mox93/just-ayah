@@ -3,13 +3,13 @@ import { filterByPosition, PositionalElement } from "utils/position";
 
 type Location = "header";
 
-interface FieldHeaderProps {
+export interface FieldHeaderProps {
   htmlFor?: string;
   label?: string;
   isInvalid?: boolean;
   isRequired?: boolean;
-  required?: boolean;
   children?: PositionalElement<string>;
+  className?: string;
 }
 
 const { before, after } = filterByPosition<Location>();
@@ -17,18 +17,18 @@ const { before, after } = filterByPosition<Location>();
 export default function FieldHeader({
   htmlFor,
   label,
-  required,
   isInvalid,
   isRequired,
   children,
+  className,
 }: FieldHeaderProps) {
   return label ? (
-    <label className="FieldHeader" htmlFor={htmlFor}>
+    <label className={cn("FieldHeader", className)} htmlFor={htmlFor}>
       {before("header", children as PositionalElement<Location>)}
       <h4
         className={cn(
           {
-            required: isRequired ?? required,
+            required: isRequired,
             invalid: isInvalid,
           },
           "label"

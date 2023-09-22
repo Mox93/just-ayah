@@ -150,6 +150,11 @@
     "leaveQuestion": "اذا كان لديك اي استفسارات أو تعليقات اكتب لنا هنا"
   },
 
+  "session": {
+    "recitation": "التسميع",
+    "memorization": "الحفظ"
+  },
+
   "pages": {
     "admin": {
       "title": "الرئيسية"

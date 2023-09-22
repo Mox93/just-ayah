@@ -28,7 +28,7 @@ import {
   Temp,
   EditStudent,
 } from "temp";
-import { getSessionTrack, getStudent } from "temp/api";
+import { getSessionReport, getSessionTrack, getStudent } from "temp/api";
 import { pass } from "utils";
 
 import { UserGuard, FetchGuard, AuthGuard } from "../guards";
@@ -153,7 +153,20 @@ export default function RoutHandler() {
               <Route index element={<SessionTrack />} />
             </Route>
           </Route>
-          <Route path="report" element={<SessionReport />} />
+          <Route path="report">
+            <Route index element={<SessionReport />} />
+            <Route
+              path=":id"
+              element={
+                <FetchGuard
+                  fetcher={({ id }: { id: string }) => getSessionReport(id)}
+                  failed={<Unauthorized />}
+                />
+              }
+            >
+              <Route index element={<SessionReport />} />
+            </Route>
+          </Route>
         </Route>
         <Route path="students">
           <Route index element={<NotFound />} />

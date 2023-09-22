@@ -25,13 +25,27 @@ export type MenuInputProps<TOption> = Merge<
   }
 >;
 
-interface MenuInputPropsInternal<TOption> extends MenuInputProps<TOption> {
-  options: ValueOrGetter<TOption[]>;
-  selected?: TOption;
-  renderElement?: FunctionOrChain<TOption, ReactNode>;
-  searchFields?: Path<TOption>[];
-  getKey?: GetKey<TOption>;
-}
+type MenuInputPropsInternal<TOption> = Merge<
+  MenuInputProps<TOption>,
+  {
+    options: ValueOrGetter<TOption[]>;
+    renderElement?: FunctionOrChain<TOption, ReactNode>;
+    searchFields?: Path<TOption>[];
+    getKey?: GetKey<TOption>;
+  }
+> &
+  (
+    | {
+        multiChoice?: false;
+        selected?: TOption;
+        setValue?: (option?: TOption) => void;
+      }
+    | {
+        multiChoice: true;
+        selected?: TOption[];
+        setValue?: (option?: TOption[]) => void;
+      }
+  );
 
 export default forwardRef(function MenuInput<TOption>(
   {
@@ -45,6 +59,7 @@ export default forwardRef(function MenuInput<TOption>(
     setValue,
     renderElement = identity,
     disabled,
+    multiChoice,
     ...props
   }: MenuInputPropsInternal<TOption>,
   ref: Ref<HTMLInputElement>
@@ -53,7 +68,7 @@ export default forwardRef(function MenuInput<TOption>(
     HTMLDivElement,
     HTMLDivElement
   >({
-    className: cn("MenuInput", className),
+    className: cn("MenuInput", className, { multiChoice }),
     dir,
     anchorPoint,
     onClick: !disabled ? "toggle" : undefined,
@@ -73,7 +88,13 @@ export default forwardRef(function MenuInput<TOption>(
         ? before(
             "input",
             <div className="selected">
-              {applyInOrder(renderElement, selected!)}
+              {multiChoice
+                ? selected.map((s) => (
+                    <div className="option" key={getKey(s)}>
+                      {applyInOrder(renderElement, s)}
+                    </div>
+                  ))
+                : applyInOrder(renderElement, selected)}
             </div>
           )
         : null}
@@ -82,11 +103,35 @@ export default forwardRef(function MenuInput<TOption>(
     <Menu
       {...{ dir, getKey, options, searchFields }}
       ref={drivenRef}
-      checkIsSelected={(option) => isEqual(option, selected)}
+      checkIsSelected={
+        hasSelection
+          ? (option) =>
+              multiChoice
+                ? selected.some((s) => isEqual(option, s))
+                : isEqual(option, selected)
+          : undefined
+      }
       renderElement={renderElement}
       onSelect={(option) => {
-        setValue?.(option);
-        close();
+        if (multiChoice) {
+          const _selected = [...(selected || [])];
+          let index = -1;
+
+          for (let i = 0; i < _selected.length; i++) {
+            if (isEqual(option, _selected[i])) {
+              index = i;
+              break;
+            }
+          }
+
+          if (index > -1) _selected.splice(index, 1);
+          else _selected.push(option);
+
+          setValue?.(_selected);
+        } else {
+          setValue?.(option);
+          close();
+        }
       }}
       withCheckMark
     />

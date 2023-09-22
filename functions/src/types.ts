@@ -64,3 +64,25 @@ export interface CachedMetaData {
   ttl: number;
   updatedAt: Timestamp;
 }
+
+export interface SessionTrackData {
+  teacher: string;
+  student: string;
+  status: string;
+  date: Date;
+  timestamp: Date;
+  notes?: string;
+}
+
+export interface ChapterVersus {
+  chapter: string;
+  from: number;
+  to: number;
+  rating: string;
+}
+
+export interface SessionReportData extends SessionTrackData {
+  recitation: ChapterVersus[];
+  memorization: Omit<ChapterVersus, "rating">[];
+  rules: string[];
+}

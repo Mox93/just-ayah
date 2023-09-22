@@ -1,5 +1,5 @@
 import { CountryCode, Timestamp, getCountry } from "@lib";
-import { PhoneNumber } from "@types";
+import { ChapterVersus, PhoneNumber } from "@types";
 
 export function dateToCell(value?: Date | Timestamp) {
   return (
@@ -32,4 +32,25 @@ export function hyperLinkCell(text: string, url: string) {
 
 export function editLinkCell(id: string, baseUrlCell = "$B$1") {
   return `=HYPERLINK(CONCAT(${baseUrlCell},"${id}"),"تعديل")`;
+}
+
+export function chapterVersusCell(
+  value: ChapterVersus[],
+  noRating?: false
+): string;
+export function chapterVersusCell(
+  value: Omit<ChapterVersus, "rating">[],
+  noRating: true
+): string;
+export function chapterVersusCell(
+  value: (Omit<ChapterVersus, "rating"> &
+    Partial<Pick<ChapterVersus, "rating">>)[],
+  noRating?: boolean
+) {
+  return value
+    .map(
+      ({ chapter, from: _from, to, rating }) =>
+        `${chapter}(${_from}-${to})` + (noRating ? "" : `[${rating}]`)
+    )
+    .join("، ");
 }
