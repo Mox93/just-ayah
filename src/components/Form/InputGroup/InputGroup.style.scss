@@ -13,6 +13,7 @@
 
       @include mobile {
         align-self: stretch;
+        gap: var(--spacing-m);
 
         & > * {
           flex: 1;

@@ -8,15 +8,17 @@ import { useLoading } from "hooks";
 
 interface DeleteButtonProps {
   onDelete: VoidFunction;
+  label: string;
+  message?: string;
 }
 
-export default function DeleteButton({ onDelete }: DeleteButtonProps) {
+export default function DeleteButton(props: DeleteButtonProps) {
   return (
     <Button
       variant="danger-solid"
       style={{ marginInline: "auto", marginBlockStart: "2rem" }}
       onClick={() =>
-        openModal(<DeleteWarning onDelete={onDelete} />, {
+        openModal(<DeleteWarning {...props} />, {
           center: true,
           closable: true,
           dismissible: true,
@@ -30,7 +32,11 @@ export default function DeleteButton({ onDelete }: DeleteButtonProps) {
 
 interface DeleteWarningProps extends DeleteButtonProps {}
 
-function DeleteWarning({ onDelete: deleteAction }: DeleteWarningProps) {
+function DeleteWarning({
+  onDelete: deleteAction,
+  label,
+  message,
+}: DeleteWarningProps) {
   const navigate = useNavigate();
 
   const [onDelete, isLoading] = useLoading(async (stopLoading) => {
@@ -40,15 +46,19 @@ function DeleteWarning({ onDelete: deleteAction }: DeleteWarningProps) {
   });
 
   return (
-    <FlashCard>
-      <Button
-        variant="danger-ghost"
-        style={{ marginInline: "auto" }}
-        isLoading={isLoading}
-        onClick={onDelete}
-      >
-        {"تأكيد حذف التقرير"}
-      </Button>
+    <FlashCard
+      actions={
+        <Button
+          variant="danger-ghost"
+          style={{ marginInline: "auto" }}
+          isLoading={isLoading}
+          onClick={onDelete}
+        >
+          {label}
+        </Button>
+      }
+    >
+      {message ? <p>{message}</p> : null}
     </FlashCard>
   );
 }

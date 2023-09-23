@@ -14,16 +14,29 @@
     padding-block-end: unset;
     gap: var(--spacing-l);
 
-    & > .InputGroup {
-      @include mobile {
-        gap: var(--spacing-m);
+    @include mobile {
+      & > .InputGroup {
+        gap: var(--spacing-l);
+
+        &.dynamicListItem {
+          gap: var(--spacing-m);
+        }
       }
     }
   }
 
   @include mobile {
-    gap: var(--spacing-xl);
     outline-offset: var(--spacing-s);
+    padding-block-end: unset;
+
+    & > :not(:last-child).InputGroup.dynamicListItem {
+      padding-block-end: var(--spacing-m);
+      border-block-end: 1px solid var(--c-gray-100);
+    }
+
+    &:not(.compact) > :last-child:not(.InputGroup.dynamicListItem) {
+      margin-block-end: var(--spacing-xl);
+    }
   }
 
   & > .title {

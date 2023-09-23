@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { UseFormReset, useWatch } from "react-hook-form";
 import { PartialDeep } from "type-fest";
 
+import { DeleteButton } from "components/Buttons";
 import { ErrorMessage } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
 import FormLayout from "components/Layouts/FormLayout";
@@ -20,7 +21,6 @@ import {
 } from "../api";
 import SessionReportFields from "./SessionReportFields";
 import SessionTrackFields from "./SessionTrackFields";
-import DeleteButton from "./DeleteButton";
 
 const { Form, Textarea, useForm } = formAtoms<SessionReportData>();
 
@@ -94,11 +94,7 @@ export default function SessionReport() {
   );
 
   useEffect(() => {
-    if (!showReport) {
-      console.log(`unregister(["recitation", "memorization", "rules"]);`);
-
-      unregister(["recitation", "memorization", "rules"]);
-    }
+    if (!showReport) unregister(["recitation", "memorization", "rules"]);
   }, [showReport, unregister]);
 
   return (
@@ -125,6 +121,8 @@ export default function SessionReport() {
       </Form>
       {id && (
         <DeleteButton
+          message="هل تريد حذف هذا التقرير؟"
+          label="تأكيد حذف التقرير"
           onDelete={async () => {
             await deleteSessionReport({ id });
             closeModal();

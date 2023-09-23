@@ -3,6 +3,7 @@ import { isEqual } from "lodash";
 import { UseFormReset, useWatch } from "react-hook-form";
 import { PartialDeep } from "type-fest";
 
+import { DeleteButton } from "components/Buttons";
 import { ErrorMessage } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
 import FormLayout from "components/Layouts/FormLayout";
@@ -10,6 +11,7 @@ import { openModal, closeModal, useRequestData } from "context";
 import { useApplyOnce, useLanguage, useLoading } from "hooks";
 import { mergeCallbacks, pass } from "utils";
 
+import SuccessMessage from "../SuccessMessage";
 import {
   SessionTrackData,
   addSessionTrack,
@@ -17,8 +19,6 @@ import {
   updateSessionTrack,
 } from "../api";
 import SessionTrackFields from "./SessionTrackFields";
-import SuccessMessage from "../SuccessMessage";
-import DeleteButton from "./DeleteButton";
 
 const { Form, Textarea, useForm } = formAtoms<SessionTrackData>();
 
@@ -108,6 +108,8 @@ export default function SessionTrack() {
       </Form>
       {id && (
         <DeleteButton
+          message="هل تريد حذف هذا التقرير؟"
+          label="تأكيد حذف التقرير"
           onDelete={async () => {
             await deleteSessionTrack({ id });
             closeModal();
