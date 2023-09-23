@@ -64,7 +64,7 @@ function dataToRow(
     teacher,
     student,
     status,
-    notes,
+    notes || "",
     editLinkCell(id),
   ];
 }

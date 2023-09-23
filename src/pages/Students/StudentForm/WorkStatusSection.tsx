@@ -5,7 +5,6 @@ import {
   InputGroup,
   SelectionInput as BaseSelectionInput,
   formAtoms,
-  formContextFactory,
 } from "components/Form";
 import { useGlobalT, usePersonalInfoT } from "hooks";
 import { OTHER } from "models";
@@ -25,11 +24,10 @@ interface HasWorkStatus {
 const {
   Input,
   modifiers: { defaultModifiers },
+  useFormContext,
 } = formAtoms<HasWorkStatus>();
 
 const SelectionInput = transformer(BaseSelectionInput, ...defaultModifiers);
-
-const [, useFormContext] = formContextFactory<HasWorkStatus>();
 
 export default function WorkStatusSection() {
   const pi = usePersonalInfoT();

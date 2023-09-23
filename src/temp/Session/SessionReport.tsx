@@ -1,5 +1,5 @@
 import { isEqual } from "lodash";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UseFormReset, useWatch } from "react-hook-form";
 import { PartialDeep } from "type-fest";
 
@@ -43,31 +43,31 @@ export default function SessionReport() {
       data: SessionReportData,
       reset: UseFormReset<SessionReportData>
     ) =>
-      id
+      (id
         ? updateSessionReport(id, data).then(() => setDefaultData(data))
-        : addSessionReport(data)
-            .then((doc) => {
-              openModal(
-                <SuccessMessage
-                  startOver={mergeCallbacks(
-                    closeModal,
-                    pass(reset, { date: new Date() })
-                  )}
-                  undo={async () => {
-                    await deleteSessionReport({ id: doc.id });
-                    closeModal();
-                  }}
-                />,
-                { center: true }
-              );
-            })
-            .catch((error) =>
-              openModal(<ErrorMessage error={error} />, {
-                center: true,
-                closable: true,
-              })
-            )
-            .finally(stopLoading)
+        : addSessionReport(data).then((doc) => {
+            openModal(
+              <SuccessMessage
+                startOver={mergeCallbacks(
+                  closeModal,
+                  pass(reset, { date: new Date() })
+                )}
+                undo={async () => {
+                  await deleteSessionReport({ id: doc.id });
+                  closeModal();
+                }}
+              />,
+              { center: true }
+            );
+          })
+      )
+        .catch((error) =>
+          openModal(<ErrorMessage error={error} />, {
+            center: true,
+            closable: true,
+          })
+        )
+        .finally(stopLoading)
   );
 
   const formProps = useForm({
@@ -76,7 +76,7 @@ export default function SessionReport() {
     resetToDefaultValues: true,
   });
   const {
-    formHook: { control },
+    formHook: { control, unregister },
   } = formProps;
 
   const status = useWatch({ name: "status", control });
@@ -92,6 +92,14 @@ export default function SessionReport() {
     () => isEqual(defaultData, updatedData),
     [defaultData, updatedData]
   );
+
+  useEffect(() => {
+    if (!showReport) {
+      console.log(`unregister(["recitation", "memorization", "rules"]);`);
+
+      unregister(["recitation", "memorization", "rules"]);
+    }
+  }, [showReport, unregister]);
 
   return (
     <FormLayout title="تقارير اللقاءات (المعلمين)">

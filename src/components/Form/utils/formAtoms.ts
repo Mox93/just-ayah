@@ -19,6 +19,7 @@ import {
   TimeInput,
 } from "../";
 import { MenuInputProps } from "../MenuInput";
+import formContextFactory from "./formContext";
 import formHookFactory from "./formHook";
 import {
   processProps,
@@ -136,6 +137,9 @@ export default singleton(function formAtoms<T extends {}>() {
 
     // Form Hook
     useForm: formHookFactory<T>(),
+
+    // Form Context
+    useFormContext: formContextFactory<T>().useFormContext,
 
     // Modifiers
     modifiers: {

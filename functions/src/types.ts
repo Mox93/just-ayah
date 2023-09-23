@@ -82,7 +82,7 @@ export interface ChapterVersus {
 }
 
 export interface SessionReportData extends SessionTrackData {
-  recitation: ChapterVersus[];
-  memorization: Omit<ChapterVersus, "rating">[];
-  rules: string[];
+  recitation?: ChapterVersus[];
+  memorization?: Omit<ChapterVersus, "rating">[];
+  rules?: string[];
 }

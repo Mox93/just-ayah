@@ -8,7 +8,7 @@ import { FormProps } from "../../Form";
 import formContextFactory from "../formContext";
 
 export default singleton(function formFamilyFactory<T extends {}>() {
-  const [FormProvider, useFormContext] = formContextFactory<T>();
+  const { FormProvider, useFormContext } = formContextFactory<T>();
 
   const formParent = createModifier<
     Merge<FormProps, Parameters<typeof FormProvider>[0]>

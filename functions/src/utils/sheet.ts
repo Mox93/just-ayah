@@ -35,22 +35,24 @@ export function editLinkCell(id: string, baseUrlCell = "$B$1") {
 }
 
 export function chapterVersusCell(
-  value: ChapterVersus[],
+  value?: ChapterVersus[],
   noRating?: false
 ): string;
 export function chapterVersusCell(
-  value: Omit<ChapterVersus, "rating">[],
+  value: Omit<ChapterVersus, "rating">[] | undefined,
   noRating: true
 ): string;
 export function chapterVersusCell(
-  value: (Omit<ChapterVersus, "rating"> &
+  value?: (Omit<ChapterVersus, "rating"> &
     Partial<Pick<ChapterVersus, "rating">>)[],
   noRating?: boolean
 ) {
-  return value
-    .map(
-      ({ chapter, from: _from, to, rating }) =>
-        `${chapter}(${_from}-${to})` + (noRating ? "" : `[${rating}]`)
-    )
-    .join("، ");
+  return (
+    value
+      ?.map(
+        ({ chapter, from: _from, to, rating }) =>
+          `${chapter}(${_from}-${to})` + (noRating ? "" : `[${rating}]`)
+      )
+      .join("، ") || ""
+  );
 }

@@ -81,8 +81,8 @@ function dataToRow(
     status,
     chapterVersusCell(recitation),
     chapterVersusCell(memorization, true),
-    rules?.join("، "),
-    notes,
+    rules?.join("، ") || "",
+    notes || "",
     editLinkCell(id),
   ];
 }
