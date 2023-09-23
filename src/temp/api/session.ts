@@ -1,4 +1,11 @@
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteField,
+} from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { z } from "zod";
 
@@ -62,9 +69,9 @@ const chapterVersusSchema = z.object({
 
 const sessionReportSchema = sessionTrackSchema.merge(
   z.object({
-    recitation: chapterVersusSchema.array(),
-    memorization: chapterVersusSchema.omit({ rating: true }).array(),
-    rules: z.string().array(),
+    recitation: chapterVersusSchema.array().optional(),
+    memorization: chapterVersusSchema.omit({ rating: true }).array().optional(),
+    rules: z.string().array().optional(),
   })
 );
 
@@ -76,7 +83,6 @@ export async function getSessionReport(id: string) {
 }
 
 export async function addSessionReport(data: SessionReportData) {
-  console.log(data);
   return await addDoc(SESSION_REPORT_REF, { ...data, timestamp: new Date() });
 }
 
@@ -86,6 +92,9 @@ export function updateSessionReport(
 ) {
   return updateDoc(doc(SESSION_REPORT_REF, id), {
     ...data,
+    recitation: data.recitation || deleteField(),
+    memorization: data.memorization || deleteField(),
+    rules: data.rules || deleteField(),
     updateAt: new Date(),
   });
 }

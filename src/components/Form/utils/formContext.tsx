@@ -29,5 +29,5 @@ export default singleton(function formContextFactory<T extends {}>() {
     return context;
   }
 
-  return [FormProvider, useFormContext] as const;
+  return { FormProvider, useFormContext } as const;
 });

@@ -5,7 +5,6 @@ import {
   InputGroup,
   formAtoms,
   SelectionInput as BaseSelectionInput,
-  formContextFactory,
   MenuInput as BaseMenuInput,
 } from "components/Form";
 import { FormLayout } from "components/Layouts";
@@ -24,6 +23,7 @@ const {
   modifiers: { defaultModifiers, menuModifiers },
   TermsOfService,
   useForm,
+  useFormContext,
 } = formAtoms<StudentData>();
 
 const SelectionInput = transformer(BaseSelectionInput, ...defaultModifiers);
@@ -107,8 +107,6 @@ export default function NewStudent() {
     </FormLayout>
   );
 }
-
-const [, useFormContext] = formContextFactory<StudentData>();
 
 function LeadsSection() {
   const glb = useGlobalT();

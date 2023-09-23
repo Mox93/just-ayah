@@ -6,7 +6,6 @@ import {
   FormSection,
   InputGroup,
   formAtoms,
-  formContextFactory,
 } from "components/Form";
 import { useSessionT } from "hooks";
 import { useFieldArray } from "lib/react-hook-form";
@@ -17,11 +16,10 @@ import { SessionReportData, useMetaData } from "../api";
 
 const {
   modifiers: { menuModifiers },
+  useFormContext,
 } = formAtoms<SessionReportData>();
 
 const MenuInput = transformer(BaseMenuInput, ...menuModifiers);
-
-const [, useFormContext] = formContextFactory<SessionReportData>();
 
 interface ChapterInputProps {
   control: Control<SessionReportData>;

@@ -1,8 +1,4 @@
-import {
-  MenuInput as BaseMenuInput,
-  formAtoms,
-  formContextFactory,
-} from "components/Form";
+import { MenuInput as BaseMenuInput, formAtoms } from "components/Form";
 import { transformer } from "utils/transformer";
 
 import { SessionReportData, useMetaData } from "../api";
@@ -10,11 +6,10 @@ import ChapterInput from "./ChapterInput";
 
 const {
   modifiers: { menuModifiers },
+  useFormContext,
 } = formAtoms<SessionReportData>();
 
 const MenuInput = transformer(BaseMenuInput, ...menuModifiers);
-
-const [, useFormContext] = formContextFactory<SessionReportData>();
 
 export default function SessionReportFields() {
   const { recitationRules = [] } = useMetaData();
@@ -33,6 +28,7 @@ export default function SessionReportFields() {
         label="القواعد التجويدية المشروحة خلال اللقاء"
         required
         multiChoice
+        rules={{ shouldUnregister: true }}
       />
     </>
   );

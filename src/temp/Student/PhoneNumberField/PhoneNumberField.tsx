@@ -8,7 +8,6 @@ import { ReactComponent as WhatsAppIcon } from "assets/icons/whatsapp-svgrepo-co
 import { ReactComponent as TelegramIcon } from "assets/icons/telegram-svgrepo-com.svg";
 import {
   formAtoms,
-  formContextFactory,
   SelectionInput as BaseSelectionInput,
 } from "components/Form";
 import ErrorMessage from "components/Form/ErrorMessage";
@@ -34,11 +33,10 @@ interface HasPhoneNumber {
   phoneNumber: PhoneNumberList;
 }
 
-const [, useFormContext] = formContextFactory<HasPhoneNumber>();
-
 const {
   Input,
   modifiers: { defaultModifiers },
+  useFormContext,
 } = formAtoms<HasPhoneNumber>();
 
 const SelectionInput = transformer(BaseSelectionInput, ...defaultModifiers);
