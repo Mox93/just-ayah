@@ -10,6 +10,7 @@ import { functions } from "services/firebase";
 import { TEMP_REF } from "./temp";
 
 export interface ChapterData {
+  index: number;
   chapter: string;
   verses: number;
 }
