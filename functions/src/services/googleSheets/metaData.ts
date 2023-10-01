@@ -69,8 +69,9 @@ function parseCoursesData(
     {} as MetaData["courses"]
   );
 
-  chapters.values?.forEach(([course, chapter, verses]) => {
+  chapters.values?.forEach(([course, chapter, verses, index]) => {
     result[course?.trim()].push({
+      index: parseInt(index?.trim()),
       chapter: chapter?.trim(),
       verses: parseInt(verses?.trim()),
     });

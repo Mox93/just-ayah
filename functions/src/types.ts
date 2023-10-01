@@ -37,6 +37,7 @@ export interface PhoneNumber {
 }
 
 export interface ChapterData {
+  index: number;
   verses: number;
   chapter: string;
 }

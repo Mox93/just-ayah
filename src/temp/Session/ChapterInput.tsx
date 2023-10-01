@@ -78,13 +78,15 @@ function ChapterInputRow({
   const chapters = useMemo(() => {
     if (!courses) return [];
 
-    const resultSet = new Set<string>();
+    const chapterIndex: Record<string, number> = {};
 
     Object.values(courses).forEach((chapters) =>
-      chapters.forEach(({ chapter }) => resultSet.add(chapter))
+      chapters.forEach(({ chapter, index }) => (chapterIndex[chapter] = index))
     );
 
-    return [...resultSet].sort();
+    return Object.keys(chapterIndex).sort(
+      (a, b) => chapterIndex[a] - chapterIndex[b]
+    );
   }, [courses]);
 
   const {
