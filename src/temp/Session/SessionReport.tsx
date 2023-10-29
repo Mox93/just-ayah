@@ -14,6 +14,7 @@ import { mergeCallbacks, pass } from "utils";
 import SuccessMessage from "../SuccessMessage";
 import {
   SessionReportData,
+  SessionStatus,
   addSessionReport,
   deleteSessionReport,
   updateSessionReport,
@@ -33,6 +34,7 @@ export default function SessionReport() {
   const [defaultData, setDefaultData] = useState(data);
 
   const [, setLanguage] = useLanguage();
+
   useApplyOnce(() => {
     setLanguage("ar");
   });
@@ -83,7 +85,7 @@ export default function SessionReport() {
   const { sessionStatus } = useMetaData();
 
   const showReport = useMemo(
-    () => sessionStatus?.find(({ value }) => value === status)?.needsReport,
+    () => needsReport(sessionStatus, status),
     [sessionStatus, status]
   );
 
@@ -95,7 +97,7 @@ export default function SessionReport() {
 
   useEffect(() => {
     if (!showReport) unregister(["recitation", "memorization", "rules"]);
-  }, [showReport, unregister]);
+  }, [showReport]);
 
   return (
     <FormLayout title="تقارير اللقاءات (المعلمين)">
@@ -131,4 +133,11 @@ export default function SessionReport() {
       )}
     </FormLayout>
   );
+}
+
+function needsReport(
+  sessionStatus: SessionStatus[] | undefined,
+  status: string
+) {
+  return sessionStatus?.find(({ value }) => value === status)?.needsReport;
 }

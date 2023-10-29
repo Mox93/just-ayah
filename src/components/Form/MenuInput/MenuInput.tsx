@@ -1,5 +1,5 @@
 import { isEqual } from "lodash";
-import { forwardRef, ReactNode, Ref } from "react";
+import { forwardRef, ReactElement, ReactNode, Ref } from "react";
 
 import { SpinningArrow } from "components/Icons";
 import Menu from "components/Menu";
@@ -29,6 +29,7 @@ type MenuInputPropsInternal<TOption> = Merge<
   MenuInputProps<TOption>,
   {
     options: ValueOrGetter<TOption[]>;
+    header?: ReactElement;
     renderElement?: FunctionOrChain<TOption, ReactNode>;
     searchFields?: Path<TOption>[];
     getKey?: GetKey<TOption>;
@@ -60,6 +61,7 @@ export default forwardRef(function MenuInput<TOption>(
     renderElement = identity,
     disabled,
     multiChoice,
+    header,
     ...props
   }: MenuInputPropsInternal<TOption>,
   ref: Ref<HTMLInputElement>
@@ -101,7 +103,7 @@ export default forwardRef(function MenuInput<TOption>(
       {after("input", <SpinningArrow {...{ isOpen, dir }} />)}
     </Input>,
     <Menu
-      {...{ dir, getKey, options, searchFields }}
+      {...{ dir, getKey, options, searchFields, header }}
       ref={drivenRef}
       checkIsSelected={
         hasSelection

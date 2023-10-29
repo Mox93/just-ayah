@@ -17,11 +17,12 @@ import { Converter, GetKey } from "models";
 import { filterByPosition } from "utils/position";
 
 export interface SelectionInputProps<TOption>
-  extends Omit<InputProps, "value" | "id"> {
+  extends Omit<InputProps, "value" | "id" | "checked"> {
   options: ValueOrGetter<TOption[]>;
   type: "radio" | "checkbox";
   renderElement?: FunctionOrChain<TOption, ReactNode>;
   keepFormat?: boolean;
+  checked?: boolean | Converter<TOption, boolean>;
   getKey?: GetKey<TOption>;
   getValue?: Converter<TOption, string>;
 }
@@ -41,6 +42,7 @@ export default forwardRef(function SelectionInput<TOption>(
     errorMessage,
     keepFormat,
     renderElement = identity,
+    checked,
     getKey = identity,
     getValue = identity,
     ...props
@@ -66,6 +68,9 @@ export default forwardRef(function SelectionInput<TOption>(
             <div className="option" key={key}>
               <input
                 {...{ ...props, ref, name, id }}
+                checked={
+                  typeof checked === "function" ? checked(option) : checked
+                }
                 value={getValue(option)}
               />
               <label htmlFor={id}>

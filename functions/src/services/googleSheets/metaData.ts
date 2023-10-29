@@ -30,6 +30,7 @@ export async function getFreshMetaData(): Promise<MetaData> {
     teachers,
     students,
     assignedTeachers,
+    studentStatus,
     courses,
     chapters,
     sessionStatus,
@@ -37,7 +38,7 @@ export async function getFreshMetaData(): Promise<MetaData> {
 
   return {
     ...parsePlainData(ranges),
-    ...parseStudentsData(teachers, students, assignedTeachers),
+    ...parseStudentsData(teachers, students, assignedTeachers, studentStatus),
     courses: parseCoursesData(courses, chapters),
     sessionStatus:
       sessionStatus.values?.map(([value, needsReport]) => ({
@@ -83,7 +84,8 @@ function parseCoursesData(
 function parseStudentsData(
   _teachers: Schema$ValueRange,
   students: Schema$ValueRange,
-  assignedTeachers: Schema$ValueRange
+  assignedTeachers: Schema$ValueRange,
+  studentStatus: Schema$ValueRange
 ) {
   const teachers = (_teachers.values || []).reduce(
     (obj, [value]) => ({ ...obj, [value?.trim()]: [] }),
@@ -92,23 +94,24 @@ function parseStudentsData(
   const noMatchTeachers: MetaData["noMatchTeachers"] = {};
   const unassignedStudents: MetaData["unassignedStudents"] = [];
 
-  students.values?.forEach(([value], index) => {
+  students.values?.forEach(([name], index) => {
     if (index === 0) return;
 
-    value = value?.trim();
+    name = name?.trim();
 
     const teacher = assignedTeachers.values?.[index]?.[0]?.trim();
+    const status = studentStatus.values?.[index]?.[0]?.trim();
 
     if (teacher) {
-      if (teacher in teachers) teachers[teacher].push(value);
+      if (teacher in teachers) teachers[teacher].push({ name, status });
       else {
         const students = noMatchTeachers[teacher];
 
-        if (Array.isArray(students)) students.push(value);
-        else noMatchTeachers[teacher] = [value];
+        if (Array.isArray(students)) students.push({ name, status });
+        else noMatchTeachers[teacher] = [{ name, status }];
       }
     } else {
-      unassignedStudents.push(value);
+      unassignedStudents.push({ name, status });
     }
   });
 

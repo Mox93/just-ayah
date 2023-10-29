@@ -49,15 +49,20 @@ interface SessionStatus {
 
 export interface MetaData {
   staff: string[];
-  teachers: Record<string, string[]>;
+  teachers: Record<string, Student[]>;
   courses: Record<string, ChapterData[]>;
   sessionStatus: SessionStatus[];
   subscriptions: string[];
   monthlySessions: string[];
   recitationRules: string[];
   recitationRating: string[];
-  unassignedStudents: string[];
-  noMatchTeachers: Record<string, string[]>;
+  unassignedStudents: Student[];
+  noMatchTeachers: Record<string, Student[]>;
+}
+
+interface Student {
+  name: string;
+  status: string;
 }
 
 export interface CachedMetaData {

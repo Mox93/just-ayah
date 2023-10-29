@@ -1,15 +1,17 @@
-import { useCallback, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useWatch } from "react-hook-form";
 
 import {
   MenuInput as BaseMenuInput,
+  SelectionInput,
   InputGroup,
   formAtoms,
 } from "components/Form";
-import { identity } from "utils";
 import { transformer } from "utils/transformer";
 
 import { SessionTrackData, useMetaData } from "../api";
+
+const ALL = "الجميع";
 
 const {
   DateInput,
@@ -32,65 +34,105 @@ export default function SessionTrackFields() {
   });
 
   useEffect(() => {
-    if (!teachers || !teacher || teachers[teacher].includes(student)) return;
+    if (
+      !teachers ||
+      !teacher ||
+      teachers[teacher].some(({ name }) => name.includes(student))
+    )
+      return;
     resetField("student", { defaultValue: null });
   }, [resetField, student, teacher, teachers]);
 
-  const getTeachers = useCallback(
+  const teacherList = useMemo(
     () => (teachers ? Object.keys(teachers).sort() : []),
     [teachers]
   );
 
-  const getStudents = useCallback<() => string[]>(
-    () =>
-      teachers
-        ? teacher
-          ? teachers[teacher].sort()
-          : Object.values(teachers).flatMap(identity).sort()
-        : [],
-    [teacher, teachers]
-  );
+  const [statusFilter, setStatusFilter] = useState("فعال");
 
-  const getSessionStatus = useCallback<() => string[]>(
+  const studentList = useMemo(() => {
+    if (!teachers) return [];
+
+    const studentList: string[] = [];
+
+    if (teacher)
+      teachers[teacher].forEach(({ name, status }) => {
+        if (statusFilter === ALL || status === statusFilter)
+          studentList.push(name);
+      });
+    else
+      Object.values(teachers).forEach((students) =>
+        students.forEach(({ name, status }) => {
+          if (statusFilter === ALL || status === statusFilter)
+            studentList.push(name);
+        })
+      );
+
+    return studentList.sort();
+  }, [statusFilter, teacher, teachers]);
+
+  const filters = useMemo(() => {
+    if (!teachers) return [];
+
+    const filters = new Set([ALL]);
+
+    if (teacher) teachers[teacher].forEach(({ status }) => filters.add(status));
+    else
+      Object.values(teachers).forEach((students) =>
+        students.forEach(({ status }) => filters.add(status))
+      );
+
+    return Array.from(filters);
+  }, [teacher, teachers]);
+
+  const sessionStatusList = useMemo<string[]>(
     () => sessionStatus?.map(({ value }) => value) || [],
     [sessionStatus]
   );
 
-  const now = new Date();
-  const start = new Date();
-  const end = new Date();
-  start.setFullYear(2020);
-  end.setFullYear(now.getFullYear() + 1);
+  const range = useMemo(() => {
+    const now = new Date();
+    const start = new Date();
+    const end = new Date();
+    start.setFullYear(2020);
+    end.setFullYear(now.getFullYear());
+
+    return { start, end };
+  }, []);
 
   return (
     <>
       <InputGroup>
         <MenuInput
-          options={getTeachers}
+          options={teacherList}
           name="teacher"
           label="اسم المعلم"
           required
         />
         <MenuInput
-          options={getStudents}
+          options={studentList}
           name="student"
           label="اسم الطالب"
           required
+          header={
+            <SelectionInput
+              type="radio"
+              name="filter"
+              options={filters}
+              checked={(option) => option === statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            />
+          }
         />
       </InputGroup>
       <InputGroup>
         <MenuInput
-          options={getSessionStatus}
+          options={sessionStatusList}
           name="status"
           label="وضع اللقاء"
           required
         />
-        <DateInput
-          name="date"
-          label="تاريخ اللقاء"
-          range={{ start, end }}
-          required
-        />
+        <DateInput name="date" label="تاريخ اللقاء" range={range} required />
       </InputGroup>
     </>
   );

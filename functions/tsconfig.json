@@ -6,6 +6,7 @@
       "@context": ["context"],
       "@lib": ["lib"],
       "@services": ["services"],
+      "@temp": ["temp"],
       "@types": ["types.ts"],
       "@utils": ["utils"]
     },
