@@ -64,6 +64,7 @@ export const CUSTOM_META_DATA_RANGES = [
   "teachers",
   "students",
   "assignedTeachers",
+  "studentStatus",
   "courses",
   "chapters",
   "sessionStatus",

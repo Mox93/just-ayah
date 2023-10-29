@@ -15,22 +15,27 @@ export interface ChapterData {
   verses: number;
 }
 
-interface SessionStatus {
+export interface SessionStatus {
   value: string;
   needsReport: boolean;
 }
 
-interface MetaData {
+interface Student {
+  name: string;
+  status: string;
+}
+
+export interface MetaData {
   staff: string[];
-  teachers: Record<string, string[]>;
+  teachers: Record<string, Student[]>;
   courses: Record<string, ChapterData[]>;
   sessionStatus: SessionStatus[];
   subscriptions: string[];
   monthlySessions: string[];
   recitationRules: string[];
   recitationRating: string[];
-  unassignedStudents: string[];
-  noMatchTeachers: Record<string, string[]>;
+  unassignedStudents: Student[];
+  noMatchTeachers: Record<string, Student[]>;
 }
 
 interface CachedMetaData {
