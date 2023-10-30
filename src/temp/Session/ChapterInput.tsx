@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { ArrayPath, Control, useWatch } from "react-hook-form";
+import { ArrayPath, useWatch } from "react-hook-form";
 
 import {
   MenuInput as BaseMenuInput,
@@ -22,17 +22,21 @@ const {
 const MenuInput = transformer(BaseMenuInput, ...menuModifiers);
 
 interface ChapterInputProps {
-  control: Control<SessionReportData>;
   name: ArrayPath<SessionReportData>;
 }
 
-export default function ChapterInput({ control, name }: ChapterInputProps) {
+export default function ChapterInput({ name }: ChapterInputProps) {
   const seT = useSessionT();
+
+  const {
+    formHook: { control },
+  } = useFormContext();
 
   const { fields, insert, remove } = useFieldArray({
     name,
     control,
     emptyItem: {
+      course: "",
       chapter: "",
       from: 0,
       to: 0,
@@ -62,12 +66,8 @@ interface ChapterInputRowProps {
   removeItem: VoidFunction;
 }
 
-function ChapterInputRow({
-  name,
-  index,
-  addItem,
-  removeItem,
-}: ChapterInputRowProps) {
+function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
+  const CO = `${name}.${index}.course` as const;
   const CH = `${name}.${index}.chapter` as const;
   const VF = `${name}.${index}.from` as const;
   const VT = `${name}.${index}.to` as const;
@@ -75,23 +75,36 @@ function ChapterInputRow({
 
   const { courses, recitationRating = [] } = useMetaData();
 
-  const chapters = useMemo(() => {
-    if (!courses) return [];
-
-    const chapterIndex: Record<string, number> = {};
-
-    Object.values(courses).forEach((chapters) =>
-      chapters.forEach(({ chapter, index }) => (chapterIndex[chapter] = index))
-    );
-
-    return Object.keys(chapterIndex).sort(
-      (a, b) => chapterIndex[a] - chapterIndex[b]
-    );
-  }, [courses]);
-
   const {
     formHook: { control, resetField },
   } = useFormContext();
+
+  const course = useWatch({ control, name: CO });
+
+  const courseList = useMemo(() => {
+    if (!courses) return [];
+
+    return Object.keys(courses).sort();
+  }, [courses]);
+
+  const chapters = useMemo(() => {
+    if (!courses) return [];
+
+    const chapterList: string[] = [];
+
+    if (course)
+      courses[course]?.forEach(
+        ({ chapter, index }) => (chapterList[index - 1] = chapter)
+      );
+    else
+      Object.values(courses).forEach((chapters) =>
+        chapters.forEach(
+          ({ chapter, index }) => (chapterList[index - 1] = chapter)
+        )
+      );
+
+    return chapterList;
+  }, [course, courses]);
 
   const [chapterName, versesFrom, versesTo] = useWatch({
     name: [CH, VF, VT],
@@ -118,11 +131,14 @@ function ChapterInputRow({
   }, [VF, VT, chapterName, resetField, verses, versesFrom, versesTo]);
 
   return (
-    <InputGroup
-      variant="dynamicListItem"
-      addItem={addItem}
-      removeItem={removeItem}
-    >
+    <InputGroup variant="dynamicListItem" {...props}>
+      <MenuInput
+        name={CO}
+        options={courseList}
+        placeholder="البرنامج"
+        required={index === 0}
+        noErrorMessage
+      />
       <MenuInput
         name={CH}
         options={chapters}

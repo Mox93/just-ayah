@@ -82,8 +82,12 @@ export default function SessionTrackFields() {
         students.forEach(({ status }) => filters.add(status))
       );
 
-    return Array.from(filters);
+    return Array.from(filters).sort();
   }, [teacher, teachers]);
+
+  useEffect(() => {
+    if (filters.length && !filters.includes(statusFilter)) setStatusFilter(ALL);
+  }, [filters, statusFilter]);
 
   const sessionStatusList = useMemo<string[]>(
     () => sessionStatus?.map(({ value }) => value) || [],

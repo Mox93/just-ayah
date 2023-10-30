@@ -1,40 +1,24 @@
 import { isEqual } from "lodash";
-import { forwardRef, ReactElement, ReactNode, Ref } from "react";
+import { forwardRef, Ref } from "react";
 
 import { SpinningArrow } from "components/Icons";
-import Menu from "components/Menu";
+import Menu, { MenuProps } from "components/Menu";
 import { AnchorPoint, useDropdown } from "hooks";
-import { GetKey, Merge, Path } from "models";
-import {
-  applyInOrder,
-  cn,
-  FunctionOrChain,
-  identity,
-  oneOf,
-  ValueOrGetter,
-} from "utils";
+import { applyInOrder, cn, identity, oneOf } from "utils";
 import { after, before } from "utils/position";
 
 import Input, { InputProps } from "../Input";
 
-export type MenuInputProps<TOption> = Merge<
-  InputProps,
-  {
-    anchorPoint?: AnchorPoint;
-    setValue?: (option?: TOption) => void;
-  }
->;
+export type MenuInputProps<TOption> = InputProps & {
+  anchorPoint?: AnchorPoint;
+  setValue?: (option?: TOption) => void;
+};
 
-type MenuInputPropsInternal<TOption> = Merge<
-  MenuInputProps<TOption>,
-  {
-    options: ValueOrGetter<TOption[]>;
-    header?: ReactElement;
-    renderElement?: FunctionOrChain<TOption, ReactNode>;
-    searchFields?: Path<TOption>[];
-    getKey?: GetKey<TOption>;
-  }
-> &
+type MenuInputPropsInternal<TOption> = MenuInputProps<TOption> &
+  Pick<
+    MenuProps<TOption>,
+    "options" | "searchFields" | "header" | "renderElement" | "getKey"
+  > &
   (
     | {
         multiChoice?: false;
@@ -76,7 +60,9 @@ export default forwardRef(function MenuInput<TOption>(
     onClick: !disabled ? "toggle" : undefined,
   });
 
-  const hasSelection = !oneOf(selected, ["", null, undefined]);
+  const hasSelection =
+    !oneOf(selected, ["", null, undefined]) ||
+    (Array.isArray(selected) && !!selected.length);
 
   return dropdownWrapper(
     // TODO replace with Button

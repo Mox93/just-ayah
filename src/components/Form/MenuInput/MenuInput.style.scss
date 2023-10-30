@@ -5,6 +5,7 @@
     .Input {
       .FieldWrapper {
         height: unset;
+        padding: calc(var(--spacing-m) - 3px);
       }
 
       .selected {
