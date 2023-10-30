@@ -1,7 +1,10 @@
 @use "styles/abstracts/mixins" as *;
 
 .FieldWrapper {
+  --field-height: 2.625rem;
+
   width: 100%;
+  min-height: var(--field-height);
   padding: var(--spacing-m);
   display: flex;
   align-items: center;
@@ -14,12 +17,8 @@
     )
   );
 
-  &.expandable {
-    min-height: 2.5rem;
-  }
-
   &:not(.expandable) {
-    height: 2.5rem;
+    height: var(--field-height);
   }
 
   &.contentFullWidth {
@@ -27,7 +26,7 @@
   }
 
   .FieldWrapper {
-    height: calc(2.5rem - 2px);
+    height: calc(var(--field-height) - 2px);
 
     &:not(.alwaysVisible) {
       background-color: transparent;

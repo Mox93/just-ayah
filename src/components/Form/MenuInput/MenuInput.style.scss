@@ -5,7 +5,6 @@
     .Input {
       .FieldWrapper {
         height: unset;
-        padding: calc(var(--spacing-m) - 3px);
       }
 
       .selected {
@@ -26,6 +25,10 @@
     position: unset; // fixes an issue with error messages width.
 
     &.hidden {
+      .FieldWrapper {
+        padding-block: calc(var(--spacing-m) - var(--spacing-xs));
+      }
+
       .field {
         position: absolute;
         opacity: 0;

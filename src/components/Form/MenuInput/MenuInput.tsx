@@ -60,9 +60,9 @@ export default forwardRef(function MenuInput<TOption>(
     onClick: !disabled ? "toggle" : undefined,
   });
 
-  const hasSelection =
-    !oneOf(selected, ["", null, undefined]) ||
-    (Array.isArray(selected) && !!selected.length);
+  const hasSelection = Array.isArray(selected)
+    ? !!selected.length
+    : !oneOf(selected, ["", null, undefined]);
 
   return dropdownWrapper(
     // TODO replace with Button
@@ -77,12 +77,12 @@ export default forwardRef(function MenuInput<TOption>(
             "input",
             <div className="selected">
               {multiChoice
-                ? selected.map((s) => (
+                ? selected!.map((s) => (
                     <div className="option" key={getKey(s)}>
                       {applyInOrder(renderElement, s)}
                     </div>
                   ))
-                : applyInOrder(renderElement, selected)}
+                : applyInOrder(renderElement, selected!)}
             </div>
           )
         : null}
@@ -95,7 +95,7 @@ export default forwardRef(function MenuInput<TOption>(
         hasSelection
           ? (option) =>
               multiChoice
-                ? selected.some((s) => isEqual(option, s))
+                ? selected!.some((s) => isEqual(option, s))
                 : isEqual(option, selected)
           : undefined
       }
