@@ -61,6 +61,7 @@ export const deleteSessionTrack = httpsCallable<{ id: string }>(
 const SESSION_REPORT_REF = collection(TEMP_REF, "sessionReport");
 
 const chapterVersusSchema = z.object({
+  course: z.string(),
   chapter: z.string(),
   from: z.number().int().positive(),
   to: z.number().int().positive(),
@@ -72,6 +73,7 @@ const sessionReportSchema = sessionTrackSchema.merge(
     recitation: chapterVersusSchema.array().optional(),
     memorization: chapterVersusSchema.omit({ rating: true }).array().optional(),
     rules: z.string().array().optional(),
+    otherRules: z.string().optional(),
   })
 );
 

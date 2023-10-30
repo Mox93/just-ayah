@@ -1,17 +1,11 @@
-import { isEqual } from "lodash";
-import { useEffect, useMemo, useState } from "react";
-import { UseFormReset, useWatch } from "react-hook-form";
-import { PartialDeep } from "type-fest";
+import { useEffect, useMemo } from "react";
+import { useWatch } from "react-hook-form";
 
 import { DeleteButton } from "components/Buttons";
-import { ErrorMessage } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
 import FormLayout from "components/Layouts/FormLayout";
-import { openModal, closeModal, useRequestData } from "context";
-import { useApplyOnce, useLanguage, useLoading } from "hooks";
-import { mergeCallbacks, pass } from "utils";
+import { closeModal } from "context";
 
-import SuccessMessage from "../SuccessMessage";
 import {
   SessionReportData,
   SessionStatus,
@@ -22,61 +16,17 @@ import {
 } from "../api";
 import SessionReportFields from "./SessionReportFields";
 import SessionTrackFields from "./SessionTrackFields";
+import { useSessionForm } from "./SessionForm.utils";
 
-const { Form, Textarea, useForm } = formAtoms<SessionReportData>();
+const { Form, Textarea } = formAtoms<SessionReportData>();
 
 export default function SessionReport() {
-  const {
-    data,
-    params: { id },
-  } = useRequestData<PartialDeep<SessionReportData>>();
-
-  const [defaultData, setDefaultData] = useState(data);
-
-  const [, setLanguage] = useLanguage();
-
-  useApplyOnce(() => {
-    setLanguage("ar");
+  const { id, formProps, isLoading, noChange } = useSessionForm({
+    addSession: addSessionReport,
+    deleteSession: deleteSessionReport,
+    updateSession: updateSessionReport,
   });
 
-  const [addReport, isLoading] = useLoading(
-    (
-      stopLoading,
-      data: SessionReportData,
-      reset: UseFormReset<SessionReportData>
-    ) =>
-      (id
-        ? updateSessionReport(id, data).then(() => setDefaultData(data))
-        : addSessionReport(data).then((doc) => {
-            openModal(
-              <SuccessMessage
-                startOver={mergeCallbacks(
-                  closeModal,
-                  pass(reset, { date: new Date() })
-                )}
-                undo={async () => {
-                  await deleteSessionReport({ id: doc.id });
-                  closeModal();
-                }}
-              />,
-              { center: true }
-            );
-          })
-      )
-        .catch((error) =>
-          openModal(<ErrorMessage error={error} />, {
-            center: true,
-            closable: true,
-          })
-        )
-        .finally(stopLoading)
-  );
-
-  const formProps = useForm({
-    onSubmit: (data, { reset }) => addReport(data, reset),
-    defaultValues: id ? defaultData : { date: new Date() },
-    resetToDefaultValues: true,
-  });
   const {
     formHook: { control, unregister },
   } = formProps;
@@ -87,12 +37,6 @@ export default function SessionReport() {
   const showReport = useMemo(
     () => needsReport(sessionStatus, status),
     [sessionStatus, status]
-  );
-
-  const updatedData = useWatch({ control });
-  const noChange = useMemo(
-    () => isEqual(defaultData, updatedData),
-    [defaultData, updatedData]
   );
 
   useEffect(() => {

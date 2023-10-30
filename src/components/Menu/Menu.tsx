@@ -21,7 +21,7 @@ export interface MenuProps<TOption>
   onSelect?: (item: TOption) => void;
 }
 
-export default forwardRef(function Menu<TItem>(
+export default forwardRef(function Menu<TOption>(
   {
     options,
     className,
@@ -36,7 +36,7 @@ export default forwardRef(function Menu<TItem>(
     checkIsSelected = pass(false),
     getKey = identity,
     onSelect,
-  }: MenuProps<TItem>,
+  }: MenuProps<TOption>,
   ref: Ref<HTMLDivElement>
 ) {
   const [optionList, searchBar] = useListFilter({ options, searchFields, dir });

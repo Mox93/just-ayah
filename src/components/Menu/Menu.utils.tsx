@@ -18,9 +18,7 @@ export function useListFilter<TOption>({
   searchFields,
   dir,
 }: UseListFilterProps<TOption>) {
-  const [optionList, setOptionList] = useState<TOption[]>(
-    resolveIfValue(options, [])
-  );
+  const [optionList, setOptionList] = useState(resolveIfValue(options, []));
 
   useEffect(() => setOptionList(options), [options]);
 
