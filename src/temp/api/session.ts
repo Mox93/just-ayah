@@ -61,7 +61,7 @@ export const deleteSessionTrack = httpsCallable<{ id: string }>(
 const SESSION_REPORT_REF = collection(TEMP_REF, "sessionReport");
 
 const chapterVersusSchema = z.object({
-  course: z.string(),
+  course: z.string().optional(),
   chapter: z.string(),
   from: z.number().int().positive(),
   to: z.number().int().positive(),
@@ -84,8 +84,16 @@ export async function getSessionReport(id: string) {
   return data && sessionReportSchema.parse(data);
 }
 
-export async function addSessionReport(data: SessionReportData) {
-  return await addDoc(SESSION_REPORT_REF, { ...data, timestamp: new Date() });
+export async function addSessionReport({ rules, ...data }: SessionReportData) {
+  return await addDoc(SESSION_REPORT_REF, {
+    ...data,
+    ...(typeof rules === "string"
+      ? { rules: (rules as string).split(",") }
+      : rules
+      ? { rules }
+      : {}),
+    timestamp: new Date(),
+  });
 }
 
 export function updateSessionReport(

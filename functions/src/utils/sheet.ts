@@ -49,10 +49,19 @@ export function chapterVersusCell(
 ) {
   return (
     value
-      ?.map(
+      ?.filter(({ chapter, from: _from, to }) => chapter && _from && to)
+      .map(
         ({ chapter, from: _from, to, rating }) =>
           `${chapter}(${_from}-${to})` + (noRating ? "" : `[${rating}]`)
       )
       .join("، ") || ""
   );
+}
+
+export function rulesCell(rules?: string | string[], otherRules?: string) {
+  return Array.isArray(rules)
+    ? rules
+        .map((value) => (value === "أخرى" ? `${value}(${otherRules})` : value))
+        .join("، ")
+    : rules;
 }

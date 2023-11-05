@@ -136,14 +136,13 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
         name={CO}
         options={courseList}
         placeholder="البرنامج"
-        required={index === 0}
         noErrorMessage
       />
       <MenuInput
         name={CH}
         options={chapters}
         placeholder="السورة"
-        required={index === 0}
+        required
         noErrorMessage
       />
       <MenuInput
@@ -151,14 +150,16 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
         options={range(1, verses + 1)}
         placeholder="من الآية"
         disabled={!verses}
-        required={index === 0}
+        required
+        noErrorMessage
       />
       <MenuInput
         name={VT}
         options={range(versesFrom || 1, verses + 1)}
         placeholder="إلى الآية"
         disabled={!verses}
-        required={index === 0}
+        required
+        noErrorMessage
       />
       {RA ? (
         <MenuInput
@@ -166,7 +167,8 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
           options={recitationRating}
           placeholder="التقييم"
           disabled={!verses}
-          required={index === 0}
+          required
+          noErrorMessage
         />
       ) : null}
     </InputGroup>

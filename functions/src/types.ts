@@ -91,4 +91,5 @@ export interface SessionReportData extends SessionTrackData {
   recitation?: ChapterVersus[];
   memorization?: Omit<ChapterVersus, "rating">[];
   rules?: string[];
+  otherRules?: string;
 }

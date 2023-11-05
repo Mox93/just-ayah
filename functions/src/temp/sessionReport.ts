@@ -15,6 +15,7 @@ import {
   dateTimeToCell,
   dateToCell,
   editLinkCell,
+  rulesCell,
 } from "@utils";
 
 import { moveToDeleted } from "./utils";
@@ -70,6 +71,7 @@ function dataToRow(
     recitation,
     memorization,
     rules,
+    otherRules,
   }: SessionReportData
 ) {
   return [
@@ -81,8 +83,8 @@ function dataToRow(
     status,
     chapterVersusCell(recitation),
     chapterVersusCell(memorization, true),
-    rules?.join("، ") || "",
-    notes || "",
+    rulesCell(rules, otherRules),
+    notes,
     editLinkCell(id),
   ];
 }
