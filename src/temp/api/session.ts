@@ -30,20 +30,49 @@ const sessionTrackSchema = z.object({
 
 export type SessionTrackData = z.infer<typeof sessionTrackSchema>;
 
+interface DuplicationCheckArgs {
+  student: string;
+  date: string;
+}
+
+type DuplicationCheckResponse<T> =
+  | { duplicated: false }
+  | { duplicated: true; sessions: Record<string, T> };
+
 export async function getSessionTrack(id: string) {
   const data = (await getDoc(doc(SESSION_TRACK_REF, id))).data();
   return data && sessionTrackSchema.parse(data);
 }
 
-export function addSessionTrack(data: SessionTrackData) {
-  return addDoc(SESSION_TRACK_REF, { ...data, timestamp: new Date() });
+const isDuplicatedSessionTrack = httpsCallable<
+  DuplicationCheckArgs,
+  DuplicationCheckResponse<SessionTrackData>
+>(functions, "isDuplicatedSessionTrack");
+
+export const DUPLICATED_SESSION = "Duplicated Session";
+
+export async function addSessionTrack(data: SessionTrackData) {
+  const { data: result } = await isDuplicatedSessionTrack({
+    student: data.student,
+    date: data.date?.toISOString(),
+  });
+
+  if (result.duplicated) {
+    throw new Error(
+      `تم تسجيل استيمارة مسبقاً للطالب/ة "${data.student}"
+      بتاريخ (${data.date.toDateString()})`,
+      { cause: DUPLICATED_SESSION }
+    );
+  }
+
+  return await addDoc(SESSION_TRACK_REF, { ...data, timestamp: new Date() });
 }
 
-export function updateSessionTrack(
+export async function updateSessionTrack(
   id: string,
   data: Partial<SessionTrackData>
 ) {
-  return updateDoc(doc(SESSION_TRACK_REF, id), {
+  return await updateDoc(doc(SESSION_TRACK_REF, id), {
     ...data,
     updateAt: new Date(),
   });
@@ -84,7 +113,25 @@ export async function getSessionReport(id: string) {
   return data && sessionReportSchema.parse(data);
 }
 
+const isDuplicatedSessionReport = httpsCallable<
+  DuplicationCheckArgs,
+  DuplicationCheckResponse<SessionReportData>
+>(functions, "isDuplicatedSessionReport");
+
 export async function addSessionReport({ rules, ...data }: SessionReportData) {
+  const { data: result } = await isDuplicatedSessionReport({
+    student: data.student,
+    date: data.date?.toISOString(),
+  });
+
+  if (result.duplicated) {
+    throw new Error(
+      `تم تسجيل استيمارة مسبقاً للطالب/ة "${data.student}"
+      بتاريخ (${data.date.toDateString()})`,
+      { cause: DUPLICATED_SESSION }
+    );
+  }
+
   return await addDoc(SESSION_REPORT_REF, {
     ...data,
     ...(typeof rules === "string"

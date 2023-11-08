@@ -72,7 +72,11 @@ export const CUSTOM_META_DATA_RANGES = [
 
 // UTILS
 function generateDocPath<P extends string>(path: P) {
-  return <S extends string>(subpath: S) => `${path}/${subpath}` as const;
+  function makePath<S extends string>(subpath: S) {
+    return `${path}/${subpath}` as const;
+  }
+  makePath.root = `${path}/` as const;
+  return makePath;
 }
 
 function generateIndexPath<N extends string>(name: N) {

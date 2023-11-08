@@ -9,6 +9,7 @@ import { useLoading } from "hooks";
 interface DeleteButtonProps {
   onDelete: VoidFunction;
   label: string;
+  afterDeleteGoTo: string;
   message?: string;
 }
 
@@ -36,13 +37,14 @@ function DeleteWarning({
   onDelete: deleteAction,
   label,
   message,
+  afterDeleteGoTo,
 }: DeleteWarningProps) {
   const navigate = useNavigate();
 
   const [onDelete, isLoading] = useLoading(async (stopLoading) => {
     await deleteAction();
     stopLoading();
-    navigate("/temp/sessions/track");
+    navigate(afterDeleteGoTo);
   });
 
   return (

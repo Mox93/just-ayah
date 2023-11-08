@@ -46,6 +46,7 @@ export default function SessionTrack() {
         <DeleteButton
           message="هل تريد حذف هذا التقرير؟"
           label="تأكيد حذف التقرير"
+          afterDeleteGoTo="/temp/session/track"
           onDelete={async () => {
             await deleteSessionTrack({ id });
             closeModal();

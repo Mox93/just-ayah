@@ -34,10 +34,15 @@ export interface TimeInfo12H {
   period: "AM" | "PM";
 }
 
-export const hours = (h24?: boolean) => (h24 ? range(24) : range(1, 13));
-export const minutes = (interval = 1) => range(0, 60, interval);
+export function hours(h24?: boolean) {
+  return h24 ? range(24) : range(1, 13);
+}
 
-export const getAge = (date: string | number | Date) => {
+export function minutes(interval = 1) {
+  return range(0, 60, interval);
+}
+
+export function getAge(date: string | number | Date) {
   const today = new Date();
   const birthDate = new Date(date);
   let age = today.getFullYear() - birthDate.getFullYear();
@@ -47,13 +52,13 @@ export const getAge = (date: string | number | Date) => {
   }
 
   return age;
-};
+}
 
-export const historyRep = (date: Date): string => {
+export function historyRep(date: Date): string {
   return date.toDateString();
-};
+}
 
-export const shortDateRep = (date: Date): string => {
+export function shortDateRep(date: Date): string {
   const now = new Date();
   const year =
     now.getFullYear() === date.getFullYear()
@@ -63,13 +68,13 @@ export const shortDateRep = (date: Date): string => {
       : `/${date.getFullYear() - 2000}`;
 
   return `${date.getDate()}/${date.getMonth() + 1}${year}`;
-};
+}
 
-export const clampDate = ({
+export function clampDate({
   day,
   month,
   year,
-}: Partial<DateInfo> = {}): Partial<DateInfo> => {
+}: Partial<DateInfo> = {}): Partial<DateInfo> {
   const lasDay = new Date(year || 2000, month || 1, 0).getDate();
 
   return {
@@ -77,13 +82,15 @@ export const clampDate = ({
     ...(month && { month }),
     ...(year && { year }),
   };
-};
+}
 
 export function fromDateInfo({ day, month, year }: DateInfo) {
   return new Date(Date.UTC(year, month - 1, day));
 }
 
-export const toDateInfo = (date?: any): DateInfo | undefined => {
+export function toDateInfo(date: Date): DateInfo;
+export function toDateInfo(date?: any): DateInfo | undefined;
+export function toDateInfo(date?: any): DateInfo | undefined {
   if (!date) return;
 
   const _date = new Date(date);
@@ -95,30 +102,40 @@ export const toDateInfo = (date?: any): DateInfo | undefined => {
         month: _date.getMonth() + 1,
         year: _date.getFullYear(),
       };
-};
+}
 
-export const fromTimeInfo = (
+export function dateOnly(date: Date) {
+  return fromDateInfo(toDateInfo(date));
+}
+
+export function fromTimeInfo(
   { hour, minute, period }: TimeInfo12H,
   t: Converter<string> = identity
-) => `${addZeros(hour)}:${addZeros(minute)}${t(period)}`;
+) {
+  return `${addZeros(hour)}:${addZeros(minute)}${t(period)}`;
+}
 
-export const to24H = ({ hour, minute, period }: TimeInfo12H): TimeInfo => ({
-  hour:
-    period === "PM" && hour < 12
-      ? hour + 12
-      : period === "AM" && hour === 12
-      ? 0
-      : hour,
-  minute,
-});
+export function to24H({ hour, minute, period }: TimeInfo12H): TimeInfo {
+  return {
+    hour:
+      period === "PM" && hour < 12
+        ? hour + 12
+        : period === "AM" && hour === 12
+        ? 0
+        : hour,
+    minute,
+  };
+}
 
-export const to12H = ({ hour, minute }: TimeInfo): TimeInfo12H => ({
-  hour: hour > 12 ? hour - 12 : hour === 0 ? 12 : hour,
-  minute,
-  period: hour > 11 ? "PM" : "AM",
-});
+export function to12H({ hour, minute }: TimeInfo): TimeInfo12H {
+  return {
+    hour: hour > 12 ? hour - 12 : hour === 0 ? 12 : hour,
+    minute,
+    period: hour > 11 ? "PM" : "AM",
+  };
+}
 
-export const shiftDate = (
+export function shiftDate(
   date: Date,
   {
     year = 0,
@@ -127,7 +144,7 @@ export const shiftDate = (
     hour = 0,
     minute = 0,
   }: RequireAtLeastOne<TimeDelta>
-): Date => {
+): Date {
   const newDate = new Date(date);
 
   newDate.setFullYear(newDate.getFullYear() + year);
@@ -137,7 +154,7 @@ export const shiftDate = (
   newDate.setMinutes(newDate.getMinutes() + minute);
 
   return newDate;
-};
+}
 
 const millisecondsPerUnit: {
   [key in TimeDeltaUnits]: number;
@@ -150,49 +167,56 @@ const millisecondsPerUnit: {
   second: 1e3,
 };
 
-function getTimeDelta(
+export function getTimeDelta(
   date1: Date,
   date2: Date,
   maxUnit?: "year"
 ): Required<TimeDelta>;
-function getTimeDelta(
+export function getTimeDelta(
   date1: Date,
   date2: Date,
   maxUnit?: "month"
 ): Required<Omit<TimeDelta, "year">>;
-function getTimeDelta(
+export function getTimeDelta(
   date1: Date,
   date2: Date,
   maxUnit?: "day"
 ): Required<Omit<TimeDelta, "year" | "month">>;
-function getTimeDelta(
+export function getTimeDelta(
   date1: Date,
   date2: Date,
   maxUnit?: "hour"
 ): Required<Omit<TimeDelta, "year" | "month" | "day">>;
-function getTimeDelta(
+export function getTimeDelta(
   date1: Date,
   date2: Date,
   maxUnit?: "minute"
 ): Required<Omit<TimeDelta, "year" | "month" | "day" | "hour">>;
-function getTimeDelta(
+export function getTimeDelta(
   date1: Date,
   date2: Date,
   maxUnit?: "second"
 ): Required<Omit<TimeDelta, "year" | "month" | "day" | "hour" | "minute">>;
-function getTimeDelta(
+export function getTimeDelta(
   date1: Date,
   date2: Date,
   maxUnit?: TimeDeltaUnits
 ): TimeDelta;
-function getTimeDelta(date1: Date, date2: Date, maxUnit?: TimeDeltaUnits) {
-  return msToTd(Math.abs(date1.getTime() - date2.getTime()), maxUnit);
+export function getTimeDelta(
+  date1: Date,
+  date2: Date,
+  maxUnit?: TimeDeltaUnits
+) {
+  return millisecondsToTimeDelta(
+    Math.abs(date1.getTime() - date2.getTime()),
+    maxUnit
+  );
 }
 
-export const msToTd = (
+export function millisecondsToTimeDelta(
   milliseconds: number,
   maxUnit: TimeDeltaUnits = "year"
-): TimeDelta => {
+): TimeDelta {
   const timeDelta: any = {};
 
   const idx = timeDeltaUnits.indexOf(maxUnit);
@@ -214,18 +238,19 @@ export const msToTd = (
   }
 
   return timeDelta;
-};
+}
 
-export const tdToMs = (timeDelta: TimeDelta): number =>
-  Object.keys(timeDelta).reduce(
+export function timeDeltaToMilliseconds(timeDelta: TimeDelta): number {
+  return Object.keys(timeDelta).reduce(
     (prev, curr) =>
       prev +
       (timeDelta[curr as TimeDeltaUnits] as number) *
         (millisecondsPerUnit[curr as TimeDeltaUnits] as number),
     0
   );
+}
 
-export const applyTimeDelta = (
+export function applyTimeDelta(
   delta1: TimeDelta,
   delta2: TimeDelta,
   {
@@ -235,17 +260,18 @@ export const applyTimeDelta = (
     maxUnit?: TimeDeltaUnits;
     method?: "add" | "subtract";
   } = {}
-) =>
-  msToTd(
+) {
+  return millisecondsToTimeDelta(
     method === "subtract"
-      ? tdToMs(delta1) - tdToMs(delta2)
-      : tdToMs(delta1) + tdToMs(delta2),
+      ? timeDeltaToMilliseconds(delta1) - timeDeltaToMilliseconds(delta2)
+      : timeDeltaToMilliseconds(delta1) + timeDeltaToMilliseconds(delta2),
     maxUnit
   );
+}
 
-export const formatTimeDelta = (
+export function formatTimeDelta(
   timeDelta: TimeDelta,
   maxUnit: TimeDeltaUnits
-): TimeDelta => msToTd(tdToMs(timeDelta), maxUnit);
-
-export { getTimeDelta };
+): TimeDelta {
+  return millisecondsToTimeDelta(timeDeltaToMilliseconds(timeDelta), maxUnit);
+}

@@ -3,16 +3,13 @@ import { FlashCard } from "components/FlashMessages";
 import { useLoading } from "hooks";
 
 interface SuccessMessageProps {
-  startOver?: VoidFunction;
+  newForm?: VoidFunction;
   undo?: VoidFunction;
 }
 
-export default function SuccessMessage({
-  startOver,
-  undo,
-}: SuccessMessageProps) {
-  const [onStartOver, startOverInProgress] = useLoading(async (stopLoading) => {
-    await startOver?.();
+export default function SuccessMessage({ newForm, undo }: SuccessMessageProps) {
+  const [onNewForm, startOverInProgress] = useLoading(async (stopLoading) => {
+    await newForm?.();
     stopLoading();
   });
 
@@ -24,14 +21,14 @@ export default function SuccessMessage({
   return (
     <FlashCard
       state="success"
-      {...(startOver || undo
+      {...(newForm || undo
         ? {
             actions: (
               <>
-                {startOver && (
+                {newForm && (
                   <Button
                     variant="primary-text"
-                    onClick={onStartOver}
+                    onClick={onNewForm}
                     isLoading={startOverInProgress}
                   >
                     قم بعملية جديدة

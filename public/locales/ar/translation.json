@@ -151,8 +151,8 @@
   },
 
   "session": {
-    "recitation": "التسميع",
-    "memorization": "الحفظ"
+    "recitation": "التسميع (مراجعة ما سبق)",
+    "memorization": "الحفظ (الجديد)"
   },
 
   "pages": {
