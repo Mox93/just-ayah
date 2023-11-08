@@ -1,18 +1,13 @@
 from firebase_admin import firestore
-
 from .config import BATCH_LIMIT
 
 
 def apply_to_all_documents(col_ref, action):
-    docs = col_ref.list_documents(page_size=BATCH_LIMIT)
-    updated = 0
+    docs = col_ref.list_documents()
 
-    for doc in docs:
+    for i, doc in enumerate(docs):
+        print(i, end=" ")
         action(doc)
-        updated = updated + 1
-
-    if updated >= BATCH_LIMIT:
-        return apply_to_all_documents(col_ref, action)
 
 
 def delete_all_fields_instances(col_ref, fields: list[str]):

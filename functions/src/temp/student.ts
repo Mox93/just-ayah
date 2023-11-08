@@ -74,7 +74,7 @@ export const deleteStudent = onCall(async (data?: { id?: string }) => {
 
   if (!id) throw new HttpsError("invalid-argument", "No 'id' was provided!");
 
-  await moveToDeleted(TEMP_STUDENT_PATH(""), id);
+  await moveToDeleted(TEMP_STUDENT_PATH.root, id);
   await removeRowFromSheet(
     STUDENT_SHEET_ID.value(),
     STUDENT_TAB_NAME.value(),

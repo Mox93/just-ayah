@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 
 import {
   getTimeDelta,
-  tdToMs,
+  timeDeltaToMilliseconds,
   TimeDelta,
   TimeDeltaUnits,
 } from "models/_blocks";
@@ -28,7 +28,7 @@ export default function useCountdown(
 
     const interval = setInterval(() => {
       setCountdown(remainingTime);
-    }, tdToMs(delta));
+    }, timeDeltaToMilliseconds(delta));
 
     return () => clearInterval(interval);
   }, [delta, isExpired, remainingTime, setCountdown]);

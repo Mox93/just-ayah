@@ -12,7 +12,7 @@ import { addRowToSheet, changeRowInSheet, removeRowFromSheet } from "@services";
 import { SessionTrackData } from "@types";
 import { dateTimeToCell, dateToCell, editLinkCell } from "@utils";
 
-import { moveToDeleted } from "./utils";
+import { isDuplicatedSession, moveToDeleted } from "./utils";
 
 export const onSessionTrackCreate = document(
   TEMP_SESSION_TRACK_PATH(DOC_ID_CARD)
@@ -42,7 +42,7 @@ export const deleteSessionTrack = onCall(async (data?: { id?: string }) => {
 
   if (!id) throw new HttpsError("invalid-argument", "No 'id' was provided!");
 
-  await moveToDeleted(TEMP_SESSION_TRACK_PATH(""), id);
+  await moveToDeleted(TEMP_SESSION_TRACK_PATH.root, id);
   await removeRowFromSheet(
     SESSION_TRACK_SHEET_ID.value(),
     SESSION_TRACK_TAB_NAME.value(),
@@ -52,6 +52,10 @@ export const deleteSessionTrack = onCall(async (data?: { id?: string }) => {
 
   return null;
 });
+
+export const isDuplicatedSessionTrack = onCall(
+  isDuplicatedSession(TEMP_SESSION_TRACK_PATH.root)
+);
 
 function dataToRow(
   id: string,

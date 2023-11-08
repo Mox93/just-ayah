@@ -18,7 +18,7 @@ import {
   rulesCell,
 } from "@utils";
 
-import { moveToDeleted } from "./utils";
+import { isDuplicatedSession, moveToDeleted } from "./utils";
 
 export const onSessionReportCreate = document(
   TEMP_SESSION_REPORT_PATH(DOC_ID_CARD)
@@ -48,7 +48,7 @@ export const deleteSessionReport = onCall(async (data?: { id?: string }) => {
 
   if (!id) throw new HttpsError("invalid-argument", "No 'id' was provided!");
 
-  await moveToDeleted(TEMP_SESSION_REPORT_PATH(""), id);
+  await moveToDeleted(TEMP_SESSION_REPORT_PATH.root, id);
   await removeRowFromSheet(
     SESSION_REPORT_SHEET_ID.value(),
     SESSION_REPORT_TAB_NAME.value(),
@@ -58,6 +58,10 @@ export const deleteSessionReport = onCall(async (data?: { id?: string }) => {
 
   return null;
 });
+
+export const isDuplicatedSessionReport = onCall(
+  isDuplicatedSession(TEMP_SESSION_REPORT_PATH.root)
+);
 
 function dataToRow(
   id: string,

@@ -3,11 +3,12 @@ import { isEqual } from "lodash";
 import { useMemo, useState } from "react";
 import { DeepPartial, UseFormReset, useWatch } from "react-hook-form";
 
-import { ErrorMessage } from "components/FlashMessages";
+import { ErrorMessage, WarningMessage } from "components/FlashMessages";
 import { formAtoms } from "components/Form";
 import { closeModal, openModal, useRequestData } from "context";
 import { useApplyOnce, useLanguage, useLoading } from "hooks";
-import { SessionTrackData } from "temp/api";
+import { dateOnly } from "models/_blocks";
+import { DUPLICATED_SESSION, SessionTrackData } from "temp/api";
 import SuccessMessage from "temp/SuccessMessage";
 import { mergeCallbacks, pass } from "utils";
 import { HttpsCallable } from "firebase/functions";
@@ -47,9 +48,11 @@ export function useSessionForm<TSession extends SessionTrackData>({
         : addSession(data).then((doc) => {
             openModal(
               <SuccessMessage
-                startOver={mergeCallbacks(
+                newForm={mergeCallbacks(
                   closeModal,
-                  pass(reset, { date: new Date() } as TSession)
+                  pass(reset, {
+                    date: dateOnly(new Date()),
+                  } as DeepPartial<TSession>)
                 )}
                 undo={async () => {
                   await deleteSession({ id: doc.id });
@@ -60,12 +63,22 @@ export function useSessionForm<TSession extends SessionTrackData>({
             );
           })
       )
-        .catch((error) =>
-          openModal(<ErrorMessage error={error} />, {
-            center: true,
-            closable: true,
-          })
-        )
+        .catch((error) => {
+          openModal(
+            error.cause === DUPLICATED_SESSION ? (
+              <WarningMessage
+                title="عملية غير مسموح بها!"
+                message={error.message}
+              />
+            ) : (
+              <ErrorMessage error={error} />
+            ),
+            {
+              center: true,
+              closable: true,
+            }
+          );
+        })
         .finally(stopLoading)
   );
 
@@ -73,7 +86,7 @@ export function useSessionForm<TSession extends SessionTrackData>({
     onSubmit: (data, { reset }) => submitForm(data, reset),
     defaultValues: (id
       ? defaultData
-      : { date: new Date() }) as DeepPartial<TSession>,
+      : { date: dateOnly(new Date()) }) as DeepPartial<TSession>,
     resetToDefaultValues: true,
   });
 

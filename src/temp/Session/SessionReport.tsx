@@ -69,6 +69,7 @@ export default function SessionReport() {
         <DeleteButton
           message="هل تريد حذف هذا التقرير؟"
           label="تأكيد حذف التقرير"
+          afterDeleteGoTo="/temp/session/report"
           onDelete={async () => {
             await deleteSessionReport({ id });
             closeModal();
