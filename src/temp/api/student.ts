@@ -33,7 +33,7 @@ export const newStudentSchema = z.object({
   zoomTestSession: booleanSchema,
   telegram: booleanSchema,
   lead: leadsSchema,
-  leadOther: z.string().optional(),
+  leadOther: z.string().nullish(),
   termsOfService: z.string(),
 });
 

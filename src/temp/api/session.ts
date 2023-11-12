@@ -24,7 +24,7 @@ const sessionTrackSchema = z.object({
   teacher: z.string(),
   student: z.string(),
   status: z.string(),
-  notes: z.string().optional(),
+  notes: z.string().nullish(),
   date: dateSchema,
 });
 
@@ -90,7 +90,7 @@ export const deleteSessionTrack = httpsCallable<{ id: string }>(
 const SESSION_REPORT_REF = collection(TEMP_REF, "sessionReport");
 
 const chapterVersusSchema = z.object({
-  course: z.string().optional(),
+  course: z.string().nullish(),
   chapter: z.string(),
   from: z.number().int().positive(),
   to: z.number().int().positive(),
@@ -99,10 +99,10 @@ const chapterVersusSchema = z.object({
 
 const sessionReportSchema = sessionTrackSchema.merge(
   z.object({
-    recitation: chapterVersusSchema.array().optional(),
-    memorization: chapterVersusSchema.omit({ rating: true }).array().optional(),
-    rules: z.string().array().optional(),
-    otherRules: z.string().optional(),
+    recitation: chapterVersusSchema.array().nullish(),
+    memorization: chapterVersusSchema.omit({ rating: true }).array().nullish(),
+    rules: z.string().array().nullish(),
+    otherRules: z.string().nullish(),
   })
 );
 
