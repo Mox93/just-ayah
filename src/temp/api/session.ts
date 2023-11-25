@@ -92,8 +92,8 @@ const SESSION_REPORT_REF = collection(TEMP_REF, "sessionReport");
 const chapterVersusSchema = z.object({
   course: z.string().nullish(),
   chapter: z.string(),
-  from: z.number().int().positive(),
-  to: z.number().int().positive(),
+  from: z.coerce.number().int().positive(),
+  to: z.coerce.number().int().positive(),
   rating: z.string(),
 });
 
