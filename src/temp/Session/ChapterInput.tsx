@@ -149,6 +149,7 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
         name={VF}
         options={range(1, verses + 1)}
         placeholder="من الآية"
+        rules={{ valueAsNumber: true }}
         disabled={!verses}
         required
         noErrorMessage
@@ -157,6 +158,7 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
         name={VT}
         options={range(versesFrom || 1, verses + 1)}
         placeholder="إلى الآية"
+        rules={{ valueAsNumber: true }}
         disabled={!verses}
         required
         noErrorMessage

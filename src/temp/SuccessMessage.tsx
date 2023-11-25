@@ -48,7 +48,7 @@ export default function SuccessMessage({ newForm, undo }: SuccessMessageProps) {
           }
         : {})}
     >
-      <h1 className="accent">تمة العملية بنجاح</h1>
+      <h1 className="accent">تمت العملية بنجاح</h1>
     </FlashCard>
   );
 }
