@@ -23,4 +23,4 @@ if __name__ == "__main__":
     session_report_collection = db.collection("meta/temp/sessionReport")
     # apply_to_all_documents(session_report_collection, reset_missing_reports(session_report_collection))
     # apply_to_all_documents(session_report_collection, fix_rules)
-    delete_duplicates(session_report_collection)
+    # delete_duplicates(session_report_collection)
