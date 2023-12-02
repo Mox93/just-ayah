@@ -9,12 +9,13 @@ import {
 } from "components/Form";
 import { useSessionT } from "hooks";
 import { useFieldArray } from "lib/react-hook-form";
-import { pass, range } from "utils";
+import { pass } from "utils";
 import { transformer } from "utils/transformer";
 
 import { SessionReportData, useMetaData } from "../api";
 
 const {
+  Input,
   modifiers: { menuModifiers },
   useFormContext,
 } = formAtoms<SessionReportData>();
@@ -106,7 +107,7 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
     return chapterList;
   }, [course, courses]);
 
-  const [chapterName, versesFrom, versesTo] = useWatch({
+  const [chapterName, versesFrom] = useWatch({
     name: [CH, VF, VT],
     control,
   });
@@ -124,11 +125,16 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
   }, [chapterName, courses]);
 
   useEffect(() => {
-    if (versesFrom > verses)
-      resetField(VF, { defaultValue: "", keepError: true });
-    if (versesTo > verses || versesFrom > versesTo)
-      resetField(VT, { defaultValue: "", keepError: true });
-  }, [VF, VT, chapterName, resetField, verses, versesFrom, versesTo]);
+    if (!chapters.includes(chapterName))
+      resetField(CH, { defaultValue: "", keepError: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chapters]);
+
+  useEffect(() => {
+    resetField(VF, { defaultValue: chapterName ? 1 : "" });
+    resetField(VT, { defaultValue: chapterName ? verses : "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chapterName]);
 
   return (
     <InputGroup variant="dynamicListItem" {...props}>
@@ -142,25 +148,26 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
         name={CH}
         options={chapters}
         placeholder="السورة"
-        required
+        rules={{ required: true }}
         noErrorMessage
       />
-      <MenuInput
+      <Input
         name={VF}
-        options={range(1, verses + 1)}
+        // options={range(1, verses + 1)}
         placeholder="من الآية"
-        rules={{ valueAsNumber: true }}
-        disabled={!verses}
-        required
+        rules={{ required: true, valueAsNumber: true, min: 1, max: verses }}
         noErrorMessage
       />
-      <MenuInput
+      <Input
         name={VT}
-        options={range(versesFrom || 1, verses + 1)}
+        // options={range(versesFrom || 1, verses + 1)}
         placeholder="إلى الآية"
-        rules={{ valueAsNumber: true }}
-        disabled={!verses}
-        required
+        rules={{
+          required: true,
+          valueAsNumber: true,
+          min: versesFrom || 1,
+          max: verses,
+        }}
         noErrorMessage
       />
       {RA ? (
@@ -168,8 +175,7 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
           name={RA}
           options={recitationRating}
           placeholder="التقييم"
-          disabled={!verses}
-          required
+          rules={{ required: true }}
           noErrorMessage
         />
       ) : null}
