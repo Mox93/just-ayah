@@ -7,7 +7,7 @@ import {
   InputGroup,
   formAtoms,
 } from "components/Form";
-import { useSessionT } from "hooks";
+import { useSessionT, useUpdate } from "hooks";
 import { useFieldArray } from "lib/react-hook-form";
 import { pass } from "utils";
 import { transformer } from "utils/transformer";
@@ -130,7 +130,7 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chapters]);
 
-  useEffect(() => {
+  useUpdate(() => {
     resetField(VF, { defaultValue: chapterName ? 1 : "" });
     resetField(VT, { defaultValue: chapterName ? verses : "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
