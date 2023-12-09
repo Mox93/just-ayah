@@ -154,6 +154,7 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
       <Input
         name={VF}
         // options={range(1, verses + 1)}
+        type="number"
         placeholder="من الآية"
         rules={{ required: true, valueAsNumber: true, min: 1, max: verses }}
         noErrorMessage
@@ -161,6 +162,7 @@ function ChapterInputRow({ name, index, ...props }: ChapterInputRowProps) {
       <Input
         name={VT}
         // options={range(versesFrom || 1, verses + 1)}
+        type="number"
         placeholder="إلى الآية"
         rules={{
           required: true,
